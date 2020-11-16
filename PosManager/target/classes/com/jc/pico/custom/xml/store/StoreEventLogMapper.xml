@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jc.pico.utils.customMapper.store.StoreEventLogMapper">
+
+	<select id="selectStoreEventList" parameterType="SingleMap" resultType="SingleMap">
+		/* StoreEventLogMapper.selectOrderEventList */	
+		SELECT
+			so.ORDER_NO AS ORDER_NO
+			, cl.ORDER_ID AS ORDER_ID
+			, cl.SALES_ID AS SALES_ID
+			, co.ALIAS AS 'EVENT_TP'
+			, cl.EVENT_TM_LOCAL AS 'EVENT_TM'
+		FROM 
+			TB_SVC_ORDER so
+		LEFT OUTER JOIN 
+			TB_SVC_CCTV_LOG cl 
+			ON cl.ORDER_ID = so.ID
+		LEFT OUTER JOIN 
+			TB_BASE_BCODE co 
+			ON co.BASE_CD = cl.EVENT_TP
+		WHERE  
+			cl.STORE_ID = #{storeId}
+			AND so.ORDER_NO IS NOT NULL  
+		<if test="eventType != null and eventType != ''">
+			AND cl.EVENT_TP = #{eventType}
+		</if>
+		    AND cl.EVENT_TP != '701005'
+	    <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+			AND cl.EVENT_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL 59 SECOND)
+		</if>    
+		<if test="orderNo != null and orderNo != ''">			
+			AND so.ORDER_NO = #{orderNo}
+		</if>  
+		ORDER BY cl.EVENT_TM DESC, cl.ID DESC
+		LIMIT #{count}
+		OFFSET #{start}		
+	</select>
+
+</mapper>
+

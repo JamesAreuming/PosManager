@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Filename	: mybatis-generator.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History	: 
+  ~
+  ~ Version	: 1.0
+  ~ Author   : 
+  -->
+
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+  <!--<classPathEntry location="/Program Files/IBM/SQLLIB/java/db2java.zip" />-->
+<!-- 	<classPathEntry location="D:\00_localData\mysql-connector-java\mysql-connector-java-5.1.39-bin.jar"/> -->
+	<!-- <classPathEntry location="D:\jcsProject\java\mysql-connector-java-5.1.39-bin.jar"/> -->
+    <!-- <classPathEntry location="D:\001.Data\Develop\DB\mysql-connector-java-5.1.35.jar"/> -->
+  <context id="MySQLTables" targetRuntime="MyBatis3"> <!-- exclude "example"  MyBatis3-->
+    <property name="autoDelimitKeywords" value="true" />
+    <property name="beginningDelimiter" value="`" />
+    <property name="endingDelimiter" value="`" />
+    <!-- for paging -->
+    <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />
+    <plugin type="com.jc.pico.configuration.plugins.LombokPlugin" />
+
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://vpn001.speedvpn.com:2306/order9db?useUnicode=true&amp;characterEncoding=utf8" userId="kiosk" password="kiosk@#!"></jdbcConnection>
+    <!-- <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://180.97.81.18:7881/order9db?useUnicode=true&amp;characterEncoding=utf8" userId="kiosk" password="kiosk@#!"></jdbcConnection>-->
+
+
+    <javaTypeResolver>
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver>
+
+    <javaModelGenerator targetPackage="com.jc.pico.bean" targetProject="src/main/java">
+      <property name="enableSubPackages" value="true" />
+      <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+
+    <sqlMapGenerator targetPackage="com.jc.pico.xml" targetProject="src/main/resources">
+      <property name="enableSubPackages" value="true" />
+    </sqlMapGenerator>
+
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.jc.pico.mapper" targetProject="src/main/java">
+      <property name="enableSubPackages" value="true" />
+      <property name="methodNameCalculator" value="" />
+    </javaClientGenerator>
+
+<table tableName="tb_svc_store_printer" domainObjectName="SvcStorePrinter">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+<!--
+<table tableName="tb_svc_store_beacon_log" domainObjectName="SvcStoreBeaconLog">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+<table tableName="tb_svc_supply_company" domainObjectName="SvcSupplyCompany">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_stock_import" domainObjectName="SvcStockImport">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_stock_adjust" domainObjectName="SvcStockAdjust">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table> 
+    <table tableName="tb_svc_sales_goal" domainObjectName="SvcSalesGoal">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+<table tableName="tb_svc_item_img" domainObjectName="SvcItemImg">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+<table tableName="tb_svc_mail_log" domainObjectName="SvcMailLog">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+
+ <table tableName="tb_svc_store_beacon" domainObjectName="SvcStoreBeacon">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+<table tableName="tb_user_card" domainObjectName="UserCard">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+  <table tableName="tb_svc_store_user" domainObjectName="SvcStoreUser">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+  <table tableName="tb_svc_user_stamp" domainObjectName="SvcUserStamp">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_user" domainObjectName="User">
+        <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+        <columnOverride column="PASSWORD" property="password" jdbcType="CHAR" typeHandler="com.jc.pico.utils.mybatis.typehandler.PasswordSecurityTypeHandler"></columnOverride>
+        <columnOverride column="MB" property="mb" jdbcType="VARCHAR" typeHandler="com.jc.pico.utils.mybatis.typehandler.MobileSecurityTypeHandler"></columnOverride>
+        <columnOverride column="MB_BK" property="mbBk" jdbcType="VARCHAR" typeHandler="com.jc.pico.utils.mybatis.typehandler.MobileSecurityTypeHandler"></columnOverride>
+    </table>
+    <table tableName="tb_svc_order_pay" domainObjectName="SvcOrderPay">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+  <table tableName="tb_svc_terms" domainObjectName="SvcTerms">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>           
+	<table tableName="tb_svc_order_discount" domainObjectName="SvcOrderDiscount">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_sms_auth" domainObjectName="SvcSmsAuth">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_sms_log" domainObjectName="SvcSmsLog">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_order_item" domainObjectName="SvcOrderItem">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_sales" domainObjectName="SvcSales">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_sales_item" domainObjectName="SvcSalesItem">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_sales_pay" domainObjectName="SvcSalesPay">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_sales_discount" domainObjectName="SvcSalesDiscount">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+ 
+    <table tableName="tb_svc_closing" domainObjectName="SvcClosing">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_closing_detail" domainObjectName="SvcClosingDetail">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+
+    <table tableName="tb_base_bcode" domainObjectName="BaseBcode">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_base_calendar" domainObjectName="BaseCalendar">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_base_mcode" domainObjectName="BaseMcode">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_biz_platform" domainObjectName="BizPlatform">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_notice" domainObjectName="Notice">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_service" domainObjectName="Service">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_app" domainObjectName="SvcApp">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_beacon" domainObjectName="SvcBeacon">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_brand" domainObjectName="SvcBrand">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_brand_set" domainObjectName="SvcBrandSet">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_cctv_log" domainObjectName="SvcCctvLog">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_coupon" domainObjectName="SvcCoupon">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_coupon_log" domainObjectName="SvcCouponLog">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_coupon_promotion" domainObjectName="SvcCouponPromotion">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_device_license" domainObjectName="SvcDeviceLicense">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_franchise" domainObjectName="SvcFranchise">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_item" domainObjectName="SvcItem">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_item_cat" domainObjectName="SvcItemCat">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_item_opt" domainObjectName="SvcItemOpt">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_item_opt_dtl" domainObjectName="SvcItemOptDtl">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_kitchen_message" domainObjectName="SvcKitchenMessage">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_mail_account" domainObjectName="SvcMailAccount">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_mail_template" domainObjectName="SvcMailTemplate">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_message_template" domainObjectName="SvcMessageTemplate">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_news" domainObjectName="SvcNews">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>      
+   	<table tableName="tb_svc_order" domainObjectName="SvcOrder">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+      <columnOverride column="ORDERER_MB" property="ordererMb" jdbcType="VARCHAR" typeHandler="com.jc.pico.utils.mybatis.typehandler.MobileSecurityTypeHandler"></columnOverride>
+    </table> 
+    <table tableName="tb_svc_order_discount" domainObjectName="SvcOrderDiscount">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_order_item" domainObjectName="SvcOrderItem">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_order_item_opt" domainObjectName="SvcOrderItemOpt">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_order_pay" domainObjectName="SvcOrderPay">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_plu_cat" domainObjectName="SvcPluCat">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_plu_item" domainObjectName="SvcPluItem">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_push_log" domainObjectName="SvcPushLog">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_push_template" domainObjectName="SvcPushTemplate">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_sales" domainObjectName="SvcSales">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_sales_item" domainObjectName="SvcSalesItem">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_sales_item_opt" domainObjectName="SvcSalesItemOpt">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_sales_pay" domainObjectName="SvcSalesPay">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_sales_discount" domainObjectName="SvcSalesDiscount">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_sms_log" domainObjectName="SvcSmsLog">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_sms_template" domainObjectName="SvcSmsTemplate">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_staff" domainObjectName="SvcStaff">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_staff_attend" domainObjectName="SvcStaffAttend">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_stamp_log" domainObjectName="SvcStampLog">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_store" domainObjectName="SvcStore">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_store_beacon" domainObjectName="SvcStoreBeacon">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_store_cctv" domainObjectName="SvcStoreCctv">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_store_img" domainObjectName="SvcStoreImg">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_store_nvr" domainObjectName="SvcStoreNvr">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_store_review" domainObjectName="SvcStoreReview">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_store_set" domainObjectName="SvcStoreSet">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_store_sync" domainObjectName="SvcStoreSync">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_table" domainObjectName="SvcTable">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_table_section" domainObjectName="SvcTableSection">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_table_status" domainObjectName="SvcTableStatus">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_tenant" domainObjectName="SvcTenant">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_user_coupon" domainObjectName="SvcUserCoupon">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_user_mapping" domainObjectName="SvcUserMapping">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_user_backoffice_menu" domainObjectName="UserBackofficeMenu">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_user_bookmark" domainObjectName="UserBookmark">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_user_device" domainObjectName="UserDevice">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_user_group" domainObjectName="UserGroup">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_user_group_auth" domainObjectName="UserGroupAuth">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_user_login_log" domainObjectName="UserLoginLog">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_user_menu" domainObjectName="UserMenu">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_user_message" domainObjectName="UserMessage">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_user_noti" domainObjectName="UserNoti">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_user_oauth" domainObjectName="UserOauth">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_user_permission" domainObjectName="UserPermission">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_user_role" domainObjectName="UserRole">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_zipcode" domainObjectName="Zipcode">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_device_push_set" domainObjectName="SvcDevicePushSet">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+ 	<table tableName="tb_svc_cctv_log_device_mapping" domainObjectName="SvcCctvLogDeviceMapping">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>     
+	<table tableName="tb_svc_cashbook" domainObjectName="SvcCashbook">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_pay_log" domainObjectName="SvcPayLog">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+    <table tableName="tb_svc_store_alive" domainObjectName="SvcStoreAlive">
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" type="post" />
+    </table>
+--> 
+  </context>
+</generatorConfiguration>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.pos.PosStorePrinterMapper">
+
+  <select id="selectList" parameterType="map" resultType="com.jc.pico.utils.bean.PosPrinterInfo">
+ 		SELECT /* PosStorePrinterMapper.selectList 2016-09-09 hyo */
+		    <!-- #{companyId} AS cdCompany
+			, STORE_ID AS cdStore
+		    , PRINTER_NO AS cdPrinter
+		    , NAME AS nmPrinter
+		    , RIGHT(MODEL_TP, 3) AS cdModel
+		    , RIGHT(PORT_TP, 3) AS cdPort
+		    , BAUR_RATE AS baudrate
+		    , POS_NO AS noPos
+		    , IP AS ip
+		    , IS_USED AS ynUse
+		    , PAGE_CNT AS cntPage -->
+		    
+		    #{companyId} AS cdCompany, 
+			STORE_ID AS cdStore,
+			PRINTER_NO AS cdPrinter,
+			PRINTER_TYPE AS printerType,
+			PRINTER_COMPANY_CD AS printerCompanyCd,
+			NAME AS nmPrinter, 
+			CAST(RIGHT(MODEL_TP, 3)AS signed integer)  AS cdModel,
+			POS_NO AS noPos,
+			IP AS ip,
+			IP_PORT AS ipPort,
+			MAC_ADDRESS AS macAddress,
+			DEVICE_FILE AS deviceFile,
+			DEVICE_NM AS deviceNm,
+			BITS AS bits,
+			PARITY AS parity,
+			STOP_BITS AS stopBits,
+			RIGHT(PORT_TP, 3) AS cdPort,
+			BAUR_RATE AS baudrate,
+			PAGE_CNT AS cntPage,
+			IS_DISABLE_BLUETOOTH AS isDisableBluetooth,
+			IS_ENABLE_BLUETOOTH AS isEnableBluetooth,
+			CONNECTION_TYPE AS connectionType,
+			USB_VID AS usbVid,
+			USB_PID AS usbPid,
+			USB_PROTOCOL AS usbProtocol,
+			IS_USED AS ynUse,
+			ACCESS_PWD AS accessPwd,
+			USER_PWD AS userPwd
+		FROM 
+			TB_SVC_STORE_PRINTER
+		WHERE
+			STORE_ID = #{storeId}
+  </select>  
+  
+  <select id="selectListWithLong" parameterType="long" resultType="com.jc.pico.utils.bean.PosPrinterInfo">
+ 		SELECT /* PosStorePrinterMapper.selectList 2016-09-09 hyo */
+			STORE_ID AS cdStore,
+			PRINTER_NO AS cdPrinter,
+			PRINTER_TYPE AS printerType,
+			PRINTER_COMPANY_CD AS printerCompanyCd,
+			NAME AS nmPrinter, 
+			CAST(RIGHT(MODEL_TP, 3)AS signed integer)  AS cdModel,
+			POS_NO AS noPos,
+			IP AS ip,
+			IP_PORT AS ipPort,
+			MAC_ADDRESS AS macAddress,
+			DEVICE_FILE AS deviceFile,
+			DEVICE_NM AS deviceNm,
+			BITS AS bits,
+			PARITY AS parity,
+			STOP_BITS AS stopBits,
+			RIGHT(PORT_TP, 3) AS cdPort,
+			BAUR_RATE AS baudrate,
+			PAGE_CNT AS cntPage,
+			IS_DISABLE_BLUETOOTH AS isDisableBluetooth,
+			IS_ENABLE_BLUETOOTH AS isEnableBluetooth,
+			CONNECTION_TYPE AS connectionType,
+			USB_VID AS usbVid,
+			USB_PID AS usbPid,
+			USB_PROTOCOL AS usbProtocol,
+			IS_USED AS ynUse,
+			ACCESS_PWD AS accessPwd,
+			USER_PWD AS userPwd
+		FROM 
+			TB_SVC_STORE_PRINTER
+		WHERE
+			STORE_ID = #{storeId}
+		AND
+			IS_USED = 1
+		ORDER BY CREATED ASC
+  </select>  
+
+</mapper>

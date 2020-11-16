@@ -1,0 +1,979 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: CustomStoreMapper.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History	: 
+  ~
+  ~ Version	: 1.0
+  ~ Author   : 
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.admin.CustomStoreMapper">
+
+  <resultMap id="BrandListResultMap" type="java.util.LinkedHashMap" >
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="SERVICE_ID" jdbcType="BIGINT" property="serviceId" />
+    <result column="TENANT_ID" jdbcType="BIGINT" property="tenantId" />
+    <result column="FRAN_ID" jdbcType="BIGINT" property="franId" />
+    <result column="SVC_ST" jdbcType="CHAR" property="svcSt" />
+    <result column="REWARD_TP" jdbcType="CHAR" property="rewardTp" />
+    <result column="BRAND_CD" jdbcType="CHAR" property="brandCd" />
+    <result column="BIZ_NO" jdbcType="VARCHAR" property="bizNo" />
+    <result column="BRAND_NM" jdbcType="VARCHAR" property="brandNm" />
+    <result column="COMPANY_NM" jdbcType="VARCHAR" property="companyNm" />
+    <result column="BIZ_CAT" jdbcType="VARCHAR" property="bizCat" />
+    <result column="LOGO_IMG" jdbcType="VARCHAR" property="logoImg" />
+    <result column="INTRO" jdbcType="VARCHAR" property="intro" />
+    <result column="CEO_NM" jdbcType="VARCHAR" property="ceoNm" />
+    <result column="HOMEPAGE" jdbcType="VARCHAR" property="homepage" />
+    <result column="EMAIL" jdbcType="VARCHAR" property="email" typeHandler="com.jc.pico.utils.AES256Cipher" />
+    <result column="MB_COUNTRY_CD" jdbcType="VARCHAR" property="mbCountryCd" />
+    <result column="MB" jdbcType="VARCHAR" property="mb" />
+    <result column="FAX_COUNTRY_CD" jdbcType="VARCHAR" property="faxCountryCd" />
+    <result column="FAX" jdbcType="VARCHAR" property="fax" />
+    <result column="TEL_COUNTRY_CD" jdbcType="VARCHAR" property="telCountryCd" />
+    <result column="TEL" jdbcType="VARCHAR" property="tel" />
+    <result column="COUNTRY" jdbcType="CHAR" property="country" />
+    <result column="REGION" jdbcType="VARCHAR" property="region" />
+    <result column="CITY" jdbcType="VARCHAR" property="city" />
+    <result column="ADDR1" jdbcType="VARCHAR" property="addr1" />
+    <result column="ADDR2" jdbcType="VARCHAR" property="addr2" />
+    <result column="ZIP" jdbcType="VARCHAR" property="zip" />
+    <result column="LANGUAGE" jdbcType="CHAR" property="language" />
+    <result column="CURRENCY" jdbcType="CHAR" property="currency" /> 
+    <result column="TAX_RATE" jdbcType="REAL" property="taxRate" />
+    <result column="STAMP_TP" jdbcType="CHAR" property="stampTp" />
+    <result column="ALLOW_STORE_SET" jdbcType="BIT" property="allowStoreSet" />
+    <result column="ALLOW_STORE_ITEM" jdbcType="BIT" property="allowStoreItem" />
+    <result column="ADMIN_ID" jdbcType="VARCHAR" property="adminId" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />
+    <result column="SVC_ST_NM" jdbcType="VARCHAR" property="svcStNm" />
+    <result column="PG_MERCHANT_ID" jdbcType="VARCHAR" property="pgMerchantId"/>
+    <result column="PG_PRIVATE_KEY"   jdbcType="VARCHAR" property="pgPrivateKey"/>
+    <result column="PG_PAYMENT_KEY" jdbcType="VARCHAR" property="pgPaymentKey"/>
+  </resultMap>
+
+  <select id="getBrandList" parameterType="hashMap" resultMap="BrandListResultMap">
+  	SELECT
+          A.*
+	      ,(SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = A.SVC_ST) AS SVC_ST_NM
+	      ,(SELECT COUNT('id') FROM TB_SVC_STORE WHERE BRAND_ID=A.ID) AS STORE_COUNT
+	FROM
+		TB_SVC_BRAND A
+    LEFT OUTER JOIN TB_SVC_BRAND_SET B ON A.ID = B.BRAND_ID
+	WHERE 1 = 1 
+    <include refid="getBrandList_Where" />
+ 	<if test="orderby != null">
+		ORDER BY ${orderby}
+	</if>
+  </select>
+
+  <select id="getCountBrandList" parameterType="hashMap" resultType="int">
+  	SELECT
+		COUNT(*) AS COUNT
+	FROM
+		TB_SVC_BRAND A
+    LEFT OUTER JOIN TB_SVC_BRAND_SET B ON A.ID = B.BRAND_ID
+	WHERE 1 = 1
+    <include refid="getBrandList_Where" />
+  </select>
+
+  <sql id="getBrandList_Where">
+	<if test="id != null">
+		AND A.ID = #{id}
+	</if>
+	<if test="serviceId != null">
+		AND A.SERVICE_ID = #{serviceId}
+	</if>
+	<if test="tenantId != null">
+		AND A.TENANT_ID = #{tenantId}
+	</if>
+	<if test="franId != null">
+		AND A.FRAN_ID = #{franId}
+	</if>
+	<if test="searchKeyword != null">
+		AND A.BRAND_NM LIKE CONCAT('%', #{searchKeyword}, '%')
+	</if>
+	<if test="svcStSearch != null">
+		AND A.SVC_ST = #{svcStSearch}
+	</if>
+  </sql>
+
+  <select id="getBrand" parameterType="hashmap" resultType="hashmap">
+    SELECT
+    	BR.*
+    	,BS.ID AS BS_ID
+    	,BS.USE_REVIEW
+		,BS.USE_SELFORDER
+		,BS.USE_RESERVE
+		,BS.USE_PARTY
+		,BS.ORDER_BEGIN
+		,BS.ORDER_END
+		,BS.RSV_DEPOSIT
+		,BS.PRT_DEPOSIT
+		,BS.STAMP_CNT
+		,BS.STAMP_ICON
+		,BS.STAMP_BG
+		,BS.STAMP_COUPON
+		,BS.STAMP_TERM
+		,BS.STAMP_DESC
+		,BS.STAMP_NOTICE
+		,BS.PG_MERCHANT_ID
+    ,BS.PG_PRIVATE_KEY
+    ,BS.PG_PAYMENT_KEY
+    FROM TB_SVC_BRAND BR
+    LEFT OUTER JOIN TB_SVC_BRAND_SET BS ON BR.ID = BS.BRAND_ID
+    WHERE BR.ID = ${id}
+  </select>
+
+  <resultMap id="StoreListResultMap" type="java.util.LinkedHashMap" >
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="SERVICE_ID" jdbcType="BIGINT" property="serviceId" />
+    <result column="TENANT_ID" jdbcType="BIGINT" property="tenantId" />
+    <result column="FRAN_ID" jdbcType="BIGINT" property="franId" />
+    <result column="BRAND_ID" jdbcType="BIGINT" property="brandId" />
+    <result column="STORE_CD" jdbcType="CHAR" property="storeCd" />
+    <result column="SVC_ST" jdbcType="CHAR" property="svcSt" />
+    <result column="STORE_ST" jdbcType="CHAR" property="storeSt" />
+    <result column="STORE_TP" jdbcType="CHAR" property="storeTp" />
+    <result column="BIZ_NO" jdbcType="VARCHAR" property="bizNo" />
+    <result column="OWNER_NM" jdbcType="VARCHAR" property="ownerNm" />
+    <result column="STORE_NM" jdbcType="VARCHAR" property="storeNm" />
+    <result column="BIZ_CAT" jdbcType="VARCHAR" property="bizCat" />
+    <result column="EMAIL" jdbcType="VARCHAR" property="email" />
+    <result column="FAX_COUNTRY_CD" jdbcType="VARCHAR" property="faxCountryCd" />
+    <result column="FAX" jdbcType="VARCHAR" property="fax" />
+    <result column="MB_COUNTRY_CD" jdbcType="VARCHAR" property="mbCountryCd" />
+    <result column="MB" jdbcType="VARCHAR" property="mb" />
+    <result column="TEL_COUNTRY_CD" jdbcType="VARCHAR" property="telCountryCd" />
+    <result column="TEL" jdbcType="VARCHAR" property="tel" />
+    <result column="COUNTRY" jdbcType="CHAR" property="country" />
+    <result column="REGION" jdbcType="VARCHAR" property="region" />
+    <result column="CITY" jdbcType="VARCHAR" property="city" />
+    <result column="ADDR1" jdbcType="VARCHAR" property="addr1" />
+    <result column="ADDR2" jdbcType="VARCHAR" property="addr2" />
+    <result column="ZIP" jdbcType="VARCHAR" property="zip" />
+    <result column="LATITUDE" jdbcType="DOUBLE" property="latitude" />
+    <result column="LONGITUDE" jdbcType="DOUBLE" property="longitude" />
+    <result column="TIMEZONE" jdbcType="VARCHAR" property="timezone" />
+    <result column="DEPOSIT" jdbcType="VARCHAR" property="deposit" />
+    <result column="BUSINESS_HOUR" jdbcType="VARCHAR" property="businessHour" />
+    <result column="TIP" jdbcType="VARCHAR" property="tip" />
+    <result column="INTRO" jdbcType="VARCHAR" property="intro" />
+    <result column="ADMIN_ID" jdbcType="VARCHAR" property="adminId" />
+    <result column="HAS_NVR" jdbcType="BIT" property="hasNvr" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />
+    <result column="SVC_ST_NM" jdbcType="VARCHAR" property="svcStNm" />
+  </resultMap>
+  
+  <select id="getStoreList" parameterType="hashMap" resultMap="StoreListResultMap">
+  	SELECT
+		A.*
+	   ,B.FRAN_ID 
+	   ,(SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = A.SVC_ST) AS SVC_ST_NM
+	FROM TB_SVC_STORE A
+	   , TB_SVC_BRAND B
+	   , TB_SVC_FRANCHISE F 
+	WHERE F.ID = B.FRAN_ID
+	AND B.ID = A.BRAND_ID
+		<if test="franId != null and franId != ''">
+			AND F.ID = #{franId}
+		</if>
+		<if test="brandId != null and brandId != ''">
+			AND B.ID = #{brandId}
+		</if>
+		<if test="storeId != null and brandId != ''" >
+			AND A.ID = #{storeId}
+		</if>
+    <include refid="getStoreList_Where" />
+    <if test="orderby != null and orderby != ''">
+		ORDER BY ${orderby}
+	</if>
+  </select>
+
+  <select id="getCountStoreList" parameterType="hashMap" resultType="int">
+  	SELECT COUNT(*) AS COUNT
+	FROM TB_SVC_STORE A
+	   , TB_SVC_BRAND B
+	   , TB_SVC_FRANCHISE F 
+	WHERE F.ID = B.FRAN_ID
+	  AND B.ID = A.BRAND_ID
+		<if test="franId != null and franId != ''">
+			AND F.ID = #{franId}
+		</if>
+		<if test="brandId != null and brandId != ''">
+			AND B.ID = #{brandId}
+		</if>
+		<if test="storeId != null and storeId != ''">
+			AND A.ID = #{storeId}
+		</if>
+		<include refid="getStoreList_Where" />
+  </select>
+
+	<select id="getCheckStore" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*) AS COUNT
+		  FROM TB_SVC_STORE A
+			 , TB_SVC_BRAND B
+			 , TB_SVC_FRANCHISE F 
+		 WHERE F.ID = B.FRAN_ID
+		   AND B.ID = A.BRAND_ID
+			<if test="franId != null">
+				AND F.ID = #{franId}
+			</if>
+			<if test="brandId != null">
+				AND B.ID = #{brandId}
+			</if>
+			<if test="storeCd != null">
+				AND A.STORE_CD = #{storeCd}
+			</if>
+	</select>
+  
+  <sql id="getStoreList_Where">
+	<if test="id != null ">
+		AND A.ID = #{id}
+	</if>
+	<if test="serviceId != null">
+		AND A.SERVICE_ID = #{serviceId}
+	</if>
+	<if test="tenantId != null">
+		AND A.TENANT_ID = #{tenantId}
+	</if>
+	<if test="brandId != null">
+		AND A.BRAND_ID = #{brandId}
+	</if>
+	<if test="searchKeyword != null">
+		AND (
+				A.STORE_NM LIKE CONCAT('%', #{searchKeyword}, '%') 
+				OR
+				A.OWNER_NM LIKE CONCAT('%', #{searchKeyword}, '%') 
+				OR
+				A.TEL LIKE CONCAT('%', #{searchKeyword}, '%') 
+				OR
+				A.MB LIKE CONCAT('%', #{searchKeyword}, '%') 
+			)
+	</if>
+	<if test="svcStSearch != null">
+		AND A.SVC_ST = #{svcStSearch}
+	</if>
+  </sql>
+
+  <select id="getStoreSet" parameterType="hashmap" resultType="hashmap">
+    SELECT
+    	A.SVC_ST
+    	,B.*
+    FROM TB_SVC_STORE A
+    LEFT OUTER JOIN TB_SVC_STORE_SET B ON A.ID = B.STORE_ID
+    WHERE A.ID = ${id}
+  </select>
+
+  <select id="getBrandSet" parameterType="hashmap" resultType="hashmap">
+    SELECT
+    	A.*
+    	,B.ALLOW_STORE_SET AS allowStoreSet
+    FROM TB_SVC_BRAND_SET A
+    LEFT OUTER JOIN TB_SVC_BRAND B ON B.ID = A.BRAND_ID
+    WHERE A.BRAND_ID = ${brandId}
+  </select>
+
+  <resultMap id="StoreBeaconListResultMap" type="java.util.LinkedHashMap" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="SERVICE_ID" property="serviceId" jdbcType="BIGINT" />
+    <result column="BEACON_ID" property="beaconId" jdbcType="BIGINT" />
+    <result column="BRAND_ID" property="brandId" jdbcType="BIGINT" />
+    <result column="STORE_ID" property="storeId" jdbcType="BIGINT" />
+    <result column="LABEL" property="label" jdbcType="CHAR" />
+    <result column="CREATED" property="created" jdbcType="CHAR" />
+    <result column="UPDATED" property="updated" jdbcType="CHAR" />
+    <result column="UUID" property="uuid" jdbcType="CHAR" />
+    <result column="MAJOR" property="major" jdbcType="CHAR" />
+    <result column="MINOR" property="minor" jdbcType="CHAR" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+  </resultMap>
+
+  <select id="getStoreBeaconList" parameterType="hashMap" resultMap="StoreBeaconListResultMap">
+  	SELECT A.ID
+		 , A.SERVICE_ID
+		 , A.BEACON_ID
+		 , A.BRAND_ID
+		 , A.STORE_ID
+		 , A.LABEL
+		 , DATE_FORMAT(A.CREATED, '%Y-%m-%d') AS CREATED
+	     , DATE_FORMAT(A.UPDATED, '%Y-%m-%d') AS UPDATED
+	     , B.UUID
+	     , B.MAJOR
+	     , B.MINOR
+	     , B.STATUS
+	FROM TB_SVC_STORE_BEACON A
+         LEFT OUTER JOIN TB_SVC_BEACON B ON B.ID = A.BEACON_ID
+	WHERE
+	<if test="id != null">
+		A.STORE_ID = #{id}
+	</if>
+  </select>
+
+  <resultMap id="BeaconListResultMap" type="java.util.LinkedHashMap" >
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="SERVICE_ID" jdbcType="BIGINT" property="serviceId" />
+    <result column="TENANT_ID" jdbcType="BIGINT" property="tenantId" />
+    <result column="BRAND_ID" jdbcType="BIGINT" property="brandId" />
+    <result column="STORE_ID" jdbcType="BIGINT" property="storeId" />
+    <result column="STATUS" jdbcType="CHAR" property="status" />
+    <result column="LABEL" jdbcType="VARCHAR" property="label" />
+    <result column="UUID" jdbcType="CHAR" property="uuid" />
+    <result column="MAJOR" jdbcType="SMALLINT" property="major" />
+    <result column="MINOR" jdbcType="SMALLINT" property="minor" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />
+    <result column="STORE_NM" jdbcType="VARCHAR" property="storeNm" />
+    <result column="STATUS_NM" jdbcType="VARCHAR" property="statusNm" />
+  </resultMap>
+
+  <select id="getBeaconList" parameterType="hashMap" resultMap="BeaconListResultMap">
+    SELECT A.ID
+	     , A.SERVICE_ID
+	     , A.TENANT_ID
+	     , IFNULL(B.BRAND_ID, '') AS BRAND_ID
+	     , IFNULL(B.STORE_ID, '') AS STORE_ID
+	     , IFNULL((SELECT STORE_NM FROM TB_SVC_STORE WHERE ID = B.STORE_ID), '-') AS STORE_NM
+	     , A.STATUS
+	     , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = A.STATUS) AS STATUS_NM
+	     , A.LABEL
+	     , A.`UUID`
+	     , A.MAJOR
+	     , A.MINOR
+	     , A.CREATED
+	     , A.UPDATED     
+	  FROM TB_SVC_BEACON A
+	       LEFT OUTER JOIN TB_SVC_STORE_BEACON B ON A.ID = B.BEACON_ID
+     WHERE 1=1
+     <include refid="getBeaconList_Where" />
+     <if test="orderby != null">
+	 	ORDER BY ${orderby}
+	 </if>
+  </select>
+
+  <select id="getCountBeaconList" parameterType="hashMap" resultType="int">
+  	SELECT COUNT(*) AS COUNT
+	  FROM TB_SVC_BEACON A
+	       LEFT OUTER JOIN TB_SVC_STORE_BEACON B ON A.ID = B.BEACON_ID
+     WHERE 1=1
+    <include refid="getBeaconList_Where" />
+  </select>
+
+  <sql id="getBeaconList_Where">
+	<if test="id != null">
+		AND A.ID = #{id}
+	</if>
+	<if test="serviceId != null">
+		AND A.SERVICE_ID = #{serviceId}
+	</if>
+	<if test="tenantId != null">
+		AND A.TENANT_ID = #{tenantId}
+	</if>
+	<if test="uuid != null">
+		AND A.UUID LIKE CONCAT('%', #{uuid}, '%')
+	</if>
+	<if test="status != null">
+		AND A.STATUS = #{status}
+	</if>
+	<if test="modal != null">
+		AND A.STATUS != #{modal}
+	</if>
+  </sql>
+
+  <insert id="insertBeaconCsv" parameterType="java.util.Map">
+    INSERT INTO TB_SVC_BEACON(SERVICE_ID, TENANT_ID, LABEL, UUID, MAJOR, MINOR, STATUS, CREATED, UPDATED)
+    VALUES
+    <foreach collection="list" item="item" separator=",">
+        (#{item.serviceId}, #{item.tenantId}, #{item.label}, #{item.uuid}, #{item.major}, #{item.minor}, #{item.status}, NOW(), NOW())
+    </foreach>
+  </insert>
+
+  <insert id="insertPosLicenseCsv" parameterType="java.util.Map">
+    INSERT INTO TB_SVC_DEVICE_LICENSE(SERVICE_ID, TENANT_ID, DEVICE_TP, NAME, BEGIN, END, LICENSE_KEY, CREATED, UPDATED)
+    VALUES
+    <foreach collection="list" item="item" separator=",">
+        (#{item.serviceId}, #{item.tenantId}, #{item.deviceTp}, #{item.name}, #{item.begin}, #{item.end}, #{item.licenseKey}, NOW(), NOW())
+    </foreach>
+  </insert>
+
+  <resultMap id="PosLicenseListResultMap" type="java.util.LinkedHashMap" >
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="SERVICE_ID" jdbcType="BIGINT" property="serviceId" />
+    <result column="USER_ID" jdbcType="BIGINT" property="userId" />
+    <result column="TENANT_ID" jdbcType="BIGINT" property="tenantId" />
+    <result column="BRAND_ID" jdbcType="BIGINT" property="brandId" />
+    <result column="STORE_ID" jdbcType="BIGINT" property="storeId" />
+    <result column="DEVICE_TP" jdbcType="CHAR" property="deviceTp" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="BEGIN" jdbcType="TIMESTAMP" property="begin" />
+    <result column="END" jdbcType="TIMESTAMP" property="end" />
+    <result column="LICENSE_KEY" jdbcType="VARCHAR" property="licenseKey" />
+    <result column="POS_NO" jdbcType="VARCHAR" property="posNo" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />
+    <result column="BEGIN_END" jdbcType="VARCHAR" property="beginEnd" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="STORE_NM" jdbcType="VARCHAR" property="storeNm" />
+    <result column="BRAND_NM" jdbcType="VARCHAR" property="brandNm" />
+    <result column="DEVICE_TP_NM" jdbcType="VARCHAR" property="deviceTpNm" />
+    <result column="STATUS_NM" jdbcType="VARCHAR" property="statusNm" />
+    <result column="USER_NM" jdbcType="VARCHAR" property="userNm" />
+  </resultMap>
+
+  <select id="getPosLicenseList" parameterType="hashMap" resultMap="PosLicenseListResultMap">
+    SELECT
+    	A.*
+	    ,CONCAT_WS(' ~ ', LEFT(A.BEGIN, 10), LEFT(A.END, 10)) AS BEGIN_END
+    	,IFNULL(B.STORE_NM, '-') AS STORE_NM
+    	,IFNULL(D.BRAND_NM, '-') AS BRAND_NM
+	    ,(SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = A.DEVICE_TP) AS DEVICE_TP_NM
+	    ,(SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = A.STATUS) AS STATUS_NM
+    	,IFNULL(C.NAME, '-') AS USER_NM
+    FROM TB_SVC_DEVICE_LICENSE A
+    LEFT JOIN TB_SVC_STORE B ON B.ID = A.STORE_ID
+    LEFT JOIN TB_USER C ON C.ID = A.USER_ID
+    LEFT JOIN TB_SVC_BRAND D ON D.ID = A.BRAND_ID    
+    WHERE 1=1
+    <include refid="getPosLicenseList_Where" />
+    <if test="orderby != null">
+		ORDER BY ${orderby}
+	</if>
+  </select>
+
+  <select id="getCountPosLicenseList" parameterType="hashMap" resultType="int">
+  	SELECT
+		COUNT(*) AS CPUNT
+    FROM TB_SVC_DEVICE_LICENSE A
+    LEFT OUTER JOIN TB_SVC_STORE B ON B.ID = A.STORE_ID
+    WHERE 1=1
+    <include refid="getPosLicenseList_Where" />
+    
+  </select>
+
+  <sql id="getPosLicenseList_Where">
+	<if test="id != null and id != ''">
+		AND A.ID = #{id}
+	</if>
+	<if test="serviceId != null and serviceId != ''">
+		AND A.SERVICE_ID = #{serviceId}
+	</if>
+	<if test="tenantId != null and tenantId != ''">
+		AND A.TENANT_ID = #{tenantId}
+	</if>
+	<if test="storeId != null and storeId != ''">
+		AND A.STORE_ID = #{storeId}
+	</if>
+	<if test="brandId != null and storeId != ''">
+		AND A.BRAND_ID = #{brandId}
+	</if>
+	<if test="licenseKey != null and licenseKey != ''">
+		AND A.LICENSE_KEY like CONCAT('%', #{licenseKey}, '%')
+	</if>
+	<if test="deviceTp != null and deviceTp != ''">
+		AND A.DEVICE_TP = #{deviceTp}
+	</if>
+	<if test="status != null and status != ''" >
+		AND A.STATUS = #{status}
+	</if>
+	<if test="modal != null and modal != ''">
+		AND A.STATUS = '354001'
+	</if>
+  </sql>
+  
+  
+	<resultMap id="CctvListResultMap" type="java.util.LinkedHashMap" >
+	    <id column="ID" jdbcType="BIGINT" property="id" />
+	    <result column="BRAND_ID" jdbcType="BIGINT" property="brandId" />
+	    <result column="BRAND_NM" jdbcType="VARCHAR" property="brandNm" />
+	    <result column="STORE_ID" jdbcType="BIGINT" property="storeId" />
+	    <result column="STORE_NM" jdbcType="VARCHAR" property="storeNm" />
+	    <result column="NVR_ID" jdbcType="BIGINT" property="nvrId" />
+	    <result column="NO" jdbcType="BIGINT" property="no" />
+	    <result column="NAME" jdbcType="VARCHAR" property="name" />
+	    <result column="IP" jdbcType="VARCHAR" property="ip" />
+	    <result column="MODEL" jdbcType="VARCHAR" property="model" />
+	    <result column="SET_DT" jdbcType="VARCHAR" property="setDt" />
+	    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+	    <result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />
+	</resultMap>
+
+  <select id="getCctvList" parameterType="hashMap" resultMap="CctvListResultMap">
+    SELECT A.ID
+	     , A.BRAND_ID
+	     , (SELECT BRAND_NM FROM tb_svc_brand B WHERE B.ID = A.BRAND_ID) AS BRAND_NM
+	     , A.STORE_ID
+         , (SELECT STORE_NM FROM tb_svc_store C WHERE C.ID = A.STORE_ID) AS STORE_NM
+	     , A.NVR_ID
+	     , A.NO
+	     , A.NAME
+	     , A.IP
+	     , A.MODEL
+	     , A.SET_DT
+	     , A.CREATED
+	     , A.UPDATED
+	 FROM TB_SVC_STORE_CCTV A
+	WHERE NVR_ID = #{nvrId}
+    <if test="orderby != null">
+		ORDER BY ${orderby}
+	</if>
+  </select>
+  
+  <select id="getCountCctvList" parameterType="hashMap" resultType="int">
+  	SELECT COUNT(*)
+	 FROM TB_SVC_STORE_CCTV A
+	WHERE NVR_ID = #{nvrId}    
+  </select>
+  
+  <resultMap id="StampInfoResultMap" type="java.util.LinkedHashMap" >
+	    <id column="ID" jdbcType="BIGINT" property="id" />
+	    <result column="BRAND_ID" jdbcType="BIGINT" property="brandId" />
+	    <result column="STORE_ID" jdbcType="BIGINT" property="storeId" />
+	    <result column="USE_STAMP" jdbcType="BIT" property="useStamp" />
+	    <result column="USE_REVIEW" jdbcType="BIT" property="useReview" />
+	    <result column="USE_SELFORDER" jdbcType="BIT" property="useSelforder" />
+	    <result column="USE_RESERVE" jdbcType="BIT" property="useReserve" />
+	    <result column="USE_PARTY" jdbcType="BIT" property="useParty" />
+	    <result column="ORDER_BEGIN" jdbcType="CHAR" property="orderBegin" />
+	    <result column="ORDER_END" jdbcType="CHAR" property="orderEnd" />
+	    <result column="BUDGET" jdbcType="VARCHAR" property="budget" />
+	    <result column="RSV_DEPOSIT" jdbcType="REAL" property="rsvDeposit" />
+	    <result column="PRT_DEPOSIT" jdbcType="REAL" property="prtDeposit" />
+	    <result column="STAMP_CNT" jdbcType="TINYINT" property="stampCnt" />
+	    <result column="STAMP_ICON" jdbcType="VARCHAR" property="stampIcon" />
+	    <result column="STAMP_BG" jdbcType="VARCHAR" property="stampBg" />
+	    <result column="STAMP_COUPON" jdbcType="BIGINT" property="stampCoupon" />
+	    <result column="STAMP_TERM" jdbcType="CHAR" property="stampTerm" />
+	    <result column="STAMP_DESC" jdbcType="VARCHAR" property="stampDesc" />
+	    <result column="STAMP_NOTICE" jdbcType="VARCHAR" property="stampNotice" />	    
+	    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+	    <result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />	    
+	    <result column="COUPON_ID" jdbcType="VARCHAR" property="couponId" />
+	    <result column="COUPON_NM" jdbcType="VARCHAR" property="couponNm" />	
+	    <result column="DISCOUNT_TP" jdbcType="VARCHAR" property="discountTp" />
+	    <result column="DISCOUNT" jdbcType="VARCHAR" property="discount" />
+	    <result column="DISCOUNT_LIMIT" jdbcType="VARCHAR" property="discountLimit" />
+	    <result column="COUPON_TERM" jdbcType="VARCHAR" property="couponTerm" />
+	</resultMap>
+
+  <select id="getStampBrandInfo" parameterType="hashMap" resultMap="StampInfoResultMap">
+	SELECT A.ID
+	     , A.BRAND_ID
+	     , B.ID AS COUPON_ID
+	     , B.COUPON_NM
+	     , B.DISCOUNT_TP
+         , B.DISCOUNT
+         , B.DISCOUNT_LIMIT
+         , B.TERM AS COUPON_TERM         
+	     , A.STAMP_COUPON
+	     , A.STAMP_CNT
+	     , A.STAMP_ICON
+	     , A.STAMP_BG
+	     , A.STAMP_TERM
+	     , A.STAMP_DESC
+	     , A.STAMP_NOTICE	     
+	     , A.USE_STAMP
+	     , A.USE_REVIEW
+	     , A.USE_SELFORDER
+	     , A.USE_RESERVE
+	     , A.USE_PARTY
+	     , A.ORDER_BEGIN
+	     , A.ORDER_END
+	     , A.BUDGET
+	     , A.RSV_DEPOSIT
+	     , A.PRT_DEPOSIT
+	     , A.CREATED
+	     , A.UPDATED
+	  FROM TB_SVC_BRAND_SET A
+		   LEFT JOIN TB_SVC_COUPON B ON (B.COUPON_TP = '406001' AND A.STAMP_COUPON = B.ID)
+	 WHERE A.BRAND_ID = #{brandId}
+  </select>
+  
+  <select id="getStampStoreInfo" parameterType="hashMap" resultMap="StampInfoResultMap">
+	SELECT A.ID
+	     , A.BRAND_ID
+	     , A.STORE_ID
+	     , A.USE_STAMP
+	     , B.ID AS COUPON_ID
+	     , B.COUPON_NM
+	     , B.DISCOUNT_TP
+         , B.DISCOUNT
+         , B.DISCOUNT_LIMIT
+         , B.TERM AS COUPON_TERM
+	     , A.STAMP_COUPON
+	     , A.STAMP_CNT
+	     , A.STAMP_ICON
+	     , A.STAMP_BG
+	     , A.STAMP_TERM
+	     , A.STAMP_DESC
+	     , A.STAMP_NOTICE
+	     , A.USE_REVIEW
+	     , A.USE_SELFORDER
+	     , A.USE_RESERVE
+	     , A.USE_PARTY
+	     , A.ORDER_BEGIN
+	     , A.ORDER_END
+	     , A.BUDGET
+	     , A.RSV_DEPOSIT
+	     , A.PRT_DEPOSIT
+	     , A.CREATED
+	     , A.UPDATED
+	  FROM TB_SVC_STORE_SET A
+		   LEFT JOIN TB_SVC_COUPON B ON (B.COUPON_TP = '406001' AND A.STAMP_COUPON = B.ID)
+	 WHERE A.BRAND_ID = #{brandId}
+	   AND A.STORE_ID = #{storeId}
+  </select>
+  
+  <!-- 스템프적립 쿠폰 등록-->
+  <insert id="insertStampCoupon" parameterType="hashMap">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO TB_SVC_COUPON
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="brandId != null">
+        BRAND_ID,
+      </if>
+      <if test="storeId != null">
+        STORE_ID,
+      </if>
+      <if test="isDefault != null">
+        IS_DEFAULT,
+      </if>
+      <if test="couponTp != null">
+        COUPON_TP,
+      </if>
+      <if test="used != null">
+        USED,
+      </if>
+      <if test="couponNm != null">
+        COUPON_NM,
+      </if>
+      <if test="hasCountLimit != null">
+        HAS_COUNT_LIMIT,
+      </if>
+      <if test="discountTp != null">
+        DISCOUNT_TP,
+      </if>
+      <if test="expireTp != null">
+        EXPIRE_TP,
+      </if>
+      <if test="maxCnt != null">
+        MAX_CNT,
+      </if>
+      <if test="issueCnt != null">
+        ISSUE_CNT,
+      </if>
+      <if test="term != null">
+        TERM,
+      </if>
+      <if test="begin != null">
+        `BEGIN`,
+      </if>
+      <if test="expire != null">
+        EXPIRE,
+      </if>
+      <if test="discount != null">
+        DISCOUNT,
+      </if>
+      <if test="discountLimit != null">
+        DISCOUNT_LIMIT,
+      </if>
+      <if test="targetMenuId != null">
+        TARGET_MENU_ID,
+      </if>
+      <if test="supplyMenuId != null">
+        SUPPLY_MENU_ID,
+      </if>
+      <if test="hasUseLimit != null">
+        HAS_USE_LIMIT,
+      </if>
+      <if test="enableDays != null">
+        ENABLE_DAYS,
+      </if>
+      <if test="openTm != null">
+        OPEN_TM,
+      </if>
+      <if test="closeTm != null">
+        CLOSE_TM,
+      </if>
+      <if test="img != null">
+        IMG,
+      </if>
+      <if test="smallImg != null">
+        SMALL_IMG,
+      </if>
+      <if test="isAll != null">
+        IS_ALL,
+      </if>
+      <if test="adminId != null">
+        ADMIN_ID,
+      </if>
+      <if test="created != null">
+        CREATED,
+      </if>
+      <if test="updated != null">
+        UPDATED,
+      </if>
+      <if test="storeIds != null">
+        STORE_IDS,
+      </if>
+      <if test="notice != null">
+        NOTICE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="brandId != null">
+        #{brandId,jdbcType=BIGINT},
+      </if>
+      <if test="storeId != null">
+        #{storeId,jdbcType=BIGINT},
+      </if>
+      <if test="isDefault != null">
+        #{isDefault,jdbcType=BIT},
+      </if>
+      <if test="couponTp != null">
+        #{couponTp,jdbcType=VARCHAR},
+      </if>
+      <if test="used != null">
+        #{used,jdbcType=BIT},
+      </if>
+      <if test="couponNm != null">
+        #{couponNm,jdbcType=VARCHAR},
+      </if>
+      <if test="hasCountLimit != null">
+        #{hasCountLimit,jdbcType=BIT},
+      </if>
+      <if test="discountTp != null">
+        #{discountTp,jdbcType=CHAR},
+      </if>
+      <if test="expireTp != null">
+        #{expireTp,jdbcType=CHAR},
+      </if>
+      <if test="maxCnt != null">
+        #{maxCnt,jdbcType=INTEGER},
+      </if>
+      <if test="issueCnt != null">
+        #{issueCnt,jdbcType=INTEGER},
+      </if>
+      <if test="term != null">
+        #{term,jdbcType=CHAR},
+      </if>
+      <if test="begin != null">
+        #{begin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expire != null">
+        #{expire,jdbcType=TIMESTAMP},
+      </if>
+      <if test="discount != null">
+        #{discount,jdbcType=DOUBLE},
+      </if>
+      <if test="discountLimit != null">
+        #{discountLimit,jdbcType=DOUBLE},
+      </if>
+      <if test="targetMenuId != null">
+        #{targetMenuId,jdbcType=BIGINT},
+      </if>
+      <if test="supplyMenuId != null">
+        #{supplyMenuId,jdbcType=BIGINT},
+      </if>
+      <if test="hasUseLimit != null">
+        #{hasUseLimit,jdbcType=BIT},
+      </if>
+      <if test="enableDays != null">
+        #{enableDays,jdbcType=CHAR},
+      </if>
+      <if test="openTm != null">
+        #{openTm,jdbcType=CHAR},
+      </if>
+      <if test="closeTm != null">
+        #{closeTm,jdbcType=CHAR},
+      </if>
+      <if test="img != null">
+        #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="smallImg != null">
+        #{smallImg,jdbcType=VARCHAR},
+      </if>
+      <if test="isAll != null">
+        #{isAll,jdbcType=BIT},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null">
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null">
+        #{updated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="storeIds != null">
+        #{storeIds,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="notice != null">
+        #{notice,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateStampCoupon" parameterType="hashMap">
+  	update tb_svc_coupon
+  	<set>
+	  	<if test="isDefault != null">
+	        IS_DEFAULT = #{isDefault,jdbcType=BIT},
+	      </if>
+	      <if test="couponTp != null">
+	        COUPON_TP = #{couponTp,jdbcType=VARCHAR},
+	      </if>
+	      <if test="used != null">
+	        USED = #{used,jdbcType=BIT},
+	      </if>
+	      <if test="couponNm != null">
+	        COUPON_NM = #{couponNm,jdbcType=VARCHAR},
+	      </if>
+	      <if test="hasCountLimit != null">
+	        HAS_COUNT_LIMIT = #{hasCountLimit,jdbcType=BIT},
+	      </if>
+	      <if test="discountTp != null">
+	        DISCOUNT_TP = #{discountTp,jdbcType=CHAR},
+	      </if>
+	      <if test="expireTp != null">
+	        EXPIRE_TP = #{expireTp,jdbcType=CHAR},
+	      </if>
+	      <if test="maxCnt != null">
+	        MAX_CNT = #{maxCnt,jdbcType=INTEGER},
+	      </if>
+	      <if test="issueCnt != null">
+	        ISSUE_CNT = #{issueCnt,jdbcType=INTEGER},
+	      </if>
+	      <if test="term != null">
+	        TERM = #{term,jdbcType=CHAR},
+	      </if>
+	      <if test="begin != null">
+	        `BEGIN` = #{begin,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="expire != null">
+	        EXPIRE = #{expire,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="discount != null">
+	        DISCOUNT = #{discount,jdbcType=DOUBLE},
+	      </if>
+	      <if test="discountLimit != null">
+	        DISCOUNT_LIMIT = #{discountLimit,jdbcType=DOUBLE},
+	      </if>
+	      <if test="targetMenuId != null">
+	        TARGET_MENU_ID = #{targetMenuId,jdbcType=BIGINT},
+	      </if>
+	      <if test="supplyMenuId != null">
+	        SUPPLY_MENU_ID = #{supplyMenuId,jdbcType=BIGINT},
+	      </if>
+	      <if test="hasUseLimit != null">
+	        HAS_USE_LIMIT = #{hasUseLimit,jdbcType=BIT},
+	      </if>
+	      <if test="enableDays != null">
+	        ENABLE_DAYS = #{enableDays,jdbcType=CHAR},
+	      </if>
+	      <if test="openTm != null">
+	        OPEN_TM = #{openTm,jdbcType=CHAR},
+	      </if>
+	      <if test="closeTm != null">
+	        CLOSE_TM = #{closeTm,jdbcType=CHAR},
+	      </if>
+	      <if test="img != null">
+	        IMG = #{img,jdbcType=VARCHAR},
+	      </if>
+	      <if test="smallImg != null">
+	        SMALL_IMG = #{smallImg,jdbcType=VARCHAR},
+	      </if>
+	      <if test="isAll != null">
+	        IS_ALL = #{isAll,jdbcType=BIT},
+	      </if>
+	      <if test="adminId != null">
+	        ADMIN_ID = #{adminId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="created != null">
+	        CREATED = #{created,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="updated != null">
+	        UPDATED = #{updated,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="storeIds != null">
+	        STORE_IDS = #{storeIds,jdbcType=LONGVARCHAR},
+	      </if>
+	      <if test="notice != null">
+	        NOTICE = #{notice,jdbcType=LONGVARCHAR},
+	      </if>
+	</set>
+	where ID = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <resultMap id="StorePrinterListMap" type="java.util.LinkedHashMap">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="BRAND_ID" jdbcType="BIGINT" property="brandId"/>
+    <result column="STORE_ID" jdbcType="BIGINT" property="storeId"/>
+    <result column="PRINTER_NO" jdbcType="VARCHAR" property="printerNo"/>
+    <result column="PRINTER_TYPE" jdbcType="VARCHAR" property="printerType" />
+    <result column="PRINTER_COMPANY_CD" jdbcType="VARCHAR" property="printerCompanyCd"/>
+    <result column="NAME" jdbcType="VARCHAR" property="name"/>
+    <result column="MODEL_TP" jdbcType="CHAR" property="modelTp"/>
+    <result column="POS_NO" jdbcType="VARCHAR" property="posNo" />
+    <result column="IP" jdbcType="VARCHAR" property="ip" />
+    <result column="IP_PORT" jdbcType="VARCHAR" property="ipPort" />
+    <result column="MAC_ADDRESS" jdbcType="VARCHAR" property="macAddress"/>
+    <result column="DEVICE_FILE" jdbcType="VARCHAR" property="deviceFile" />
+    <result column="DEVICE_NM" jdbcType="VARCHAR" property="deviceNm" />
+    <result column="BITS" jdbcType="VARCHAR" property="bits" />
+    <result column="PARITY" jdbcType="VARCHAR" property="parity"/>
+    <result column="STOP_BITS" jdbcType="VARCHAR" property="stopBits" />
+    <result column="CONNECTION_TYPE" jdbcType="VARCHAR" property="connectionType" />
+    <result column="PORT_TP" jdbcType="CHAR" property="portTp"/>
+    <result column="BAUR_RATE" jdbcType="VARCHAR" property="baurRate" />
+    <result column="PAGE_CNT" jdbcType="INTEGER" property="pageCnt" />
+    <result column="IS_DISABLE_BLUETOOTH" jdbcType="SMALLINT" property="isDisableBluetooth"/>
+    <result column="IS_ENABLE_BLUETOOTH" jdbcType="SMALLINT" property="isEnableBluetooth" />
+    <result column="USB_VID" jdbcType="VARCHAR" property="usbVid"/>
+    <result column="USB_PID" jdbcType="VARCHAR" property="usbPid"/>
+    <result column="USB_PROTOCOL" jdbcType="VARCHAR" property="usbProtocol" />
+    <result column="IS_USED" jdbcType="SMALLINT" property="isUsed"/>
+    <result column="ACCESS_PWD" jdbcType="VARCHAR" property="accessPwd" typeHandler="com.jc.pico.utils.AES256Cipher" />
+    <result column="USER_PWD" jdbcType="VARCHAR" property="userPwd" typeHandler="com.jc.pico.utils.AES256Cipher" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created"/>
+    <result column="UPDATED" jdbcType="TIMESTAMP" property="updated"/>
+  </resultMap>
+  
+  <sql id="getBrandByFran">
+    <if test="franId != null and brandId != null">
+		   SELECT ID
+		   FROM TB_SVC_BRAND
+		   WHERE FRAN_ID = ${franId}
+		   AND ID = ${brandId}
+    </if>
+  </sql>  
+  
+  <select id="getPrinterList" parameterType="hashMap" resultMap="StorePrinterListMap">
+    <if test="storeId != null">
+    SELECT  sp.*
+    FROM (
+                  SELECT   *
+                  FROM TB_SVC_STORE_PRINTER
+                  WHERE BRAND_ID = (
+                                                                <include refid="getBrandByFran"/>
+                                                            )
+                  ) sp
+    LEFT OUTER JOIN TB_SVC_STORE s ON s.ID = sp.STORE_ID AND s.BRAND_ID = sp.BRAND_ID
+     WHERE sp.STORE_ID = ${storeId}
+     <if test="printerId != null">
+      AND sp.ID = ${printerId}
+     </if>
+     ORDER BY sp.CREATED DESC
+     <if test="offset != null and limit != null">
+     LIMIT ${offset}, ${limit}
+     </if>
+     </if>
+  </select>
+</mapper>

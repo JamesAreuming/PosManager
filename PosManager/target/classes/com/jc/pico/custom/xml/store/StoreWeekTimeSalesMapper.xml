@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.jc.pico.utils.customMapper.store.StoreWeekTimeSalesMapper">
+
+	<select id="selectTimeTotal" parameterType="map" resultType="SingleMap">
+		/* StoreWeekTimeSalesMapper.selectTimeTotal */
+		SELECT 
+			(SELECT 
+				ROUND(COALESCE(SUM(SALES), 0), #{currencyFraction})
+			FROM TB_SVC_SALES
+			WHERE
+				STORE_ID = #{storeId}
+			AND SALES_ST = '809001'
+			AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+			) AS salesTotal
+		    , (SELECT	
+					COUNT(*) AS paymentCount
+				FROM TB_SVC_SALES A
+				INNER JOIN TB_SVC_SALES_PAY B
+				ON A.ID = B.SALES_ID
+				WHERE
+					A.STORE_ID = #{storeId}
+				AND A.SALES_ST = '809001'
+				AND B.SALES_ST IN ('809001', '809012')
+				AND A.SALES_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+			) AS paymentCount
+		FROM dual
+	</select>
+	
+	<select id="selectTimeList" parameterType="map" resultType="SingleMap">
+		/* StoreWeekTimeSalesMapper.selectTimeList */
+		SELECT 
+			CONCAT(A.hour, '~', A.hour + 1, 'h') AS label
+		    , COALESCE(C.paymentCount, 0) AS paymentCount 
+		    , ROUND(COALESCE(B.salesTotal, 0), #{currencyFraction}) AS salesTotal 
+		FROM (
+			SELECT 0 AS hour UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+			UNION SELECT 6 AS hour UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11
+			UNION SELECT 12 AS hour UNION SELECT 13 UNION SELECT 14 UNION SELECT 15 UNION SELECT 16 UNION SELECT 17
+			UNION SELECT 18 AS hour UNION SELECT 19 UNION SELECT 20 UNION SELECT 21 UNION SELECT 22 UNION SELECT 23
+		) A
+		LEFT JOIN (
+			SELECT 
+				HOUR(SALES_TM_LOCAL) AS hour        
+				, SUM(SALES) AS salesTotal
+			FROM TB_SVC_SALES
+			WHERE
+				STORE_ID = #{storeId}
+			AND SALES_ST = '809001'
+			AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+			GROUP BY hour	
+		) B
+		ON A.hour = B.hour
+		LEFT JOIN (
+			SELECT	
+				HOUR(A.SALES_TM_LOCAL) AS hour
+				, COUNT(*) AS paymentCount
+			FROM TB_SVC_SALES A
+			INNER JOIN TB_SVC_SALES_PAY B
+			ON A.ID = B.SALES_ID
+			WHERE 
+				A.STORE_ID = #{storeId}
+			AND A.SALES_ST = '809001'
+			AND B.SALES_ST IN ('809001', '809012')
+			AND A.SALES_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+			GROUP BY hour
+		) C
+		ON A.hour = C.hour
+		ORDER BY A.hour		
+	</select>
+	
+	<select id="selectWeekList" parameterType="map" resultType="SingleMap">
+		/* StoreWeekTimeSalesMapper.selectWeekList */	
+		SELECT 
+			A.DAY_OF_WEEK AS label
+		    , A.dayCount
+		    , ROUND(COALESCE(B.salesTotal, 0), #{currencyFraction}) AS salesTotal
+		    , ROUND(COALESCE(salesTotal / A.dayCount, 0), #{currencyFraction}) 
+		    AS salesAvg
+		FROM (
+			SELECT
+				CL.DAY_OF_WEEK
+				, COUNT(*) AS dayCount    
+			FROM TB_BASE_CALENDAR CL
+			WHERE ymd BETWEEN DATE(#{startDate}) AND DATE(#{endDate})
+			GROUP BY DAY_OF_WEEK
+		) A
+		LEFT JOIN (
+			SELECT	
+				DAYOFWEEK(SALES_TM_LOCAL) as dayOfWeek		
+				, COALESCE(SUM(SALES), 0) AS salesTotal		
+			FROM TB_SVC_SALES
+			WHERE
+				STORE_ID = #{storeId}
+			AND SALES_ST = '809001'
+			AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+			GROUP BY dayOfWeek
+		) B
+		ON A.DAY_OF_WEEK = B.dayOfWeek
+		ORDER BY A.DAY_OF_WEEK				
+	</select>
+
+</mapper>
