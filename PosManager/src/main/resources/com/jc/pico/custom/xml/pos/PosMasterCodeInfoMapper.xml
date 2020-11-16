@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: PosMasterCodeInfoMapper.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History		: 
+  ~
+  ~ Version		: 1.0
+  ~ Author   	: 
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.pos.PosMasterCodeInfoMapper">
+
+  <select id="selectDefault" parameterType="hashmap" resultType="com.jc.pico.utils.bean.PosMasterCodeInfo">
+    SELECT  /* PosMasterCodeInfoMapper.selectDefault : POS.M_CODE_INFO, 2016-07-11, green */
+			#{companyId} AS cdCompany /* 회사코드 */
+			, #{storeId} AS cdStore /* 매장코드 */
+			, TB_BASE_BCODE.MAIN_CD AS cdGroup /* 공통구분코드 (공통코드 탭 참고) */
+			, TB_BASE_BCODE.SUB_CD AS cdCode /* 공통상세코드 (공통코드 탭 참고) */
+			, TB_BASE_BCODE.TITLE AS nmCode /* 명칭 */
+			, TB_BASE_BCODE.TITLE AS data1 /* 명칭 : 영어 */
+			, TB_BASE_BCODE.DSC AS data2 /* 명칭 : 러시아어 */
+			, '' AS data3 /* 관리항목3 */
+			, '' AS data4 /* 관리항목4 */
+			, '' AS data5 /* 관리항목5 */
+			, '' AS data6 /* 관리항목6 */
+			, '' AS data7 /* 관리항목7 */
+			, '' AS data8 /* 관리항목8 */
+			, '' AS data9 /* 관리항목9 */
+			, '' AS data10 /* 관리항목10 */
+			, TB_BASE_BCODE.USE_YN AS ynUse /* 사용유무 (1:사용, 0:미사용) */
+			, DATE_FORMAT(TB_BASE_BCODE.CREATED, '%Y%m%d%H%i%s') AS dtInsert /* 등록일시 */
+			, 'BAK' AS cdEmployeeInsert /* 등록자 */
+			, DATE_FORMAT(TB_BASE_BCODE.UPDATED, '%Y%m%d%H%i%s') AS dtUpdate /* 수정일시 */
+			, 'BAK' AS cdEmployeeUpdate /* 수정자 */
+      FROM TB_BASE_BCODE
+     WHERE 
+     <if test="mainCodes == null or mainCodes.length == 0">
+     	TB_BASE_BCODE.MAIN_CD &gt;= '800' AND TB_BASE_BCODE.MAIN_CD &lt;= '999'
+     </if>
+  </select>  
+  
+  <select id="selectManualList" parameterType="hashmap" resultType="com.jc.pico.utils.bean.PosMasterCodeInfo">
+    SELECT  /* PosMasterCodeInfoMapper.selectDefault : POS.M_CODE_INFO, 2016-07-11, green */
+			#{companyId} AS cdCompany /* 회사코드 */
+			, #{storeId} AS cdStore /* 매장코드 */
+			, TB_BASE_BCODE.MAIN_CD AS cdGroup /* 공통구분코드 (공통코드 탭 참고) */
+			, TB_BASE_BCODE.BASE_CD AS cdCode /* 공통상세코드 (공통코드 탭 참고) */
+			, TB_BASE_BCODE.TITLE AS nmCode /* 명칭 */
+			, '' AS data1 /* 관리항목1 */
+			, '' AS data2 /* 관리항목2 */
+			, '' AS data3 /* 관리항목3 */
+			, '' AS data4 /* 관리항목4 */
+			, '' AS data5 /* 관리항목5 */
+			, '' AS data6 /* 관리항목6 */
+			, '' AS data7 /* 관리항목7 */
+			, '' AS data8 /* 관리항목8 */
+			, '' AS data9 /* 관리항목9 */
+			, '' AS data10 /* 관리항목10 */
+			, TB_BASE_BCODE.USE_YN AS ynUse /* 사용유무 (1:사용, 0:미사용) */
+			, DATE_FORMAT(TB_BASE_BCODE.CREATED, '%Y%m%d%H%i%s') AS dtInsert /* 등록일시 */
+			, 'BAK' AS cdEmployeeInsert /* 등록자 */
+			, DATE_FORMAT(TB_BASE_BCODE.UPDATED, '%Y%m%d%H%i%s') AS dtUpdate /* 수정일시 */
+			, 'BAK' AS cdEmployeeUpdate /* 수정자 */
+      FROM TB_BASE_BCODE
+     WHERE     
+     	MAIN_CD IN
+		<foreach item="item" index="index" collection="mainCodes" open="(" separator="," close=")">
+        	#{item}
+  		</foreach>     
+  </select>  
+
+</mapper>

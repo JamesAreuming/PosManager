@@ -1,0 +1,23 @@
+{
+  "duration": 11000,
+  "image": [
+            "http://api.order9.co.kr/admin/_static/ad/image/ad_01.jpg",
+            "http://api.order9.co.kr/admin/_static/ad/image/ad_02.jpg",
+            "http://api.order9.co.kr/admin/_static/ad/image/ad_03.jpg",
+            "http://api.order9.co.kr/admin/_static/ad/image/ad_04.jpg",
+            "http://api.order9.co.kr/admin/_static/ad/image/ad_05.jpg",
+            "http://api.order9.co.kr/admin/_static/ad/image/ad_06.jpg",
+            "http://api.order9.co.kr/admin/_static/ad/image/ad_07.jpg",
+            "http://api.order9.co.kr/admin/_static/ad/image/ad_08.jpg",
+            "http://api.order9.co.kr/admin/_static/ad/image/ad_09.jpg",
+            "http://api.order9.co.kr/admin/_static/ad/image/ad_10.jpg"
+            ],
+  "video": [
+            "http://api.order9.co.kr/admin/_static/ad/video/ad.mp4",
+            "http://ccpad.esubi.com/ads/20181231161651G49SVq_1.mp4"
+  ],
+  "pay": [
+            "http://api.order9.co.kr/image-resource/ad/store/default/adPay.mp4"
+  ]
+
+}

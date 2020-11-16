@@ -1,0 +1,12 @@
+{{#pluType}}
+	<div class="col-md-3 p-a-0">
+		<a class="gridly-title-txt pluType" id="pluType_{{id}}">{{name}}</a>
+		<input type="hidden" name="id" value="{{id}}" id="pluTypeId_{{id}}" />
+		<input type="hidden" name="name" value="{{name}}" id="pluName_{{id}}" />
+	</div>
+{{/pluType}}
+{{^pluType}}
+	<div class="col-md-3 p-a-0">
+		<a class="gridly-title-txt">{{i18n.BO0010}}</a>
+	</div>
+{{/pluType}}

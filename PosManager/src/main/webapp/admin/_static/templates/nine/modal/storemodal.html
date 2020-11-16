@@ -1,0 +1,233 @@
+]<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title" id="myLargeModalLabel">
+				{{i18n.BO1033}} <b>* {{i18n.BO0008}}<b>
+			</h4>
+		</div>
+		<form id="storeForm" enctype="multipart/form-data">
+			<input type="hidden" value="{{brandId}}" name="brandId" id="brandId">
+			<input type="hidden" value="{{franId}}" name="franId" id="franId">
+			<input type="hidden" value="{{storeId}}" name="storeId">
+			<input type="hidden" value="{{id}}" name="id" id="storeId">
+	  		<input type="hidden" name="mode" id="mode">
+			<div class="modal-body" id="modal-form">
+			
+				{{#id}}
+					<ul class="nav nav-tabs nav-justified nav-dark" id="store-modal-tabs">
+						<li value="info" class="active"><a href="#info" data-toggle="tab"><strong>{{i18n.BO2044}}</strong></a></li> 
+						<li value="pos"><a href="#pos" data-toggle="tab"><strong>{{i18n.BO2048}}</strong></a></li> 
+					</ul>
+				{{/id}}
+
+				<div class="tab-content">
+					<div class="tab-pane active" id="info">
+					{{#mode=info}}
+		 				<input type="hidden" name="storeCdEx" value="{{storeCd}}" readonly="readonly">
+						<input type="hidden" name="deposit" value="{{deposit}}">
+						<input type="hidden" name="businessHour" value="{{businessHour}}">
+						<div class="row">						
+							<div class="form-group min-height-30 col-sm-6 padding-0" style='display: none'>
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2039}}*</label>
+								<div class="col-sm-9">
+									<input type="hidden" class="form-control" id="input-Default" value="{{storeCd}}" name="storeCd" data-validation="required">
+								</div>
+							</div> 
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="storeNm" class="col-sm-3 control-label">{{i18n.BO2040}}*</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="storeNm"
+										value="{{storeNm}}" name="storeNm" data-validation="required">
+								</div>
+							</div>							
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="storeSt" class="col-sm-3 control-label">{{i18n.BO2042}}*</label>
+								<div class="col-sm-9">
+									<div class="col-sm-12 p-l-0">
+										<select id="storeSt" class="form-control m-b-sm" tabindex="-1" style="width: 100%" data-validation="required" name="storeSt">
+											<option value="">{{i18n.BO2042}}</option>
+										{{#storest}}
+											<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+										{{/storest}}
+										</select>
+									</div>
+									<!-- <div class="col-sm-6">
+										<div class="input-group m-b-sminput-appendbootstrap-timepicker"></div>
+										<input id="timepicker1" type="text"
+											class="form-control date-picker" placeholder="폐점일">
+									</div> -->
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2023}}</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default" value="{{bizCat}}" name="bizCat">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="storeTp" class="col-sm-3 control-label">{{i18n.BO2341}}
+									*</label>
+								<div class="col-sm-9">
+									<div class="col-sm-12 p-l-0">
+										<select id="storeTp" class="form-control m-b-sm" tabindex="-1" style="width: 100%" data-validation="required" name="storeTp">
+											<option value="">{{i18n.BO2341}}</option>
+										{{#storetp}}
+											<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+										{{/storetp}}
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2005}}</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default" value="{{bizNo}}" name="bizNo">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2015}}</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default" value="{{ownerNm}}" name="ownerNm">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2024}}</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default" placeholder="(010-1234-5678)" value="{{tel}}" name="tel">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2017}}</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default" placeholder="(02-1234-5678)" value="{{fax}}" name="fax">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2342}}</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default" placeholder="(010-1234-5678)" value="{{mb}}" name="mb">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2018}}</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default" value="{{email}}" name="email">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2496}}*</label>
+								<div class="col-sm-9">
+									<select class="form-control m-b-sm" id="timezone" name="timezone" data-validation="required">
+										<option value="">{{i18n.BO2496}}</option>
+										{{#tz}}
+											<option value="{{id}}"  {{#selected}} selected="selected" {{/selected}}>{{country}} ({{id}})</option>
+										{{/tz}}
+									</select>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-9 padding-0">
+								<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2013}}</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control addr1" id="input-Default" value="{{addr1}}" name="addr1">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-9 padding-0">
+								<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2014}}</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control addr2" id="input-Default" value="{{addr2}}" name="addr2">
+									<!--input-error 에는 has-error 추가할것-->
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-9 padding-0">
+								<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2043}}</label>
+								<div class="col-sm-10">
+									<div class="input-group m-b-sm">
+										<input type="text" class="form-control" id="gpsId" value="{{#latitude}}{{latitude}},{{longitude}}{{/latitude}}" placeholder="{{i18n.BO2343}}" >
+										<input type="hidden" name="latitude" value="{{latitude}}">
+										<input type="hidden" name="longitude" value="{{longitude}}">
+										<span class="input-group-btn">
+											<button class="btn btn-primary" type="button" id="toggle_map">{{i18n.BO0011}}</button>
+										</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group col-sm-12 padding-0 hidden" style="height: 250px;" id="target_map">
+								<div class="col-sm-12" id="map-canvas" style="height: 100%;"></div>
+							</div>
+							<!-- Google Map API js -->
+							<script>JC_google_util.setupMapKey('target_map');</script>
+							 
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2012}}*</label>
+								<div class="col-sm-9">
+									<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+										style="width: 100%" data-validation="required" name="svcSt">
+										<option value="">{{i18n.BO2012}}</option>
+										{{#svcst}}
+										<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+										{{/svcst}}
+									</select>
+								</div>
+							</div> 
+						</div>
+					{{/mode=info}}
+					</div>
+
+					 
+
+					<div class="tab-pane" id="pos">
+					{{#mode=pos}}
+						<div class="float-right">
+ 
+							<button type="button" class="btn btn-xs btn-danger" id="del-row">- {{i18n.BO0016}}</button>
+							<button type="button" class="btn btn-xs btn-primary" data-target=".bs-pos-modal-lg" id="new-pos">+ {{i18n.BO0017}}</button>
+ 
+						</div>
+						<div class="table-responsive">
+							<table id="poslist_table" class="display table" style="width: 100%; cellspacing: 0;">
+								<thead>
+									<tr>
+										<th>{{i18n.BO0024}}</th>
+										<th>{{i18n.BO2065}}</th>
+										<th>{{i18n.BO2066}}</th>
+										<th>{{i18n.BO2067}}</th>
+										<th>{{i18n.BO2068}}</th>
+										<th>{{i18n.BO2069}}</th>
+										<th>{{i18n.BO2356}}</th>
+									</tr>
+								</thead>
+								<tbody>
+									{{#list}}
+									<tr>
+										<td>
+											<input type="checkbox" name="ckl{{id}}" id="ckl_{{id}}" value="{{id}}" class="table-checkbox">
+											<input type="hidden" name="posIU{{id}}" value="U">
+											<input type="hidden" name="pId{{id}}" value="{{id}}">
+										</td>
+										<td>{{licenseKey}}</td>
+										<td>{{deviceTpNm}}</td>
+										<td>{{beginEnd}}</td>
+										<td><input type="text" class="col-sm-10" name="posNo{{id}}" value="{{posNo}}"></td>
+										<td>{{userNm}}</td>
+										<td>{{#formatDay}}{{created}}{{/formatDay}}</td>
+									</tr>
+									{{/list}}
+								</tbody>
+							</table>
+						</div>
+					{{/mode=pos}}
+					</div>
+  
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+				<button type="submit" class="btn btn-primary">{{i18n.BO0014}}</button>
+			</div>
+		</form>
+	</div>
+</div>
+

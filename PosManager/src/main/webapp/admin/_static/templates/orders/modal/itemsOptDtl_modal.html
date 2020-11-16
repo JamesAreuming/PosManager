@@ -1,0 +1,94 @@
+<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myLargeModalLabel">{{i18n.BO2116}}</h4>
+			</div>
+			<div class="modal-body" id="modal-form">
+				<form id="itemOptDtlModalForm">
+				<div class="row">
+					<div class="form-group min-height-30 col-sm-6 padding-0" style="height: 40px;">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2239}} *</label>
+						<div class="col-sm-9">
+							{{#id}}<input type="hidden" name="id" value="{{id}}" id="optId">{{/id}}
+							<input type="text" name="name" value="{{name}}" id="optNm" class="form-control">
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2124}}</label>
+						<div class="col-sm-9">
+							<div class="radio">
+								<label><input type="radio" name="isUsed" value="true" {{#isUsed}} checked="checked" {{/isUsed}} id="isUsed_t"/> {{i18n.BO2031}}</label>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							 	<label><input type="radio" name="isUsed" value="false" {{^isUsed}} checked="checked" {{/isUsed}} id="isUsed_f"/> {{i18n.BO2032}}</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2376}} *</label>
+						<div class="col-sm-9">
+							<div class="radio">
+								<label><input type="radio" name="isMandatory" value="false" {{^isMandatory}} checked="checked" {{/isMandatory}} id="isMandatory_f"/> {{i18n.BO2059}}</label>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<label><input type="radio" name="isMandatory" value="true" {{#isMandatory}} checked="checked" {{/isMandatory}} id="isMandatory_t"/> {{i18n.BO2241}}</label>
+							</div>
+						</div>
+					</div>
+					{{#id}}
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2242}} *</label>
+
+						<div class="col-sm-9">
+							<select class="form-control m-b-sm" tabindex="-1" style="width: 100%" name="optCount" id="optCount_select">
+								<option value=""> - {{i18n.BO0024}} -</option>
+								<option value="1" {{#optCount=1}} selected="selected" {{/optCount=1}}>1</option>
+								<option value="2" {{#optCount=2}} selected="selected" {{/optCount=2}}>2</option>
+								<option value="3" {{#optCount=3}} selected="selected" {{/optCount=3}}>3</option>
+								<option value="4" {{#optCount=4}} selected="selected" {{/optCount=4}}>4</option>
+								<option value="5" {{#optCount=5}} selected="selected" {{/optCount=5}}>5</option>
+							</select>
+						</div>
+					</div>
+					{{/id}}
+					</form>
+				</div>
+				{{#id}}
+				<div class="row">
+					<form id="itemOptDtlDataForm">
+					<table class="display table" style="width: 100%; cellspacing: 0;" id="optDtlListTbl">
+						<thead>
+							<tr>
+								<th>{{i18n.BO2378}}</th>
+								<th>{{i18n.BO2243}}</th>
+								<th>{{i18n.BO2244}}</th>
+								<th>{{i18n.BO2245}}</th>
+							</tr>
+						</thead>
+						<tbody id="optDtlTbl">
+						  {{#optDtl}}
+							<tr id="optDtlTr_{{id}}">
+								<td>
+									<input type="hidden" name="optId" value="{{optId}}" class="form-control">
+									<input type="text" name="optCd" value="{{optCd}}" class="form-control">
+								</td>
+								<td><input type="text" name="name" value="{{name}}" class="form-control"></td>
+								<td><input type="text" name="price" value="{{#formatPrice2}}{{price}}{{/formatPrice2}}" class="form-control"></td>
+								<td><button type="button" class="btn btn-xs btn-danger optListDel" id="optListDel_{{id}}">- {{i18n.BO0016}}</button></td>
+							</tr>
+						  {{/optDtl}}
+						</tbody>
+					</table>
+					</form>
+				</div>
+				{{/id}}
+			</div>
+			<div class="modal-footer" style="border: 0;">
+				<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+				<button type="button" class="btn btn-primary addOpt" id="addOpt" >{{i18n.BO0014}}</button>
+			</div>
+		</div>
+		</form>
+	</div>

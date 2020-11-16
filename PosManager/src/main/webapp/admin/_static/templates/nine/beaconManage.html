@@ -1,0 +1,76 @@
+
+<form>
+<ul class="filemanager-options">
+	<li class="select2-padding">
+		<div class="itemopt">
+			<select class="select2" name="statusSearch">
+				<option value="">{{i18n.BO2085}}</option>
+				{{#cd}}
+					{{#412}}
+						<option value="{{baseCd}}">{{title}}</option>
+					{{/412}}
+				{{/cd}}
+			</select>
+		</div>
+	</li>
+	 <li class="sch-toolbar">
+      <div class="input-group ">
+        <input type="text" class="form-control ckbox-border sch-input" id="demo"  placeholder="search..." name="searchKeyword">
+        <button type="button" id="search">
+          <i class="glyphicon glyphicon-search sch-btn-i"></i>
+        </button>
+      </div>
+      </li>
+	 <li class="float-right">
+        <button type="button" id="new-beacon" class="btn btn-xs btn-primary" data-toggle="modal" data-target=".bs-beacon-modal-lg">+ {{i18n.BO3055}}</button>
+		<div class="modal fade bs-beacon-modal-lg" tabindex="-1"
+			role="dialog" aria-labelledby="myLargeModalLabel"
+			aria-hidden="true" id="beacon-modal">
+		</div>
+        <button type="button" id="csv-beacon" class="btn btn-xs btn-primary" data-toggle="modal" data-target=".bs-brand-modal-lg">+ {{i18n.BO3056}}</button>
+      </li>
+</ul>
+</form>
+	<div class="modal fade bs-brand-modal-lg" tabindex="-1"
+		role="dialog" aria-labelledby="myLargeModalLabel2"
+		aria-hidden="true" id="beacon-csv">
+	</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table id="beacon-table" class="display table"
+						style="width: 100%; cellspacing: 0;">
+						<thead>
+							<tr>
+								<th>{{i18n.BO2001}}</th>
+								<th>{{i18n.BO2060}}</th>
+								<th>{{i18n.BO2061}}</th>
+								<th>{{i18n.BO2062}}</th>
+								<th>{{i18n.BO2085}}</th>
+								<th>{{i18n.BO2086}}</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th>{{i18n.BO2001}}</th>
+								<th>{{i18n.BO2060}}</th>
+								<th>{{i18n.BO2061}}</th>
+								<th>{{i18n.BO2062}}</th>
+								<th>{{i18n.BO2085}}</th>
+								<th>{{i18n.BO2086}}</th>
+								<th></th>
+							</tr>
+						</tfoot>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Row -->

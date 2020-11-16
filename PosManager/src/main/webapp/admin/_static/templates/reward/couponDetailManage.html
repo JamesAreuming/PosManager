@@ -1,0 +1,163 @@
+<form id="be-search">
+	<ul class="filemanager-options" {{#isSt}} style="display: none" {{/isSt}}>
+		<li class="select2-padding" {{#isFr}} style="display: none" {{/isFr}}>
+			<div class="itemopt">
+				<select class="select2" id="franchise_select">
+					<option value="">{{i18n.BO1031}}</option>
+					{{#frList}}
+					<option value="{{id}}" >{{companyNm}}</option>
+					{{/frList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding" {{#isBr}} style="display: none" {{/isBr}}>
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="brand_select">
+					<option value="">{{i18n.BO1032}}</option>
+					{{#brList}}
+					<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+					{{/brList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="store_select">
+					<option value="">{{i18n.BO1033}}</option>
+					{{#stList}}
+					<option value="{{id}}" {{{selections}}}>{{storeNm}}</option>
+					{{/stList}}
+				</select>
+			</div>
+		</li>
+	</ul>
+	<ul class="filemanager-options">
+		<li class="datepicker-range">
+			<div class="input-group">
+				<input id="daterangepicker" type="text" class="form-control date-picker" placeholder="{{i18n.BO2064}}" value="{{begin}} - {{expire}}">
+					<span class="input-group-addon add-on add-on-datepicker">
+						<i class="fa fa-calendar"></i>
+					</span>
+				<input id="from-date" name="fromdate" value="{{begin}}" type="hidden" />
+				<input id="to-date" name="todate" value="{{expire}}" type="hidden" />
+			</div>
+		</li>
+		
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select id="option2_select" class="js-states form-control" name="couponTp">
+					<option value="">{{i18n.BO2399}}</option>
+					{{#cd}}
+						{{#couponpubtype}}
+							<option value="{{baseCd}}">{{title}}</option>
+						{{/couponpubtype}}
+					{{/cd}}
+				</select>
+			</div>
+		</li>
+		
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select id="option3_select" class="js-states form-control" name="expire">
+					<option value="">{{i18n.BO2268}}</option>
+					<option value="1">{{i18n.BO2425}}</option>
+					<option value="0">{{i18n.BO2426}}</option>
+				</select>
+			</div>
+		</li>
+		
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select id="option4_select" class="js-states form-control" name="couponSt">
+					<option value="">{{i18n.BO2269}}</option>
+					<option value="0">{{i18n.BO2264}}</option>
+					<option value="1">{{i18n.BO2403}}</option>
+				</select>
+			</div>
+		</li>
+		
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select id="option5_select" class="js-states form-control" name="used">
+					<option value="">{{i18n.BO2270}}</option>
+					<option value="1">{{i18n.BO2031}}</option>
+					<option value="0">{{i18n.BO2032}}</option>
+				</select>
+			</div>
+		</li>
+		
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select name="searchType" id="option1_select" class="js-states form-control" >
+					<option value="usercode">{{i18n.BO2152}}</option>
+					<option value="usermb">{{i18n.BO2342}}</option>
+					<option value="couponcode">{{i18n.BO2159}}</option>
+				</select>
+			</div>
+		</li>
+		
+		<li class="sch-toolbar">
+			<div class="input-group ">
+				<input type="text" class="form-control ckbox-border sch-input" id="demo"  placeholder="search..." name="searchKeyword">
+				<button type="button" id="couponList-search">
+					<i class="glyphicon glyphicon-search sch-btn-i"></i>
+				</button>
+			</div>
+		</li>
+	</ul>
+</form>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="table-responsive">
+					<div class="float-right">
+						<div class="modal fade bs-coupon-list-modal-lg" tabindex="-1"
+							role="dialog" aria-labelledby="myLargeModalLabel"
+							aria-hidden="true" id="coupon-lists">
+						</div>
+					</div>
+					<table id="coupon-table" class="display table" style="width: 100%; cellspacing: 0;">
+						<thead>
+							<tr>
+								<th>{{i18n.BO2001}}</th>
+								<th>{{i18n.BO2159}}</th>
+								<th>{{i18n.BO2076}}</th>
+								<th>{{i18n.BO2385}}</th>
+								<th>{{i18n.BO2397}}</th>
+								<th>{{i18n.BO2171}}</th>
+								<th>{{i18n.BO2152}}</th>
+								<th>{{i18n.BO2151}}</th>
+								<th>{{i18n.BO2342}}</th>
+								<th>{{i18n.BO2040}}</th>
+								<th>{{i18n.BO2031}}</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th>{{i18n.BO2001}}</th>
+								<th>{{i18n.BO2159}}</th>
+								<th>{{i18n.BO2076}}</th>
+								<th>{{i18n.BO2385}}</th>
+								<th>{{i18n.BO2397}}</th>
+								<th>{{i18n.BO2171}}</th>
+								<th>{{i18n.BO2152}}</th>
+								<th>{{i18n.BO2151}}</th>
+								<th>{{i18n.BO2342}}</th>
+								<th>{{i18n.BO2040}}</th>
+								<th>{{i18n.BO2031}}</th>
+								<th></th>
+							</tr>
+						</tfoot>
+						<tbody>
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Row -->

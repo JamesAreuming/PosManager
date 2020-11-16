@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: PosSalesSaleSaveMapper.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History		: 
+  ~
+  ~ Version		: 1.0
+  ~ Author   	: 
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.pos.PosSalesEmployeeAttendMapper">
+
+  <select id="selectCountDefault" parameterType="hashmap" resultType="int">
+    SELECT COUNT(*) CNT
+      FROM TB_SVC_STAFF_ATTEND
+     WHERE BRAND_ID = #{brandId}
+       AND STORE_ID = #{storeId}
+       AND ATTEND_TP = #{attendTp}
+       AND STAFF_ID = #{staffId}
+       AND `WHEN` BETWEEN DATE_ADD(#{when}, INTERVAL 0 SECOND) AND DATE_ADD(#{when}, INTERVAL '23:59:59' HOUR_SECOND)
+  </select>
+
+</mapper>

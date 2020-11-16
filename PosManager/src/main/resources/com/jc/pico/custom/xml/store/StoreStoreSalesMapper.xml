@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+
+<mapper namespace="com.jc.pico.utils.customMapper.store.StoreStoreSalesMapper">
+	
+	<select id="selectSalesSummary" parameterType="map" resultType="SingleMap">
+		/* StoreStoreSalesMapper.selectSalesSummary */
+		SELECT
+			ROUND(COALESCE(SUM(SALES), 0), #{currencyFraction}) AS salesTotal
+		    , ROUND(COALESCE(SUM(DISCOUNT), 0), #{currencyFraction}) AS discountTotal
+		    , ROUND(COALESCE(SUM(SALES), 0) - COALESCE(SUM(DISCOUNT), 0), #{currencyFraction}) as realSalesTotal
+		    , ROUND(COALESCE(SUM(TAX), 0), #{currencyFraction}) AS taxTotal
+		    , COALESCE(SUM(CUSTOMER_CNT), 0) AS customerTotal       
+			, ROUND(COALESCE(SUM(SUPPLY_VALUE), 0), #{currencyFraction}) AS netSalesTotal
+		FROM TB_SVC_SALES
+		WHERE 
+			STORE_ID = #{storeId}
+		AND SALES_ST = '809001'
+		AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+	</select>
+	
+	<select id="selectPayMethodSales" parameterType="map" resultType="SingleMap">
+		/* StoreStoreSalesMapper.selectPayMethodSales */
+		SELECT
+		    A.label
+		    , ROUND(
+		    	COALESCE(
+					CASE
+						WHEN A.label = 'cash' THEN cashSales
+						WHEN A.label = 'card' THEN cardSales
+						ELSE otherSales
+					END
+		    	, 0)
+		    , #{currencyFraction}) AS salesTotal
+		FROM (
+			SELECT 'cash' AS label
+			UNION SELECT 'card' AS label
+			UNION SELECT 'other' AS label
+		) A
+		CROSS JOIN (
+			SELECT
+				SUM(IF(PAY_METHOD = 810001, sales, 0)) AS cashSales
+				, SUM(IF(PAY_METHOD = 810002, sales, 0)) AS cardSales
+				, SUM(IF(PAY_METHOD NOT IN (810001, 810002), sales, 0)) AS otherSales        
+			FROM (
+				SELECT
+					B.PAY_METHOD
+					, COALESCE(SUM(AMOUNT), 0) AS sales
+				FROM TB_SVC_SALES A
+				INNER JOIN TB_SVC_SALES_PAY B
+				ON A.ID = B.SALES_ID
+				WHERE 
+					A.STORE_ID = #{storeId}
+				AND A.SALES_ST = '809001'
+				AND B.SALES_ST IN ('809001', '809012')
+				AND A.SALES_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+				GROUP BY B.PAY_METHOD
+			) T
+		) B
+	</select>
+	
+	<select id="selectHourlySalesList" parameterType="map" resultType="SingleMap">
+		/* StoreStoreSalesMapper.selectHourlySalesList */
+		SELECT 
+			CONCAT(A.hour, '~', A.hour + 1, 'h') AS label			
+		    , ROUND(COALESCE(B.salesTotal, 0), #{currencyFraction}) AS salesTotal 
+		FROM (
+			SELECT 0 AS hour UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+			UNION SELECT 6 AS hour UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11
+			UNION SELECT 12 AS hour UNION SELECT 13 UNION SELECT 14 UNION SELECT 15 UNION SELECT 16 UNION SELECT 17
+			UNION SELECT 18 AS hour UNION SELECT 19 UNION SELECT 20 UNION SELECT 21 UNION SELECT 22 UNION SELECT 23
+		) A
+		LEFT JOIN (
+			SELECT 
+				HOUR(SALES_TM_LOCAL) AS hour
+				, SUM(SALES) AS salesTotal
+			FROM TB_SVC_SALES
+			WHERE
+				STORE_ID = #{storeId}
+			AND SALES_ST = '809001'
+			AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+			GROUP BY hour
+		) B
+		ON A.hour = B.hour
+		ORDER BY A.hour
+	</select>
+	
+	
+	<select id="selectDailyList" parameterType="map" resultType="SingleMap">
+		/* StoreStoreSalesMapper.selectDailyList */
+		SELECT
+			DATE_FORMAT(CL.YMD, '%Y-%m-%d') AS label
+			, ROUND(COALESCE(A.salesTotal, 0), #{currencyFraction}) AS salesTotal
+			, COALESCE(A.customerTotal, 0) AS customerTotal
+		FROM 
+			TB_BASE_CALENDAR CL
+		LEFT JOIN (
+			SELECT	
+				DATE(SALES_TM_LOCAL) AS YMD
+				, SUM(SALES) AS salesTotal
+				, SUM(CUSTOMER_CNT) AS customerTotal
+			FROM TB_SVC_SALES
+			WHERE
+				STORE_ID = #{storeId}
+			AND SALES_ST = '809001'
+			AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{pagination.startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{pagination.endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+			GROUP BY YMD
+		) A
+		ON CL.YMD = A.YMD
+		WHERE
+			CL.YMD BETWEEN #{pagination.startDate} AND #{pagination.endDate}
+		ORDER BY CL.YMD
+	</select>
+	
+	<select id="selectWeeklyList" parameterType="map" resultType="SingleMap">
+		/* StoreStoreSalesMapper.selectWeeklyList */		
+		SELECT
+			CONCAT(DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 0), '%X%V%w'), '%Y-%m-%d')
+				, ' ~ ' 
+		        , DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 6), '%X%V%w'), '%Y-%m-%d')
+			) AS label
+			, DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 0), '%X%V%w'), '%Y-%m-%d') AS startDate
+		    , DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 6), '%X%V%w'), '%Y-%m-%d') AS endDate   
+			, ROUND(COALESCE(A.salesTotal, 0), #{currencyFraction}) AS salesTotal
+			, COALESCE(A.customerTotal, 0) AS customerTotal
+		FROM 
+			TB_BASE_CALENDAR CL
+		LEFT JOIN (
+			SELECT	
+				YEARWEEK(SALES_TM_LOCAL) AS YEARWEEK
+				, SUM(SALES) AS salesTotal
+				, SUM(CUSTOMER_CNT) AS customerTotal
+			FROM TB_SVC_SALES
+			WHERE
+				STORE_ID = #{storeId}
+			AND SALES_ST = '809001'
+			AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{pagination.startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{pagination.endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+			GROUP BY YEARWEEK
+		) A
+		ON CL.YEARWEEK = A.YEARWEEK
+		WHERE
+			CL.YMD BETWEEN #{pagination.startDate} AND #{pagination.endDate}
+		GROUP BY CL.YEARWEEK
+		ORDER BY CL.YEARWEEK
+	</select>
+	
+	<select id="selectMonthlyList" parameterType="map" resultType="SingleMap">
+		/* StoreStoreSalesMapper.selectMonthlyList */		
+		SELECT
+			DATE_FORMAT(CL.YMD, '%Y-%m') AS label
+			, ROUND(COALESCE(A.salesTotal, 0), #{currencyFraction}) AS salesTotal
+			, COALESCE(A.customerTotal, 0) AS customerTotal
+		FROM 
+			TB_BASE_CALENDAR CL
+		LEFT JOIN (
+			SELECT	
+				YEAR(SALES_TM_LOCAL) AS YEAR
+				, MONTH(SALES_TM_LOCAL) AS MONTH
+				, SUM(SALES) AS salesTotal
+				, SUM(CUSTOMER_CNT) AS customerTotal
+			FROM TB_SVC_SALES
+			WHERE
+				STORE_ID = #{storeId}
+			AND SALES_ST = '809001'
+			AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{pagination.startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{pagination.endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+			GROUP BY YEAR, MONTH	
+		) A
+		ON CL.YEAR = A.YEAR
+			AND CL.MONTH = A.MONTH
+		WHERE
+			CL.YMD BETWEEN #{pagination.startDate} AND #{pagination.endDate}
+		GROUP BY CL.YEAR, CL.MONTH
+		ORDER BY CL.YEAR, CL.MONTH
+	</select>
+	
+	<select id="selectSalesBrandIdSalesId" parameterType="map" resultType="long">
+		/* StoreStoreSalesMapper.selectSalesBrandIdSalesId */
+		SELECT
+			BRAND_ID
+		FROM 
+			TB_SVC_SALES
+		WHERE 
+			ID = #{salesId}
+	</select>	
+	
+	
+	
+<!-- 	    <association column="{storeId = STORE_ID, brandId = BRAND_ID}" property="totalItemCount" javaType="int" select="getStoreSalesTotalItemCount"/> -->
+<!-- 	    <association column="{storeId = STORE_ID, brandId = BRAND_ID}" property="totalSales" javaType="int" select="getStoreSalesTotalSales"/> -->
+<!-- 	    <association column="{storeId = STORE_ID, brandId = BRAND_ID}" property="totalPageCount" javaType="int" select="getStoreSalesTotalPageCount"/> -->
+
+	<resultMap id="result" type="com.jc.pico.bean.SvcStoreSales">
+	    <result column="BRAND_ID" jdbcType="BIGINT" property="brandId" />
+	    <result column="STORE_ID" jdbcType="BIGINT" property="storeId" />
+	    <result column="TOTAL_ITEM_COUNT" jdbcType="INTEGER" property="totalItemCount" />
+	    <result column="TOTAL_SALES" jdbcType="INTEGER" property="totalSales" />
+	    <result column="TOTAL_PAGE_COUNT" jdbcType="INTEGER" property="totalPageCount" />
+	    <collection property="list" javaType="java.util.List" ofType="com.jc.pico.bean.SvcStoreSalesView" >
+		    <result column="ORDER_ID" jdbcType="BIGINT" property="orderId" />
+		    <result column="RECEIPT_NO" jdbcType="VARCHAR" property="receiptNo" />
+		    <result column="ITEM_COUNT" jdbcType="INTEGER" property="itemCount" />
+		    <result column="SALES" jdbcType="INTEGER" property="sales" />
+		    <result column="CARD_NO" jdbcType="VARCHAR" property="cardNo" />
+		    <result column="OPEN_DT" jdbcType="TIMESTAMP" property="openDt" />
+		    <result column="ORDER_TM_LOCAL" jdbcType="TIMESTAMP" property="orderTmLocal" />
+	    </collection>
+	</resultMap>
+	
+	<resultMap id="resultCount" type="com.jc.pico.bean.SvcStoreSales">
+	    <result column="TOTAL_ITEM_COUNT" jdbcType="INTEGER" property="totalItemCount" />
+	    <result column="TOTAL_SALES" jdbcType="INTEGER" property="totalSales" />
+	</resultMap>
+	
+	
+	<select id="getStoreSales" parameterType="map" resultMap="result">
+		SELECT     
+			BRAND_ID, STORE_ID, ORDER_ID, RECEIPT_NO, COUNT as ITEM_COUNT, SALES, ORDER_TM_LOCAL
+		FROM
+			(SELECT BRAND_ID, STORE_ID, ORDER_ID, ORDER_TM_LOCAL, RECEIPT_NO,
+				(SELECT COUNT(*) 
+				FROM TB_SVC_SALES_ITEM
+				WHERE SALES_ID = A.ID) COUNT,
+				SALES,
+			    <choose>
+			    	<when test="cardNo != null">
+						(SELECT COUNT(*) FROM TB_SVC_SALES_PAY WHERE SALES_ID = A.ID AND CARD_NO LIKE CONCAT('%', #{cardNo}, '%')) AS IS_CARD
+			    	</when>
+			    	<otherwise>
+			    		1 AS IS_CARD
+			    	</otherwise>
+			    </choose>
+			FROM 
+				TB_SVC_SALES A
+			WHERE
+				BRAND_ID = #{brandId}
+			AND
+				STORE_ID = #{storeId}
+		ORDER BY A.ID DESC
+		LIMIT 0, #{pageLimit}
+	</select>
+	
+	<select id="getStoreSalesTotalItemCount" parameterType="map" resultType="int">
+		SELECT
+			SUM((SELECT COUNT(*) FROM TB_SVC_SALES_ITEM WHERE SALES_ID = A.ID)) AS TOTAL_ITEM_COUNT
+		FROM
+			TB_SVC_SALES A
+		WHERE
+			A.STORE_ID = #{storeId}
+		AND
+			A.BRAND_ID = #{brandId}
+	</select>
+	
+	<select id="getStoreSalesTotalSales" parameterType="map" resultType="int">
+		SELECT
+			SUM(SALES) AS TOTAL_SALES
+		FROM
+			TB_SVC_SALES
+		WHERE
+			STORE_ID = #{storeId}
+		AND
+			BRAND_ID = #{brandId}
+	</select>
+	
+	<select id="getStoreSalesTotal" parameterType="map" resultMap="result">
+		SELECT     
+			TOTAL_ITEM_COUNT, TOTAL_SALES, TOTAL_PAGE_COUNT
+		FROM
+			TB_SVC_SALES
+		WHERE
+			STORE_ID = #{storeId}
+		AND
+			BRAND_ID = #{brandId}
+		<if  test="openDt != null">
+			AND
+				OPEN_DT = DATE_FORMAT(#{openDt}, %Y-%m-%D)
+		</if>
+		<if test="receiptNo != null">
+			AND
+				RECEIPT_NO = #{receiptNo}
+		</if>
+		<if test="cardNo != null">
+			AND
+				CARD_NO = #{cardNo}
+		</if>
+	</select>
+	
+	
+	
+	<resultMap id="resultInfo" type="com.jc.pico.bean.SvcStoreSalesInfo">
+	    <result column="ID" jdbcType="BIGINT" property="id" />
+	    <result column="ORDER_ID" jdbcType="BIGINT" property="orderId" />
+	    <result column="ORDER_NO" jdbcType="VARCHAR" property="orderNo" />
+	    <result column="STORE_ID" jdbcType="BIGINT" property="storeId" />
+	    <result column="ORDER_ST" jdbcType="VARCHAR" property="orderSt" />
+	    <result column="ORDER_ST_NM" jdbcType="VARCHAR" property="orderStNm" />
+	    <result column="STAFF_NM" jdbcType="VARCHAR" property="staffNm" />
+	    <result column="POS_NO" jdbcType="VARCHAR" property="posNo" />
+	    <result column="AMOUNT" jdbcType="DOUBLE" property="amount" />
+	    <result column="SALES_ST" jdbcType="VARCHAR" property="salesSt" />
+	    <result column="SALES_ST_NM" jdbcType="VARCHAR" property="salesStNm" />
+	    <association column="ID" property="totalCount" javaType="int" select="getTotalCount"/>
+	    <collection property="pays" javaType="java.util.List" ofType="com.jc.pico.bean.SvcStoreSalesDetail" resultMap="resultDetail" />
+	    <collection property="items" javaType="java.util.List" ofType="com.jc.pico.bean.SvcStoreSalesDetailItem" resultMap="resultDetailItem" />
+	</resultMap>
+	
+	<resultMap id="resultDetail" type="com.jc.pico.bean.SvcStoreSalesDetail">
+	    <result column="PAY_METHOD" jdbcType="VARCHAR" property="payMethod" />
+	    <result column="PAY_METHOD_NM" jdbcType="VARCHAR" property="payMethodNm" />
+	    <result column="CARD_NO" jdbcType="VARCHAR" property="cardNo" />
+	    <result column="CARD_INFO" jdbcType="VARCHAR" property="cardInfo" />
+	    <result column="MONTHLY_PLAIN" jdbcType="INTEGER" property="monthlyPlain" />
+	    <result column="TRAN_NO" jdbcType="VARCHAR" property="tranNo" />
+	    <result column="PG_KIND" jdbcType="VARCHAR" property="pgKind" />
+	    <result column="PAY_TM_LOCAL" jdbcType="TIMESTAMP" property="payTmLocal" />
+	</resultMap>
+	
+	<resultMap id="resultDetailItem" type="com.jc.pico.bean.SvcStoreSalesDetailItem">
+	    <result column="ID" jdbcType="VARCHAR" property="id" />
+	    <result column="ITEM_NM" jdbcType="VARCHAR" property="itemNm" />
+	    <result column="COUNT" jdbcType="INTEGER" property="count" />
+	    <result column="PRICE" jdbcType="DOUBLE" property="price" />
+	    <result column="OPT_PRICE" jdbcType="DOUBLE" property="optPrice" />
+	    <result column="SALES" jdbcType="DOUBLE" property="sales" />
+	    <result column="TAX" jdbcType="DOUBLE" property="tax" />
+	    <result column="NET_SALES" jdbcType="DOUBLE" property="netSales" />
+	    <result column="SMALL_IMAGE" jdbcType="VARCHAR" property="smallImage" />
+	    <result column="SMALL_IMAGE_VIEW" jdbcType="VARCHAR" property="smallImageView" />
+	    <result column="IMAGE" jdbcType="VARCHAR" property="image" />
+	    <result column="IMAGE_VIEW" jdbcType="VARCHAR" property="imageView" />
+	    <collection property="itemDtls" javaType="java.util.List" ofType="com.jc.pico.bean.SvcStoreSalesDetailItemDtl" resultMap="resultDetailItemDtl" />
+	</resultMap>
+	
+	<resultMap id="resultDetailItemDtl" type="com.jc.pico.bean.SvcStoreSalesDetailItemDtl">
+	    <result column="OPT_NM" jdbcType="VARCHAR" property="optNm" />
+	    <result column="OPT_DTL_NM" jdbcType="VARCHAR" property="optDtlNm" />
+	</resultMap>
+	
+	
+	
+	<select id="getStoreSalesDtl" parameterType="map" resultMap="resultInfo">
+		SELECT DISTINCT
+			A.ID, A.ORDER_ID, A.ORDER_NO, A.ORDER_ST, A.POS_NO, A.SALES_ST,
+            (SELECT TITLE AS ORDER_ST_NM FROM TB_BASE_BCODE WHERE BASE_CD = A.ORDER_ST)AS ORDER_ST_NM, 
+            (SELECT TITLE AS SALES_ST_NM FROM TB_BASE_BCODE WHERE BASE_CD = A.SALES_ST)AS SALES_ST_NM, 
+			B.PAY_TM_LOCAL, B.PAY_METHOD,
+            (SELECT TITLE AS PAY_METHOD_NM FROM TB_BASE_BCODE WHERE BASE_CD = B.PAY_METHOD)AS PAY_METHOD_NM,
+            B.CARD_INFO, B.CARD_NO, B.TRAN_NO, B.MONTHLY_PLAIN, B.PG_KIND, B.AMOUNT,
+			C.ID, C.ITEM_NM, C.PRICE, C.COUNT, C.OPT_PRICE, C.SALES, C.TAX, C.NET_SALES,
+			D.OPT_NM, D.OPT_DTL_NM,
+			E.SMALL_IMAGE, E.SMALL_IMAGE_VIEW, E.IMAGE, E.IMAGE_VIEW,
+			(SELECT F.NAME AS STAFF_NM FROM TB_SVC_STAFF F WHERE F.ID = A.STAFF_ID) AS STAFF_NM
+		FROM
+			TB_SVC_SALES A
+		LEFT JOIN TB_SVC_SALES_PAY B
+			ON A.ID = B.SALES_ID
+		LEFT JOIN TB_SVC_SALES_ITEM C
+			ON A.ID = C.SALES_ID
+		LEFT JOIN TB_SVC_SALES_ITEM_OPT D
+			ON C.ID = D.ITEM_ID
+		LEFT JOIN TB_SVC_ITEM_IMG E
+			ON C.ITEM_ID = E.ITEM_ID
+		WHERE
+			A.ORDER_ID = #{orderId}
+		AND
+			A.BRAND_ID = #{brandId}
+		AND
+			A.STORE_ID = #{storeId}
+	</select>
+	
+	
+	<select id="getTotalCount" parameterType="map" resultType="int">
+		SELECT
+			COUNT(COUNT) as TOTAL_COUNT
+		FROM
+			TB_SVC_SALES_ITEM
+		WHERE
+			SALES_ID = #{id}
+	</select>
+
+</mapper>

@@ -1,0 +1,63 @@
+<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title" id="myLargeModalLabel">{{i18n.BO2454}}</h4>
+		</div>
+		<div class="modal-body" id="modal-form">
+			<div class="col-md-6">
+				<div class="panel panel-white">
+					<div class="panel-body">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>{{i18n.BO0024}}</th>
+									<th>{{i18n.BO2116}}</th>
+									<th>{{i18n.BO2239}}</th>
+								</tr>
+							</thead>
+							<tbody>
+							{{#list}}
+								<tr>
+									<td><input type="radio" name="rOptId" value="{{id}}" id="rOptId_{{id}}"></td>
+									<td>{{id}}</td>
+									<td>
+										<label for="rOptId_{{id}}">
+										<button type="button" class="btn btn-xs btn-success getItemOptDataDtl" id="getItemOpt_{{id}}">{{name}}</button>
+										</label>
+									</td>
+								</tr>
+							{{/list}}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="panel panel-white">
+					<div class="panel-body">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>{{i18n.BO2394}}</th>
+									<th>{{i18n.BO2215}}</th>
+								</tr>
+							</thead>
+							<tbody id="getDtlDataTr">
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer" style="border: 0;">
+			<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+			<button type="submit" class="btn btn-primary" id="getOtherItemOptDataSave">{{i18n.BO2228}}</button>
+		</div>
+	</div>
+
+</div>
+
+

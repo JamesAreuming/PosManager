@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.jc.pico.utils.customMapper.store.StoreServiceSalesMapper">
+
+	<select id="selectServiceTotal" parameterType="map" resultType="SingleMap">
+		/* StoreServiceSalesMapper.selectServiceTotal */
+		SELECT 
+			COUNT(*) AS orderTotal
+		    , ROUND(COALESCE(SUM(SALES), 0), #{currencyFraction}) AS salesTotal
+		FROM 
+			TB_SVC_SALES
+		WHERE
+			STORE_ID = #{storeId}
+		AND SALES_ST = '809001'
+		AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+	</select>	
+	
+	<select id="selectOfflineServiceTotal" parameterType="map" resultType="SingleMap">
+		/* StoreServiceSalesMapper.selectOfflineServiceTotal */
+		SELECT 
+			COUNT(*) AS orderTotal
+		    , ROUND(COALESCE(SUM(SALES), 0), #{currencyFraction}) AS salesTotal
+		FROM 
+			TB_SVC_SALES
+		WHERE
+			STORE_ID = #{storeId}
+		AND SALES_ST = '809001'
+		AND PATH_TP != '606002'
+		AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+	</select>
+	
+	<select id="selectOfflineServiceList" parameterType="map" resultType="SingleMap">
+		/* StoreServiceSalesMapper.selectOfflineServiceList */
+		SELECT 
+			POS_NO AS label
+			, COUNT(*) AS orderTotal
+		    , ROUND(COALESCE(SUM(SALES), 0), #{currencyFraction}) AS salesTotal
+		FROM 
+			TB_SVC_SALES
+		WHERE
+			STORE_ID = #{storeId}
+		AND SALES_ST = '809001'
+		AND PATH_TP != '606002'
+		AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+		GROUP BY POS_NO
+		ORDER BY POS_NO
+	</select>
+	
+	<select id="selectOnlineServiceTotal" parameterType="map" resultType="SingleMap">
+		/* StoreServiceSalesMapper.selectOnlineServiceTotal */
+		SELECT 
+			COUNT(*) AS orderTotal
+		    , ROUND(COALESCE(SUM(SALES), 0), #{currencyFraction}) AS salesTotal
+		FROM 
+			TB_SVC_SALES
+		WHERE
+			STORE_ID = #{storeId}
+		AND SALES_ST = '809001'
+		AND PATH_TP = '606002'
+		AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)		
+	</select>
+	
+	<select id="selectOnlineServiceList" parameterType="map" resultType="SingleMap">
+		/* StoreServiceSalesMapper.selectOnlineServiceList */
+		SELECT 
+			B.ALIAS AS label
+			, COUNT(*) AS orderTotal
+		    , ROUND(COALESCE(SUM(A.SALES), 0), #{currencyFraction}) AS salesTotal
+		FROM 
+			TB_SVC_SALES A
+		INNER JOIN TB_BASE_BCODE B
+		ON A.ORDER_TP = B.BASE_CD
+		WHERE
+			A.STORE_ID = #{storeId}
+		AND A.SALES_ST = '809001'
+		AND A.PATH_TP = '606002'
+		AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+		GROUP BY A.ORDER_TP
+		ORDER BY A.ORDER_TP				
+	</select>	
+
+</mapper>

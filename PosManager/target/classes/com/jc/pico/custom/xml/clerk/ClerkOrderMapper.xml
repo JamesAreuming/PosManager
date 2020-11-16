@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jc.pico.utils.customMapper.clerk.ClerkOrderMapper">
+
+	<select id="selectOrderSimpleByOrderId" parameterType="SingleMap" resultType="SingleMap">
+		/* ClerkOrderMappe.selectOrderSimpleByOrderId */
+		SELECT
+			ID AS id
+		    , ORDER_TP AS orderTp
+		    , ORDER_TM_LOCAL AS orderTmLocal
+		    , SALES AS sales
+		    , CUSTOMER_CNT AS customerCnt    
+		FROM 
+			TB_SVC_ORDER
+		WHERE
+			ID = #{orderId}	
+		AND ORDER_ST NOT IN ('607003', '607004') /* cancel, reject */
+		AND LAST_ST != '951004' /* delete */
+	</select>
+	
+	<select id="selectOrderItemSimpleListByOrderId" parameterType="SingleMap" resultType="SingleMap">
+		/* ClerkOrderMappe.selectOrderItemSimpleListByOrderId*/
+		SELECT 
+		    ITEM_NM AS itemNm
+		    , COUNT AS count
+		FROM
+		    TB_SVC_ORDER_ITEM
+		WHERE
+		    ORDER_ID = #{orderId}
+		AND LAST_ST != '951004' /* delete */
+		ORDER BY ID
+	</select>
+	
+	<select id="selectOrderStById" parameterType="long" resultType="string">
+		/* ClerkOrderMappe.selectOrderStById*/
+		SELECT 
+		    ORDER_ST
+		FROM
+		    TB_SVC_ORDER
+		WHERE
+		    ID = #{orderId}
+	</select>
+
+</mapper>

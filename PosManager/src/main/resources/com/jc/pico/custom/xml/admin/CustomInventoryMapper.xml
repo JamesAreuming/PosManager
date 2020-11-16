@@ -1,0 +1,977 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: CustomMarketingMapper.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History	: 
+  ~
+  ~ Version	: 1.0
+  ~ Author   : 
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jc.pico.utils.customMapper.admin.CustomInventoryMapper">
+  <sql id="getLimitPagination">
+        <if test="start != null and length != null">
+            LIMIT ${start}, ${length}
+          </if>
+    </sql>
+    <!-- Stock Import -->
+    <sql id="getStockImportList_Where">
+        WHERE 
+          1 = 1
+      <if test="brandId != null">
+        AND BRAND_ID = #{brandId}
+       </if>
+       <if test="storeId != null">
+        AND  STORE_ID = #{storeId}
+       </if>
+       <if test="fromdate != null and todate != null">
+        AND STOCK_DT BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+      </if>
+    </sql>
+    
+    <resultMap id="StockImportMap" type="java.util.LinkedHashMap">
+        <id column="ID" jdbcType="BIGINT" property="id" />
+        <result column="BRAND_ID" jdbcType="BIGINT" property="brandId" />
+        <result column="STORE_ID" jdbcType="BIGINT" property="storeId" />
+        <result column="SUPPLY_ID" jdbcType="BIGINT" property="supplyId" />
+        <result column="ITEM_ID" jdbcType="BIGINT" property="itemId" />
+        <result column="STOCK_DT" jdbcType="TIMESTAMP" property="stockDt" />
+        <result column="STOCK_CNT" jdbcType="INTEGER" property="stockCnt" />
+        <result column="CURRENT_CNT" jdbcType="INTEGER" property="currentCnt" />
+        <result column="UNIT_PRICE" jdbcType="DOUBLE" property="unitPrice" />
+        <result column="TOTAL_PRICE" jdbcType="DOUBLE" property="totalPrice" />
+        <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+        <result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />
+        <result column="ITEM_CD" jdbcType="VARCHAR" property="itemCd" />
+        <result column="ITEM_NM" jdbcType="VARCHAR" property="itemNm" />
+        <result column="SUPPLY_NM" jdbcType="VARCHAR" property="supplyNm" />
+    </resultMap>
+    
+    <select id="getStockImportList" parameterType="hashMap" resultMap="StockImportMap">
+    SELECT *
+    FROM (
+        SELECT
+           A.*
+          ,(SELECT ITEM_CD FROM TB_SVC_ITEM WHERE ID = A.ITEM_ID) AS ITEM_CD
+          ,(SELECT NAME FROM TB_SVC_ITEM WHERE ID = A.ITEM_ID) AS ITEM_NM
+          ,(SELECT COMPANY_NM FROM TB_SVC_SUPPLY_COMPANY WHERE ID = A.SUPPLY_ID) AS SUPPLY_NM
+        FROM
+           TB_SVC_STOCK_IMPORT A
+       <include refid="getStockImportList_Where" /> ) B
+       WHERE
+          1 = 1
+        <if test="searchKeywordType == 'itemCd'">
+          <if test="searchKeyword != null">
+            AND ITEM_CD LIKE CONCAT('%', #{searchKeyword}, '%')
+          </if>
+        </if>
+        <if test="searchKeywordType == 'itemNm'">
+          <if test="searchKeyword != null">
+            AND ITEM_NM LIKE CONCAT('%', #{searchKeyword}, '%')
+          </if>
+        </if>
+       <if test="orderby != null">
+        ORDER BY ${orderby}
+       </if>
+       <if test="orderby == null">
+        ORDER BY STOCK_DT DESC
+       </if>
+       <if test="start != null and length != null">
+        LIMIT ${start}, ${length}
+       </if>
+    </select>
+    
+    <select id="getStockImportListCount" parameterType="hashMap" resultType="int">
+      SELECT 
+          COUNT(*)
+       FROM ( 
+            SELECT
+			           (SELECT ITEM_CD FROM TB_SVC_ITEM WHERE ID = A.ITEM_ID) AS ITEM_CD
+			          ,(SELECT NAME FROM TB_SVC_ITEM WHERE ID = A.ITEM_ID) AS ITEM_NM
+		        FROM
+			           TB_SVC_STOCK_IMPORT A 
+			      <include refid="getStockImportList_Where" />) B
+			  WHERE
+			     1 = 1
+       <if test="searchKeywordType == 'itemCd'">
+          <if test="searchKeyword != null">
+            AND B.ITEM_CD LIKE CONCAT('%', #{searchKeyword}, '%')
+          </if>
+        </if>
+        <if test="searchKeywordType == 'itemNm'">
+          <if test="searchKeyword != null">
+            AND B.ITEM_NM LIKE CONCAT('%', #{searchKeyword}, '%')
+          </if>
+        </if>
+    </select>    
+    
+    <insert id="insertStockImportCSV" parameterType="java.util.Map">
+	    INSERT INTO TB_SVC_STOCK_IMPORT(BRAND_ID, STORE_ID, SUPPLY_ID, ITEM_ID, STOCK_DT, STOCK_CNT, CURRENT_CNT, UNIT_PRICE, TOTAL_PRICE, CREATED, UPDATED)
+	    VALUES
+	    <foreach collection="list" item="item" separator=",">
+	        (#{item.brandId}, #{item.storeId}, #{item.supplyId}, #{item.itemId}, #{item.stockDt}, #{item.stockCnt}, #{item.currentCnt}, #{item.unitPrice}, #{item.totalPrice}, NOW(), NOW())
+	    </foreach>
+    </insert>  
+    
+    <!-- Stock Adjust -->
+    <sql id="getStockAdjustList_Where">
+        WHERE 
+          1 = 1
+      <if test="brandId != null">
+        AND BRAND_ID = #{brandId}
+       </if>
+       <if test="storeId != null">
+        AND  STORE_ID = #{storeId}
+       </if>
+       <if test="fromdate != null and todate != null">
+        AND CREATED BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+        </if>
+    </sql>
+    
+    <resultMap id="StockAdjustMap" type="java.util.LinkedHashMap">
+        <id column="ID" property="id" jdbcType="BIGINT" />
+        <result column="BRAND_ID" property="brandId" jdbcType="BIGINT" />
+        <result column="STORE_ID" property="storeId" jdbcType="BIGINT" />
+        <result column="ITEM_ID" property="itemId" jdbcType="BIGINT" />
+        <result column="SAFE_CNT" property="safeCnt" jdbcType="INTEGER" />
+        <result column="CURRENT_CNT" property="currentCnt" jdbcType="INTEGER" />
+        <result column="ACTUAL_CNT" property="actualCnt" jdbcType="INTEGER" />
+        <result column="GAP_CNT" property="gapCnt" jdbcType="INTEGER" />
+        <result column="CREATED" property="created" jdbcType="TIMESTAMP" />
+        <result column="UPDATED" property="updated" jdbcType="TIMESTAMP" />
+        <result column="ITEM_CD" jdbcType="VARCHAR" property="itemCd" />
+        <result column="ITEM_NM" jdbcType="VARCHAR" property="itemNm" />
+    </resultMap>
+    
+    <select id="getStockAdjustList" parameterType="hashMap" resultMap="StockAdjustMap">
+        SELECT *
+        FROM(SELECT A.*
+		          , (SELECT ITEM_CD FROM TB_SVC_ITEM WHERE ID = A.ITEM_ID) AS ITEM_CD
+		          , (SELECT NAME FROM TB_SVC_ITEM WHERE ID = A.ITEM_ID) AS ITEM_NM
+		        FROM TB_SVC_STOCK_ADJUST A
+		       <include refid="getStockAdjustList_Where" />
+		    ) B
+		    WHERE
+		        1 = 1
+         <if test="searchKeywordType == 'itemCd'">
+	         <if test="searchKeyword != null">
+	           AND ITEM_CD LIKE CONCAT('%', #{searchKeyword}, '%')
+	         </if>
+	       </if>
+	       <if test="searchKeywordType == 'itemNm'">
+	         <if test="searchKeyword != null">
+	           AND ITEM_NM LIKE CONCAT('%', #{searchKeyword}, '%')
+	         </if>
+	       </if>
+       <if test="orderby != null">
+        ORDER BY ${orderby}
+       </if>
+       <if test="start != null and length != null">
+        LIMIT ${start}, ${length}
+       </if>
+    </select>
+    
+    <select id="getStockAdjustListCount" parameterType="hashMap" resultType="int">
+         SELECT 
+            COUNT(*)
+        FROM(SELECT A.*
+              , (SELECT ITEM_CD FROM TB_SVC_ITEM WHERE ID = A.ITEM_ID) AS ITEM_CD
+              , (SELECT NAME FROM TB_SVC_ITEM WHERE ID = A.ITEM_ID) AS ITEM_NM
+            FROM TB_SVC_STOCK_ADJUST A
+           <include refid="getStockAdjustList_Where" />
+        ) B
+        WHERE
+            1 = 1
+         <if test="searchKeywordType == 'itemCd'">
+           <if test="searchKeyword != null">
+             AND ITEM_CD LIKE CONCAT('%', #{searchKeyword}, '%')
+           </if>
+         </if>
+         <if test="searchKeywordType == 'itemNm'">
+           <if test="searchKeyword != null">
+             AND ITEM_NM LIKE CONCAT('%', #{searchKeyword}, '%')
+           </if>
+         </if>
+    </select>
+    
+    <!-- Supply Company -->
+	<resultMap id="supplyCompanyListMap" type="java.util.LinkedHashMap"  autoMapping="false">
+    <id        column="ID"                                 property="id"                       jdbcType="BIGINT" />
+    <result column="FRAN_ID"                 property="franId"            jdbcType="BIGINT" />
+    <result column="BRAND_ID"                 property="brandId"            jdbcType="BIGINT" />
+    <result column="STORE_ID"                  property="storeId"             jdbcType="BIGINT" />
+    <result column="BIZ_NO"                        property="bizNo"               jdbcType="CHAR" />
+    <result column="COMPANY_CD"         property="companyCd"   jdbcType="CHAR" />
+    <result column="COMPANY_NM"         property="companyNm"   jdbcType="CHAR" />
+    <!-- <result column="SVC_ST"                       property="svcSt"                jdbcType="CHAR" /> -->
+    <result column="CEO_NM"                     property="ceoNm"             jdbcType="CHAR" />
+    <result column="EMAIL"                          property="email"                jdbcType="CHAR"  typeHandler="com.jc.pico.utils.AES256Cipher"/>
+    <!-- <result column="MB_COUNTRY_CD"  property="mbCountryCd" jdbcType="CHAR" /> -->
+    <result column="MB"                                 property="mb"                    jdbcType="CHAR"   typeHandler="com.jc.pico.utils.mybatis.typehandler.MobileSecurityTypeHandler"/>
+    <!-- <result column="FAX_COUNTRY_CD" property="faxCountryCd" jdbcType="CHAR"/> -->
+    <result column="FAX"                               property="fax"                     jdbcType="CHAR" />
+    <!-- <result column="TEL_COUNTRY_CD" property="telCountryCd"  jdbcType="CHAR" /> --> 
+     <result column="TEL"                                property="tel"                     jdbcType="CHAR" />
+     <result column="ADDR1"                         property = "addr1"             jdbcType="CHAR" />
+    <result column="ADDR2"                         property="addr2"               jdbcType="CHAR" />
+    <!-- <result column="ZIP"                                 property="zip"                    jdbcType="CHAR" />  -->
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+  </resultMap>
+
+  <!--  공급사 목록 -->
+  <select id="getSupplyCompanyList" parameterType="hashMap" resultMap="supplyCompanyListMap">
+    SELECT
+       ID
+      ,FRAN_ID
+      ,BRAND_ID
+      ,STORE_ID
+      ,BIZ_NO
+      ,TEL
+  	  ,COMPANY_CD
+  	  ,COMPANY_NM
+  	  ,EMAIL
+  	  ,TEL
+  	  ,CEO_NM
+  	  ,MB
+  	  ,FAX
+  	  ,ADDR1
+  	  ,ADDR2
+  	  ,CREATED
+    FROM
+       TB_SVC_SUPPLY_COMPANY
+    WHERE 
+      1 = 1
+       <if test="id != null">
+        AND ID = #{id}
+       </if>
+       <if test="franId != null">
+        AND FRAN_ID = ${franId}
+       </if>
+       <if test="brandId != null">
+        AND BRAND_ID = ${brandId}
+       </if>
+      <if test="brandId != null">
+        AND BRAND_ID = ${brandId}
+       </if>
+       <if test="storeId != null">
+        AND  STORE_ID = ${storeId}
+       </if>
+       <if test="searchkeywordType == 'companyCd'">
+          <if test="searchKeyword != null">
+              AND COMPANY_CD like CONCAT ('%', #{searchKeyword}, '%') 
+          </if>
+       </if>
+       
+         <if test="searchkeywordType == 'companyNm'">
+          <if test="searchKeyword != null">
+              AND COMPANY_NM like CONCAT ('%', #{searchKeyword}, '%') 
+          </if>
+       </if>
+       
+         <if test="searchkeywordType == 'bizNo'">
+          <if test="searchKeyword != null">
+              AND BIZ_NO like CONCAT ('%', #{searchKeyword}, '%') 
+          </if>
+       </if>
+       <choose>
+          <when test="orderby != null">
+              ORDER BY ${orderby}
+          </when>
+          <when test="orderby == null">
+             ORDER BY CREATED DESC
+          </when>
+       </choose>
+       <if test="start != null and length != null">
+        LIMIT ${start}, ${length}
+       </if> 
+  </select>
+  
+  <!--  공급사 전체 갯수  -->
+  <select id="getCountSupplyCompanyList" parameterType="hashMap" resultType="int">
+   SELECT
+      COUNT(*)
+    FROM
+       TB_SVC_SUPPLY_COMPANY
+    WHERE 
+      1 = 1
+       <if test="id != null">
+        AND ID = #{id}
+       </if>
+       <if test="franId != null">
+        AND FRAN_ID = ${franId}
+       </if>
+       <if test="brandId != null">
+        AND BRAND_ID = ${brandId}
+       </if>
+      <if test="brandId != null">
+        AND BRAND_ID = ${brandId}
+       </if>
+       <if test="storeId != null">
+        AND  STORE_ID = ${storeId}
+       </if>
+       <if test="searchkeywordType == 'companyCd'">
+          <if test="searchKeyword != null">
+              AND COMPANY_CD like CONCAT ('%', #{searchKeyword}, '%') 
+          </if>
+       </if>
+       
+         <if test="searchkeywordType == 'companyNm'">
+          <if test="searchKeyword != null">
+              AND COMPANY_NM like CONCAT ('%', #{searchKeyword}, '%') 
+          </if>
+       </if>
+       
+         <if test="searchkeywordType == 'bizNo'">
+          <if test="searchKeyword != null">
+              AND BIZ_NO like CONCAT ('%', #{searchKeyword}, '%') 
+          </if>
+       </if>
+  </select>
+  
+	<!-- 출고조회 카운트 -->
+	<select id="getStockExportListCount" parameterType="hashMap" resultType="int">
+    SELECT	COUNT(1)
+		FROM   (
+		        SELECT	ITEM_ID,
+						ITEM_NM,
+		            	DATE(T1.ORDER_TM_LOCAL) AS YMD,
+						COALESCE(SUM(t2.COUNT),0) AS VALUE
+				FROM 	TB_SVC_SALES T1
+				INNER 	JOIN tb_svc_sales_item T2 ON T1.ID = T2.SALES_ID
+				INNER 	JOIN tb_svc_item 	   T3 ON T2.ITEM_ID = T3.ID
+				WHERE	T1.ORDER_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) 
+						AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+						AND T3.IS_STOCK_USE = 1
+						AND T3.ITEM_TP = '818008'
+						<include refid="getStockExportList_Where" />
+				<if test="searchKeywordType == 'itemCd'">
+          <if test="searchKeyword != null">
+            AND T3.ITEM_CD LIKE CONCAT('%', #{searchKeyword}, '%')
+          </if>
+        </if>
+        <if test="searchKeywordType == 'itemNm'">
+          <if test="searchKeyword != null">
+            AND T3.NAME LIKE CONCAT('%', #{searchKeyword}, '%')
+          </if>
+        </if>
+				GROUP BY ITEM_ID
+		) T1	
+	</select>
+	
+	<!-- 출고조회 리스트-->
+	<select id="getStockExportList" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+        SELECT
+        T3.ITEM_CD,
+				ITEM_NM,
+		       	DATE(T1.ORDER_TM_LOCAL) AS YMD,
+				COALESCE(SUM(t2.COUNT),0) AS VALUE
+		FROM 	TB_SVC_SALES T1
+		INNER 	JOIN tb_svc_sales_item T2 ON T1.ID = T2.SALES_ID
+		INNER 	JOIN tb_svc_item 	   T3 ON T2.ITEM_ID = T3.ID
+		WHERE	T1.ORDER_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) 
+				AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+				AND T3.IS_STOCK_USE = 1
+				AND T3.ITEM_TP = '818008'
+				<include refid="getStockExportList_Where" />
+		  <if test="searchKeywordType == 'itemCd'">
+        <if test="searchKeyword != null">
+          AND T3.ITEM_CD LIKE CONCAT('%', #{searchKeyword}, '%')
+        </if>
+      </if>
+      <if test="searchKeywordType == 'itemNm'">
+        <if test="searchKeyword != null">
+          AND T3.NAME LIKE CONCAT('%', #{searchKeyword}, '%')
+        </if>
+      </if>
+		GROUP BY ITEM_ID	
+		
+		<if test="orderby != null and length != null">
+        ORDER BY ${orderby}
+       	</if> 
+        <if test="start != null and length != null">
+        LIMIT ${start}, ${length}
+       	</if> 
+	</select>
+	
+
+	<sql id="getStockExportList_Where">
+		<if test="brandId != null">
+        	AND T1.BRAND_ID = #{brandId}
+       </if>
+       <if test="storeId != null">
+        	AND  T1.STORE_ID = #{storeId}
+       </if>
+    </sql>
+    
+    <!-- 재고현황 카운트 -->
+    <select id="getStockSatusListCount" parameterType="hashMap" resultType="int">
+    SELECT
+        COUNT(*)
+    FROM ( 
+          SELECT BRAND_ID,
+             STORE_ID,
+             ITEM_ID,
+             ITEM_CD,
+             ITEM_NAME,
+             BASE_CNT,
+             IMPORT_CNT,
+             EXPORT_CNT,
+             ADJUST_CNT,
+             BASE_CNT + IMPORT_CNT - EXPORT_CNT + ADJUST_CNT  AS STOCK_CNT,
+             SAFE_STOCK_CNT
+        FROM (
+            SELECT   T1.BRAND_ID,
+                 T1.STORE_ID,
+                 T1.ID AS ITEM_ID,
+                 T1.ITEM_CD,
+                 T1.NAME AS ITEM_NAME,
+                 C1.ID, 
+                 COALESCE(T5.BASE_CNT  , 0) AS BASE_CNT,
+                 COALESCE(T3.IMPORT_CNT,0) AS IMPORT_CNT,
+                 COALESCE(T2.EXPORT_CNT,0) AS EXPORT_CNT,
+                 COALESCE(T4.ADJUST_CNT,0) AS ADJUST_CNT,
+                 T1.SAFE_STOCK_CNT
+            FROM TB_SVC_ITEM T1
+            LEFT JOIN TB_SVC_ITEM_CAT C1 ON C1.ID = T1.CAT_ID
+            LEFT JOIN (
+                SELECT  ITEM_ID,
+                    ITEM_NM,
+                    BRAND_ID,
+                    STORE_ID,
+                    COALESCE(SUM(t2.COUNT),0) AS EXPORT_CNT
+                FROM TB_SVC_SALES AA
+                INNER JOIN tb_svc_sales_item T2 ON AA.ID = T2.SALES_ID
+                WHERE
+                      1 = 1
+                 <if test="fromdate != null and todate != null">
+						       AND (<![CDATA[ SALES_TM_LOCAL >= '${fromdate}' AND SALES_TM_LOCAL <= '${todate}' ]]> )
+						      </if>
+                GROUP BY ITEM_ID
+            ) T2 ON T1.ID = T2.ITEM_ID AND T1.BRAND_ID = T2.BRAND_ID AND T1.STORE_ID = T2.STORE_ID 
+            LEFT JOIN (
+                SELECT  BRAND_ID,STORE_ID, ITEM_ID, COALESCE(SUM(STOCK_CNT),0) AS IMPORT_CNT
+                FROM  tb_svc_stock_import
+                WHERE   
+                     1 = 1
+                 <if test="fromdate != null and todate != null">
+                   AND (<![CDATA[ STOCK_DT >= '${fromdate}' AND STOCK_DT <= '${todate}' ]]> )
+                  </if>
+                GROUP BY ITEM_ID
+            ) T3 ON T1.ID = T3.ITEM_ID AND T1.BRAND_ID = T3.BRAND_ID AND T1.STORE_ID = T3.STORE_ID 
+            LEFT JOIN (
+                SELECT  BRAND_ID,STORE_ID, ITEM_ID, COALESCE(SUM(GAP_CNT),0) AS ADJUST_CNT
+                FROM  tb_svc_stock_adjust
+                WHERE 
+                1 = 1
+                 <if test="fromdate != null and todate != null">
+                   AND (<![CDATA[ UPDATED >= '${fromdate}' AND UPDATED <= '${todate}' ]]> )
+                  </if>
+                GROUP BY ITEM_ID
+            ) T4 ON T1.ID = T4.ITEM_ID AND T1.BRAND_ID = T4.BRAND_ID AND T1.STORE_ID = T4.STORE_ID 
+            LEFT outer JOIN (
+				SELECT	BRAND_ID,	STORE_ID,
+						ITEM_ID,	COALESCE(SUM(BASE_CNT), 0) AS BASE_CNT
+				FROM	tb_svc_stock_closing
+				WHERE	1 = 1					
+						AND CLOSING_DT	BETWEEN DATE_ADD(DATE_ADD(LAST_DAY(DATE_ADD('${fromdate}', INTERVAL -2 MONTH)),INTERVAL +1 DAY), INTERVAL 0 SECOND)
+										AND DATE_ADD(LAST_DAY(DATE_ADD('${todate}', INTERVAL -1 MONTH)),INTERVAL '23:59:59' HOUR_SECOND)
+				GROUP BY BRAND_ID,STORE_ID,ITEM_ID,CLOSING_DT
+			) T5    ON 	T1.ID = T5.ITEM_ID	
+					AND T1.BRAND_ID = T5.BRAND_ID
+					AND T1.STORE_ID = T5.STORE_ID
+        WHERE IS_STOCK_USE = 1
+        AND ITEM_TP = '818008'
+        <if test="itemCat != null">
+          AND C1.ID = ${itemCat}
+        </if>
+        <if test="brandId != null">
+            AND T1.BRAND_ID = ${brandId}
+        </if>
+        <if test="storeId != null">
+            AND T1.STORE_ID = ${storeId}
+        </if>
+            <if test="searchKeywordType == 'itemCd'">
+          <if test="searchKeyword != null">
+            AND T1.ITEM_CD LIKE CONCAT('%', #{searchKeyword}, '%')
+          </if>
+        </if>
+        <if test="searchKeywordType == 'itemNm'">
+          <if test="searchKeyword != null">
+            AND T1.NAME LIKE CONCAT('%', #{searchKeyword}, '%')
+          </if>
+        </if>
+        <if test="status != null">
+          AND T1.STATUS = ${status}
+        </if>
+        ) TT 
+      ) TS
+      WHERE
+          1 = 1
+    <if test="stockStatus != null">
+     <choose>
+       <when test="stockStatus == 'underSafeStockCnt'">  <!--  현재 재고가 안전 재고 보다 작을 때 -->
+         <![CDATA[ AND STOCK_CNT < SAFE_STOCK_CNT ]]> 
+       </when>
+       <when test="stockStatus == 'overZeroCnt'">    <!-- 현재 재고가 0개 이상일 때 -->
+         <![CDATA[ AND STOCK_CNT > 0 ]]> 
+       </when>
+       <when test="stockStatus == 'underZeroCnt'"> <!-- 현재 재고가 0개 미만일 때 -->
+         <![CDATA[ AND STOCK_CNT < 0 ]]>
+       </when>
+     </choose>
+    </if>
+    </select>
+    
+    <!-- 재고현황 조회 리스트 -->
+    <select id="getStockSatusList" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+    SELECT *
+    FROM ( 
+			    SELECT 
+			       BRAND_ID,
+						 STORE_ID,
+						 ITEM_ID,
+						 ITEM_CD,
+						 ITEM_NAME,
+						 BASE_CNT,
+						 IMPORT_CNT,
+						 EXPORT_CNT,
+						 ADJUST_CNT,
+						 BASE_CNT + IMPORT_CNT - EXPORT_CNT + ADJUST_CNT  AS STOCK_CNT,
+						 SAFE_STOCK_CNT
+				FROM (
+						SELECT	 T1.BRAND_ID,
+								 T1.STORE_ID,
+								 T1.ID AS ITEM_ID,
+								 T1.ITEM_CD,
+								 T1.NAME AS ITEM_NAME,
+								 C1.ID,
+								 COALESCE(T5.BASE_CNT  , 0) AS BASE_CNT,
+								 COALESCE(T3.IMPORT_CNT,0) AS IMPORT_CNT,
+								 COALESCE(T2.EXPORT_CNT,0) AS EXPORT_CNT,
+								 COALESCE(T4.ADJUST_CNT,0) AS ADJUST_CNT,
+								 T1.SAFE_STOCK_CNT
+						FROM TB_SVC_ITEM T1
+						LEFT JOIN TB_SVC_ITEM_CAT C1 ON C1.ID = T1.CAT_ID
+						LEFT JOIN (
+								SELECT	ITEM_ID,
+										ITEM_NM,
+										BRAND_ID,
+										STORE_ID,
+										COALESCE(SUM(t2.COUNT),0) AS EXPORT_CNT
+								FROM TB_SVC_SALES AA
+								INNER JOIN tb_svc_sales_item T2 ON AA.ID = T2.SALES_ID
+								WHERE 
+								  1 = 1
+                 <if test="fromdate != null and todate != null">
+                   AND (<![CDATA[ SALES_TM_LOCAL >= '${fromdate}' AND SALES_TM_LOCAL <= '${todate}' ]]> )
+                  </if>
+								GROUP BY ITEM_ID
+						) T2 ON T1.ID = T2.ITEM_ID AND T1.BRAND_ID = T2.BRAND_ID AND T1.STORE_ID = T2.STORE_ID 
+						LEFT JOIN (
+								SELECT	BRAND_ID,STORE_ID, ITEM_ID, COALESCE(SUM(STOCK_CNT),0) AS IMPORT_CNT
+								FROM 	tb_svc_stock_import
+								WHERE 	
+								    1 = 1
+					                 <if test="fromdate != null and todate != null">
+					                   AND (<![CDATA[ STOCK_DT >= '${fromdate}' AND STOCK_DT <= '${todate}' ]]> )
+					                  </if>
+								GROUP BY ITEM_ID
+						) T3 ON T1.ID = T3.ITEM_ID AND T1.BRAND_ID = T3.BRAND_ID AND T1.STORE_ID = T3.STORE_ID 
+						LEFT JOIN (
+								SELECT	BRAND_ID,STORE_ID, ITEM_ID, COALESCE(SUM(GAP_CNT),0) AS ADJUST_CNT
+								FROM	tb_svc_stock_adjust
+								WHERE
+								    1 = 1
+					                 <if test="fromdate != null and todate != null">
+					                   AND (<![CDATA[ UPDATED >= '${fromdate}' AND UPDATED <= '${todate}' ]]> )
+					                  </if>
+								GROUP BY ITEM_ID
+						) T4 ON T1.ID = T4.ITEM_ID AND T1.BRAND_ID = T4.BRAND_ID AND T1.STORE_ID = T4.STORE_ID
+						LEFT outer JOIN (
+								SELECT	BRAND_ID,	STORE_ID,
+										ITEM_ID,	COALESCE(SUM(BASE_CNT), 0) AS BASE_CNT
+								FROM	tb_svc_stock_closing
+								WHERE	1 = 1
+										AND CLOSING_DT	BETWEEN DATE_ADD(DATE_ADD(LAST_DAY(DATE_ADD('${fromdate}', INTERVAL -2 MONTH)),INTERVAL +1 DAY), INTERVAL 0 SECOND)
+														AND DATE_ADD(LAST_DAY(DATE_ADD('${todate}', INTERVAL -1 MONTH)),INTERVAL '23:59:59' HOUR_SECOND)
+								GROUP BY BRAND_ID,STORE_ID,ITEM_ID,CLOSING_DT
+						) T5    ON 	T1.ID = T5.ITEM_ID	
+								AND T1.BRAND_ID = T5.BRAND_ID
+								AND T1.STORE_ID = T5.STORE_ID 
+				WHERE IS_STOCK_USE = 1
+				AND ITEM_TP = '818008'
+				<if test="itemCat != null">
+				  AND C1.ID = ${itemCat}
+				</if>
+				<if test="brandId != null">
+				    AND T1.BRAND_ID = ${brandId}
+				</if>
+				<if test="storeId != null">
+		        AND T1.STORE_ID = ${storeId}
+		    </if>
+		        <if test="searchKeywordType == 'itemCd'">
+		      <if test="searchKeyword != null">
+		        AND T1.ITEM_CD LIKE CONCAT('%', #{searchKeyword}, '%')
+		      </if>
+		    </if>
+		    <if test="searchKeywordType == 'itemNm'">
+		      <if test="searchKeyword != null">
+		        AND T1.NAME LIKE CONCAT('%', #{searchKeyword}, '%')
+		      </if>
+		    </if>
+		    <if test="status != null">
+		      AND T1.STATUS = ${status}
+		    </if>
+				) TT 
+			) TS
+		  WHERE
+		      1 = 1
+    <if test="stockStatus != null">
+     <choose>
+       <when test="stockStatus == 'underSafeStockCnt'">  <!--  현재 재고가 안전 재고 보다 작을 때 -->
+         <![CDATA[ AND STOCK_CNT < SAFE_STOCK_CNT ]]> 
+       </when>
+       <when test="stockStatus == 'overZeroCnt'">    <!-- 현재 재고가 0개 이상일 때 -->
+         <![CDATA[ AND STOCK_CNT > 0 ]]> 
+       </when>
+       <when test="stockStatus == 'underZeroCnt'"> <!-- 현재 재고가 0개 미만일 때 -->
+         <![CDATA[ AND STOCK_CNT < 0 ]]>
+       </when>
+     </choose>
+    </if>
+		<if test="orderby != null and length != null">
+        ORDER BY ${orderby}
+       	</if> 
+        <if test="start != null and length != null">
+        LIMIT ${start}, ${length}
+       	</if> 
+    </select>
+    
+     <!-- ActualStock -->
+  <resultMap id="actualStockListMap" type="java.util.LinkedHashMap"  autoMapping="false">
+    <id        column="ID"                                 property="id"                       jdbcType="BIGINT" />
+    <result column="ITEM_ID"                      property="itemId"               jdbcType="BIGINT" />
+    <result column="ITEM_CD"                    property="itemCd"             jdbcType="VARCHAR" />
+    <result column="NAME"                          property="name"                jdbcType="VARCHAR" />
+    <result column="SAFE_STOCK_CNT" property="safeStockCnt"  jdbcType="INTEGER" />
+    <result column="CURRENT_CNT"       property="currentCnt"       jdbcType="INTEGER" />
+  </resultMap>
+
+  <select id="getActualStockList" parameterType="hashMap" resultMap="actualStockListMap">
+    SELECT 
+      A.*
+     FROM 
+			    (SELECT 
+			        si.ID
+			        ,si.ITEM_ID
+			        ,si.UPDATED
+			        ,i.STATUS
+			        ,i.ITEM_CD
+			        ,i.NAME
+			        ,i.SAFE_STOCK_CNT
+			        ,si.CURRENT_CNT
+			        ,ic.ID AS CAT_ID
+			    FROM TB_SVC_STOCK_IMPORT si
+			    LEFT OUTER JOIN TB_SVC_ITEM i ON si.ITEM_ID = i.ID
+			    LEFT OUTER JOIN TB_SVC_ITEM_CAT ic ON ic.ID = i.CAT_ID
+			    WHERE 
+			        1=1
+			     <if test="brandId != null">
+			     AND
+			        si.BRAND_ID = ${brandId}
+			     </if>
+			     <if test="storeId != null">
+			     AND
+			        si.STORE_ID = ${storeId}
+			     </if>
+			     <if test="searchKeywordType == 'itemCd'">
+             <if test="searchKeyword != null">
+                AND i.ITEM_CD LIKE CONCAT('%', #{searchKeyword}, '%')
+              </if>
+            </if>
+            <if test="searchKeywordType == 'itemNm'">
+              <if test="searchKeyword != null">
+                AND i.NAME LIKE CONCAT('%', #{searchKeyword}, '%')
+              </if>
+            </if>
+			    AND 
+			        i.ITEM_TP = 818008
+			    AND 
+			        i.IS_STOCK_USE = 1 ) A
+	    WHERE
+	      1=1
+	     <if test="fromdate != null and todate != null">
+	     AND (<![CDATA[ UPDATED >= '${fromdate}' AND UPDATED <= '${todate}' ]]> )
+	     </if>
+      <if test="status != null" >
+       AND STATUS = ${status}
+      </if>
+      <choose>
+        <when test="orderby != null">
+            ORDER BY ${orderby}
+        </when>
+        <when test="orderby == null">
+            ORDER BY CREATED DESC
+        </when>
+      </choose>
+       <include refid="getLimitPagination" />
+  </select>
+
+  <select id="getCountActualStockList" parameterType="hashMap" resultType="int">
+      SELECT 
+        COUNT(*)
+     FROM 
+          (SELECT 
+              si.ID
+              ,si.ITEM_ID
+              ,si.UPDATED
+              ,i.STATUS
+              ,i.ITEM_CD
+              ,i.NAME
+              ,i.SAFE_STOCK_CNT
+              ,si.CURRENT_CNT
+              ,ic.ID AS CAT_ID
+          FROM TB_SVC_STOCK_IMPORT si
+          LEFT OUTER JOIN TB_SVC_ITEM i ON si.ITEM_ID = i.ID
+          LEFT OUTER JOIN TB_SVC_ITEM_CAT ic ON ic.ID = i.CAT_ID
+          WHERE 
+              1=1
+           <if test="brandId != null">
+           AND
+              si.BRAND_ID = ${brandId}
+           </if>
+           <if test="storeId != null">
+           AND
+              si.STORE_ID = ${storeId}
+           </if>
+          <if test="searchKeywordType == 'itemCd'">
+             <if test="searchKeyword != null">
+                AND i.ITEM_CD LIKE CONCAT('%', #{searchKeyword}, '%')
+              </if>
+            </if>
+            <if test="searchKeywordType == 'itemNm'">
+              <if test="searchKeyword != null">
+                AND i.NAME LIKE CONCAT('%', #{searchKeyword}, '%')
+              </if>
+            </if>          AND 
+              i.ITEM_TP = 818008
+          AND 
+              i.IS_STOCK_USE = 1 ) A
+      WHERE
+        1=1
+       <if test="fromdate != null and todate != null">
+       AND (<![CDATA[ UPDATED >= '${fromdate}' AND UPDATED <= '${todate}' ]]> )
+       </if>
+      <if test="itemCat != null">
+       AND CAT_ID = ${itemCat}
+      </if>
+      <if test="status != null" >
+       AND STATUS = ${status}
+      </if>
+  </select>
+    
+    
+    <!-- 월말 재고현황 리스트 카운트 -->
+	<select id="getStockCloingListCount" parameterType="hashMap" resultType="int">
+    SELECT 
+    	COUNT(*)
+	FROM
+    (SELECT 
+        BRAND_ID,
+            STORE_ID,
+            ITEM_ID,
+            ITEM_CD,
+            ITEM_NAME,
+            BASE_CNT,
+            IMPORT_CNT,
+            EXPORT_CNT,
+            ADJUST_CNT,
+            BASE_CNT + IMPORT_CNT - EXPORT_CNT + ADJUST_CNT AS STOCK_CNT,
+            SAFE_STOCK_CNT
+    FROM
+        (SELECT 
+        T1.BRAND_ID,
+            T1.STORE_ID,
+            T1.ID AS ITEM_ID,
+            T1.ITEM_CD,
+            T1.NAME AS ITEM_NAME,
+            C1.ID,
+            COALESCE(T3.IMPORT_CNT, 0) AS BASE_CNT,
+            COALESCE(T3.IMPORT_CNT, 0) AS IMPORT_CNT,
+            COALESCE(T2.EXPORT_CNT, 0) AS EXPORT_CNT,
+            COALESCE(T4.ADJUST_CNT, 0) AS ADJUST_CNT,
+            T1.SAFE_STOCK_CNT
+    FROM
+        TB_SVC_ITEM T1
+    LEFT JOIN TB_SVC_ITEM_CAT C1 ON C1.ID = T1.CAT_ID
+    LEFT JOIN (SELECT 
+        ITEM_ID,
+            ITEM_NM,
+            BRAND_ID,
+            STORE_ID,
+            COALESCE(SUM(T2.COUNT), 0) AS EXPORT_CNT
+    FROM
+        TB_SVC_SALES AA
+    INNER JOIN TB_SVC_SALES_ITEM T2 ON AA.ID = T2.SALES_ID
+    WHERE
+        SALES_TM_LOCAL BETWEEN DATE_ADD(DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -2 MONTH)),INTERVAL +1 DAY), INTERVAL 0 SECOND)
+					   AND DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -1 MONTH)),INTERVAL '23:59:59' HOUR_SECOND)
+    GROUP BY ITEM_ID) T2 ON T1.ID = T2.ITEM_ID
+        AND T1.BRAND_ID = T2.BRAND_ID
+        AND T1.STORE_ID = T2.STORE_ID
+    LEFT JOIN (SELECT 
+        BRAND_ID,
+            STORE_ID,
+            ITEM_ID,
+            COALESCE(SUM(STOCK_CNT), 0) AS IMPORT_CNT
+    FROM
+        TB_SVC_STOCK_IMPORT
+    WHERE  
+		STOCK_DT  BETWEEN DATE_ADD(DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -2 MONTH)),INTERVAL +1 DAY), INTERVAL 0 SECOND)
+				  AND DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -1 MONTH)),INTERVAL '23:59:59' HOUR_SECOND)
+    GROUP BY ITEM_ID) T3 ON T1.ID = T3.ITEM_ID
+        AND T1.BRAND_ID = T3.BRAND_ID
+        AND T1.STORE_ID = T3.STORE_ID
+    LEFT JOIN (SELECT 
+        BRAND_ID,
+            STORE_ID,
+            ITEM_ID,
+            COALESCE(SUM(GAP_CNT), 0) AS ADJUST_CNT
+    FROM
+        TB_SVC_STOCK_ADJUST
+    WHERE
+		UPDATED BETWEEN DATE_ADD(DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -2 MONTH)),INTERVAL +1 DAY), INTERVAL 0 SECOND)
+				AND DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -1 MONTH)),INTERVAL '23:59:59' HOUR_SECOND)
+    GROUP BY ITEM_ID) T4 ON T1.ID = T4.ITEM_ID
+        AND T1.BRAND_ID = T4.BRAND_ID
+        AND T1.STORE_ID = T4.STORE_ID
+    LEFT outer JOIN (
+		SELECT 
+			BRAND_ID,
+			STORE_ID,
+			ITEM_ID,
+			COALESCE(SUM(BASE_CNT), 0) AS BASE_CNT
+			FROM	tb_svc_stock_closing
+			WHERE	1 = 1
+				AND CLOSING_DT	BETWEEN DATE_ADD(DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -3 MONTH)),INTERVAL +1 DAY), INTERVAL 0 SECOND)
+								AND DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -2 MONTH)),INTERVAL '23:59:59' HOUR_SECOND)
+			GROUP BY BRAND_ID,STORE_ID,ITEM_ID,CLOSING_DT
+        ) T5    ON 	T1.ID = T5.ITEM_ID
+				AND T1.BRAND_ID = T5.BRAND_ID
+				AND T1.STORE_ID = T5.STORE_ID    
+    WHERE
+        IS_STOCK_USE = 1 AND ITEM_TP = '818008'
+            AND T1.STATUS = 602001) TT) TS
+    </select>
+    
+    <!-- 월말 재고현황 리스트 카운트 -->
+    <select id="getStockCloingList" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+    SELECT 
+    	*
+	FROM
+    (SELECT 
+        BRAND_ID,
+            STORE_ID,
+            ITEM_ID,
+            ITEM_CD,
+            ITEM_NAME,
+            BASE_CNT,
+            IMPORT_CNT,
+            EXPORT_CNT,
+            ADJUST_CNT,
+            BASE_CNT + IMPORT_CNT - EXPORT_CNT + ADJUST_CNT AS STOCK_CNT,
+            SAFE_STOCK_CNT
+    FROM
+        (SELECT 
+        T1.BRAND_ID,
+            T1.STORE_ID,
+            T1.ID AS ITEM_ID,
+            T1.ITEM_CD,
+            T1.NAME AS ITEM_NAME,
+            C1.ID,
+            COALESCE(T5.BASE_CNT, 0) AS BASE_CNT,
+            COALESCE(T3.IMPORT_CNT, 0) AS IMPORT_CNT,
+            COALESCE(T2.EXPORT_CNT, 0) AS EXPORT_CNT,
+            COALESCE(T4.ADJUST_CNT, 0) AS ADJUST_CNT,
+            T1.SAFE_STOCK_CNT
+    FROM
+        TB_SVC_ITEM T1
+    LEFT JOIN TB_SVC_ITEM_CAT C1 ON C1.ID = T1.CAT_ID
+    LEFT JOIN (SELECT 
+        ITEM_ID,
+            ITEM_NM,
+            BRAND_ID,
+            STORE_ID,
+            COALESCE(SUM(T2.COUNT), 0) AS EXPORT_CNT
+    FROM
+        TB_SVC_SALES AA
+    INNER JOIN TB_SVC_SALES_ITEM T2 ON AA.ID = T2.SALES_ID
+    WHERE
+        SALES_TM_LOCAL BETWEEN DATE_ADD(DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -2 MONTH)),INTERVAL +1 DAY), INTERVAL 0 SECOND)
+					   AND DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -1 MONTH)),INTERVAL '23:59:59' HOUR_SECOND)
+    GROUP BY ITEM_ID) T2 ON T1.ID = T2.ITEM_ID
+        AND T1.BRAND_ID = T2.BRAND_ID
+        AND T1.STORE_ID = T2.STORE_ID
+    LEFT JOIN (SELECT 
+        BRAND_ID,
+            STORE_ID,
+            ITEM_ID,
+            COALESCE(SUM(STOCK_CNT), 0) AS IMPORT_CNT
+    FROM
+        TB_SVC_STOCK_IMPORT
+    WHERE  
+		STOCK_DT  BETWEEN DATE_ADD(DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -2 MONTH)),INTERVAL +1 DAY), INTERVAL 0 SECOND)
+				  AND DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -1 MONTH)),INTERVAL '23:59:59' HOUR_SECOND)
+    GROUP BY ITEM_ID) T3 ON T1.ID = T3.ITEM_ID
+        AND T1.BRAND_ID = T3.BRAND_ID
+        AND T1.STORE_ID = T3.STORE_ID
+    LEFT JOIN (SELECT 
+        BRAND_ID,
+            STORE_ID,
+            ITEM_ID,
+            COALESCE(SUM(GAP_CNT), 0) AS ADJUST_CNT
+    FROM
+        TB_SVC_STOCK_ADJUST
+    WHERE
+		UPDATED BETWEEN DATE_ADD(DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -2 MONTH)),INTERVAL +1 DAY), INTERVAL 0 SECOND)
+				AND DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -1 MONTH)),INTERVAL '23:59:59' HOUR_SECOND)
+    GROUP BY ITEM_ID) T4 ON T1.ID = T4.ITEM_ID
+        AND T1.BRAND_ID = T4.BRAND_ID
+        AND T1.STORE_ID = T4.STORE_ID
+	LEFT outer JOIN (
+		SELECT 
+			BRAND_ID,
+			STORE_ID,
+			ITEM_ID,
+			COALESCE(SUM(BASE_CNT), 0) AS BASE_CNT
+			FROM	tb_svc_stock_closing
+			WHERE	1 = 1
+				AND CLOSING_DT	BETWEEN DATE_ADD(DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -3 MONTH)),INTERVAL +1 DAY), INTERVAL 0 SECOND)
+								AND DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -2 MONTH)),INTERVAL '23:59:59' HOUR_SECOND)
+			GROUP BY BRAND_ID,STORE_ID,ITEM_ID,CLOSING_DT
+        ) T5    ON 	T1.ID = T5.ITEM_ID
+				AND T1.BRAND_ID = T5.BRAND_ID
+				AND T1.STORE_ID = T5.STORE_ID  
+    WHERE
+        IS_STOCK_USE = 1 AND ITEM_TP = '818008'
+            AND T1.STATUS = 602001) TT) TS
+    </select>
+    
+    
+    <insert id="insertStockCloingList" parameterType="java.util.Map">
+	INSERT INTO TB_SVC_STOCK_CLOSING
+	(
+		BRAND_ID,	STORE_ID,	ITEM_ID,	ITEM_CD, 
+		CLOSING_DT, BASE_CNT, 	CREATED, 	UPDATED
+	)
+	VALUES
+	(
+		#{BRAND_ID}, #{STORE_ID}, #{ITEM_ID}, #{ITEM_CD},
+		DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL -1 MONTH)),INTERVAL '23:59:59' HOUR_SECOND),	#{BASE_CNT}, NOW(),	 	NOW()
+	)
+    </insert>
+</mapper>

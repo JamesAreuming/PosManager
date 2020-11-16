@@ -1,0 +1,58 @@
+<div class="leftpanel">
+  <div class="logopanel">
+    <h1>
+    <span>[</span> ORDER9 <span>]</span>
+    </h1>
+  </div>
+  <!-- logopanel -->
+  <div class="leftpanelinner">
+
+	  <!-- This is only visible to small devices -->
+	  <div class="visible-xs hidden-sm hidden-md hidden-lg">
+	    <div class="media userlogged">
+	      <img alt="" src="./_static/assets/images/loggeduser.jpg" class="media-object">
+	      <div class="media-body">
+	        <h4>{{user.userInfo.name}}</h4>
+	        <!-- <span>"Life is so..."</span> -->
+	      </div>
+	    </div>
+
+	    <h5 class="sidebartitle actitle">Account</h5>
+	    <ul class="nav nav-pills nav-stacked nav-bracket mb30">
+	    
+	      <!-- <li><a href="profile.html"><i class="fa fa-user"></i> <span>Profile</span></a></li>
+	      <li><a href=""><i class="fa fa-cog"></i> <span>Account Settings</span></a></li>
+	      <li><a href=""><i class="fa fa-question-circle"></i> <span>Help</span></a></li>
+	      <li><a href="signout.html"><i class="fa fa-sign-out"></i> <span>Sign Out</span></a></li> 
+	      
+	      <li><a href="javascript:JC_cookies.reload('BAK_ADMIN_LANG', 'en');"><i class="glyphicon glyphicon-log-out"></i> English</a></li>
+          <li><a href="javascript:JC_cookies.reload('BAK_ADMIN_LANG', 'ru');"><i class="glyphicon glyphicon-log-out"></i> Russian</a></li>
+          -->
+          
+          <li><a href="logout"><i class="glyphicon glyphicon-log-out"></i> 로그아웃</a></li>
+	    </ul>
+	  </div>
+
+    <h5 class="sidebartitle">Navigation</h5>
+
+    <ul class="nav nav-pills nav-stacked nav-bracket">
+    {{#menuList}}
+      {{#useYn}}
+        <li class="{{{mainClass}}}"><a href="{{{url}}}"><i class="{{{dsc}}}"></i> <span>{{{title}}}</span></a>
+          {{#hasChild}}
+            <ul class="children" {{{childClass}}}>
+            {{#nodes}}
+              {{#useYn}}
+                <li><a href="{{{url}}}"><i class="{{{dsc}}}"></i>{{{title}}}</a></li>
+              {{/useYn}}
+            {{/nodes}}
+            </ul>
+          {{/hasChild}}
+        </li>
+      {{/useYn}}
+    {{/menuList}}
+    </ul>
+
+	</div><!-- leftpanelinner -->
+
+</div>

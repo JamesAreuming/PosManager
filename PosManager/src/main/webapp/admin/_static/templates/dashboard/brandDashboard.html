@@ -1,0 +1,343 @@
+<form id="rollSearchFrom">
+	<div class="row">
+		<div class="col-md-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="panel-btns">
+						<!-- <a href="" class="panel-close">&times;</a> -->
+						<a href="" class="minimize">&minus;</a>
+					</div>
+					<h4 class="panel-title">{{i18n.BO2287}}</h4>
+				</div><!-- panel-heading -->
+				<div class="panel panel-white">
+					<div class="panel-body" id="weekOfSalesChart"></div>
+				</div>
+			</div><!-- panel -->
+		</div><!-- col-md-4 -->
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="panel-btns">
+						<!-- <a href="" class="panel-close">&times;</a> -->
+						<a href="" class="minimize">&minus;</a>
+					</div>
+					<h4 class="panel-title" data-toggle="tooltip" title="({{#formatDay}}{{today}}{{/formatDay}})">{{i18n.BO2275}}</h4>
+				</div><!-- panel-heading -->
+				<div class="panel-body">
+					<ul class="list-unstyled index-info">
+						<li>{{i18n.BO2278}}<span class="pull-right"><b></b></span></li>
+						<li>{{i18n.BO1003}}<span class="pull-right"><b>{{#formatPrice}}{{brandlist.totalSalesAmt}}{{/formatPrice}}</b></span></li>
+						<li>{{i18n.BO2279}}<span class="pull-right"><b>{{#formatNumber}}{{brandlist.totalSalesCnt}}{{/formatNumber}}</b></span></li>
+						<hr>
+						<li>{{i18n.BO2280}}<span class="pull-right"><b></b></span></li>
+						<li>{{i18n.BO1003}}<span class="pull-right"><b>{{#formatPrice}}{{brandlist.averageSalesAmt}}{{/formatPrice}}</b></span></li>
+						<li>{{i18n.BO2279}}<span class="pull-right"><b>{{#formatNumber}}{{brandlist.averageSalesCnt}}{{/formatNumber}}</b></span></li>
+					</ul>
+				</div>
+			</div><!-- panel -->
+		</div><!-- col-md-4 -->
+	</div>	
+	<div class="row">
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="panel-btns">
+						<!-- <a href="" class="panel-close">&times;</a> -->
+						<a href="" class="minimize">&minus;</a>
+					</div>
+					<h4 class="panel-title"  data-toggle="tooltip"  title="({{#formatDay}}{{today}}{{/formatDay}})">{{i18n.BO2288}}</h4>
+				</div><!-- panel-heading -->
+				<div class="panel panel-white">
+					<div class="panel-body" id="salesTopChart"></div>
+					
+					<div class="panel-body">
+						<table class="table table-striped mb30">
+				            <thead>
+				              <tr>
+				                <th>{{i18n.BO2040}}</th>
+				                <th>{{i18n.BO2303}}</th>
+				              </tr>
+				            </thead>
+				            <tbody>
+				              {{#salesTopList}}
+				              <tr>
+				                <td>{{storeNm}}</td>
+				                <td>{{#formatPrice}}{{sales}}{{/formatPrice}}</td>
+				              </tr>
+				              {{/salesTopList}}
+				              {{^salesTopList}}
+				              <tr>
+				                <td colspan="2">{{i18n.BO0010}}</td>
+				              </tr>
+				              {{/salesTopList}}
+				            </tbody>
+				        </table>
+						<!-- <ul class="list-unstyled index-info">
+							{{#salesTopList}}
+								<li>{{storeNm}}<span class="pull-right"><b>{{#formatPrice}}{{sales}}{{/formatPrice}}</b></span></li>
+							{{/salesTopList}}
+						</ul> -->
+					</div>
+				</div>
+			</div><!-- panel -->
+		</div><!-- col-md-4 -->
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="panel-btns">
+						<!-- <a href="" class="panel-close">&times;</a> -->
+						<a href="" class="minimize">&minus;</a>
+					</div>
+					<h4 class="panel-title" data-toggle="tooltip" title="({{#formatDay}}{{today}}{{/formatDay}})">{{i18n.BO2289}}</h4>
+				</div><!-- panel-heading -->
+				<div class="panel panel-white">
+					<div class="panel-body" id="salesBottomChart"></div>
+					<div class="panel-body">
+						<table class="table table-striped">
+				            <thead>
+				              <tr>
+				                <th>{{i18n.BO2040}}</th>
+				                <th>{{i18n.BO2303}}</th>
+				              </tr>
+				            </thead>
+				            <tbody>
+				              {{#salesBottomList}}
+				              <tr>
+				                <td>{{storeNm}}</td>
+				                <td>{{#formatPrice}}{{sales}}{{/formatPrice}}</td>
+				              </tr>
+				              {{/salesBottomList}}
+				              {{^salesBottomList}}
+				              <tr>
+				                <td colspan="2">{{i18n.BO0010}}</td>
+				              </tr>
+				              {{/salesBottomList}}
+				            </tbody>
+				        </table>
+				        
+						<!-- <ul class="list-unstyled index-info">
+							{{#salesBottomList}}
+								<li>{{storeNm}}<span class="pull-right"><b>{{#formatPrice}}{{sales}}{{/formatPrice}}</b></span></li>
+							{{/salesBottomList}}
+						</ul> -->
+					</div>
+				</div>
+			</div><!-- panel -->
+		</div><!-- col-md-4 -->	
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="panel-btns">
+						<!-- <a href="" class="panel-close">&times;</a> -->
+						<a href="" class="minimize">&minus;</a>
+					</div>
+					<h4 class="panel-title" data-toggle="tooltip" title="({{#formatDay}}{{today}}{{/formatDay}})">{{i18n.BO2276}}</h4>
+				</div><!-- panel-heading -->
+				<div class="panel-body">
+					<ul class="list-unstyled index-info">
+						<li>{{i18n.BO2278}}<span class="pull-right"><b></b></span></li>
+						<li>{{i18n.BO2281}}<span class="pull-right"><b>{{#formatNumber}}{{brandlist.totalSoCnt}}{{/formatNumber}}</b></span></li>
+						<li>{{i18n.BO2282}}<span class="pull-right"><b>{{#formatNumber}}{{brandlist.totalRvCnt}}{{/formatNumber}}</b></span></li>
+						<li>{{i18n.BO2283}}<span class="pull-right"><b>{{#formatNumber}}{{brandlist.totalPcCnt}}{{/formatNumber}}</b></span></li>
+						<hr>
+						<li>{{i18n.BO2280}}<span class="pull-right"><b></b></span></li>
+						<li>{{i18n.BO2281}}<span class="pull-right"><b>{{#formatNumber}}{{brandlist.averageSoCnt}}{{/formatNumber}}</b></span></li>
+						<li>{{i18n.BO2282}}<span class="pull-right"><b>{{#formatNumber}}{{brandlist.averageRvCnt}}{{/formatNumber}}</b></span></li>
+						<li>{{i18n.BO2283}}<span class="pull-right"><b>{{#formatNumber}}{{brandlist.averagePcCnt}}{{/formatNumber}}</b></span></li>
+					</ul>
+				</div>
+			</div><!-- panel -->
+		</div><!-- col-md-4 -->
+	</div>
+	<div class="row">
+		<div class="col-md-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="panel-btns">
+						<!-- <a href="" class="panel-close">&times;</a> -->
+						<a href="" class="minimize">&minus;</a>
+					</div>
+					<h4 class="panel-title" data-toggle="tooltip" title="{{#searchCouponDate}}
+                                                              {{#formatDay}} {{weekFromDate}} {{/formatDay}} ~ 
+                                                              {{#formatDay}} {{weekToDate}} {{/formatDay}}
+                                                               {{/searchCouponDate}}">{{i18n.BO2494}}</h4>
+				</div><!-- panel-heading -->
+				<div class="panel panel-white">
+					<div class="panel-body" id="topItem"></div>
+				</div>
+			</div><!-- panel -->
+		</div><!-- col-md-4 -->
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="panel-btns">
+						<!-- <a href="" class="panel-close">&times;</a> -->
+						<a href="" class="minimize">&minus;</a>
+					</div>
+					<h4 class="panel-title" data-toggle="tooltip" title="{{#searchCouponDate}}
+                                                              {{#formatDay}} {{weekFromDate}} {{/formatDay}} ~ 
+                                                              {{#formatDay}} {{weekToDate}} {{/formatDay}}
+                                                               {{/searchCouponDate}}">{{i18n.BO2495}}</h4>
+				</div><!-- panel-heading -->
+				<div class="panel panel-white">
+					<div class="panel-body" id="topCategory"></div>
+				</div>
+			</div><!-- panel -->
+		</div><!-- col-md-4 -->	
+	</div>
+	
+	<!--  Customers (this week customer, last week customer) ,   Recently Reviews -->
+	<div class="row">
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="panel-btns">
+						<!-- <a href="" class="panel-close">&times;</a> -->
+						<a href="" class="minimize">&minus;</a>
+					</div>
+					<h4 class="panel-title" data-toggle="tooltip" title="{{#searchCustomerDate}}
+                                                              {{#formatDay}} {{startDate}} {{/formatDay}} ~ 
+                                                              {{#formatDay}} {{endDate}} {{/formatDay}}
+                                                               {{/searchCustomerDate}}">{{i18n.BO2307}}</h4>
+				</div>
+				<!-- panel-heading -->
+				<div class="panel panel-white">
+					<div class="panel-body" id="chart-customers"></div>
+				</div>
+			</div>
+			<!-- panel -->
+		</div>
+
+		<div class="col-md-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="panel-btns">
+						<!-- <a href="" class="panel-close">&times;</a> -->
+						<a href="" class="minimize">&minus;</a>
+					</div>
+					<h4 class="panel-title">{{i18n.BO2293}}</h4>
+				</div>
+				<!-- panel-heading -->
+				<div class="panel panel-white">
+					<div class="panel-body">
+					 <div class="col-xs-3">
+							<div class="panel panel-dark panel-stat">
+								<div class="panel-heading">
+									<div class="stat" style="max-width: 100%;">
+										<div class="row">
+										  <div class="col-xs-12 text-center today">
+										    <h3>{{i18n.BO3001}}</h3>
+									    </div>
+									    <div class="col-xs-12 text-center today">
+                        <h1>{{#todayReviewsCount}}{{todayReviewsCount}}{{/todayReviewsCount}}</h1>
+                        <h1>{{^todayReviewsCount}}0{{/todayReviewsCount}}</h1>
+                      </div>
+										</div>
+										<!-- row -->
+	
+										<div class="mb15"></div>
+	
+										<!-- >div class="row">
+	                        <div class="col-xs-6">
+	                          <small class="stat-label">Last Week</small>
+	                          <h4>$32,322</h4>
+	                        </div>
+	                        
+	                        <div class="col-xs-6">
+	                          <small class="stat-label">Last Month</small>
+	                          <h4>$503,000</h4>
+	                        </div>
+	                      </div -->
+										<!-- row -->
+	
+									</div>
+									<!-- stat -->
+	
+								</div>
+								<!-- panel-heading -->
+							</div>
+							<!-- panel -->
+							</div>
+							<div class="col-xs-9">
+								<table class="table table-striped">
+									<tbody>
+										{{#reviewList}}
+										<tr>
+											<td>{{#formatDay}}{{created}}{{/formatDay}}</td>
+											<td>{{storeNm}}</td>
+											<td>
+											       {{{buildRating}}}
+											</td>
+											<td>{{mbBk}}</td>
+										</tr>
+										{{/reviewList}}
+									</tbody>
+								</table>
+							</div>
+					</div>
+					<!-- panel -->
+				</div>
+			</div>
+</div>
+</div>
+<!-- Today Stamp,  This week Coupon issue, This week Coupon use -->
+  <div class="row">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-btns">
+            <!-- <a href="" class="panel-close">&times;</a> -->
+            <a href="" class="minimize">&minus;</a>
+          </div>
+          <h4 class="panel-title" data-toggle="tooltip" title="({{#formatDay}}{{today}}{{/formatDay}})">{{i18n.BO2277}}</h4>
+        </div><!-- panel-heading -->
+        <div class="panel-body">
+          <div>
+            {{i18n.BO1033}}<span class="pull-right"><b>{{todayStamp.storeCnt}}</b></span>
+            </div>
+            <hr>
+            <div>
+            {{i18n.BO2278}}<span class="pull-right"><b>{{todayStamp.saveStamp}}</b></span>
+            {{i18n.BO2284}}<span class="pull-right"><b></b></span>
+            </div>
+            <hr>
+            <div>
+            {{i18n.BO0026}}<span class="pull-right"><b>{{todayStamp.cancelStamp}}</b></span>
+            </div>
+        </div>
+      </div><!-- panel -->
+    </div><!-- col-md-4 -->
+    
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-btns">
+            <!-- <a href="" class="panel-close">&times;</a> -->
+            <a href="" class="minimize">&minus;</a>
+          </div>
+          <h4 class="panel-title" data-toggle="tooltip" title="{{#searchCouponDate}}
+                                                              {{#formatDay}} {{weekFromDate}} {{/formatDay}} ~ 
+                                                              {{#formatDay}} {{weekToDate}} {{/formatDay}}
+                                                               {{/searchCouponDate}}">{{i18n.BO2295}}</h4>
+        </div><!-- panel-heading -->
+         <div class="panel-body" id="couponIssue"></div>
+      </div><!-- panel -->
+    </div>
+    
+    <div class="col-md-4">
+     <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-btns">
+            <!-- <a href="" class="panel-close">&times;</a> -->
+            <a href="" class="minimize">&minus;</a>
+          </div>
+          <h4 class="panel-title" data-toggle="tooltip" title="{{#searchCouponDate}}
+                                                              {{#formatDay}} {{weekFromDate}} {{/formatDay}} ~ 
+                                                              {{#formatDay}} {{weekToDate}} {{/formatDay}}
+                                                               {{/searchCouponDate}}">{{i18n.BO2296}}</h4>
+        </div><!-- panel-heading -->
+        <div class="panel-body" id="couponUse"></div>
+      </div><!-- panel -->
+    </div>
+  </div>
+</form>

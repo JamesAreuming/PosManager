@@ -1,0 +1,118 @@
+<form id="be-search">
+	<ul class="filemanager-options" {{#isSt}} style="display: none" {{/isSt}}>
+		<li class="select2-padding" {{#isFr}} style="display: none" {{/isFr}}>
+			<div class="itemopt">
+				<select class="select2" id="franchise_select" >
+					<option value="">{{i18n.BO1031}}</option>
+					{{#frList}}
+					<option value="{{id}}" >{{companyNm}}</option>
+					{{/frList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding" {{#isBr}} style="display: none" {{/isBr}}>
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" id="brand_select" >
+					<option value="">{{i18n.BO1032}}</option>
+					{{#brList}}
+					<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+					{{/brList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" id="store_select">
+					<option value="">{{i18n.BO1033}}</option>
+					{{#stList}}
+					<option value="{{id}}" {{{selections}}}>{{storeNm}}</option>
+					{{/stList}}
+				</select>
+			</div>
+		</li>
+	</ul>
+	<ul class="filemanager-options">
+		<li class="datepicker-range">
+			<div class="input-group">
+				<input id="daterangepicker" type="text" class="form-control date-picker" placeholder="{{i18n.BO2064}}" value="{{data.fromdate}} - {{data.todate}}">
+				<span class="input-group-addon add-on add-on-datepicker">
+				<i class="fa fa-calendar"></i></span>
+				<input id="from-date" name="fromdate" value="{{data.fromdate}}" type="hidden" />
+				<input id="to-date" name="todate" value="{{data.todate}}" type="hidden" />
+			</div>
+		</li>
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select name="statusSt" id="statuses_select" class="select2" >
+					<option value="">{{i18n.BO2387}}</option>
+					{{#cd.orderstatus}}
+					<option value="{{baseCd}}">{{title}}</option>
+					{{/cd.orderstatus}}
+					<!-- <option value="normality">{{i18n.BO2388}}</option>
+					<option value="canceled">{{i18n.BO2389}}</option> -->
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="service_select" name="serviceSt">
+					<option value="">{{i18n.BO2386}}</option>
+					{{#cd.pathtype}}
+					<option value="{{baseCd}}">{{title}}</option>
+					{{/cd.pathtype}}					
+				</select>
+			</div>
+		</li>
+		<li class="sch-toolbar">
+			<div class="itemopt">
+		        <button type="button" id="search">
+		        	<i class="glyphicon glyphicon-search sch-btn-i"></i>
+		        </button>
+	        </div>
+	    </li>
+		<li class="float-right">
+			<div class="btn-group">
+				<button type="button" class="btn btn-xs btn-primary" id="csv-exp">{{i18n.BO3066}}</button>
+			</div>
+		</li>
+	</ul>
+</form>
+
+<div class="row" >
+	<div class="col-md-12" id="approval" style="display: none;">
+		<div class="panel panel-white" >
+			<div class="panel panel-default">
+				<div class="panel-body ">
+					<div class="table-responsive" >
+						<table class="table table-striped table_fullwidth" id="approval_table">
+							<thead>
+							   <tr>
+							      <th></th> 					<!-- ID -->
+							      <th>{{i18n.BO2323}}</th>		<!-- PAY_DAY -->
+							      <th>{{i18n.BO2322}}</th>		<!-- ORDER_NO -->
+							      <th>{{i18n.BO2327}}</th>		<!-- AMOUNT -->
+							      <th></th>						<!-- PAY_ST -->
+							      <th></th>						<!-- PAY_ST_NM -->
+							      <th>{{i18n.BO2328}}</th>		<!-- CARD_NO -->
+							      <th>{{i18n.BO2325}}</th>		<!-- TRAN_NO -->
+							      <th>{{i18n.BO2329}}</th>		<!-- MONTHLY_PLAIN -->
+							      <th></th>						<!-- PAY_METHOD -->
+							      <th></th>						<!-- PAY_METHOD_NM -->
+							      <th>{{i18n.BO2331}}</th>		<!-- APPROVAL_DAY -->
+							      <th>{{i18n.BO2332}}</th>		<!-- APPROVAL_TIME -->
+							   </tr>
+							</thead>
+							<tbody>
+
+							</tbody>
+						</table>
+					</div>
+					<!-- table-responsive -->
+
+				</div>
+				<!-- panel-body -->
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Row -->

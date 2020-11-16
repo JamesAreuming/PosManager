@@ -1,0 +1,139 @@
+<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title" id="myLargeModalLabel">{{i18n.BO2187}}</h4>
+		</div>
+		<form id="couponModal" >
+			<div class="modal-body">
+				<div class="row">
+					<!-- 쿠폰코드  -->
+					<input type="hidden" value="{{id}}" name="id" id="id">
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2159}}</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="couponCd" value="{{couponCd}}" readonly>
+						</div>
+					</div>
+					
+					<!-- 쿠폰명  -->
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2076}}</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="couponNm" value="{{couponNm}}" readonly>
+						</div>
+					</div>
+					
+					<!-- 발행일자  -->
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2397}}</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="created" value="{{#formatDate}}{{created}}{{/formatDate}}" readonly>
+						</div>
+					</div>
+					
+					<!-- 유효기간  -->
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2171}}</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="input-Default" value="{{#formatDate}}{{expire}}{{/formatDate}}" readonly>
+						</div>
+					</div>
+					
+					<!-- 고객코드  -->
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2152}}</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="barcode" value="{{barcode}}" readonly>
+						</div>
+					</div>
+					
+					<!-- 휴대폰번호  -->
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2342}}</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="mb" value="{{mb}}" readonly>
+						</div>
+					</div>
+					
+					<!-- 발행구분  -->
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2267}}</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="couponTpNm" value="{{couponTpNm}}" readonly>
+							<input type="hidden" value="{{couponTp}}" name="couponTp" id="couponTp">
+						</div>
+					</div>
+					
+					<!-- 할인유형  -->
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2169}}</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="discountTpNm" value="{{discountTpNm}}" readonly>
+						</div>
+					</div>
+					
+					<!-- 쿠폰상태  -->
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2269}}</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="couponStNm" value="{{couponStNm}}" readonly>
+							<input type="hidden" value="{{couponSt}}" name="couponSt" id="couponSt">
+						</div>
+					</div>
+					
+					<!-- 쿠폰사용  -->
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2270}}</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="used" value="{{used}}" readonly>
+						</div>
+					</div>
+					
+					<!-- 선물가능  -->
+					<!-- <div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">선물가능</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="input-Default" value="" readonly>
+						</div>
+					</div> -->
+					
+					<!-- 발행매장  -->
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2406}}</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="storeNm" value="{{storeNm}}" readonly>
+						</div>
+					</div>
+					
+					<!-- 사용매장  -->
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2407}}</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="useStoreId" value="{{useStoreId}}" readonly>
+						</div>
+					</div>
+					
+					<!-- 사용제한  -->
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2164}}</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="" value="" readonly>
+						</div>
+					</div>
+				</div>
+				<hr>
+			</div>
+			
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" status="402004" id="cancle_issued" data-dismiss="modal">{{i18n.BO2403}}</button>
+				<button type="button" class="btn btn-primary" status="402002" id="cancle_used" data-dismiss="modal">{{i18n.BO2404}}</button>
+				<!-- {{#couponst=402005}}
+					<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+				{{/couponst=402005}} -->
+			</div>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.jc.pico.utils.customMapper.pos.PosCashbookMapper">
+
+	<select id="selectCashbookInfoList" parameterType="map" resultType="com.jc.pico.utils.bean.PosCashBookInfo">
+		SELECT /* PosCashbookMapper.selectCashbookInfoLis 2016-08-31 hyo */
+			ID AS cdCashbook    
+		    , ACCOUNT_TP AS cdAccount
+		    , IS_OUT AS dsAccount
+		    , AMOUNT AS prAmount
+		    , MEMO AS memo
+		    , DATE_FORMAT(CREATED, '%Y%m%d%H%i%s') AS dtInsert
+		    , STAFF_ID AS cdEmployeeInsert
+		    , DATE_FORMAT(UPDATED, '%Y%m%d%H%i%s') AS dtUpdate
+		    , STAFF_ID AS cdEmployeeUpdate
+		FROM 
+			TB_SVC_CASHBOOK
+		WHERE
+			STORE_ID = #{CD_STORE}
+		AND CREATED BETWEEN DATE_ADD(STR_TO_DATE(#{DT_START},'%Y%m%d'), INTERVAL 0 SECOND) AND DATE_ADD(STR_TO_DATE(#{DT_END},'%Y%m%d'), INTERVAL '23:59:59' HOUR_SECOND)
+	</select>
+	
+</mapper>

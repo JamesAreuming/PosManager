@@ -1,0 +1,148 @@
+<div class="modal-dialog modal-lg">
+	<form>
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title">
+				{{i18n.BO2160}} <b>* {{i18n.BO0008}}<b>
+			</h4>
+		</div>
+		<div class="modal-body">
+		 	<input type="hidden" name="id" value="{{id}}" readonly="readonly">
+		 	<input type="hidden" name="brandId" value="{{brandId}}" readonly="readonly">
+			<div class="row">
+				<div class="form-group min-height-30 col-sm-9 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2076}}*</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="input-Default" value="{{couponNm}}" name="couponNm" data-validation="required"/>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2169}}*</label>
+					<div class="col-sm-9">
+						<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+							style="width: 100%" name="discountTp" data-validation="required">
+							<option value="">{{i18n.BO2169}}</option>
+							{{#discounttp}}
+								<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+							{{/discounttp}}
+						</select>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2161}}*</label>
+					<div class="col-sm-9">
+						<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+							style="width: 100%" name="expireTp" data-validation="required">
+							<option value="">{{i18n.BO2161}}</option>
+							{{#expiretp}}
+								<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+							{{/expiretp}}
+						</select>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2171}}*</label>
+					<div class="col-sm-9">
+						<div
+							class="input-group col-sm-12 m-b-sm input-append bootstrap-timepicker float-left">
+							<input id="timepicker" type="text"
+								class="form-control date-picker" placeholder="y/m/d" name="term" value="{{term}}" data-validation="number">
+						</div>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2373}}</label>
+					<div class="col-sm-9">
+						<div
+							class="input-group col-sm-12 m-b-sm input-append bootstrap-timepicker float-left">
+							<input id="timepicker1" type="text"
+								class="form-control date-picker" placeholder="{{i18n.BO2373}}" value="{{begin}} - {{expire}}"><span
+								class="input-group-addon add-on"><i
+								class="fa fa-calendar"></i></span>
+							<input id="from-date" name="begin" value="{{begin}}" type="hidden" />
+							<input id="to-date" name="expire" value="{{expire}}" type="hidden"/ >
+						</div>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2163}}*</label>
+					<div class="col-sm-9">
+						<input id="timepicker1" type="text"
+								class="form-control date-picker" name="discount" value="{{discount}}" data-validation="number">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2162}}*</label>
+					<div class="col-sm-9">
+						<input id="timepicker1" type="text"
+								class="form-control date-picker" name="discountLimit" value="{{discountLimit}}" data-validation="number">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-9 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2374}}</label>
+					<div class="col-sm-10">
+						<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+							style="width: 100%" name="targetMenuId">
+							<option value="">{{i18n.BO2374}}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-9 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2375}}</label>
+					<div class="col-sm-10">
+						<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+							style="width: 100%" name="supplyMenuId">
+							<option value="">{{i18n.BO2375}}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2124}}</label>
+					<div class="col-sm-9">
+						<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+							style="width: 100%" name="used" data-validation="required">
+							<option value="">{{i18n.BO2124}}</option>
+							<option value="true" {{{used_t}}}>{{i18n.BO2031}}</option>
+							<option value="false" {{{used_f}}}>{{i18n.BO2032}}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2164}}</label>
+					<div class="col-sm-9">
+						<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+							style="width: 100%" name="hasUseLimit" data-validation="required">
+							<option value="">{{i18n.BO2124}}</option>
+							<option value="true" {{{hasUseLimit_t}}}>{{i18n.BO2031}}</option>
+							<option value="false" {{{hasUseLimit_f}}}>{{i18n.BO2032}}</option>
+						</select>
+					</div>
+				</div>
+				<!--
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">사용가능요일</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{tel}}" name="tel">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">사용가능 시간</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{email}}" name="email">
+					</div>
+				</div>
+				-->
+			</div>
+			<hr>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+			<button type="submit" class="btn btn-primary">{{i18n.BO0014}}</button>
+		</div>
+	</div>
+	</form>
+</div>

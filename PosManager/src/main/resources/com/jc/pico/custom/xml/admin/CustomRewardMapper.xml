@@ -1,0 +1,1400 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: CustomRewardMapper.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History	: 
+  ~
+  ~ Version	: 1.0
+  ~ Author   :
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.admin.CustomRewardMapper">
+
+  <sql id="getWhen_Where">
+	<if test="fromdate != null and todate != null">
+   		AND `WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+   	</if>
+	<if test="brandId != null">
+		AND BRAND_ID = #{brandId}
+	</if>
+	<if test="storeId != null">
+		AND STORE_ID = #{storeId}
+	</if>
+  </sql>
+
+  <resultMap id="RewardChartMap" type="java.util.LinkedHashMap" >
+    <result column="LABEL" property="label" jdbcType="VARCHAR" />
+    <result column="VALUE" property="value" jdbcType="INTEGER" />
+  </resultMap>
+
+  <select id="getRewardSummaryStampChart" parameterType="hashMap" resultMap="RewardChartMap">
+	SELECT /* getRewardSummaryStampChart */
+	       (SELECT STORE_NM FROM TB_SVC_STORE WHERE A.STORE_ID = ID) AS LABEL
+		 , COUNT(*) AS VALUE
+	  FROM TB_SVC_STAMP_LOG A
+	 WHERE A.BRAND_ID = #{brandId} 
+	   AND A.STORE_ID > 0 
+	   AND A.LOG_TP = #{logTp}
+	<if test="fromdate != null and todate != null">
+   		AND `WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) 
+   		               AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+   	</if>
+	GROUP BY A.STORE_ID
+    LIMIT 0, 5
+  </select>
+
+  <select id="getRewardSummaryCouponChart" parameterType="hashMap" resultMap="RewardChartMap">
+	SELECT /* getRewardSummaryCouponChart */                                
+	       (SELECT STORE_NM FROM TB_SVC_STORE WHERE CL.STORE_ID = ID) AS LABEL
+	     , COUNT(*) AS VALUE
+	  FROM TB_SVC_COUPON_LOG CL
+	       LEFT JOIN TB_SVC_USER_COUPON UC ON UC.COUPON_CD = CL.COUPON_CD
+	 WHERE CL.BRAND_ID = #{brandId}
+	   AND CL.LOG_TP = #{logTp}
+	   AND UC.COUPON_TP = '406001'
+	  <if test="fromdate != null and todate != null">
+   	   AND CL.`WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) 
+   		                 AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+   	  </if>
+	GROUP BY CL.STORE_ID
+	LIMIT 0, 5
+	 
+	UNION ALL
+	SELECT 'Event Coupon' AS LABEL
+	      , COUNT(*) AS VALUE
+	   FROM TB_SVC_COUPON_LOG CL
+	        LEFT JOIN TB_SVC_USER_COUPON UC ON UC.COUPON_CD = CL.COUPON_CD
+	  WHERE CL.BRAND_ID = #{brandId}
+	    AND CL.LOG_TP = #{logTp}
+	    AND UC.COUPON_TP = '406002'
+	    <if test="fromdate != null and todate != null">
+   	   AND CL.`WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) 
+   		                 AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+   	   </if>
+  </select>
+  
+  <select id="getRewardSummaryUsedCouponChart" parameterType="hashMap" resultMap="RewardChartMap">
+	SELECT /* getRewardSummaryUsedCouponChart */                                
+	       (SELECT STORE_NM FROM TB_SVC_STORE WHERE CL.STORE_ID = ID) AS LABEL
+	     , COUNT(*) AS VALUE
+	  FROM TB_SVC_COUPON_LOG CL
+	       LEFT JOIN TB_SVC_USER_COUPON UC ON UC.COUPON_CD = CL.COUPON_CD
+	 WHERE CL.BRAND_ID = #{brandId}
+	   AND CL.LOG_TP = #{logTp}
+	   AND UC.COUPON_TP = '406001'
+	   <if test="fromdate != null and todate != null">
+   	   AND CL.`WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) 
+   		                 AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+   	   </if>
+	GROUP BY CL.STORE_ID
+	LIMIT 0, 5
+	 
+	UNION ALL
+	SELECT 'Event Coupon' AS LABEL
+	      , COUNT(*) AS VALUE
+	   FROM TB_SVC_COUPON_LOG CL
+	        LEFT JOIN TB_SVC_USER_COUPON UC ON UC.COUPON_CD = CL.COUPON_CD
+	  WHERE CL.BRAND_ID = #{brandId}
+	    AND CL.LOG_TP = #{logTp}
+	    AND UC.COUPON_TP = '406002'
+	   <if test="fromdate != null and todate != null">
+   	    AND CL.`WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) 
+   		                  AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+   	   </if>
+  </select>
+  
+  <select id="getRewardDayChart" parameterType="hashMap" resultMap="RewardChartMap">
+	SELECT /* getRewardDayChart, 2016-08-01, vancocu */
+		DATE_FORMAT(CL.YMD, '%m-%d') AS LABEL
+		,COALESCE(A.VALUE, 0) AS VALUE
+	FROM
+		TB_BASE_CALENDAR CL
+	LEFT JOIN (
+		SELECT
+			DATE(`WHEN`) AS YMD
+			,COUNT(*) AS VALUE
+		FROM ${tableNm}
+		WHERE LOG_TP = #{logTp}
+		<include refid="getWhen_Where" />
+	  	GROUP BY YMD
+	) A	ON CL.YMD = A.YMD
+	WHERE CL.YMD BETWEEN #{fromdate} AND #{todate}
+	ORDER BY CL.YMD
+  </select>
+
+  <select id="getRewardMonthChart" parameterType="hashMap" resultMap="RewardChartMap">
+	SELECT /* getRewardMonthChart, 2016-08-01, vancocu */
+		CASE WHEN A.MONTH = 1 THEN 'Jan'
+			WHEN A.MONTH = 2 THEN 'Feb'
+			WHEN A.MONTH = 3 THEN 'Mar'
+			WHEN A.MONTH = 4 THEN 'Apr'
+			WHEN A.MONTH = 5 THEN 'May'
+			WHEN A.MONTH = 6 THEN 'Jun'
+			WHEN A.MONTH = 7 THEN 'Jul'
+			WHEN A.MONTH = 8 THEN 'Aug'
+			WHEN A.MONTH = 9 THEN 'Sep'
+			WHEN A.MONTH = 10 THEN 'Oct'
+			WHEN A.MONTH = 11 THEN 'Nov'
+			WHEN A.MONTH = 12 THEN 'Dec'
+		END AS LABEL
+		,COALESCE(B.VALUE, 0) AS VALUE
+	FROM (
+		SELECT 1 AS MONTH UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6
+		UNION SELECT 7 AS hour UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12
+	) A LEFT JOIN (
+		SELECT
+			MONTH(`WHEN`) AS MONTH
+			,COUNT(*) AS VALUE
+		FROM ${tableNm}
+		WHERE LOG_TP = #{logTp}
+		<include refid="getWhen_Where" />
+		GROUP BY MONTH
+	) B	ON A.MONTH = B.MONTH
+	ORDER BY A.MONTH
+  </select>
+
+  <select id="getRewardHourChart" parameterType="hashMap" resultMap="RewardChartMap">
+	SELECT /* getRewardChart, 2016-08-01, vancocu */
+		CONCAT(A.HOUR, '~', A.HOUR + 1, 'h') AS LABEL
+	    ,COALESCE(B.VALUE, 0) AS VALUE
+	FROM (
+		SELECT 0 AS hour UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+		UNION SELECT 6 AS hour UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11
+		UNION SELECT 12 AS hour UNION SELECT 13 UNION SELECT 14 UNION SELECT 15 UNION SELECT 16 UNION SELECT 17
+		UNION SELECT 18 AS hour UNION SELECT 19 UNION SELECT 20 UNION SELECT 21 UNION SELECT 22 UNION SELECT 23
+	) A	LEFT JOIN (
+		SELECT
+			HOUR(`WHEN`) AS HOUR
+			,COUNT(*) AS VALUE
+		FROM ${tableNm}
+		WHERE LOG_TP = #{logTp}
+		<include refid="getWhen_Where" />
+		GROUP BY HOUR
+	) B	ON A.HOUR = B.HOUR
+	ORDER BY A.HOUR
+  </select>
+
+  <select id="getRewardDayofweekChart" parameterType="hashMap" resultMap="RewardChartMap">
+	SELECT /* getRewardDayofweekChart, 2016-08-01, vancocu */
+		CASE WHEN A.DAYOFWEEK = 1 THEN 'Sun'
+			WHEN A.DAYOFWEEK = 2 THEN 'Mon'
+			WHEN A.DAYOFWEEK = 3 THEN 'Tue'
+			WHEN A.DAYOFWEEK = 4 THEN 'Wed'
+			WHEN A.DAYOFWEEK = 5 THEN 'Thu'
+			WHEN A.DAYOFWEEK = 6 THEN 'Fri'
+			WHEN A.DAYOFWEEK = 7 THEN 'Sat'
+		END AS LABEL
+		,COALESCE(B.VALUE, 0) AS VALUE
+	FROM (
+		SELECT 1 AS DAYOFWEEK UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7
+	) A LEFT JOIN (
+		SELECT
+			DAYOFWEEK(`WHEN`) AS DAYOFWEEK
+			,COUNT(*) AS VALUE
+		FROM ${tableNm}
+		WHERE LOG_TP = #{logTp}
+		<include refid="getWhen_Where" />
+		GROUP BY DAYOFWEEK
+	) B	ON A.DAYOFWEEK = B.DAYOFWEEK
+	ORDER BY A.DAYOFWEEK
+  </select>
+
+  <resultMap id="RewardSummaryListResultMap" type="java.util.LinkedHashMap" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="BRAND_ID" property="brandId" jdbcType="INTEGER" />
+    <result column="STORE_ID" property="storeId" jdbcType="INTEGER" />
+    <result column="STORE_NM" property="storeNm" jdbcType="VARCHAR" />
+    <result column="BRAND_NM" property="brandNm" jdbcType="VARCHAR" />
+    <result column="STAMP_CNT" property="stampCnt" jdbcType="INTEGER" />
+    <result column="COUPON_CNT" property="couponCnt" jdbcType="INTEGER" />
+    <result column="COUPON_USE_CNT" property="couponUseCnt" jdbcType="INTEGER" />
+  </resultMap>
+
+  <select id="getRewardSummaryList" parameterType="hashMap" resultMap="RewardSummaryListResultMap">
+	SELECT /* getRewardSummaryList */
+	       0 AS ID
+	     , 0 AS BRAND_ID
+	     , 'Total' AS STORE_NM
+	     , A.STAMP_CNT                                         /*스탬프적립 합계*/
+	     , B.COUPON_CNT                                        /*쿠폰발행 합계*/
+	     , C.COUPON_USE_CNT                                    /*쿠폰사용 합계*/
+	  FROM (SELECT COUNT(*) AS STAMP_CNT
+	          FROM TB_SVC_STAMP_LOG
+	         WHERE BRAND_ID = #{brandId}
+	           AND LOG_TP = 401001
+	           <if test="fromdate != null and todate != null">
+	           AND `WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+	                          AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+	           </if>
+	           
+	        ) AS A 
+	        CROSS JOIN (SELECT COUNT(*) AS COUPON_CNT
+	                      FROM TB_SVC_COUPON_LOG
+	                     WHERE BRAND_ID = #{brandId}
+	                       AND LOG_TP = 402001
+	                       <if test="fromdate != null and todate != null">
+				           AND `WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+				                          AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+				           </if>
+	                    ) AS B 
+	        CROSS JOIN (SELECT COUNT(*) AS COUPON_USE_CNT 
+	                      FROM TB_SVC_COUPON_LOG
+	                     WHERE BRAND_ID = #{brandId}
+	                       AND LOG_TP = 402003
+	                       <if test="fromdate != null and todate != null">
+				           AND `WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+				                          AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+				           </if>
+	                    ) AS C
+	UNION ALL
+
+	SELECT 0 AS ID
+	     , 0 AS BRAND_ID
+	     , 'Event Coupon' AS STORE_NM
+	     , A.STAMP_CNT                                         /*스탬프적립 합계*/
+	     , B.COUPON_CNT                                        /*쿠폰발행 합계*/
+	     , C.COUPON_USE_CNT                                    /*쿠폰사용 합계*/
+	  FROM (SELECT 0 AS STAMP_CNT) AS A
+	       CROSS JOIN (SELECT COUNT(*) AS COUPON_CNT
+	                     FROM TB_SVC_COUPON_LOG CL
+	                          LEFT JOIN TB_SVC_USER_COUPON UC ON UC.COUPON_CD = CL.COUPON_CD
+	                    WHERE CL.BRAND_ID = #{brandId}
+	                      AND CL.LOG_TP = '402001'
+	                      AND UC.COUPON_TP = '406002'
+	                      <if test="fromdate != null and todate != null">
+	                      AND CL.`WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+	                                        AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+	                      </if>
+	                ) AS B
+	     CROSS JOIN (SELECT COUNT(*) AS COUPON_USE_CNT
+	                   FROM TB_SVC_USER_COUPON
+	                  WHERE BRAND_ID = #{brandId}
+	                    AND COUPON_ST = '402003'
+	                    AND COUPON_TP = '406002'
+	                    <if test="fromdate != null and todate != null">
+	                    AND USE_TM BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+	                                   AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+						</if>
+	                ) AS C
+	 UNION ALL
+	 
+	 SELECT All_LIST.*
+	   FROM (SELECT A.ID
+	             , A.BRAND_ID
+	             , A.STORE_NM
+	             , COALESCE(B.STAMP_CNT, 0) AS STAMP_CNT                  /*스탬프적립*/
+	             , COALESCE(C.COUPON_CNT, 0) AS COUPON_CNT                /*쿠폰발행*/
+	             , COALESCE(D.COUPON_USE_CNT, 0) AS COUPON_USE_CNT        /*쿠폰사용*/
+	          FROM TB_SVC_STORE A
+	               LEFT JOIN (SELECT STORE_ID
+	                               , COUNT(*) AS STAMP_CNT
+	                            FROM TB_SVC_STAMP_LOG
+	                           WHERE BRAND_ID = #{brandId}
+	                             AND LOG_TP = 401001
+	                             <if test="fromdate != null and todate != null">
+	                             AND `WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+	                                            AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+	                             </if>
+	                           GROUP BY STORE_ID
+	                         ) B ON A.ID = B.STORE_ID
+	               LEFT JOIN (SELECT CL.STORE_ID
+	                               , COUNT(*) AS COUPON_CNT
+	                            FROM TB_SVC_COUPON_LOG CL
+	                                 LEFT JOIN TB_SVC_USER_COUPON UC ON UC.COUPON_CD = CL.COUPON_CD
+	                           WHERE CL.BRAND_ID = #{brandId}
+	                             AND CL.LOG_TP = 402001
+	                             <if test="fromdate != null and todate != null">
+	                             AND CL.`WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+	                                               AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+	                             </if>
+	                             AND UC.COUPON_TP = '406001'
+	                           GROUP BY CL.STORE_ID
+	                          ) C ON A.ID = C.STORE_ID
+	               LEFT JOIN (SELECT USE_STORE_ID AS STORE_ID
+	                               , COUNT(*) AS COUPON_USE_CNT
+	                            FROM TB_SVC_USER_COUPON
+	                           WHERE BRAND_ID = #{brandId}
+	                             AND COUPON_ST = 402003
+	                             AND COUPON_TP = 406001
+	                             <if test="fromdate != null and todate != null">
+	                             AND USE_TM BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+	                                            AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+	                             </if>
+	                           GROUP BY USE_STORE_ID
+	                          ) D ON A.ID = D.STORE_ID
+	         WHERE A.BRAND_ID = #{brandId}
+	         ORDER BY A.STORE_NM
+	          
+	        ) AS All_LIST
+  </select>
+
+  <resultMap id="RewardResultMap" type="java.util.LinkedHashMap" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="STORE_ID" property="storeId" jdbcType="INTEGER" />
+    <result column="STORE_NM" property="storeNm" jdbcType="VARCHAR" />
+    <result column="WHEN" property="when" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getRewardList" parameterType="hashMap" resultMap="RewardResultMap">
+	SELECT /* getRewardList, 2016-07-12, vancocu */
+	ALL_LIST.* FROM (
+		SELECT
+			A.ID AS STORE_ID
+		    ,A.BRAND_ID
+			,A.STORE_NM
+   			<include refid="getRewardList_When" />
+		FROM TB_SVC_STORE A
+		WHERE A.BRAND_ID = #{brandId}
+
+	UNION
+
+		SELECT
+			A.ID AS STORE_ID
+		    ,A.BRAND_ID
+			,' Total' AS STORE_NM
+   			<include refid="getRewardTotalList_When" />
+		FROM TB_SVC_STORE A
+		WHERE A.BRAND_ID = #{brandId}
+		GROUP BY A.BRAND_ID
+	) ALL_LIST
+	WHERE BRAND_ID = #{brandId}
+	ORDER BY STORE_NM
+  </select>
+
+  <sql id="getRewardList_When">
+	<if test="option1 == 'daily'">
+	   	,(	SELECT
+	   			GROUP_CONCAT(LEFT(`WHEN`, 10))
+	   		FROM ${tableNm}
+	   		WHERE STORE_ID = A.ID AND LOG_TP = #{logTp}
+			<if test="fromdate != null and todate != null">
+		   		AND `WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		   	</if>
+	   	) AS `WHEN`
+	</if>
+	<if test="option1 == 'weekly'">
+	    ,(	SELECT
+	   			GROUP_CONCAT(WEEK(`WHEN`, 0) + 1)
+    		FROM ${tableNm}
+    		WHERE STORE_ID = A.ID AND LOG_TP = #{logTp}
+			<if test="fromdate != null and todate != null">
+		   		AND `WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		   	</if>
+    	) AS 'WHEN'
+	</if>
+	<if test="option1 == 'monthly'">
+	    ,(	SELECT
+	      		GROUP_CONCAT(DATE_FORMAT(`WHEN`, '%Y-%m'))
+	   	   	FROM ${tableNm}
+	   	   	WHERE STORE_ID = A.ID AND LOG_TP = #{logTp}
+			<if test="fromdate != null and todate != null">
+		   		AND `WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		   	</if>
+	    ) AS `WHEN`
+	</if>
+  </sql>
+
+  <sql id="getRewardTotalList_When">
+	<if test="option1 == 'daily'">
+	   	,(	SELECT
+	   			GROUP_CONCAT(LEFT(`WHEN`, 10))
+	   		FROM ${tableNm}
+	   		WHERE BRAND_ID = A.BRAND_ID AND LOG_TP = #{logTp}
+			<if test="fromdate != null and todate != null">
+		   		AND `WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		   	</if>
+	   	) AS `WHEN`
+	</if>
+	<if test="option1 == 'weekly'">
+	    ,(	SELECT
+	   			GROUP_CONCAT(WEEK(`WHEN`, 0) + 1)
+    		FROM ${tableNm}
+    		WHERE BRAND_ID = A.BRAND_ID AND LOG_TP = #{logTp}
+			<if test="fromdate != null and todate != null">
+		   		AND `WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		   	</if>
+    	) AS 'WHEN'
+	</if>
+	<if test="option1 == 'monthly'">
+	    ,(	SELECT
+	      		GROUP_CONCAT(DATE_FORMAT(`WHEN`, '%Y-%m'))
+	   	   	FROM ${tableNm}
+	   	   	WHERE BRAND_ID = A.BRAND_ID AND LOG_TP = #{logTp}
+			<if test="fromdate != null and todate != null">
+		   		AND `WHEN` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		   	</if>
+	    ) AS `WHEN`
+	</if>
+  </sql>
+
+  <resultMap id="StampSummaryResultMap" type="java.util.LinkedHashMap" >
+    <result column="TYPE_NM" property="typeNm" jdbcType="VARCHAR" />
+    <result column="STAMP_SUM_CNT" property="stampSumCnt" jdbcType="INTEGER" />
+  </resultMap>
+
+  <select id="getStampSummaryList" parameterType="hashMap" resultMap="StampSummaryResultMap">
+	SELECT /* getStampSummaryList, 2016-07-25, vancocu */
+		'Earn Sales' AS TYPE_NM
+		,COUNT(*) AS STAMP_SUM_CNT
+	FROM TB_SVC_STAMP_LOG
+	WHERE LOG_TP = 401001
+	<include refid="getWhen_Where" />
+
+	UNION ALL
+
+	SELECT
+		'Cancel Sales' AS TYPE_NM
+		,COUNT(*) AS STAMP_SUM_CNT
+	FROM TB_SVC_STAMP_LOG
+	WHERE LOG_TP = 401002
+	<include refid="getWhen_Where" />
+
+	UNION ALL
+
+	SELECT
+		'Daily Average Earn' AS TYPE_NM
+		,ROUND(COUNT(*) / DATEDIFF(#{todate}, #{fromdate}), 1) AS STAMP_SUM_CNT
+	FROM TB_SVC_STAMP_LOG
+	WHERE LOG_TP = 401001
+	<include refid="getWhen_Where" />
+  </select>
+
+  <resultMap id="StampResultMap" type="java.util.LinkedHashMap" >
+    <result column="LABEL" property="label" jdbcType="VARCHAR" />
+    <result column="STAMP_ISSUED_TOTAL" property="stampIssuedTotal" jdbcType="INTEGER" />
+    <result column="STAMP_CANCELED_TOTAL" property="stampCanceledTotal" jdbcType="INTEGER" />
+    <result column="STAMP_SUM_TOTAL" property="stampSumTotal" jdbcType="INTEGER" />
+    <result column="STAMP_ISSUED_DAILY_AVG" property="stampIssuedDailyAvg" jdbcType="INTEGER" />
+  </resultMap>
+
+  <select id="getStampDailyList" parameterType="hashMap" resultMap="StampResultMap">
+	SELECT /* getStampDailyList, 2016-07-25, vancocu */
+		DATE_FORMAT(CL.YMD, '%Y-%m-%d') AS LABEL
+		,COALESCE(A.STAMP_ISSUED_TOTAL, 0) AS STAMP_ISSUED_TOTAL
+		,COALESCE(B.STAMP_CANCELED_TOTAL, 0) AS STAMP_CANCELED_TOTAL
+		,COALESCE(A.STAMP_ISSUED_TOTAL, 0) + COALESCE(B.STAMP_CANCELED_TOTAL, 0) AS STAMP_SUM_TOTAL
+     	,COALESCE(A.STAMP_ISSUED_TOTAL, 0) + COALESCE(B.STAMP_CANCELED_TOTAL, 0) AS STAMP_ISSUED_DAILY_AVG
+	FROM
+		TB_BASE_CALENDAR CL
+	LEFT JOIN (
+		SELECT
+			DATE(`WHEN`) AS YMD
+			,COUNT(*) AS STAMP_ISSUED_TOTAL
+		FROM TB_SVC_STAMP_LOG
+		WHERE LOG_TP = 401001
+		<include refid="getWhen_Where" />
+	    GROUP BY YMD
+	) A	ON CL.YMD = A.YMD
+	LEFT JOIN (
+		SELECT
+			DATE(`WHEN`) AS YMD
+			,COUNT(*) AS STAMP_CANCELED_TOTAL
+		FROM TB_SVC_STAMP_LOG
+		WHERE LOG_TP = 401002
+		<include refid="getWhen_Where" />
+	    GROUP BY YMD
+	) B	ON CL.YMD = B.YMD
+	WHERE CL.YMD BETWEEN #{fromdate} AND #{todate}
+	ORDER BY CL.YMD
+  </select>
+
+  <select id="getStampWeeklyList" parameterType="hashMap" resultMap="StampResultMap">
+	SELECT /* getStampWeeklyList, 2016-07-25, vancocu */
+		CONCAT(DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 0), '%X%V%w'), '%Y-%m-%d'), ' ~ ', DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 6), '%X%V%w'), '%Y-%m-%d')) AS LABEL
+		,COALESCE(A.STAMP_ISSUED_TOTAL, 0) AS STAMP_ISSUED_TOTAL
+		,COALESCE(B.STAMP_CANCELED_TOTAL, 0) AS STAMP_CANCELED_TOTAL
+		,COALESCE(A.STAMP_ISSUED_TOTAL, 0) + COALESCE(B.STAMP_CANCELED_TOTAL, 0) AS STAMP_SUM_TOTAL
+		,CASE
+			WHEN DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 0), '%X%V%w'), '%Y-%m-%d') <![CDATA[ <= ]]> #{fromdate}
+			THEN COALESCE(ROUND(A.STAMP_ISSUED_TOTAL / (DATEDIFF(DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 6), '%X%V%w'), '%Y-%m-%d'), #{fromdate}) + 1), 1), 0)
+			WHEN DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 6), '%X%V%w'), '%Y-%m-%d') >= #{todate}
+			THEN COALESCE(ROUND(A.STAMP_ISSUED_TOTAL / (DATEDIFF(#{todate}, DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 0), '%X%V%w'), '%Y-%m-%d')) + 1), 1), 0)
+			ELSE COALESCE(ROUND(A.STAMP_ISSUED_TOTAL / (DATEDIFF(DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 6), '%X%V%w'), '%Y-%m-%d'), DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 0), '%X%V%w'), '%Y-%m-%d')) + 1), 1), 0)
+		END AS STAMP_ISSUED_DAILY_AVG
+	FROM
+		TB_BASE_CALENDAR CL
+	LEFT JOIN (
+		SELECT
+			YEARWEEK(`WHEN`) AS YEARWEEK
+			,COUNT(*) AS STAMP_ISSUED_TOTAL
+		FROM TB_SVC_STAMP_LOG
+		WHERE LOG_TP = 401001
+		<include refid="getWhen_Where" />
+	    GROUP BY YEARWEEK
+	) A	ON CL.YEARWEEK = A.YEARWEEK
+	LEFT JOIN (
+		SELECT
+			YEARWEEK(`WHEN`) AS YEARWEEK
+			,COUNT(*) AS STAMP_CANCELED_TOTAL
+		FROM TB_SVC_STAMP_LOG
+		WHERE LOG_TP = 401002
+		<include refid="getWhen_Where" />
+	    GROUP BY YEARWEEK
+	) B	ON CL.YEARWEEK = B.YEARWEEK
+	WHERE CL.YMD BETWEEN #{fromdate} AND #{todate}
+	GROUP BY CL.YEARWEEK
+	ORDER BY CL.YEARWEEK
+  </select>
+
+  <select id="getStampMonthlyList" parameterType="hashMap" resultMap="StampResultMap">
+  	SELECT /* getStampMonthlyList, 2016-07-25, vancocu */
+		DATE_FORMAT(CL.YMD, '%Y-%m') AS LABEL
+		,COALESCE(A.STAMP_ISSUED_TOTAL, 0) AS STAMP_ISSUED_TOTAL
+		,COALESCE(B.STAMP_CANCELED_TOTAL, 0) AS STAMP_CANCELED_TOTAL
+		,COALESCE(A.STAMP_ISSUED_TOTAL, 0) + COALESCE(B.STAMP_CANCELED_TOTAL, 0) AS STAMP_SUM_TOTAL
+     	,COALESCE(ROUND(A.STAMP_ISSUED_TOTAL / DATE_FORMAT(LAST_DAY(CL.YMD), '%d'), 1), 0) AS STAMP_ISSUED_DAILY_AVG
+	FROM
+		TB_BASE_CALENDAR CL
+	LEFT JOIN (
+		SELECT
+			YEAR(`WHEN`) AS YEAR
+			,MONTH(`WHEN`) AS MONTH
+			,COUNT(*) AS STAMP_ISSUED_TOTAL
+		FROM TB_SVC_STAMP_LOG
+		WHERE LOG_TP = 401001
+		<include refid="getWhen_Where" />
+	    GROUP BY YEAR, MONTH
+	) A	ON CL.YEAR = A.YEAR	AND CL.MONTH = A.MONTH
+	LEFT JOIN (
+		SELECT
+			YEAR(`WHEN`) AS YEAR
+			,MONTH(`WHEN`) AS MONTH
+			,COUNT(*) AS STAMP_CANCELED_TOTAL
+		FROM TB_SVC_STAMP_LOG
+		WHERE LOG_TP = 401002
+		<include refid="getWhen_Where" />
+	    GROUP BY YEAR, MONTH
+	) B	ON CL.YEAR = B.YEAR	AND CL.MONTH = B.MONTH
+	WHERE CL.YMD BETWEEN #{fromdate} AND #{todate}
+	GROUP BY CL.YEAR, CL.MONTH
+	ORDER BY CL.YEAR, CL.MONTH
+  </select>
+
+  <resultMap id="CouponSummaryResultMap" type="java.util.LinkedHashMap" >
+    <result column="TYPE_NM" property="typeNm" jdbcType="VARCHAR" />
+    <result column="COUPON_SUM_CNT" property="couponSumCnt" jdbcType="INTEGER" />
+    <result column="PARENT" property="parent" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getCouponSummaryList" parameterType="hashMap" resultMap="CouponSummaryResultMap">
+	SELECT
+		'Coupon Issuing' AS TYPE_NM	<!-- i18n.BO2189 -->
+		,COUNT(*) AS COUPON_SUM_CNT
+		,'odd gradeX back_blue' AS PARENT
+	FROM TB_SVC_COUPON_LOG
+	WHERE LOG_TP = 402001
+	<include refid="getWhen_Where" />
+
+    UNION ALL
+
+	SELECT
+		'Earn Coupon' AS TYPE_NM	<!-- i18n.BO2401 -->
+		,COUNT(*) AS COUPON_SUM_CNT
+		,'even gradeC' AS PARENT
+	FROM TB_SVC_COUPON_LOG
+	WHERE LOG_TP = 402001 AND PROMOTION_ID = 0
+	<include refid="getWhen_Where" />
+
+    UNION ALL
+
+	SELECT
+		'Promotion coupon' AS TYPE_NM <!-- i18n.BO2402 --> 
+		,COUNT(*) AS COUPON_SUM_CNT
+		,'even gradeC' AS PARENT
+	FROM TB_SVC_COUPON_LOG
+	WHERE LOG_TP = 402001 AND PROMOTION_ID > 0
+	<include refid="getWhen_Where" />
+
+    UNION ALL
+
+	SELECT
+        'Cancle Coupon Issuing' AS TYPE_NM	<!-- i18n.BO2403 -->
+		,COUNT(*) AS COUPON_SUM_CNT
+		,'odd gradeX back_blue' AS PARENT
+	FROM TB_SVC_COUPON_LOG
+	WHERE LOG_TP = 402004
+	<include refid="getWhen_Where" />
+
+    UNION ALL
+
+	SELECT
+		'Earn Coupon' AS TYPE_NM	<!-- i18n.BO2401 -->
+		,COUNT(*) AS COUPON_SUM_CNT
+		,'even gradeC' AS PARENT
+	FROM TB_SVC_COUPON_LOG
+	WHERE LOG_TP = 402004 AND PROMOTION_ID = 0
+	<include refid="getWhen_Where" />
+
+    UNION ALL
+
+	SELECT
+		'Promotion coupon' AS TYPE_NM <!-- i18n.BO2402 --> 
+		,COUNT(*) AS COUPON_SUM_CNT
+		,'even gradeC' AS PARENT
+	FROM TB_SVC_COUPON_LOG
+	WHERE LOG_TP = 402004 AND PROMOTION_ID > 0
+	<include refid="getWhen_Where" />
+
+    UNION ALL
+
+	SELECT
+        'Use Coupon' AS TYPE_NM <!-- i18n.BO2270 -->
+		,COUNT(*) AS COUPON_SUM_CNT
+		,'odd gradeX back_blue' AS PARENT
+	FROM TB_SVC_COUPON_LOG
+	WHERE LOG_TP = 402003
+	<include refid="getWhen_Where" />
+
+    UNION ALL
+
+	SELECT
+		'Earn Coupon' AS TYPE_NM <!-- i18n.BO2401 -->
+		,COUNT(*) AS COUPON_SUM_CNT
+		,'even gradeC' AS PARENT
+	FROM TB_SVC_COUPON_LOG
+	WHERE LOG_TP = 402003 AND PROMOTION_ID = 0
+	<include refid="getWhen_Where" />
+
+    UNION ALL
+
+	SELECT
+		'Promotion coupon' AS TYPE_NM <!-- i18n.BO2402 -->
+		,COUNT(*) AS COUPON_SUM_CNT
+		,'even gradeC' AS PARENT
+	FROM TB_SVC_COUPON_LOG
+	WHERE LOG_TP = 402003 AND PROMOTION_ID > 0
+	<include refid="getWhen_Where" />
+
+    UNION ALL
+
+	SELECT
+        'Cancle Use Coupon' AS TYPE_NM	<!-- i18n.BO2404 -->
+		,COUNT(*) AS COUPON_SUM_CNT
+		,'odd gradeX back_blue' AS PARENT
+	FROM TB_SVC_COUPON_LOG
+	WHERE LOG_TP = 402002
+	<include refid="getWhen_Where" />
+
+    UNION ALL
+
+	SELECT
+		'Earn Coupon' AS TYPE_NM	<!-- i18n.BO2401 -->
+		,COUNT(*) AS COUPON_SUM_CNT
+		,'even gradeC' AS PARENT
+	FROM TB_SVC_COUPON_LOG
+	WHERE LOG_TP = 402002 AND PROMOTION_ID = 0
+	<include refid="getWhen_Where" />
+
+    UNION ALL
+
+	SELECT
+		'Promotion coupon' AS TYPE_NM	<!-- i18n.BO2402 -->
+		,COUNT(*) AS COUPON_SUM_CNT
+		,'even gradeC' AS PARENT
+	FROM TB_SVC_COUPON_LOG
+	WHERE LOG_TP = 402002 AND PROMOTION_ID > 0
+	<include refid="getWhen_Where" />
+  </select>
+
+  <resultMap id="CouponResultMap" type="java.util.LinkedHashMap" >
+    <result column="LABEL" property="label" jdbcType="VARCHAR" />
+    <result column="COUPON_ISSUED_TOTAL" property="couponIssuedTotal" jdbcType="INTEGER" />
+    <result column="COUPON_ISSUED_PROMOTION_TOTAL" property="couponIssuedPromotionTotal" jdbcType="INTEGER" />
+    <result column="COUPON_ISSUED_CANCELED_TOTAL" property="couponIssuedCanceledTotal" jdbcType="INTEGER" />
+    <result column="COUPON_ISSUED_CANCELED_PROMOTION_TOTAL" property="couponIssuedCanceledPromotionTotal" jdbcType="INTEGER" />
+    <result column="COUPON_USED_TOTAL" property="couponUsedTotal" jdbcType="INTEGER" />
+    <result column="COUPON_USED_PROMOTION_TOTAL" property="couponUsedPromotionTotal" jdbcType="INTEGER" />
+    <result column="COUPON_USED_CANCELED_TOTAL" property="couponUsedCanceledTotal" jdbcType="INTEGER" />
+    <result column="COUPON_USED_CANCELED_PROMOTION_TOTAL" property="couponUsedCanceledPromotionTotal" jdbcType="INTEGER" />
+  </resultMap>
+
+  <select id="getCouponDailyList" parameterType="hashMap" resultMap="CouponResultMap">
+	SELECT
+		DATE_FORMAT(CL.YMD, '%Y-%m-%d') AS LABEL
+		,COALESCE(A.COUPON_ISSUED_TOTAL, 0) AS COUPON_ISSUED_TOTAL
+		,COALESCE(AP.COUPON_ISSUED_PROMOTION_TOTAL, 0) AS COUPON_ISSUED_PROMOTION_TOTAL
+		,COALESCE(B.COUPON_ISSUED_CANCELED_TOTAL, 0) AS COUPON_ISSUED_CANCELED_TOTAL
+		,COALESCE(BP.COUPON_ISSUED_CANCELED_PROMOTION_TOTAL, 0) AS COUPON_ISSUED_CANCELED_PROMOTION_TOTAL
+		,COALESCE(C.COUPON_USED_TOTAL, 0) AS COUPON_USED_TOTAL
+		,COALESCE(CP.COUPON_USED_PROMOTION_TOTAL, 0) AS COUPON_USED_PROMOTION_TOTAL
+		,COALESCE(D.COUPON_USED_CANCELED_TOTAL, 0) AS COUPON_USED_CANCELED_TOTAL
+		,COALESCE(DP.COUPON_USED_CANCELED_PROMOTION_TOTAL, 0) AS COUPON_USED_CANCELED_PROMOTION_TOTAL
+	FROM
+		TB_BASE_CALENDAR CL
+	LEFT JOIN (
+		SELECT
+			DATE(`WHEN`) AS YMD
+			,COUNT(*) AS COUPON_ISSUED_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402001
+		<include refid="getWhen_Where" />
+	    GROUP BY YMD
+	) A	ON CL.YMD = A.YMD
+	LEFT JOIN (
+		SELECT
+			DATE(`WHEN`) AS YMD
+			,COUNT(*) AS COUPON_ISSUED_PROMOTION_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402001 AND PROMOTION_ID > 0
+		<include refid="getWhen_Where" />
+	    GROUP BY YMD
+	) AP ON CL.YMD = AP.YMD
+	LEFT JOIN (
+		SELECT
+			DATE(`WHEN`) AS YMD
+			,COUNT(*) AS COUPON_ISSUED_CANCELED_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402004
+		<include refid="getWhen_Where" />
+	    GROUP BY YMD
+	) B	ON CL.YMD = B.YMD
+	LEFT JOIN (
+		SELECT
+			DATE(`WHEN`) AS YMD
+			,COUNT(*) AS COUPON_ISSUED_CANCELED_PROMOTION_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402004 AND PROMOTION_ID > 0
+		<include refid="getWhen_Where" />
+	    GROUP BY YMD
+	) BP ON CL.YMD = BP.YMD
+	LEFT JOIN (
+		SELECT
+			DATE(`WHEN`) AS YMD
+			,COUNT(*) AS COUPON_USED_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402003
+		<include refid="getWhen_Where" />
+	    GROUP BY YMD
+	) C	ON CL.YMD = C.YMD
+	LEFT JOIN (
+		SELECT
+			DATE(`WHEN`) AS YMD
+			,COUNT(*) AS COUPON_USED_PROMOTION_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402003 AND PROMOTION_ID > 0
+		<include refid="getWhen_Where" />
+	    GROUP BY YMD
+	) CP	ON CL.YMD = CP.YMD
+	LEFT JOIN (
+		SELECT
+			DATE(`WHEN`) AS YMD
+			,COUNT(*) AS COUPON_USED_CANCELED_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402002
+		<include refid="getWhen_Where" />
+	    GROUP BY YMD
+	) D	ON CL.YMD = D.YMD
+	LEFT JOIN (
+		SELECT
+			DATE(`WHEN`) AS YMD
+			,COUNT(*) AS COUPON_USED_CANCELED_PROMOTION_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402002 AND PROMOTION_ID > 0
+		<include refid="getWhen_Where" />
+	    GROUP BY YMD
+	) DP ON CL.YMD = DP.YMD
+	WHERE CL.YMD BETWEEN #{fromdate} AND #{todate}
+	ORDER BY CL.YMD
+  </select>
+
+  <select id="getCouponWeeklyList" parameterType="hashMap" resultMap="CouponResultMap">
+	SELECT
+		CONCAT(DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 0), '%X%V%w'), '%Y-%m-%d'), ' ~ ', DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 6), '%X%V%w'), '%Y-%m-%d')) AS LABEL
+		,COALESCE(A.COUPON_ISSUED_TOTAL, 0) AS COUPON_ISSUED_TOTAL
+		,COALESCE(AP.COUPON_ISSUED_PROMOTION_TOTAL, 0) AS COUPON_ISSUED_PROMOTION_TOTAL
+		,COALESCE(B.COUPON_ISSUED_CANCELED_TOTAL, 0) AS COUPON_ISSUED_CANCELED_TOTAL
+		,COALESCE(BP.COUPON_ISSUED_CANCELED_PROMOTION_TOTAL, 0) AS COUPON_ISSUED_CANCELED_PROMOTION_TOTAL
+		,COALESCE(C.COUPON_USED_TOTAL, 0) AS COUPON_USED_TOTAL
+		,COALESCE(CP.COUPON_USED_PROMOTION_TOTAL, 0) AS COUPON_USED_PROMOTION_TOTAL
+		,COALESCE(D.COUPON_USED_CANCELED_TOTAL, 0) AS COUPON_USED_CANCELED_TOTAL
+		,COALESCE(DP.COUPON_USED_CANCELED_PROMOTION_TOTAL, 0) AS COUPON_USED_CANCELED_PROMOTION_TOTAL
+	FROM
+		TB_BASE_CALENDAR CL
+	LEFT JOIN (
+		SELECT
+			YEARWEEK(`WHEN`) AS YEARWEEK
+			,COUNT(*) AS COUPON_ISSUED_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402001
+		<include refid="getWhen_Where" />
+	    GROUP BY YEARWEEK
+	) A	ON CL.YEARWEEK = A.YEARWEEK
+	LEFT JOIN (
+		SELECT
+			YEARWEEK(`WHEN`) AS YEARWEEK
+			,COUNT(*) AS COUPON_ISSUED_PROMOTION_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402001 AND PROMOTION_ID > 0
+		<include refid="getWhen_Where" />
+	    GROUP BY YEARWEEK
+	) AP ON CL.YEARWEEK = AP.YEARWEEK
+	LEFT JOIN (
+		SELECT
+			YEARWEEK(`WHEN`) AS YEARWEEK
+			,COUNT(*) AS COUPON_ISSUED_CANCELED_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402004
+		<include refid="getWhen_Where" />
+	    GROUP BY YEARWEEK
+	) B	ON CL.YEARWEEK = B.YEARWEEK
+	LEFT JOIN (
+		SELECT
+			YEARWEEK(`WHEN`) AS YEARWEEK
+			,COUNT(*) AS COUPON_ISSUED_CANCELED_PROMOTION_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402004 AND PROMOTION_ID > 0
+		<include refid="getWhen_Where" />
+	    GROUP BY YEARWEEK
+	) BP ON CL.YEARWEEK = BP.YEARWEEK
+	LEFT JOIN (
+		SELECT
+			YEARWEEK(`WHEN`) AS YEARWEEK
+			,COUNT(*) AS COUPON_USED_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402003
+		<include refid="getWhen_Where" />
+	    GROUP BY YEARWEEK
+	) C	ON CL.YEARWEEK = C.YEARWEEK
+	LEFT JOIN (
+		SELECT
+			YEARWEEK(`WHEN`) AS YEARWEEK
+			,COUNT(*) AS COUPON_USED_PROMOTION_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402003 AND PROMOTION_ID > 0
+		<include refid="getWhen_Where" />
+	    GROUP BY YEARWEEK
+	) CP ON CL.YEARWEEK = CP.YEARWEEK
+	LEFT JOIN (
+		SELECT
+			YEARWEEK(`WHEN`) AS YEARWEEK
+			,COUNT(*) AS COUPON_USED_CANCELED_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402002
+		<include refid="getWhen_Where" />
+	    GROUP BY YEARWEEK
+	) D	ON CL.YEARWEEK = D.YEARWEEK
+	LEFT JOIN (
+		SELECT
+			YEARWEEK(`WHEN`) AS YEARWEEK
+			,COUNT(*) AS COUPON_USED_CANCELED_PROMOTION_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402002 AND PROMOTION_ID > 0
+		<include refid="getWhen_Where" />
+	    GROUP BY YEARWEEK
+	) DP ON CL.YEARWEEK = DP.YEARWEEK
+	WHERE CL.YMD BETWEEN #{fromdate} AND #{todate}
+	GROUP BY CL.YEARWEEK
+	ORDER BY CL.YEARWEEK
+  </select>
+
+  <select id="getCouponMonthlyList" parameterType="hashMap" resultMap="CouponResultMap">
+	SELECT
+		DATE_FORMAT(CL.YMD, '%Y-%m') AS LABEL
+		,COALESCE(A.COUPON_ISSUED_TOTAL, 0) AS COUPON_ISSUED_TOTAL
+		,COALESCE(AP.COUPON_ISSUED_PROMOTION_TOTAL, 0) AS COUPON_ISSUED_PROMOTION_TOTAL
+		,COALESCE(B.COUPON_ISSUED_CANCELED_TOTAL, 0) AS COUPON_ISSUED_CANCELED_TOTAL
+		,COALESCE(BP.COUPON_ISSUED_CANCELED_PROMOTION_TOTAL, 0) AS COUPON_ISSUED_CANCELED_PROMOTION_TOTAL
+		,COALESCE(C.COUPON_USED_TOTAL, 0) AS COUPON_USED_TOTAL
+		,COALESCE(CP.COUPON_USED_PROMOTION_TOTAL, 0) AS COUPON_USED_PROMOTION_TOTAL
+		,COALESCE(D.COUPON_USED_CANCELED_TOTAL, 0) AS COUPON_USED_CANCELED_TOTAL
+		,COALESCE(DP.COUPON_USED_CANCELED_PROMOTION_TOTAL, 0) AS COUPON_USED_CANCELED_PROMOTION_TOTAL
+	FROM
+		TB_BASE_CALENDAR CL
+	LEFT JOIN (
+		SELECT
+			YEAR(`WHEN`) AS YEAR
+			,MONTH(`WHEN`) AS MONTH
+			,COUNT(*) AS COUPON_ISSUED_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402001
+		<include refid="getWhen_Where" />
+	  	GROUP BY YEAR, MONTH
+	) A	ON CL.YEAR = A.YEAR AND CL.MONTH = A.MONTH
+	LEFT JOIN (
+		SELECT
+			YEAR(`WHEN`) AS YEAR
+			,MONTH(`WHEN`) AS MONTH
+			,COUNT(*) AS COUPON_ISSUED_PROMOTION_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402001 AND PROMOTION_ID > 0
+		<include refid="getWhen_Where" />
+	  	GROUP BY YEAR, MONTH
+	) AP ON CL.YEAR = AP.YEAR AND CL.MONTH = AP.MONTH
+	LEFT JOIN (
+		SELECT
+			YEAR(`WHEN`) AS YEAR
+			,MONTH(`WHEN`) AS MONTH
+			,COUNT(*) AS COUPON_ISSUED_CANCELED_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402004
+		<include refid="getWhen_Where" />
+	  	GROUP BY YEAR, MONTH
+	) B	ON CL.YEAR = B.YEAR AND CL.MONTH = B.MONTH
+	LEFT JOIN (
+		SELECT
+			YEAR(`WHEN`) AS YEAR
+			,MONTH(`WHEN`) AS MONTH
+			,COUNT(*) AS COUPON_ISSUED_CANCELED_PROMOTION_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402004 AND PROMOTION_ID > 0
+		<include refid="getWhen_Where" />
+	  	GROUP BY YEAR, MONTH
+	) BP ON CL.YEAR = BP.YEAR AND CL.MONTH = BP.MONTH
+	LEFT JOIN (
+		SELECT
+			YEAR(`WHEN`) AS YEAR
+			,MONTH(`WHEN`) AS MONTH
+			,COUNT(*) AS COUPON_USED_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402003
+		<include refid="getWhen_Where" />
+	  	GROUP BY YEAR, MONTH
+	) C	ON CL.YEAR = C.YEAR AND CL.MONTH = C.MONTH
+	LEFT JOIN (
+		SELECT
+			YEAR(`WHEN`) AS YEAR
+			,MONTH(`WHEN`) AS MONTH
+			,COUNT(*) AS COUPON_USED_PROMOTION_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402003 AND PROMOTION_ID > 0
+		<include refid="getWhen_Where" />
+	  	GROUP BY YEAR, MONTH
+	) CP ON CL.YEAR = CP.YEAR AND CL.MONTH = CP.MONTH
+	LEFT JOIN (
+		SELECT
+			YEAR(`WHEN`) AS YEAR
+			,MONTH(`WHEN`) AS MONTH
+			,COUNT(*) AS COUPON_USED_CANCELED_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402002
+		<include refid="getWhen_Where" />
+	  	GROUP BY YEAR, MONTH
+	) D ON CL.YEAR = D.YEAR AND CL.MONTH = D.MONTH
+	LEFT JOIN (
+		SELECT
+			YEAR(`WHEN`) AS YEAR
+			,MONTH(`WHEN`) AS MONTH
+			,COUNT(*) AS COUPON_USED_CANCELED_PROMOTION_TOTAL
+		FROM TB_SVC_COUPON_LOG
+		WHERE LOG_TP = 402002 AND PROMOTION_ID > 0
+		<include refid="getWhen_Where" />
+	  	GROUP BY YEAR, MONTH
+	) DP ON CL.YEAR = DP.YEAR AND CL.MONTH = DP.MONTH
+	WHERE CL.YMD BETWEEN #{fromdate} AND #{todate}
+	GROUP BY CL.YEAR, CL.MONTH
+	ORDER BY CL.YEAR, CL.MONTH
+  </select>
+
+  <resultMap id="StampListResultMap" type="java.util.LinkedHashMap" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="USER_ID" property="userId" jdbcType="BIGINT" />
+    <result column="BRAND_ID" property="brandId" jdbcType="BIGINT" />
+    <result column="STORE_ID" property="storeId" jdbcType="BIGINT" />
+    <result column="ORDER_ID" property="orderId" jdbcType="BIGINT" />
+    <result column="COUPON_ID" property="couponId" jdbcType="BIGINT" />
+	<result column="STAMP_ST" property="stampSt" jdbcType="CHAR" />
+    <result column="STAMP_ST_NM" property="stampStNm" jdbcType="CHAR" />
+    <result column="STAMP_TP" property="stampTp" jdbcType="CHAR" />
+    <result column="STAMP_TP_NM" property="stampTpNm" jdbcType="CHAR" />
+    <result column="INS_DATE" property="insDate" jdbcType="CHAR" />
+    <result column="INS_TIME" property="insTime" jdbcType="CHAR" />
+    <result column="NAME" property="name" jdbcType="CHAR" />
+    <result column="BARCODE" property="barcode" jdbcType="CHAR" />
+    <result column="MB" property="mb" jdbcType="CHAR" typeHandler="com.jc.pico.utils.mybatis.typehandler.MobileSecurityTypeHandler"/>
+    <result column="STORE_NM" property="storeNm" jdbcType="CHAR" />
+  </resultMap>
+
+ <select id="getStampList" parameterType="hashMap" resultMap="StampListResultMap">
+  	SELECT ST.ID
+  	     , ST.USER_ID
+  	     , ST.BRAND_ID
+  	     , ST.STORE_ID
+  	     , ST.ORDER_ID
+  	     , ST.COUPON_ID
+  	     , ST.CREATED AS INS_DATE
+  	     , RIGHT(ST.CREATED, 8) AS INS_TIME
+  	     , US.`BARCODE`
+  	     , US.`NAME`
+  	     , US.`MB`
+  	     , US.`MB_BK`
+  	     , ST.STAMP_TP
+  	     , (SELECT TITLE FROM TB_BASE_BCODE A WHERE BASE_CD=ST.STAMP_TP) AS STAMP_TP_NM
+  	     , ST.STAMP_ST
+  	     , (SELECT TITLE FROM TB_BASE_BCODE A WHERE BASE_CD=ST.STAMP_ST) AS STAMP_ST_NM
+  	     , STO.STORE_NM
+	FROM TB_SVC_USER_STAMP ST
+	     LEFT JOIN TB_USER US ON (ST.USER_ID=US.ID)
+	     LEFT JOIN TB_SVC_STORE STO ON (ST.STORE_ID=STO.ID)
+	WHERE 1=1 
+		<if test="id != null">
+			AND ST.ID = #{id}
+		</if>
+		<if test="userId != null">
+			AND ST.USER_ID = #{userId}
+		</if>
+		<if test="brandId != null">
+			AND ST.BRAND_ID = #{brandId}
+		</if>
+		<if test=" storeId != null">
+			AND ST.STORE_ID = #{storeId}
+		</if>
+		<if test="fromdate != null and todate != null">
+			AND ST.CREATED BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		</if>
+		<if test="stampSt != null and stampSt !=''">
+			AND ST.STAMP_ST = #{stampSt}
+		</if>
+		<if test="stampTp != null and stampTp !=''">
+			AND ST.STAMP_TP = #{stampTp}
+		</if>
+		<if test=" searchType == 'usercode'">
+			<if test="searchKeyword != null and searchKeyword !=''">
+				AND US.BARCODE = #{searchKeyword}
+			</if>
+		</if>
+		<if test=" searchType == 'usermb'">
+			<if test="searchKeyword != null and searchKeyword !=''">
+				AND US.MB = #{searchKeyword,typeHandler=com.jc.pico.utils.mybatis.typehandler.OnewaySecurityTypeHandler}
+			</if>
+		</if>
+		<if test="orderby != null">
+			ORDER BY ${orderby}
+		</if>
+		<if test="orderby == null">
+			ORDER BY ST.CREATED DESC
+		</if>
+  </select>
+
+  <select id="getCountStampList" parameterType="hashMap" resultType="int">
+  	SELECT COUNT(*) AS COUNT
+	FROM TB_SVC_USER_STAMP ST
+	     LEFT JOIN PICO.TB_USER US ON (ST.USER_ID=US.ID)
+	     LEFT JOIN PICO.TB_SVC_STORE STO ON (ST.STORE_ID=STO.ID)
+	WHERE 1=1
+		<if test="id != null">
+			AND ST.ID = #{id}
+		</if>
+		<if test="userId != null">
+			AND ST.USER_ID = #{userId}
+		</if>
+		<if test="brandId != null">
+			AND ST.BRAND_ID = #{brandId}
+		</if>
+		<if test=" storeId != null">
+			AND ST.STORE_ID = #{storeId}
+		</if>
+		<if test="fromdate != null and todate != null">
+			AND ST.CREATED BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		</if>
+		<if test="stampSt != null and stampSt !=''">
+			AND ST.STAMP_ST = #{stampSt}
+		</if>
+		<if test="stampTp != null and stampTp !=''">
+			AND ST.STAMP_TP = #{stampTp}
+		</if>
+		<if test=" searchType == 'usercode'">
+			<if test="searchKeyword != null and searchKeyword !=''">
+				AND US.BARCODE = #{searchKeyword}
+			</if>
+		</if>
+		<if test=" searchType == 'usermb'">
+			<if test="searchKeyword != null and searchKeyword !=''">
+				AND US.MB = #{searchKeyword,typeHandler=com.jc.pico.utils.mybatis.typehandler.OnewaySecurityTypeHandler}
+			</if>
+		</if>
+		<if test="orderby != null">
+			ORDER BY ${orderby}
+		</if>
+		<if test="orderby == null">
+			ORDER BY ST.CREATED DESC
+		</if>
+  </select>
+  
+  <resultMap id="CouponListResultMap" type="java.util.LinkedHashMap" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <result column="COUPON_ID" property="couponId" jdbcType="VARCHAR" />
+    <result column="COUPON_CD" property="couponCd" jdbcType="VARCHAR" />
+    <result column="COUPON_NM" property="couponNm" jdbcType="CHAR" />
+    <result column="COUPON_TP" property="couponTp" jdbcType="VARCHAR" />
+    <result column="COUPON_TP_NM" property="couponTpNm" jdbcType="VARCHAR" />
+    <result column="COUPON_ST" property="couponSt" jdbcType="VARCHAR" />
+    <result column="COUPON_ST_NM" property="couponStNm" jdbcType="VARCHAR" />
+    <result column="DISCOUNT_TP" property="discountTp" jdbcType="VARCHAR" />
+    <result column="DISCOUNT_TP_NM" property="discountTpNm" jdbcType="VARCHAR" />
+    <result column="CREATED" property="created" jdbcType="CHAR" />
+    <result column="EXPIRE" property="expire" jdbcType="CHAR" />
+    <result column="BARCODE" property="barcode" jdbcType="CHAR" />
+    <result column="NAME" property="name" jdbcType="CHAR" />
+    <result column="NAME" property="name" jdbcType="CHAR" />
+    <result column="MB" property="mb" jdbcType="CHAR" typeHandler="com.jc.pico.utils.mybatis.typehandler.MobileSecurityTypeHandler"/>
+    <result column="MB_BK" property="mb_bk" jdbcType="CHAR" typeHandler="com.jc.pico.utils.mybatis.typehandler.MobileSecurityTypeHandler"/>
+    <result column="STORE_NM" property="storeNm" jdbcType="CHAR" />
+    <result column="USED" property="used" jdbcType="CHAR" />
+    <result column="USE_STORE_ID" property="useStoreId" jdbcType="CHAR" />
+    <result column="FRAN_ID" property="franId" jdbcType="VARCHAR" />
+    <result column="BRAND_ID" property="brandId" jdbcType="VARCHAR" />
+    <result column="STORE_ID" property="storeId" jdbcType="VARCHAR" />
+  </resultMap>
+
+ <select id="getCouponList" parameterType="hashMap" resultMap="CouponListResultMap">
+  	SELECT CP.ID
+  	     , CP.USER_ID
+  	     , CPLOG.ID AS COUPON_ID
+         , CP.COUPON_CD
+         , CPLOG.COUPON_NM
+         , CP.COUPON_TP
+         , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = CP.COUPON_TP ) COUPON_TP_NM
+         , CP.COUPON_ST
+         , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = CP.COUPON_ST ) COUPON_ST_NM
+         , CPLOG.DISCOUNT_TP
+         , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = CPLOG.DISCOUNT_TP ) DISCOUNT_TP_NM
+	     <if test=" id != null">
+			, CP.CREATED
+			, CP.EXPIRE
+		 </if>
+		 <if test=" id == null">
+		 	, LEFT(CP.CREATED, 10) AS CREATED
+			, RIGHT(CP.EXPIRE, 8) AS EXPIRE
+		 </if>	     
+	     , US.`BARCODE`
+	     , US.`NAME`
+		 , US.`MB`
+	     , US.`MB_BK`         
+	     , STO.STORE_NM
+         , CP.USED
+         , BRAND.FRAN_ID
+         , CP.BRAND_ID
+         , CP.STORE_ID
+         , IF(CP.USE_STORE_ID = 0, '', CP.USE_STORE_ID) USE_STORE_ID
+	FROM TB_SVC_USER_COUPON CP
+		 LEFT JOIN tb_svc_brand BRAND ON (BRAND.ID = CP.BRAND_ID)
+         LEFT JOIN tb_svc_coupon CPLOG ON (CPLOG.ID = CP.COUPON_ID)
+ 	     LEFT JOIN TB_USER US ON (CP.USER_ID=US.ID)
+ 	     LEFT JOIN TB_SVC_STORE STO ON (CP.STORE_ID=STO.ID)
+	WHERE 1=1
+	    
+		<if test=" id != null">
+			AND CP.ID = #{id}
+		</if>
+		<if test=" franId != null">
+	    	AND BRAND.FRAN_ID = #{franId}
+	    </if>
+		<if test=" brandId != null">
+			AND CP.BRAND_ID = #{brandId}
+		</if>
+		<if test=" storeId != null">
+			AND CP.STORE_ID = #{storeId}
+		</if>
+		<if test="fromdate != null and todate != null">
+			AND CP.CREATED BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		</if>
+		
+		<if test="expire == 0 ">
+			AND CP.EXPIRE >= NOW()
+		</if>		
+		
+		<if test="couponTp != null">
+			AND CP.COUPON_TP = #{couponTp}
+		</if>
+		
+		<if test="used != null">
+			AND CP.USED = #{used}
+		</if>
+		
+		<if test=" searchType == 'usercode'">
+			<if test="searchKeyword != null">
+				AND US.BARCODE = #{searchKeyword}
+			</if>
+		</if>
+		<if test=" searchType == 'usermb'">
+			<if test="searchKeyword != null">
+				AND US.MB_BK = #{searchKeyword, typeHandler=com.jc.pico.utils.mybatis.typehandler.MobileSecurityTypeHandler}
+			</if>
+		</if>
+		<if test=" searchType == 'couponcode'">
+			<if test="searchKeyword != null">
+				AND CP.COUPON_CD = #{searchKeyword}
+			</if>
+		</if>
+		
+		<if test="orderby != null">
+			ORDER BY ${orderby}
+		</if>
+  </select>
+
+  <select id="getCountCouponList" parameterType="hashMap" resultType="int">
+  	SELECT
+		COUNT(*) AS COUNT
+	FROM
+		TB_SVC_USER_COUPON CP
+		LEFT JOIN tb_svc_brand BRAND ON (BRAND.ID = CP.BRAND_ID)
+	    LEFT JOIN TB_USER US ON (CP.USER_ID=US.ID)
+	    LEFT JOIN TB_SVC_STORE STO ON (CP.STORE_ID=STO.ID)
+	WHERE 1=1
+		
+		<if test=" id != null">
+			AND CP.ID = #{id}
+		</if>
+		<if test=" franId != null">
+	    	AND BRAND.FRAN_ID = #{franId}
+	    </if>
+		<if test=" brandId != null">
+			AND CP.BRAND_ID = #{brandId}
+		</if>
+		<if test=" storeId != null">
+			AND CP.STORE_ID = #{storeId}
+		</if>
+		<if test="fromdate != null and todate != null">
+			AND CP.CREATED BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		</if>
+		
+		<if test="expire == 0 ">
+			AND CP.EXPIRE >= NOW()
+		</if>		
+		
+		<if test="couponTp != null">
+			AND CP.COUPON_TP = #{couponTp}
+		</if>
+		
+		<if test="used != null">
+			AND CP.USED = #{used}
+		</if>
+		
+		<if test=" searchType == 'usercode'">
+			<if test="searchKeyword != null">
+				AND US.BARCODE = #{searchKeyword}
+			</if>
+		</if>
+		<if test=" searchType == 'usermb'">
+			<if test="searchKeyword != null">
+				AND US.MB_BK = #{searchKeyword, typeHandler=com.jc.pico.utils.mybatis.typehandler.MobileSecurityTypeHandler}
+			</if>
+		</if>
+		<if test=" searchType == 'couponcode'">
+			<if test="searchKeyword != null">
+				AND CP.COUPON_CD = #{searchKeyword}
+			</if>
+		</if>
+  </select>
+  
+  
+  <!-- 프로모션 정보 수정 -->
+  <update id="updateCancleCoupon" parameterType="hashMap">
+    UPDATE TB_SVC_USER_COUPON
+    <set>
+      <if test="couponSt != null">
+        COUPON_ST = #{couponSt,jdbcType=VARCHAR},
+      </if>
+    </set>
+    WHERE ID = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <resultMap id="StampAccListResultMap" type="java.util.LinkedHashMap" >
+    <result column="BRAND_ID" property="brandId" jdbcType="VARCHAR" />    
+    <result column="BRAND_NM" property="brandNm" jdbcType="VARCHAR" />
+    <result column="STORE_ID" property="storeId" jdbcType="VARCHAR" />
+    <result column="STORE_NM" property="storeNm" jdbcType="VARCHAR" />
+    <result column="STAMP_AMOUNT" property="stampAmount" jdbcType="VARCHAR" />
+    <result column="IISUE_STAMP_CNT" property="issueStampCnt" jdbcType="VARCHAR" />
+    <result column="USE_COUPON_CNT" property="useCouponCnt" jdbcType="VARCHAR" />
+    <result column="COUPON_AMOUNT" property="couponAmount" jdbcType="VARCHAR" />
+    <result column="SETTLEMENT_AMOUNT" property="settlementAmount" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getStampAccList" parameterType="hashMap" resultMap="StampAccListResultMap">
+ 	   SELECT  DD.BRAND_ID
+             , DD.BRAND_NM
+             , DD.STORE_ID
+             , DD.STORE_NM
+             , IFNULL(SUM(DD.STAMP_AMOUNT),0) AS STAMP_AMOUNT
+             , SUM(DD.IISUE_STAMP_CNT) AS IISUE_STAMP_CNT
+             , IFNULL(SUM(DD.COUPON_AMOUNT),0) AS COUPON_AMOUNT
+             , SUM(DD.USE_COUPON_CNT) USE_COUPON_CNT
+             , IFNULL(SUM((DD.STAMP_AMOUNT + DD.COUPON_AMOUNT)),0) AS SETTLEMENT_AMOUNT
+		FROM (  SELECT CC.BRAND_ID,
+		               CC.BRAND_NM,
+		               CC.STORE_ID,
+		               CC.STORE_NM,
+		               ((CC.DISCOUNT * (#{settltRate}/100)) / CC.USE_STAMP_CNT) * CC.IISUE_STAMP_CNT *-1 AS STAMP_AMOUNT,
+		               IISUE_STAMP_CNT,
+		               IF(USE_COUPON_CNT = 1,(CC.DISCOUNT * (#{settltRate}/100)),0)  AS COUPON_AMOUNT,
+		               USE_COUPON_CNT
+		        FROM (SELECT S.BRAND_ID,
+		                     (SELECT BRAND_NM FROM TB_SVC_BRAND B WHERE B.ID = S.BRAND_ID) BRAND_NM,
+		                     S.STORE_ID,
+		                     (SELECT STORE_NM FROM TB_SVC_STORE B WHERE B.ID = S.STORE_ID) STORE_NM,
+		                     S.COUPON_ID,
+		                     COUNT(S.STORE_ID) AS IISUE_STAMP_CNT,
+		                     C.BRAND_ID AS USE_BRAND_ID,
+		                     C.STAMP_CNT USE_STAMP_CNT,
+		                     C.USE_STORE_ID,
+		                     CASE WHEN S.STORE_ID = C.USE_STORE_ID THEN 1 ELSE 0 END USE_COUPON_CNT,
+		                     (SELECT STORE_NM FROM TB_SVC_STORE B WHERE B.ID = C.USE_STORE_ID) USE_STORE_NM,
+		                     C.DISCOUNT_TP,
+		                     C.DISCOUNT
+		                FROM TB_SVC_USER_STAMP S
+		                     LEFT JOIN TB_SVC_USER_COUPON C ON C.ID = S.COUPON_ID AND C.USED = 1
+		               WHERE     S.COUPON_ID > 0
+		                     AND S.STAMP_ST = '401003'
+		                     AND S.BRAND_ID = #{brandId}
+		                     AND C.USE_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+		                                            AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		              GROUP BY S.COUPON_ID, S.BRAND_ID, S.STORE_ID
+		              ORDER BY S.COUPON_ID) CC
+		        GROUP BY CC.BRAND_ID, CC.STORE_ID
+		) DD
+		GROUP BY DD.BRAND_ID, DD.STORE_ID
+  </select>
+  
+	<select id="getCountStampAccList" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM(SELECT  DD.BRAND_ID
+             , DD.BRAND_NM
+             , DD.STORE_ID
+             , DD.STORE_NM
+             , IFNULL(SUM(DD.STAMP_AMOUNT),0) AS STAMP_AMOUNT
+             , SUM(DD.IISUE_STAMP_CNT) AS IISUE_STAMP_CNT
+             , IFNULL(SUM(DD.COUPON_AMOUNT),0) AS COUPON_AMOUNT
+             , SUM(DD.USE_COUPON_CNT) USE_COUPON_CNT
+             , IFNULL(SUM((DD.STAMP_AMOUNT + DD.COUPON_AMOUNT)),0) AS SETTLEMENT_AMOUNT
+		FROM (  SELECT CC.BRAND_ID,
+		               CC.BRAND_NM,
+		               CC.STORE_ID,
+		               CC.STORE_NM,
+		               ((CC.DISCOUNT * (#{settltRate}/100)) / CC.USE_STAMP_CNT) * CC.IISUE_STAMP_CNT *-1 AS STAMP_AMOUNT,
+		               IISUE_STAMP_CNT,
+		               IF(USE_COUPON_CNT = 1,(CC.DISCOUNT * (#{settltRate}/100)),0)  AS COUPON_AMOUNT,
+		               USE_COUPON_CNT
+		        FROM (SELECT S.BRAND_ID,
+		                     (SELECT BRAND_NM FROM TB_SVC_BRAND B WHERE B.ID = S.BRAND_ID) BRAND_NM,
+		                     S.STORE_ID,
+		                     (SELECT STORE_NM FROM TB_SVC_STORE B WHERE B.ID = S.STORE_ID) STORE_NM,
+		                     S.COUPON_ID,
+		                     COUNT(S.STORE_ID) AS IISUE_STAMP_CNT,
+		                     C.BRAND_ID AS USE_BRAND_ID,
+		                     C.STAMP_CNT USE_STAMP_CNT,
+		                     C.USE_STORE_ID,
+		                     CASE WHEN S.STORE_ID = C.USE_STORE_ID THEN 1 ELSE 0 END USE_COUPON_CNT,
+		                     (SELECT STORE_NM FROM TB_SVC_STORE B WHERE B.ID = C.USE_STORE_ID) USE_STORE_NM,
+		                     C.DISCOUNT_TP,
+		                     C.DISCOUNT
+		                FROM TB_SVC_USER_STAMP S
+		                     LEFT JOIN TB_SVC_USER_COUPON C ON C.ID = S.COUPON_ID AND C.USED = 1
+		               WHERE     S.COUPON_ID > 0
+		                     AND S.STAMP_ST = '401003'
+		                     AND S.BRAND_ID = #{brandId}
+		                     AND C.USE_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+		                                            AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		              GROUP BY S.COUPON_ID, S.BRAND_ID, S.STORE_ID
+		              ORDER BY S.COUPON_ID) CC
+		        GROUP BY CC.BRAND_ID, CC.STORE_ID
+		) DD
+		GROUP BY DD.BRAND_ID, DD.STORE_ID) AA
+		
+		
+	</select>
+</mapper>

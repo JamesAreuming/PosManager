@@ -1,0 +1,144 @@
+<form id="userForm">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-white">
+				<div class="panel-body">
+				  <div class="col-md-12">
+					<div class="col-lg-6 col-md-6">
+						<div class="panel panel-white panel-box-shadow">
+							<div class="widget">
+								<div class="row">
+									<div class="col-md-12">
+										<ul class="list-unstyled index-info">
+											<li>{{i18n.BO2151}}<span class="pull-right"><b>{{name}}</b></span></li>
+											<li>{{i18n.BO2342}}<span class="pull-right"><b>{{mb}}</b></span></li>
+											<li>{{i18n.BO2154}}<span class="pull-right"><b>{{#formatDay}}{{birthday}}{{/formatDay}}</b></span></li>
+											<li>{{i18n.BO2156}}<span class="pull-right"><b>{{#formatDate}}{{created}}{{/formatDate}}</b></span></li>
+											<li>{{i18n.BO2156}}<span class="pull-right"><b>{{#formatDate}}{{created}}{{/formatDate}}</b></span></li>
+											<li>{{i18n.BO2449}}
+											 <span class="pull-right">
+                          <select class="select2 pull-right col-sm-12" id="membership" name="membership" style="width:100px;">
+                              {{#memberlevel}}
+                                <option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+                              {{/memberlevel}}
+                           </select>
+                        </span>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-6">
+						<div class="panel panel-white  panel-box-shadow">
+							<div class="widget">
+								<div class="row">
+									<div class="col-md-12">
+										<ul class="list-unstyled index-info">
+											<li>{{i18n.BO2152}}<span class="pull-right"><b>{{barcode}}</b></span></li>
+											<li>{{i18n.BO2018}}<span class="pull-right"><b>{{email}}</b></span></li>
+											<li>{{i18n.BO2153}}<span class="pull-right"><b>{{gender}}</b></span></li>
+											<li>{{i18n.BO2157}}<span class="pull-right"><b>{{#formatDate}}{{lastLogin}}{{/formatDate}}</b></span></li>
+											<li></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div>
+				  <div class="float-right">
+				      <input type="hidden" id="userId" name="userId" value="{{id}}"/>
+				      <input type="hidden" id="franId" name="franId" value="{{franId}}"/>
+				      <input type="hidden" id="brandId" name="brandId" value="{{brandId}}"/>
+				      <input type="hidden" id="storeId" name="storeId" value="{{storeId}}"/>
+             <button type="button" class="btn btn-primary float-left margin-top-b-15 save-user-info">{{i18n.BO0014}}</button>
+             <button type="button" class="btn btn-primary float-left margin-top-b-15 back-user-main">{{i18n.BO0013}}</button>
+           </div>
+				</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div class="panel panel-white">
+				<div class="panel-body padding-top-zero">
+					<div class="col-md-12">
+						<div class="panel-btn-padding">
+							<div class="table-responsive col-md-12">
+								<h3>{{i18n.BO2395}}</h3>
+								<table id="lastest-stamp-log" class="display table" style="width: 100%; cellspacing: 0;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>{{i18n.BO4042}}</th>
+											<th>{{i18n.BO4043}}</th>
+											<th>{{i18n.BO2040}}</th>
+											<th></th>
+											<th>{{i18n.BO2333}}</th>
+											<th></th>
+											<th>{{i18n.BO2385}}</th>
+										</tr>
+									</thead>
+									<tfoot>
+										<tr>
+											<th>#</th>
+											<th>{{i18n.BO4042}}</th>
+											<th>{{i18n.BO4043}}</th>
+											<th>{{i18n.BO2040}}</th>
+											<th></th>
+											<th>{{i18n.BO2333}}</th>
+											<th></th>
+											<th>{{i18n.BO2385}}</th>
+										</tr>
+									</tfoot>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<!-- 	<div class="col-md-12">
+			<div class="panel panel-white">
+				<div class="panel-body padding-top-zero">
+					<div class="col-md-12">
+						<div class="panel-btn-padding">
+							<div class="table-responsive col-md-12">
+								<h3>{{i18n.BO2398}}</h3>
+								<table id="lastest-coupon-log" class="display table" style="width: 100%; cellspacing: 0;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>{{i18n.BO2159}}</th>
+											<th>{{i18n.BO2076}}</th>
+											<th>{{i18n.BO2385}}</th>
+											<th>{{i18n.BO2397}}</th>
+											<th>{{i18n.BO2171}}</th>
+										</tr>
+									</thead>
+									<tfoot>
+										<tr>
+											<th>#</th>
+											<th>{{i18n.BO2159}}</th>
+											<th>{{i18n.BO2076}}</th>
+											<th>{{i18n.BO2385}}</th>
+											<th>{{i18n.BO2397}}</th>
+											<th>{{i18n.BO2171}}</th>
+										</tr>
+									</tfoot>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> -->
+	</div>
+</form>
+<!-- Row -->

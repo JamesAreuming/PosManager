@@ -1,0 +1,29 @@
+{{#cate}}
+	<tr class="treegrid-{{id}} {{#parent}}treegrid-parent-{{parent}} {{/parent}}" id="treegrid-{{id}}" >
+		<td>
+			<label>{{catCd}}</label>
+			<span>{{name}}</span>
+			<span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="hidden" name="catCd" value="{{catCd}}" id="catCd-{{id}}"/>
+        		<input type="hidden" name="name" value="{{name}}" id="name-{{id}}"/>
+        		<input type="hidden" name="id" value="{{id}}" id="id-{{id}}"/>
+        		<input type="hidden" name="parent" value="{{parent}}" id="parent-{{id}}"/>
+        		<input type="hidden" name="brandId" value="{{brandId}}" id="brandId-{{id}}"/>
+        		<input type="hidden" name="storeId" value="{{storeId}}" id="storeId-{{id}}"/>
+        	</span>
+        	<span class="pull-badge badge badge-primary">2</span>
+        </td>
+        <td>
+        	<button type="button" class="btn btn-xs btn-primary edit" id="edit-{{id}}">{{i18n.BO0015}}</button>
+        	<button type="button" class="btn btn-xs btn-primary add" id="add-{{id}}">+ {{i18n.BO0017}}</button>
+        	<button type="button" class="btn btn-xs btn-danger del" id="del-{{id}}">- {{i18n.BO0016}}</button>
+        </td>
+	</tr>
+{{/cate}}
+
+{{^cate}}
+	<tr class="treegrid-{{id}} {{#parent}}treegrid-parent-{{parent}} {{/parent}}" id="treegrid-{{id}}" >
+		<td>{{i18n.BO0010}}</td>
+		<td></td>
+	</tr>
+{{/cate}}

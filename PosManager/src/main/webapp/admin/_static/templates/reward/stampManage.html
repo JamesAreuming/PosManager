@@ -1,0 +1,132 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<form>
+			<div class="panel-body">
+				<div class="form-group min-height-30">
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%" id="franchise_select">
+							<option value="">법인 선택</option>
+							{{#fr.list}}
+								<option value="{{id}}">{{companyNm}}</option>
+							{{/fr.list}}
+						</select>
+					</div>
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%" id="brand_select" name="brandId">
+							<option value="">{{i18n.BO1032}}</option>
+						</select>
+					</div>
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%" id="store_select" data-placeholder="Select an option" data-allow-clear="true" name="storeId">
+							<option></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<div class="col-sm-12">
+						<div
+							class="input-group col-sm-6 m-b-sm input-append bootstrap-timepicker float-left margin-b-15">
+							<input id="daterangepicker" type="text"
+								class="form-control date-picker" placeholder="{{i18n.BO2373}}" value="{{begin}} - {{expire}}"><span
+								class="input-group-addon add-on"><i
+								class="fa fa-calendar"></i></span>
+							<input id="from-date" name="fromdate" value="{{begin}}" type="hidden" />
+							<input id="to-date" name="todate" value="{{expire}}" type="hidden" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group min-height-30">
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control base-select" tabindex="-1"
+							style="display: none; width: 100%" name="searchType">
+							<option value="usercode">고객코드</option>
+							<option value="usermb">휴대폰번호</option>
+						</select>
+					</div>
+					<div class="col-md-2 m-b-sm">
+						<input type="text" class="form-control" id="input-Default"
+							placeholder="검색어 입력..." name="searchKeyword">
+					</div>
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control base-select" tabindex="-1"
+							style="display: none; width: 100%" name="stampSt">
+							<option value="">적립상태</option>
+							{{#cd}}
+								{{#stamplogtype}}
+									<option value="{{baseCd}}">{{title}}</option>
+								{{/stamplogtype}}
+							{{/cd}}
+						</select>
+					</div>
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control base-select" tabindex="-1"
+							style="display: none; width: 100%" name="stampTp">
+							<option value="">적립구분</option>
+							{{#cd}}
+								{{#stamptype}}
+									<option value="{{baseCd}}">{{title}}</option>
+								{{/stamptype}}
+							{{/cd}}
+						</select>
+					</div>
+					<div class="col-md-4 m-b-sm">
+						<button type="button" class="btn btn-primary float-right" id="stampList-search">
+							검색</button>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="table-responsive">
+					<div class="float-right">
+						<div class="modal fade bs-stamp-list-modal-lg" tabindex="-1"
+							role="dialog" aria-labelledby="myLargeModalLabel"
+							aria-hidden="true" id="stamp-lists">
+						</div>
+					</div>
+					<table id="stamp-table" class="display table"
+						style="width: 100%; cellspacing: 0;">
+						<thead>
+							<tr>
+								<th>번호</th>
+								<th>날짜</th>
+								<th>시간</th>
+								<th>매장명</th>
+								<th>고객코드</th>
+								<th>휴대폰</th>
+								<th>{{i18n.BO2333}}</th>
+								<th>{{i18n.BO2385}}</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th>번호</th>
+								<th>날짜</th>
+								<th>시간</th>
+								<th>매장명</th>
+								<th>고객코드</th>
+								<th>휴대폰</th>
+								<th>{{i18n.BO2333}}</th>
+								<th>{{i18n.BO2385}}</th>
+								<th></th>
+							</tr>
+						</tfoot>
+						<tbody>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Row -->

@@ -1,0 +1,40 @@
+<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<input type="hidden" value="{{userId}}" id="userId">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title" id="myLargeModalLabel">
+				{{i18n.BO2134}} <b>* {{i18n.BO0008}}<b>
+			</h4>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<!-- <div class="col-md-12">
+					<div class="panel panel-white">
+						<div class="panel-body">
+							<div class="form-group">
+								<div class="col-md-12 m-b-sm">
+									<button type="button" class="btn btn-primary float-right treeview-submit" >수정</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> -->
+				<div class="col-md-12">
+					<div class="panel panel-white">
+						<div class="table-responsive" id="tree_view">
+						
+						</div>
+					</div>
+				</div>
+			</div>	
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+			<button type="button" class="btn btn-primary float-right treeview-submit">{{i18n.BO0014}}</button>
+		</div>
+	</div>
+</div>
+<!-- Row -->

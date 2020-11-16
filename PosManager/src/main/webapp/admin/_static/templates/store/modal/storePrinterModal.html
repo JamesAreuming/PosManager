@@ -1,0 +1,128 @@
+<div class="modal-dialog modal-lg">
+	<form>
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title">
+				{{i18n.BO2456}} <b>* {{i18n.BO0008}}<b>
+			</h4>
+		</div>
+		<div class="modal-body" id="modal-form-printer">
+			<div class="row">
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-4 control-label">{{i18n.BO2461}}*</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" id="input-Default" value="{{printerNo}}" name="printerNo" data-validation="required" maxlength="3"/>
+					</div>
+				</div>
+				
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+		          <label for="input-Default" class="col-sm-4 control-label">{{i18n.BO2462}}*</label>
+		          <div class="col-sm-8">
+		             <select class="form-control m-b-sm" tabindex="-1"  id="printerType" name="printerType" data-validation="required" data-placeholder="{{i18n.BO0024}}">
+		                <option value=''>{{i18n.BO0024}}</option>
+		                <option value="001" {{#printertype=001}} selected="selected" {{/printertype=001}}>{{i18n.BO2463}}</option>
+		                <option value="002"  {{#printertype=002}} selected="selected" {{/printertype=002}}>{{i18n.BO2464}}</option>
+		             </select>
+		          </div>
+        		</div>
+        
+        <div class="form-group min-height-30 col-sm-6 padding-0">
+          <label for="input-Default" class="col-sm-4 control-label">{{i18n.BO2458}}*</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="input-Default" value="{{printerCompanyCd}}" name="printerCompanyCd" data-validation="required" maxlength="3"/>
+          </div>
+        </div>
+        
+         <div class="form-group min-height-30 col-sm-6 padding-0">
+          <label for="input-Default" class="col-sm-4 control-label">{{i18n.BO2459}}*</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="input-Default" value="{{name}}" name="name" data-validation="required" maxlength="90"/>
+          </div>
+        </div>
+        
+        <div class="form-group min-height-30 col-sm-6 padding-0">
+          <label for="input-Default" class="col-sm-4 control-label">{{i18n.BO2485}}*</label>
+          <div class="col-sm-8">
+             <select class="form-control m-b-sm" tabindex="-1"  id="modelTp" name="modelTp" data-validation="required" data-placeholder="{{i18n.BO0024}}">
+                <option value=''>{{i18n.BO0024}}</option>
+                 {{#modeltp}}
+                 <option value='{{baseCd}}' {{{selections}}}>{{title}}</option>
+                 {{/modeltp}}
+             </select>
+          </div>
+        </div>
+        
+         <div class="form-group min-height-30 col-sm-6 padding-0">
+          <label for="input-Default" class="col-sm-4 control-label">{{i18n.BO2460}}*</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="input-Default" value="{{posNo}}" name="posNo" data-validation="required" maxlength="17"/>
+          </div>
+        </div>
+        
+        <div class="form-group min-height-30 col-sm-6 padding-0">
+          <label for="input-Default" class="col-sm-4 control-label">{{i18n.BO2466}}*</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="input-Default" value="{{ip}}" name="ip" data-validation="required" maxlength="25"/>
+          </div>
+        </div>
+        
+        <div class="form-group min-height-30 col-sm-6 padding-0">
+          <label for="input-Default" class="col-sm-4 control-label">{{i18n.BO2467}}</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="input-Default" value="{{ipPort}}" name="ipPort" maxlength="25"/>
+          </div>
+        </div> 
+        
+        <div class="form-group min-height-30 col-sm-6 padding-0">
+          <label for="input-Default" class="col-sm-4 control-label">{{i18n.BO2474}}*</label>
+          <div class="col-sm-8">
+             <select class="form-control m-b-sm" tabindex="-1"  id="portTp" name="portTp" data-validation="required" data-placeholder="{{i18n.BO0024}}">
+                <option value=''>{{i18n.BO0024}}</option>
+                 {{#porttp}}
+                 <option value='{{baseCd}}' {{{selections}}}>{{title}}</option>
+                 {{/porttp}}
+             </select>
+          </div>
+        </div> 
+        
+        
+        <div class="form-group min-height-30 col-sm-6 padding-0">
+          <label for="input-Default" class="col-sm-4 control-label">{{i18n.BO2478}}*</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="input-Default" value="{{baurRate}}" name="baurRate" data-validation="required" maxlength="17"/>
+          </div>
+        </div>
+        
+        <div class="form-group min-height-30 col-sm-6 padding-0">
+          <label for="input-Default" class="col-sm-4 control-label">{{i18n.BO2479}}*</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="input-Default" value="{{pageCnt}}" name="pageCnt" data-validation="required" maxlength="10"/>
+          </div>
+        </div>
+         
+        
+       <div class="form-group min-height-30 col-sm-6 padding-0">
+          <label for="input-Default" class="col-sm-4 control-label">{{i18n.BO2124}}*</label>
+          <div class="col-sm-8">
+            <select class="form-control m-b-sm" tabindex="-1"  id="isUsed" name="isUsed" data-validation="required" data-placeholder="{{i18n.BO0024}}">
+              <option value=''>{{i18n.BO0024}}</option>
+              <option value='true' {{#isused=true}} selected="selected" {{/isused=true}}>{{i18n.BO2031}}</option>
+              <option value='false' {{#isused=false}} selected="selected" {{/isused=false}}>{{i18n.BO2032}}</option>
+            </select>
+          </div>
+        </div> 
+        
+        <input type="hidden" id="id" name="id" value="{{id}}" />
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+			<button type="submit" class="btn btn-primary">{{i18n.BO0014}}</button>
+		</div>
+	</div>
+	</form>
+</div>

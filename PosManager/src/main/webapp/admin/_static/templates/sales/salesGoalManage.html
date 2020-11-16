@@ -1,0 +1,69 @@
+<form id="be-search">
+	<ul class="filemanager-options" {{#isSt}} style="display: none" {{/isSt}}>
+		<li class="select2-padding" {{#isFr}} style="display: none" {{/isFr}}>
+			<div class="itemopt">
+				<select class="select2" id="franchise_select" >
+					<option value="">{{i18n.BO1031}}</option>
+					{{#frList}}
+					<option value="{{id}}" >{{companyNm}}</option>
+					{{/frList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding" {{#isBr}} style="display: none" {{/isBr}}>
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="brand_select" >
+					<option value="">{{i18n.BO1032}}</option>
+					{{#brList}}
+					<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+					{{/brList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="store_select">
+					<option value="">{{i18n.BO1033}}</option>
+					{{#stList}}
+					<option value="{{id}}" {{{selections}}}>{{storeNm}}</option>
+					{{/stList}}
+				</select>
+			</div>
+		</li>
+	</ul>
+	<ul class="filemanager-options">
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select id="year_select" name="year" class="select2" >
+					<!--TODO: 1)formatting �߰� 
+							  2)�ϵ��ڵ� -> �� ���� �⵵�� ���;� �ϴ��� �����ڵ忡 ��� �� DB���� ����Ʈ ���������� ����.
+					-->
+					<option value="2016" >2016</option>
+					<option value="2017" >2017</option>
+					<option value="2018" >2018</option>
+					<option value="2019" >2019</option>
+					<option value="2020" >2020</option>
+					<!-- {{#stList}}
+					<option value="{{id}}" {{{selections}}}>{{fromDate}}</option>
+					{{/stList}} -->
+				</select>
+			</div>
+		</li>
+		<li class="sch-toolbar">
+			<div class="itemopt">
+		        <button type="button" id="search">
+		        	<i class="glyphicon glyphicon-search sch-btn-i"></i>
+		        </button>
+	        </div>
+	    </li>
+	</ul>
+	
+</form>
+
+<table class="table table-success mb30 table-striped" id="etc-table">
+</table>
+<button type="button" id="saveBtn" name="saveBtn" class="btn btn-primary" style="float: right;margin-right: 1px;display: none" >
+	+ {{i18n.BO0014}}
+</button>
+
+

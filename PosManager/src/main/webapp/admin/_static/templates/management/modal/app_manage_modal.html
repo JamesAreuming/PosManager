@@ -1,0 +1,145 @@
+<div class="modal-dialog modal-lg">
+	<form data-toggle="validator" role="form">
+	{{#id}}<input type="hidden" name="id" id="id" value="{{id}}" />{{/id}}
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title" id="myLargeModalLabel">
+				{{i18n.BO2111}} <b>* {{i18n.BO0008}}</b>
+			</h4>
+		</div>
+		<div class="modal-body" id="modal-form">
+			<div class="row">
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2104}} *</label>
+					<div class="col-sm-9">
+						<select class="select2" data-validation="required" style="width: 100%"
+							{{#method=PUT}} disabled {{/method=PUT}}
+							id="modal_app_select" name="appTp">
+							<option value="">{{i18n.BO2104}}</option>
+							{{#appTypeList}}
+							<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+							{{/appTypeList}}
+						</select>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2106}} *</label>
+					<div class="col-sm-9">
+						<select class="js-states form-control" data-validation="required" style="width: 100%"
+							{{#method=PUT}} disabled {{/method=PUT}}
+							id="modal_os_select" name="osTp">
+							<option value="">{{i18n.BO2106}}</option>
+							{{#osTypeList}}
+							<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+							{{/osTypeList}}
+						</select>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2109}}</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default"
+							{{#method=PUT}} readonly {{/method=PUT}} value="{{projectName}}" name="prjNm">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2110}}</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default"
+							{{#method=PUT}} readonly {{/method=PUT}} value="{{packageName}}" name="pkgNm">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-9 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2107}}</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="input-Default"
+							{{#method=PUT}} readonly {{/method=PUT}} value="{{appInfo}}" name="appInfo">
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2105}} *</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{version}}" name="version"
+							data-validation="required">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2112}} *</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{versionCode}}" name="versionCode"
+							data-validation="required">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-9 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2113}} *</label>
+					<div class="col-sm-10">
+						<select class="js-states form-control" tabindex="-1" style="width: 100%" name="isStrictUpdate"
+							data-validation="required">
+							<option value="">{{i18n.BO2113}}</option>
+							<option value="true" {{#isStrictUpdate}} selected{{/isStrictUpdate}}>{{i18n.BO2061}}</option>
+							<option value="false" {{#isStrictUpdate=false}} selected{{/isStrictUpdate=false}}>{{i18n.BO2062}}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-9 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2114}}</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="input-Default" value="{{updateInfo}}" name="updateInfo">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+			<button type="submit" class="btn btn-primary">{{i18n.BO0014}}</button>
+		</div>
+		<div class="modal-header">
+			<h4 class="modal-title" id="myLargeModalLabel">{{i18n.BO2115}}</h4>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="form-group min-height-30 col-sm-12 hide" id="btn_delete_group">
+					<button type="button" class="btn btn-primary margin-b-15" id="btn_delete_update">{{i18n.BO2115}}</button>
+				</div>
+				<div class="form-group min-height-30 col-sm-12">
+					<table id="app-version-table" class="display table" style="width: 100%; cellspacing: 0;">
+						<thead>
+							<tr>
+								<th>{{i18n.BO2105}}</th>
+								<th>{{i18n.BO2116}}</th>
+								<th>{{i18n.BO2114}}</th>
+								<th>{{i18n.BO2356}}</th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th>{{i18n.BO2105}}</th>
+								<th>{{i18n.BO2116}}</th>
+								<th>{{i18n.BO2114}}</th>
+								<th>{{i18n.BO2356}}</th>
+							</tr>
+						</tfoot>
+<!--
+						<tbody>
+							<tr onclick="loadmodel(this)">
+								<td>1.1.1</td>
+								<td>Minor</td>
+								<td>신규 등록입니다.</td>
+								<td>2013-10-22 12:00</td>
+							</tr>
+						</tbody>
+-->
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	</form>
+</div>

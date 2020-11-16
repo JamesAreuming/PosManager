@@ -1,0 +1,67 @@
+<form id="be-search">
+	<ul class="filemanager-options" {{#isSt}} style="display: none" {{/isSt}}>
+		<li class="select2-padding" {{#isFr}} style="display: none" {{/isFr}}>
+			<div class="itemopt">
+				<select class="select2" id="franchise_select" >
+					<option value="">{{i18n.BO1031}}</option>
+					{{#frList}}
+					<option value="{{id}}" >{{companyNm}}</option>
+					{{/frList}}
+				</select>
+			</div>             
+			
+		</li>
+		<li class="select2-padding" {{#isBr}} style="display: none" {{/isBr}}>
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="brand_select" >
+					<option value="">{{i18n.BO1032}}</option>
+					{{#brList}}
+					<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+					{{/brList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="store_select">
+					<option value="">{{i18n.BO1033}}</option>
+					{{#stList}}
+					<option value="{{id}}" {{{selections}}}>{{storeNm}}</option>
+					{{/stList}}
+				</select>
+			</div>
+		</li>
+	</ul>
+	<ul class="filemanager-options">
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select id="year_select" name="year_select" class="select2" >
+					<!--TODO: 1)formatting 추가 
+							  2)하드코딩 -> 몇 개의 년도가 나와야 하는지 공통코드에 등록 후 DB에서 리스트 가져오도록 변경.
+					-->
+					<option value="2016" >2016</option>
+					<option value="2017" >2017</option>
+					<option value="2018" >2018</option>
+					<option value="2019" >2019</option>
+					<option value="2020" >2020</option>
+					<!-- {{#stList}}
+					<option value="{{id}}" {{{selections}}}>{{fromDate}}</option>
+					{{/stList}} -->
+				</select>
+			</div>
+		</li>
+		<li class="sch-toolbar">
+			<div class="itemopt">
+		        <button type="button" id="search">
+		        	<i class="glyphicon glyphicon-search sch-btn-i"></i>
+		        </button>
+	        </div>
+	    </li>
+	</ul>
+	
+</form>
+
+<table class="table table-success mb30 table-striped" id="etc-table">
+</table>
+
+

@@ -1,0 +1,2432 @@
+<?xml version="1.0" encoding="UTF-8" ?><!-- ~ Filename : CustomSalesMapper.xml 
+	~ Function : ~ Comment : ~ History :  ~ ~ Version : 1.0 
+	~ Author :  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.admin.CustomSalesMapper">
+
+	<sql id="getOption2_Tp">
+		<if test="option2 == 01">
+			,ROUND(SUM(SALES), 2) AS VALUE
+		</if>
+		<if test="option2 == 02">
+			,ROUND(SUM(DISCOUNT), 2) AS VALUE
+		</if>
+		<if test="option2 == 03">
+			,ROUND(SUM(SALES - DISCOUNT), 2) AS VALUE
+		</if>
+		<if test="option2 == 04">
+			,ROUND(SUM(CUSTOMER_CNT), 2) AS VALUE
+		</if>
+		<if test="option2 == 05">
+			,ROUND(SUM(CUSTOMER_CNT), 2) AS VALUE
+		</if>
+	</sql>
+
+	<sql id="getTopOption2_Tp">
+		<if test="option2 == 01">
+			,ROUND(SUM(A.SALES), 2) AS VALUE
+		</if>
+		<if test="option2 == 02">
+			,ROUND(SUM(A.DISCOUNT), 2) AS VALUE
+		</if>
+		<if test="option2 == 03">
+			,ROUND(SUM(A.SALES - A.DISCOUNT), 2) AS VALUE
+		</if>
+		<if test="option2 == 04">
+			,ROUND(SUM(B.CUSTOMER_CNT), 2) AS VALUE
+		</if>
+		<if test="option2 == 05">
+			,ROUND(SUM(B.CUSTOMER_CNT), 2) AS VALUE
+		</if>
+	</sql>
+	
+	<sql id="getWhen_Where">
+		<if test="fromdate != null and todate != null">
+			AND `SALES_TM_LOCAL` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+			AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		</if>
+		<if test="brandId != null and brandId != ''">
+			AND BRAND_ID = #{brandId}
+		</if>
+		<if test="storeId != null and storeId != ''">
+			AND STORE_ID = #{storeId}
+		</if>
+	</sql>
+
+	<!-- 날짜리스트 타입별 분류 -->
+	<sql id="getCalendar_Tp">
+		<if test="option1 == 'daily'">
+			, SUM(CASE WHEN TEMPLATE.YMD = #{calendarList.YMD} THEN COALESCE(VALUE,0) END)  AS #{calendarList.LABEL}
+		</if>
+		<if test="option1 == 'weekly'">
+			, SUM(CASE WHEN YEARWEEK(TEMPLATE.YMD) = #{calendarList.YEARWEEK}  THEN COALESCE(VALUE,0) END)  AS #{calendarList.LABEL}
+		</if>
+		<if test="option1 == 'monthly'">
+			, SUM(CASE WHEN DATE_FORMAT(TEMPLATE.YMD, '%Y-%m') = #{calendarList.YEARMONTH} THEN COALESCE(VALUE,0) END)  #{calendarList.LABEL}  
+		</if>
+	</sql>
+	
+	<!--  
+	   01:매출금액(Sales Amount)  
+	   02:판매수량(Sales )
+	   03:할인금액(Discount Amount)
+	   04:실매출액 (Actual Sales Amount)
+	   05:고객수(Customer Count)
+	 -->
+	<sql id="getSales_Tp">
+	 	<!-- 매출금액 --> 
+		<if test="option2 == '01'">
+			ROUND(COALESCE(SUM(T1.SALES),0), #{currencyFraction})  AS VALUE   
+		</if>
+		<!-- 판매수량 -->
+		<if test="option2 == '02'">
+			SUM((SELECT SUM(T2.COUNT) FROM (SELECT * FROM TB_SVC_SALES_ITEM WHERE SALES_ST = 809001) T2 WHERE T1.ID = T2.SALES_ID )) AS VALUE
+		</if>
+		<!-- 할인금액 -->
+		<if test="option2 == '03'">
+			ROUND(COALESCE(SUM(T1.DISCOUNT),0), #{currencyFraction})  AS VALUE
+		</if>
+		<!-- 실매출액 -->
+		<if test="option2 == '04'">
+			ROUND(COALESCE(SUM(T1.ACTUAL_SALES_AMT),0), #{currencyFraction}) AS VALUE  
+		</if>
+		<!-- 고객수-->
+		<if test="option2 == '05'">
+			COALESCE(SUM(T1.CUSTOMER_CNT),0) AS VALUE  
+		</if>
+	</sql>
+	
+	<!--  
+	   01:주문수량(Order Count)  
+	   02:매출금액(Sales Amount)
+	   03:주문평균매출(Average Sales)
+	 -->
+	<sql id="getSales2_Tp">
+		<if test="option2 == '01'">
+			, COUNT(*)  AS VALUE
+		</if>
+		<if test="option2 == '02'">
+			, ROUND(COALESCE(SUM(SALES),0), 2)  AS VALUE
+		</if>
+		<if test="option2 == '03'">
+			, ROUND(COALESCE((SUM(SALES) / COUNT(*)),0), 2)  AS VALUE
+		</if>
+	</sql>
+	
+	<resultMap id="ServiceChartMap" type="java.util.LinkedHashMap">
+		<result column="LABEL" property="label" jdbcType="VARCHAR" />
+		<result column="ONLINE" property="online" jdbcType="INTEGER" />
+		<result column="OFFLINE" property="offline" jdbcType="INTEGER" />
+	</resultMap>
+	<select id="getServiceSummaryChart" parameterType="hashMap" resultMap="ServiceChartMap">
+		SELECT /* getServiceSummaryChart, 2016-08-01, ikinox */
+		       CONCAT(A.HOUR, '~', A.HOUR + 1, 'h') AS LABEL
+		     , COALESCE(B.ONLINE, 0) AS ONLINE
+		     , COALESCE(B.OFFLINE, 0) AS OFFLINE
+		  FROM ( SELECT 0 AS HOUR UNION SELECT 1 AS HOUR UNION SELECT 2 AS HOUR UNION SELECT 3 AS HOUR UNION SELECT 4 AS HOUR UNION 
+		         SELECT 5 AS HOUR UNION SELECT 6 AS HOUR UNION SELECT 7 AS HOUR UNION SELECT 8 AS HOUR UNION SELECT 9 AS HOUR UNION 
+		         SELECT 10 AS HOUR UNION SELECT 11 AS HOUR UNION SELECT 12 AS HOUR UNION SELECT 13 AS HOUR UNION SELECT 14 AS HOUR UNION 
+		         SELECT 15 AS HOUR UNION SELECT 16 AS HOUR UNION SELECT 17 AS HOUR UNION SELECT 18 AS HOUR UNION SELECT 19 AS HOUR UNION 
+		         SELECT 20 AS HOUR UNION SELECT 21 AS HOUR UNION SELECT 22 AS HOUR UNION SELECT 23 AS HOUR
+				) A LEFT JOIN ( SELECT C.HOUR
+		                        , SUM(C.Online) AS Online
+		                        , SUM(C.Offline) AS Offline
+		                     FROM( SELECT HOUR(`SALES_TM_LOCAL`) AS HOUR
+							            , IF(PATH_TP = '606002', ROUND(SUM(SALES),2),0) AS Online
+							            , IF(PATH_TP != '606002', ROUND(SUM(SALES),2),0) AS Offline
+							         FROM TB_SVC_SALES
+							        WHERE 1 = 1
+							        AND SALES_ST IN ('809001')
+							        <include refid="getWhen_Where" />
+							        GROUP BY PATH_TP
+						        ) C
+						        GROUP BY C.HOUR) B ON A.HOUR = B.HOUR
+		 ORDER BY A.HOUR
+	</select>
+
+	<select id="getServiceDayChart" parameterType="hashMap" resultMap="ServiceChartMap">
+		SELECT	DATE_FORMAT(CL.YMD, '%m-%d') AS label,
+				COALESCE(B.ONLINE, 0) 		 AS online,
+				COALESCE(B.OFFLINE, 0) 		 AS offline
+		FROM	TB_BASE_CALENDAR CL
+		LEFT JOIN (	SELECT C.YMD
+			             , SUM(C.Online) AS Online
+			             , SUM(C.Offline) AS Offline
+			          FROM ( SELECT DATE(`SALES_TM_LOCAL`) AS YMD
+								  , IF(PATH_TP = '606002',SUM(SALES),0) AS Online
+							      , IF(PATH_TP != '606002',SUM(SALES),0) AS Offline
+							   FROM TB_SVC_SALES
+							  WHERE 1 = 1
+							  AND SALES_ST IN ('809001')
+							  <include refid="getWhen_Where" />
+							  GROUP BY PATH_TP
+							) C 
+					GROUP BY YMD ) B ON CL.YMD = B.YMD
+		WHERE CL.YMD BETWEEN #{fromdate} AND #{todate}
+		ORDER BY CL.YMD
+	</select>
+
+	<select id="getServiceDayOfWeekChart" parameterType="hashMap" resultMap="ServiceChartMap">
+		SELECT /* getServiceDayOfWeekChart, 2016-08-01, ikinox */
+		       CASE WHEN A.DAYWEEK = 1 THEN 'Sun'
+		            WHEN A.DAYWEEK = 2 THEN 'Mon'
+		            WHEN A.DAYWEEK = 3 THEN 'Tue'
+		            WHEN A.DAYWEEK = 4 THEN 'Wed'
+		            WHEN A.DAYWEEK = 5 THEN 'Thu'
+		            WHEN A.DAYWEEK = 6 THEN 'Fri'
+		            WHEN A.DAYWEEK = 7 THEN 'Sat'
+		            END AS LABEL
+		     , COALESCE(B.ONLINE, 0) AS ONLINE
+		     , COALESCE(B.OFFLINE, 0) AS OFFLINE
+		  FROM ( SELECT 1 AS DAYWEEK UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7) A 
+		       LEFT JOIN ( SELECT C.DAYWEEK
+		                        , SUM(C.Online) AS Online
+		                        , SUM(C.Offline) AS Offline
+		       				FROM (SELECT DAYOFWEEK(`SALES_TM_LOCAL`) AS DAYWEEK
+									   , IF(PATH_TP = '606002',SUM(SALES),0) AS Online
+									   , IF(PATH_TP != '606002',SUM(SALES),0) AS Offline
+									FROM TB_SVC_SALES
+								   WHERE 1 = 1
+								   AND SALES_ST IN ('809001')
+								   <include refid="getWhen_Where" />
+							       GROUP BY PATH_TP
+							     ) C
+						   GROUP BY C.DAYWEEK) B ON A.DAYWEEK = B.DAYWEEK
+		ORDER BY A.DAYWEEK
+	</select>
+
+	<select id="getServiceMonthChart" parameterType="hashMap" resultMap="ServiceChartMap">
+		SELECT /* getServiceMonthChart, 2016-08-01, ikinox */
+		       CASE WHEN A.MONTH = 1 THEN 'Jan'
+		            WHEN A.MONTH = 2 THEN 'Feb'
+		            WHEN A.MONTH = 3 THEN 'Mar'
+		            WHEN A.MONTH = 4 THEN 'Apr'
+		            WHEN A.MONTH = 5 THEN 'May'
+		            WHEN A.MONTH = 6 THEN 'Jun'
+		            WHEN A.MONTH = 7 THEN 'Jul'
+		            WHEN A.MONTH = 8 THEN 'Aug'
+		            WHEN A.MONTH = 9 THEN 'Sep'
+		            WHEN A.MONTH = 10 THEN 'Oct'
+		            WHEN A.MONTH = 11 THEN 'Nov'
+		            WHEN A.MONTH = 12 THEN 'Dec'
+		            END AS LABEL
+		     , COALESCE(B.ONLINE, 0) AS ONLINE
+		     , COALESCE(B.OFFLINE, 0) AS OFFLINE
+		  FROM ( SELECT 1 AS MONTH UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 
+		          UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) A 
+		       LEFT JOIN ( SELECT C.MONTH
+		                        , SUM(C.Online) AS Online
+		                        , SUM(C.Offline) AS Offline
+		                     FROM( SELECT MONTH(`SALES_TM_LOCAL`) AS MONTH
+									    , IF(PATH_TP = '606002',SUM(SALES),0) AS Online
+									    , IF(PATH_TP != '606002',SUM(SALES),0) AS Offline
+									 FROM TB_SVC_SALES
+								    WHERE 1 = 1
+								    AND SALES_ST IN ('809001')
+								    <include refid="getWhen_Where" />
+								    GROUP BY PATH_TP
+								 ) C
+							GROUP BY C.MONTH ) B ON A.MONTH = B.MONTH
+		 ORDER BY A.MONTH
+	</select>
+
+	<select id="getServiceHourChart" parameterType="hashMap" resultMap="ServiceChartMap">
+		SELECT /* getServiceHourChart, 2016-08-01, ikinox */
+		       CONCAT(A.HOUR, '~', A.HOUR + 1, 'h') AS LABEL
+		     , COALESCE(B.ONLINE, 0) AS ONLINE
+		     , COALESCE(B.OFFLINE, 0) AS OFFLINE
+		  FROM ( SELECT 0 AS HOUR UNION SELECT 1 AS HOUR UNION SELECT 2 AS HOUR UNION SELECT 3 AS HOUR UNION SELECT 4 AS HOUR UNION 
+		         SELECT 5 AS HOUR UNION SELECT 6 AS HOUR UNION SELECT 7 AS HOUR UNION SELECT 8 AS HOUR UNION SELECT 9 AS HOUR UNION 
+		         SELECT 10 AS HOUR UNION SELECT 11 AS HOUR UNION SELECT 12 AS HOUR UNION SELECT 13 AS HOUR UNION SELECT 14 AS HOUR UNION 
+		         SELECT 15 AS HOUR UNION SELECT 16 AS HOUR UNION SELECT 17 AS HOUR UNION SELECT 18 AS HOUR UNION SELECT 19 AS HOUR UNION 
+		         SELECT 20 AS HOUR UNION SELECT 21 AS HOUR UNION SELECT 22 AS HOUR UNION SELECT 23 AS HOUR) A 
+		       LEFT JOIN ( SELECT C.HOUR
+		                        , SUM(C.Online) AS Online
+		                        , SUM(C.Offline) AS Offline
+		                     FROM( SELECT HOUR(`SALES_TM_LOCAL`) AS HOUR
+									    , IF(PATH_TP = '606002', ROUND(SUM(SALES),2), 0) AS Online
+									    , IF(PATH_TP != '606002', ROUND(SUM(SALES),2), 0) AS Offline
+									 FROM TB_SVC_SALES
+									WHERE 1 = 1
+									AND SALES_ST IN ('809001')
+									<include refid="getWhen_Where" />
+									GROUP BY PATH_TP
+							     ) C
+							GROUP BY C.HOUR
+		) B ON A.HOUR = B.HOUR
+		ORDER BY A.HOUR
+	</select>
+
+	<!-- Sales Summary Chart-->
+	<resultMap id="SalesChartMap" type="java.util.LinkedHashMap">
+		<result column="LABEL" property="label" jdbcType="VARCHAR" />
+		<result column="VALUE" property="value" jdbcType="INTEGER" />
+	</resultMap>
+
+	<select id="getSalesSummaryChart" parameterType="hashMap" resultMap="SalesChartMap">
+		SELECT /* getSalesSummaryChart, 2016-08-08, ikinox */ 
+		       (SELECT STORE_NM FROM TB_SVC_STORE WHERE A.STORE_ID = ID) AS LABEL 
+		     , ROUND(SUM(SALES), 2) AS VALUE
+		  FROM TB_SVC_SALES A
+		 WHERE A.BRAND_ID = #{brandId} 
+		   AND A.STORE_ID > 0
+		   AND A.SALES_ST = 8090091
+		 <if test="fromdate != null and todate != null">
+		   AND `SALES_TM_LOCAL` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+		   AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		 </if>
+		 GROUP BY A.STORE_ID
+		 LIMIT 0, 5
+	</select>
+
+	<select id="getSalesDayChart" parameterType="hashMap" resultMap="SalesChartMap">
+		SELECT /* getSalesDayChart, 2016-08-01, ikinox */
+		       DATE_FORMAT(CL.YMD, '%m-%d') AS LABEL
+		     , COALESCE(A.VALUE, 0) AS VALUE
+		  FROM TB_BASE_CALENDAR CL
+		       LEFT JOIN ( SELECT DATE(`SALES_TM_LOCAL`) AS YMD
+		                          <include refid="getOption2_Tp" />
+		                     FROM TB_SVC_SALES
+		                    WHERE 1=1
+		                    AND SALES_ST IN ('809001')
+		                    <include refid="getWhen_Where" />
+		                    GROUP BY YMD
+		                 ) A ON CL.YMD = A.YMD
+		 WHERE CL.YMD BETWEEN #{fromdate} AND #{todate}
+		 ORDER BY CL.YMD
+	</select>
+
+	<select id="getSalesMonthChart" parameterType="hashMap" resultMap="SalesChartMap">
+		SELECT /* getSalesMonthChart, 2016-08-01, ikinox */
+		       CASE WHEN A.MONTH = 1 THEN 'Jan'
+		            WHEN A.MONTH = 2 THEN 'Feb'
+		            WHEN A.MONTH = 3 THEN 'Mar'
+		            WHEN A.MONTH = 4 THEN 'Apr'
+		            WHEN A.MONTH = 5 THEN 'May'
+		            WHEN A.MONTH = 6 THEN 'Jun'
+		            WHEN A.MONTH = 7 THEN 'Jul'
+		            WHEN A.MONTH = 8 THEN 'Aug'
+		            WHEN A.MONTH = 9 THEN 'Sep'
+		            WHEN A.MONTH = 10 THEN 'Oct'
+		            WHEN A.MONTH = 11 THEN 'Nov'
+		            WHEN A.MONTH = 12 THEN 'Dec'
+		            END AS LABEL
+		     , COALESCE(B.VALUE, 0) AS VALUE
+		  FROM ( SELECT 1 AS MONTH UNION SELECT 2 AS MONTH UNION SELECT 3 AS MONTH UNION SELECT 4 AS MONTH UNION 
+		         SELECT 5 AS MONTH UNION SELECT 6 AS MONTH UNION SELECT 7 AS MONTH UNION SELECT 8 AS MONTH UNION 
+		         SELECT 9 AS MONTH UNION SELECT 10 AS MONTH UNION SELECT 11 AS MONTH UNION SELECT 12 AS MONTH) A 
+		       LEFT JOIN ( SELECT MONTH(`SALES_TM_LOCAL`) AS MONTH
+		                          <include refid="getOption2_Tp" />
+		                     FROM TB_SVC_SALES
+		                    WHERE 1=1
+		                    AND SALES_ST IN ('809001')
+		                    <include refid="getWhen_Where" />
+		                    GROUP BY MONTH
+		                 ) B ON A.MONTH = B.MONTH
+		 ORDER BY A.MONTH
+	</select>
+
+	<select id="getSalesHourChart" parameterType="hashMap" resultMap="SalesChartMap">
+		SELECT /* getSalesChart, 2016-08-01, ikinox */
+		       CONCAT(A.HOUR, '~', A.HOUR + 1, 'h') AS LABEL
+		     , COALESCE(B.VALUE, 0) AS VALUE
+		  FROM ( SELECT 0 AS HOUR UNION SELECT 1 AS HOUR UNION SELECT 2 AS HOUR UNION SELECT 3 AS HOUR UNION SELECT 4 AS HOUR UNION 
+		         SELECT 5 AS HOUR UNION SELECT 6 AS HOUR UNION SELECT 7 AS HOUR UNION SELECT 8 AS HOUR UNION SELECT 9 AS HOUR UNION 
+		         SELECT 10 AS HOUR UNION SELECT 11 AS HOUR UNION SELECT 12 AS HOUR UNION SELECT 13 AS HOUR UNION SELECT 14 AS HOUR UNION 
+		         SELECT 15 AS HOUR UNION SELECT 16 AS HOUR UNION SELECT 17 AS HOUR UNION SELECT 18 AS HOUR UNION SELECT 19 AS HOUR UNION 
+		         SELECT 20 AS HOUR UNION SELECT 21 AS HOUR UNION SELECT 22 AS HOUR UNION SELECT 23 AS HOUR
+		       ) A LEFT JOIN ( SELECT HOUR(`SALES_TM_LOCAL`) AS HOUR
+		                              <include refid="getOption2_Tp" />
+		                         FROM TB_SVC_SALES
+		                        WHERE 1=1
+		                        AND SALES_ST IN ('809001')
+		                        <include refid="getWhen_Where" />
+		                        GROUP BY HOUR
+		                     ) B ON A.HOUR = B.HOUR
+		 ORDER BY A.HOUR
+	</select>
+
+	<select id="getSalesDayofweekChart" parameterType="hashMap"	resultMap="SalesChartMap">
+		SELECT /* getSalesDayofweekChart, 2016-08-01, ikinox */
+		       CASE WHEN A.DAYOFWEEK = 1 THEN 'Sun'
+		            WHEN A.DAYOFWEEK = 2 THEN 'Mon'
+		            WHEN A.DAYOFWEEK = 3 THEN 'Tue'
+		            WHEN A.DAYOFWEEK = 4 THEN 'Wed'
+		            WHEN A.DAYOFWEEK = 5 THEN 'Thu'
+		            WHEN A.DAYOFWEEK = 6 THEN 'Fri'
+		            WHEN A.DAYOFWEEK = 7 THEN 'Sat'
+		            END AS LABEL
+		     , COALESCE(B.VALUE, 0) AS VALUE
+		  FROM ( SELECT 1 AS DAYOFWEEK UNION SELECT 2 AS DAYOFWEEK UNION SELECT 3 AS DAYOFWEEK UNION SELECT 4 AS DAYOFWEEK UNION 
+		         SELECT 5 AS DAYOFWEEK UNION SELECT 6 AS DAYOFWEEK UNION SELECT 7 AS DAYOFWEEK
+		        ) A LEFT JOIN ( SELECT DAYOFWEEK(`SALES_TM_LOCAL`) AS DAYOFWEEK
+		                               <include refid="getOption2_Tp" />
+		                          FROM TB_SVC_SALES
+		                         WHERE 1=1
+		                         AND SALES_ST IN ('809001')
+		                         <include refid="getWhen_Where" />
+		                         GROUP BY DAYOFWEEK
+		                      ) B ON A.DAYOFWEEK = B.DAYOFWEEK
+		 ORDER BY A.DAYOFWEEK
+	</select>
+
+	<!-- Sales Summary List-->
+	<resultMap id="AllSalesSummaryListResultMap" type="java.util.LinkedHashMap">
+		<result column="YMD" property="label" jdbcType="VARCHAR" />
+		<result column="SALES" property="sales" jdbcType="DOUBLE" />
+		<result column="DISCOUNT" property="discount" jdbcType="DOUBLE" />
+		<result column="REAL_SALES" property="realSales" jdbcType="DOUBLE" />
+		<result column="TAX" property="tax" jdbcType="DOUBLE" />
+		<result column="NET_SALES" property="netSales" jdbcType="DOUBLE" />
+		<result column="CUSTOMER_CNT" property="customerCnt" jdbcType="SMALLINT" />
+		<result column="CASH" property="cash" jdbcType="SMALLINT" />
+		<result column="CARD" property="card" jdbcType="SMALLINT" />
+		<result column="ETC" property="etc" jdbcType="SMALLINT" />
+	</resultMap>
+
+	<select id="getAllSalesSummaryList" parameterType="hashMap" resultMap="AllSalesSummaryListResultMap">
+		/* CustomSalesMapper.getAllSalesSummaryList , 2016-08-05,ikinox */
+		SELECT AA.SALES
+		     , AA.DISCOUNT
+		     , AA.REAL_SALES
+		     , AA.TAX
+		     , AA.NET_SALES
+		     , AA.CUSTOMER_CNT
+		     , BB.CASH
+		     , BB.CARD
+		     , BB.ETC
+		  FROM ( SELECT ROUND(SUM(SALES),2) SALES                                        /* 매출금액 */
+		              , ROUND(SUM(DISCOUNT),2) DISCOUNT                                  /* 할인금액 */
+		              , ROUND(SUM((SALES - DISCOUNT)),2) AS REAL_SALES
+		              , ROUND(SUM(TAX),2) TAX
+		              , ROUND(SUM(((SALES - DISCOUNT) - TAX)),2) AS NET_SALES
+		              , SUM(CUSTOMER_CNT) CUSTOMER_CNT
+		          FROM TB_SVC_SALES
+						   WHERE 1=1
+						   AND SALES_ST IN ('809001')
+						   <include refid="getWhen_Where" />
+		       ) AA CROSS JOIN (SELECT ROUND(SUM(IF(PAY_METHOD = 810001, SALES, 0)),2) AS CASH
+				 					 , ROUND(SUM(IF(PAY_METHOD = 810002, SALES, 0)),2) AS CARD
+				 					 , ROUND(SUM(IF(PAY_METHOD NOT IN (810001, 810002), SALES, 0)),2) AS ETC        
+			  					  FROM ( SELECT B.PAY_METHOD
+			  					              , COALESCE(SUM(AMOUNT), 0) AS sales
+			  					           FROM TB_SVC_SALES A 
+			  					                INNER JOIN TB_SVC_SALES_PAY B ON A.ID = B.SALES_ID
+			  					          WHERE 1=1
+			  					          AND B.SALES_ST IN ('809001', '809012')
+			  					          AND A.SALES_ST IN ('809001')
+			  					          <include refid="getWhen_Where" />
+			  					          GROUP BY B.PAY_METHOD
+			  					        ) B
+			  				    ) BB
+	</select>
+
+	<select id="getSalesDayOfMonthList" parameterType="hashMap" resultMap="AllSalesSummaryListResultMap">
+		SELECT /* getSalesDayOfMonthList, 2016-12-12 */
+		       DATE_FORMAT(AAA.YMD,'%m-%d') AS YMD,
+		       IFNULL(BBB.SALES,0) AS SALES,
+		       IFNULL(BBB.DISCOUNT,0) AS DISCOUNT,
+		       IFNULL(BBB.REAL_SALES,0) AS REAL_SALES,
+		       IFNULL(BBB.TAX,0) AS TAX,
+		       IFNULL(BBB.NET_SALES,0) AS NET_SALES,
+		       IFNULL(BBB.CUSTOMER_CNT,0) AS CUSTOMER_CNT,
+		       IFNULL(BBB.CASH,0) AS CASH,
+		       IFNULL(BBB.CARD,0) AS CARD, 
+		       IFNULL(BBB.ETC,0) AS ETC
+		FROM( SELECT YMD
+		        FROM TB_BASE_CALENDAR
+		       WHERE YMD BETWEEN DATE_ADD(DATE_FORMAT(#{fromdate},'%Y-%m-01'), INTERVAL 0 SECOND) AND LAST_DAY(#{todate})
+				   ORDER BY YMD) AAA LEFT JOIN (SELECT AA.YMD,
+		                                           AA.SALES,
+		                                           AA.DISCOUNT,
+		                                           AA.REAL_SALES,
+		                                           AA.TAX,
+		                                           AA.NET_SALES,
+		                                           AA.CUSTOMER_CNT,
+		                                           BB.CASH,
+		                                           BB.CARD,
+		                                           BB.ETC
+		                                      FROM ( SELECT DATE(SALES_TM_LOCAL) AS YMD
+		                                                  , ROUND(SUM(SALES), 2) SALES                           /* 매출금액 */
+		                                                  , ROUND(SUM(DISCOUNT), 2) DISCOUNT                     /* 할인금액 */
+		                                                  , ROUND(SUM((SALES - DISCOUNT)), 2) AS REAL_SALES
+		                                                  , ROUND(SUM(TAX), 2) TAX
+		                                                  , ROUND(SUM(((SALES - DISCOUNT) - TAX)), 2) AS NET_SALES
+		                                                  , SUM(CUSTOMER_CNT) CUSTOMER_CNT
+		                                              FROM TB_SVC_SALES
+		                                             WHERE 1 = 1
+		                                             AND SALES_ST IN ('809001')
+		                                               <include refid="getWhen_Where" />
+		                                               GROUP BY BRAND_ID, YMD) AA
+		                                           CROSS JOIN (SELECT YMD,
+		                                                              ROUND(SUM(IF(PAY_METHOD = 810001, SALES, 0)), 2) AS CASH,
+		                                                              ROUND(SUM(IF(PAY_METHOD = 810002, SALES, 0)), 2) AS CARD,
+		                                                              ROUND(SUM(IF(PAY_METHOD NOT IN (810001, 810002), SALES, 0)),2) AS ETC
+		                                                         FROM (SELECT DATE(A.SALES_TM_LOCAL) AS YMD
+		                                                                    , B.PAY_METHOD
+		                                                                    , COALESCE(SUM(AMOUNT), 0) AS sales
+		                                                                 FROM TB_SVC_SALES A
+		                                                                      INNER JOIN TB_SVC_SALES_PAY B ON A.ID = B.SALES_ID
+		                                                                WHERE 1 = 1
+		                                                                AND B.SALES_ST IN ('809001', '809012')
+		                                                                AND A.SALES_ST IN ('809001')
+		                                                                  <include refid="getWhen_Where" />
+		                                                                GROUP BY B.PAY_METHOD, YMD) B
+		                                                        GROUP BY YMD) BB ON AA.YMD = BB.YMD ) BBB ON AAA.YMD = BBB.YMD
+	   UNION ALL
+
+	  SELECT 'Total' AS YMD,
+		     SUM(AA.SALES) AS SALES,
+		     SUM(AA.DISCOUNT) AS DISCOUNT,
+		     SUM(AA.REAL_SALES) AS REAL_SALES,
+		     SUM(AA.TAX) AS TAX,
+		     SUM(AA.NET_SALES) AS NET_SALES,
+		     SUM(AA.CUSTOMER_CNT) AS CUSTOMER_CNT,
+		     SUM(BB.CASH) AS CASH,
+		     SUM(BB.CARD) AS CARD,
+		     SUM(BB.ETC) AS ETC
+		FROM ( SELECT DATE(SALES_TM_LOCAL) AS YMD
+		            , ROUND(SUM(SALES), 2) SALES                           /* 매출금액 */
+		            , ROUND(SUM(DISCOUNT), 2) DISCOUNT                     /* 할인금액 */
+		            , ROUND(SUM((SALES - DISCOUNT)), 2) AS REAL_SALES
+		            , ROUND(SUM(TAX), 2) TAX
+		            , ROUND(SUM(((SALES - DISCOUNT) - TAX)), 2) AS NET_SALES
+		            , SUM(CUSTOMER_CNT) CUSTOMER_CNT
+		        FROM TB_SVC_SALES
+		       WHERE 1 = 1
+		       AND SALES_ST IN ('809001')
+		       <include refid="getWhen_Where" />
+		       GROUP BY BRAND_ID, YMD) AA
+		       CROSS JOIN (SELECT YMD,
+		                          ROUND(SUM(IF(PAY_METHOD = 810001, SALES, 0)), 2) AS CASH,
+		                          ROUND(SUM(IF(PAY_METHOD = 810002, SALES, 0)), 2) AS CARD,
+		                          ROUND(SUM(IF(PAY_METHOD NOT IN (810001, 810002), SALES, 0)),2) AS ETC
+		                     FROM (SELECT DATE(A.SALES_TM_LOCAL) AS YMD
+		                                , B.PAY_METHOD
+		                                , COALESCE(SUM(AMOUNT), 0) AS sales
+		                             FROM TB_SVC_SALES A
+		                                  INNER JOIN TB_SVC_SALES_PAY B ON A.ID = B.SALES_ID
+		                            WHERE 1 = 1
+		                            AND B.SALES_ST IN ('809001', '809012')
+		                            AND A.SALES_ST IN ('809001')
+		                            <include refid="getWhen_Where" />
+		                            GROUP BY B.PAY_METHOD, YMD) B
+		                    GROUP BY YMD) BB ON AA.YMD = BB.YMD
+	</select>
+
+	<select id="getSalesDayOfWeekList" parameterType="hashMap" resultMap="AllSalesSummaryListResultMap">
+		SELECT /* getSalesDayOfWeekList, 2016-12-12 */
+		       CASE WHEN AAA.DAYOFWEEK = 1 THEN 'Sun'
+		            WHEN AAA.DAYOFWEEK = 2 THEN 'Mon'
+		            WHEN AAA.DAYOFWEEK = 3 THEN 'Tue'
+		            WHEN AAA.DAYOFWEEK = 4 THEN 'Wed'
+		            WHEN AAA.DAYOFWEEK = 5 THEN 'Thu'
+		            WHEN AAA.DAYOFWEEK = 6 THEN 'Fri'
+		            WHEN AAA.DAYOFWEEK = 7 THEN 'Sat'
+		            END AS YMD,
+               IFNULL(BBB.SALES,0) AS SALES,
+		       IFNULL(BBB.DISCOUNT,0) AS DISCOUNT,
+		       IFNULL(BBB.REAL_SALES,0) AS REAL_SALES,
+		       IFNULL(BBB.TAX,0) AS TAX,
+		       IFNULL(BBB.NET_SALES,0) AS NET_SALES,
+		       IFNULL(BBB.CUSTOMER_CNT,0) AS CUSTOMER_CNT,
+		       IFNULL(BBB.CASH,0) AS CASH,
+		       IFNULL(BBB.CARD,0) AS CARD, 
+		       IFNULL(BBB.ETC,0) AS ETC
+		  FROM ( SELECT 1 AS DAYOFWEEK UNION SELECT 2 AS DAYOFWEEK UNION SELECT 3 AS DAYOFWEEK UNION SELECT 4 AS DAYOFWEEK UNION 
+		         SELECT 5 AS DAYOFWEEK UNION SELECT 6 AS DAYOFWEEK UNION SELECT 7 AS DAYOFWEEK
+		        ) AAA LEFT JOIN (SELECT AA.DAYOFWEEK,
+                                        AA.SALES,
+                                        AA.DISCOUNT,
+                                        AA.REAL_SALES,
+                                        AA.TAX,
+                                        AA.NET_SALES,
+                                        AA.CUSTOMER_CNT,
+                                        BB.CASH,
+                                        BB.CARD,
+                                        BB.ETC
+                                  FROM ( SELECT DAYOFWEEK(`SALES_TM_LOCAL`) AS DAYOFWEEK 
+                                              , ROUND(SUM(SALES), 2) SALES                           /* 매출금액 */
+                                              , ROUND(SUM(DISCOUNT), 2) DISCOUNT                     /* 할인금액 */
+                                              , ROUND(SUM((SALES - DISCOUNT)), 2) AS REAL_SALES
+                                              , ROUND(SUM(TAX), 2) TAX
+                                              , ROUND(SUM(((SALES - DISCOUNT) - TAX)), 2) AS NET_SALES
+                                              , SUM(CUSTOMER_CNT) CUSTOMER_CNT
+                                          FROM TB_SVC_SALES
+                                         WHERE 1 = 1
+                                         AND SALES_ST IN ('809001')
+                                         <include refid="getWhen_Where" />
+                                         GROUP BY BRAND_ID, DAYOFWEEK) AA
+                                       CROSS JOIN (SELECT DAYOFWEEK,
+                                                          ROUND(SUM(IF(PAY_METHOD = 810001, SALES, 0)), 2) AS CASH,
+                                                          ROUND(SUM(IF(PAY_METHOD = 810002, SALES, 0)), 2) AS CARD,
+                                                          ROUND(SUM(IF(PAY_METHOD NOT IN (810001, 810002), SALES, 0)),2) AS ETC
+                                                     FROM (SELECT DAYOFWEEK(`SALES_TM_LOCAL`) AS DAYOFWEEK
+                                                                , B.PAY_METHOD
+                                                                , COALESCE(SUM(AMOUNT), 0) AS sales
+                                                             FROM TB_SVC_SALES A
+                                                                  INNER JOIN TB_SVC_SALES_PAY B ON A.ID = B.SALES_ID
+                                                            WHERE 1 = 1
+                                                            AND B.SALES_ST IN ('809001', '809012')
+                                                            AND A.SALES_ST IN ('809001')
+                                                            <include refid="getWhen_Where" />
+                                                            GROUP BY B.PAY_METHOD, DAYOFWEEK) B
+                                                    GROUP BY DAYOFWEEK) BB ON AA.DAYOFWEEK = BB.DAYOFWEEK ) BBB ON AAA.DAYOFWEEK = BBB.DAYOFWEEK
+                                                    
+		 UNION ALL
+		 
+		SELECT 'Total' AS YMD,
+		       IFNULL(SUM(AA.SALES),0) AS SALES,
+		       IFNULL(SUM(AA.DISCOUNT),0) AS DISCOUNT,
+		       IFNULL(SUM(AA.REAL_SALES),0) AS REAL_SALES,
+		       IFNULL(SUM(AA.TAX),0) AS TAX,
+		       IFNULL(SUM(AA.NET_SALES),0) AS NET_SALES,
+		       IFNULL(SUM(AA.CUSTOMER_CNT),0) AS CUSTOMER_CNT,
+		       IFNULL(SUM(BB.CASH),0) AS CASH,
+		       IFNULL(SUM(BB.CARD),0) AS CARD,
+		       IFNULL(SUM(BB.ETC),0) AS ETC
+         FROM ( SELECT DAYOFWEEK(`SALES_TM_LOCAL`) AS DAYOFWEEK 
+                     , ROUND(SUM(SALES), 2) SALES                           /* 매출금액 */
+                     , ROUND(SUM(DISCOUNT), 2) DISCOUNT                     /* 할인금액 */
+                     , ROUND(SUM((SALES - DISCOUNT)), 2) AS REAL_SALES
+                     , ROUND(SUM(TAX), 2) TAX
+                     , ROUND(SUM(((SALES - DISCOUNT) - TAX)), 2) AS NET_SALES
+                     , SUM(CUSTOMER_CNT) CUSTOMER_CNT
+                 FROM TB_SVC_SALES
+                WHERE 1 = 1
+                AND SALES_ST IN ('809001')
+                <include refid="getWhen_Where" />
+                GROUP BY BRAND_ID, DAYOFWEEK) AA
+              CROSS JOIN (SELECT DAYOFWEEK,
+                                 ROUND(SUM(IF(PAY_METHOD = 810001, SALES, 0)), 2) AS CASH,
+                                 ROUND(SUM(IF(PAY_METHOD = 810002, SALES, 0)), 2) AS CARD,
+                                 ROUND(SUM(IF(PAY_METHOD NOT IN (810001, 810002), SALES, 0)),2) AS ETC
+                            FROM (SELECT DAYOFWEEK(`SALES_TM_LOCAL`) AS DAYOFWEEK
+                                       , B.PAY_METHOD
+                                       , COALESCE(SUM(AMOUNT), 0) AS sales
+                                    FROM TB_SVC_SALES A
+                                         INNER JOIN TB_SVC_SALES_PAY B ON A.ID = B.SALES_ID
+                                   WHERE 1 = 1
+                                   AND B.SALES_ST IN ('809001', '809012')
+                                   AND A.SALES_ST IN ('809001')
+                                   <include refid="getWhen_Where" />
+                                   GROUP BY B.PAY_METHOD, DAYOFWEEK) B
+                           GROUP BY DAYOFWEEK) BB ON AA.DAYOFWEEK = BB.DAYOFWEEK
+	</select>
+
+	<select id="getSalesMonthOfYearList" parameterType="hashMap" resultMap="AllSalesSummaryListResultMap">
+		SELECT /* getSalesMonthOfYearList, 2016-12-12 */
+		       CASE WHEN AAA.MONTH = 1 THEN 'Jan'
+		            WHEN AAA.MONTH = 2 THEN 'Feb'
+		            WHEN AAA.MONTH = 3 THEN 'Mar'
+		            WHEN AAA.MONTH = 4 THEN 'Apr'
+		            WHEN AAA.MONTH = 5 THEN 'May'
+		            WHEN AAA.MONTH = 6 THEN 'Jun'
+		            WHEN AAA.MONTH = 7 THEN 'Jul'
+		            WHEN AAA.MONTH = 8 THEN 'Aug'
+		            WHEN AAA.MONTH = 9 THEN 'Sep'
+		            WHEN AAA.MONTH = 10 THEN 'Oct'
+		            WHEN AAA.MONTH = 11 THEN 'Nov'
+		            WHEN AAA.MONTH = 12 THEN 'Dec'
+		            END AS YMD,
+		       IFNULL(BBB.SALES,0) AS SALES,
+		       IFNULL(BBB.DISCOUNT,0) AS DISCOUNT,
+		       IFNULL(BBB.REAL_SALES,0) AS REAL_SALES,
+		       IFNULL(BBB.TAX,0) AS TAX,
+		       IFNULL(BBB.NET_SALES,0) AS NET_SALES,
+		       IFNULL(BBB.CUSTOMER_CNT,0) AS CUSTOMER_CNT,
+		       IFNULL(BBB.CASH,0) AS CASH,
+		       IFNULL(BBB.CARD,0) AS CARD, 
+		       IFNULL(BBB.ETC,0) AS ETC
+		  FROM ( SELECT 1 AS MONTH UNION SELECT 2 AS MONTH UNION SELECT 3 AS MONTH UNION SELECT 4 AS MONTH UNION 
+				     SELECT 5 AS MONTH UNION SELECT 6 AS MONTH UNION SELECT 7 AS MONTH UNION SELECT 8 AS MONTH UNION 
+				     SELECT 9 AS MONTH UNION SELECT 10 AS MONTH UNION SELECT 11 AS MONTH UNION SELECT 12 AS MONTH
+		        ) AAA LEFT JOIN ( SELECT AA.MONTH,
+		                                 AA.SALES,
+		                                 AA.DISCOUNT,
+		                                 AA.REAL_SALES,
+		                                 AA.TAX,
+		                                 AA.NET_SALES,
+		                                 AA.CUSTOMER_CNT,
+		                                 BB.CASH,
+		                                 BB.CARD,
+		                                 BB.ETC
+		                            FROM ( SELECT MONTH(`SALES_TM_LOCAL`) AS MONTH 
+		                                        , ROUND(SUM(SALES), 2) SALES                           /* 매출금액 */
+		                                        , ROUND(SUM(DISCOUNT), 2) DISCOUNT                     /* 할인금액 */
+		                                        , ROUND(SUM((SALES - DISCOUNT)), 2) AS REAL_SALES
+		                                        , ROUND(SUM(TAX), 2) TAX
+		                                        , ROUND(SUM(((SALES - DISCOUNT) - TAX)), 2) AS NET_SALES
+		                                        , SUM(CUSTOMER_CNT) CUSTOMER_CNT
+		                                    FROM TB_SVC_SALES
+		                                   WHERE 1 = 1
+		                                   AND SALES_ST IN ('809001')
+		                                   <include refid="getWhen_Where" />
+		                                   GROUP BY BRAND_ID, MONTH) AA
+		                                 CROSS JOIN (SELECT MONTH,
+		                                                    ROUND(SUM(IF(PAY_METHOD = 810001, SALES, 0)), 2) AS CASH,
+		                                                    ROUND(SUM(IF(PAY_METHOD = 810002, SALES, 0)), 2) AS CARD,
+		                                                    ROUND(SUM(IF(PAY_METHOD NOT IN (810001, 810002), SALES, 0)),2) AS ETC
+		                                               FROM (SELECT MONTH(`SALES_TM_LOCAL`) AS MONTH
+		                                                          , B.PAY_METHOD
+		                                                          , COALESCE(SUM(AMOUNT), 0) AS SALES
+		                                                       FROM TB_SVC_SALES A
+		                                                            INNER JOIN TB_SVC_SALES_PAY B ON A.ID = B.SALES_ID
+		                                                      WHERE 1 = 1
+		                                                      AND B.SALES_ST IN ('809001', '809012')
+		                                                      AND A.SALES_ST IN ('809001')
+		                                                      <include refid="getWhen_Where" />
+		                                                      GROUP BY B.PAY_METHOD, MONTH) B
+		                                              GROUP BY MONTH) BB ON AA.MONTH = BB.MONTH ) BBB ON AAA.MONTH = BBB.MONTH
+
+		 UNION ALL
+
+		SELECT 'Total' AS YMD,
+		       IFNULL(SUM(AA.SALES),0) AS SALES,
+		       IFNULL(SUM(AA.DISCOUNT),0) AS DISCOUNT,
+		       IFNULL(SUM(AA.REAL_SALES),0) AS REAL_SALES,
+		       IFNULL(SUM(AA.TAX),0) AS TAX,
+		       IFNULL(SUM(AA.NET_SALES),0) AS NET_SALES,
+		       IFNULL(SUM(AA.CUSTOMER_CNT),0) AS CUSTOMER_CNT,
+		       IFNULL(SUM(BB.CASH),0) AS CASH,
+		       IFNULL(SUM(BB.CARD),0) AS CARD,
+		       IFNULL(SUM(BB.ETC),0) AS ETC
+		  FROM ( SELECT MONTH(`SALES_TM_LOCAL`) AS MONTH 
+		              , ROUND(SUM(SALES), 2) SALES                           /* 매출금액 */
+		              , ROUND(SUM(DISCOUNT), 2) DISCOUNT                     /* 할인금액 */
+		              , ROUND(SUM((SALES - DISCOUNT)), 2) AS REAL_SALES
+		              , ROUND(SUM(TAX), 2) TAX
+		              , ROUND(SUM(((SALES - DISCOUNT) - TAX)), 2) AS NET_SALES
+		              , SUM(CUSTOMER_CNT) CUSTOMER_CNT
+		          FROM TB_SVC_SALES
+		         WHERE 1 = 1
+		         AND SALES_ST IN ('809001')
+		         <include refid="getWhen_Where" />
+		         GROUP BY BRAND_ID, MONTH) AA
+		       CROSS JOIN (SELECT MONTH,
+		                          ROUND(SUM(IF(PAY_METHOD = 810001, SALES, 0)), 2) AS CASH,
+		                          ROUND(SUM(IF(PAY_METHOD = 810002, SALES, 0)), 2) AS CARD,
+		                          ROUND(SUM(IF(PAY_METHOD NOT IN (810001, 810002), SALES, 0)),2) AS ETC
+		                     FROM (SELECT MONTH(`SALES_TM_LOCAL`) AS MONTH
+		                                , B.PAY_METHOD
+		                                , COALESCE(SUM(AMOUNT), 0) AS sales
+		                             FROM TB_SVC_SALES A
+		                                  INNER JOIN TB_SVC_SALES_PAY B ON A.ID = B.SALES_ID
+		                            WHERE 1 = 1
+		                            AND B.SALES_ST IN ('809001', '809012')
+		                            AND A.SALES_ST IN ('809001')
+		                            <include refid="getWhen_Where" />
+		                            GROUP BY B.PAY_METHOD, MONTH) B
+		                    GROUP BY MONTH) BB ON AA.MONTH = BB.MONTH
+	</select>
+	
+	<select id="getSalesHourOfDayList" parameterType="hashMap" resultMap="AllSalesSummaryListResultMap">
+		SELECT /* getSalesHourOfDayList */
+		       CONCAT(AAA.HOUR, '~', AAA.HOUR + 1, 'h') AS YMD,
+		       IFNULL(BBB.SALES,0) AS SALES,
+		       IFNULL(BBB.DISCOUNT,0) AS DISCOUNT,
+		       IFNULL(BBB.REAL_SALES,0) AS REAL_SALES,
+		       IFNULL(BBB.TAX,0) AS TAX,
+		       IFNULL(BBB.NET_SALES,0) AS NET_SALES,
+		       IFNULL(BBB.CUSTOMER_CNT,0) AS CUSTOMER_CNT,
+		       IFNULL(BBB.CASH,0) AS CASH,
+		       IFNULL(BBB.CARD,0) AS CARD, 
+		       IFNULL(BBB.ETC,0) AS ETC
+		  FROM ( SELECT 0 AS HOUR UNION SELECT 1 AS HOUR UNION SELECT 2 AS HOUR UNION SELECT 3 AS HOUR UNION SELECT 4 AS HOUR UNION 
+		         SELECT 5 AS HOUR UNION SELECT 6 AS HOUR UNION SELECT 7 AS HOUR UNION SELECT 8 AS HOUR UNION SELECT 9 AS HOUR UNION 
+		         SELECT 10 AS HOUR UNION SELECT 11 AS HOUR UNION SELECT 12 AS HOUR UNION SELECT 13 AS HOUR UNION SELECT 14 AS HOUR UNION 
+		         SELECT 15 AS HOUR UNION SELECT 16 AS HOUR UNION SELECT 17 AS HOUR UNION SELECT 18 AS HOUR UNION SELECT 19 AS HOUR UNION 
+		         SELECT 20 AS HOUR UNION SELECT 21 AS HOUR UNION SELECT 22 AS HOUR UNION SELECT 23 AS HOUR
+		       ) AAA LEFT JOIN (SELECT AA.HOUR,
+                                       AA.SALES,
+                                       AA.DISCOUNT,
+                                       AA.REAL_SALES,
+                                       AA.TAX,
+                                       AA.NET_SALES,
+                                       AA.CUSTOMER_CNT,
+                                       BB.CASH,
+                                       BB.CARD,
+                                       BB.ETC
+                                  FROM ( SELECT HOUR(`SALES_TM_LOCAL`) AS HOUR 
+                                              , ROUND(SUM(SALES), 2) SALES                           /* 매출금액 */
+                                              , ROUND(SUM(DISCOUNT), 2) DISCOUNT                     /* 할인금액 */
+                                              , ROUND(SUM((SALES - DISCOUNT)), 2) AS REAL_SALES
+                                              , ROUND(SUM(TAX), 2) TAX
+                                              , ROUND(SUM(((SALES - DISCOUNT) - TAX)), 2) AS NET_SALES
+                                              , SUM(CUSTOMER_CNT) CUSTOMER_CNT
+                                          FROM TB_SVC_SALES
+                                         WHERE 1 = 1
+                                         AND SALES_ST IN ('809001')
+                                         <include refid="getWhen_Where" />
+                                         GROUP BY BRAND_ID, HOUR) AA
+                                       CROSS JOIN (SELECT HOUR,
+                                                          ROUND(SUM(IF(PAY_METHOD = 810001, SALES, 0)), 2) AS CASH,
+                                                          ROUND(SUM(IF(PAY_METHOD = 810002, SALES, 0)), 2) AS CARD,
+                                                          ROUND(SUM(IF(PAY_METHOD NOT IN (810001, 810002), SALES, 0)),2) AS ETC
+                                                     FROM (SELECT HOUR(`SALES_TM_LOCAL`) AS HOUR
+                                                                , B.PAY_METHOD
+                                                                , COALESCE(SUM(AMOUNT), 0) AS sales
+                                                             FROM TB_SVC_SALES A
+                                                                  INNER JOIN TB_SVC_SALES_PAY B ON A.ID = B.SALES_ID
+                                                            WHERE 1 = 1
+                                                            AND B.SALES_ST IN ('809001', '809012')
+                                                            AND A.SALES_ST IN ('809001')
+                                                            <include refid="getWhen_Where" />
+                                                            GROUP BY B.PAY_METHOD, HOUR) B
+                                                    GROUP BY HOUR) BB ON AA.HOUR = BB.HOUR ) BBB ON AAA.HOUR = BBB.HOUR
+
+		 UNION ALL
+		
+		SELECT 'Total' YMD,
+		       SUM(AA.SALES) AS SALES, 
+		       SUM(AA.DISCOUNT) AS DISCOUNT,
+		       SUM(AA.REAL_SALES) AS REAL_SALES,
+		       SUM(AA.TAX) AS TAX,
+		       SUM(AA.NET_SALES) AS NET_SALES,
+		       SUM(AA.CUSTOMER_CNT) AS CUSTOMER_CNT,
+		       SUM(BB.CASH) AS CASH,
+		       SUM(BB.CARD) AS CARD,
+		       SUM(BB.ETC) AS ETC
+		  FROM ( SELECT HOUR(`SALES_TM_LOCAL`) AS HOUR 
+		              , ROUND(SUM(SALES), 2) SALES                           /* 매출금액 */
+		              , ROUND(SUM(DISCOUNT), 2) DISCOUNT                     /* 할인금액 */
+		              , ROUND(SUM((SALES - DISCOUNT)), 2) AS REAL_SALES
+		              , ROUND(SUM(TAX), 2) TAX
+		              , ROUND(SUM(((SALES - DISCOUNT) - TAX)), 2) AS NET_SALES
+		              , SUM(CUSTOMER_CNT) CUSTOMER_CNT
+		          FROM TB_SVC_SALES
+		         WHERE 1 = 1
+		         AND SALES_ST IN ('809001')
+		         <include refid="getWhen_Where" />
+		         GROUP BY BRAND_ID, HOUR) AA
+		       CROSS JOIN (SELECT HOUR,
+		                          ROUND(SUM(IF(PAY_METHOD = 810001, SALES, 0)), 2) AS CASH,
+		                          ROUND(SUM(IF(PAY_METHOD = 810002, SALES, 0)), 2) AS CARD,
+		                          ROUND(SUM(IF(PAY_METHOD NOT IN (810001, 810002), SALES, 0)),2) AS ETC
+		                     FROM (SELECT HOUR(`SALES_TM_LOCAL`) AS HOUR
+		                                , B.PAY_METHOD
+		                                , COALESCE(SUM(AMOUNT), 0) AS sales
+		                             FROM TB_SVC_SALES A
+		                                  INNER JOIN TB_SVC_SALES_PAY B ON A.ID = B.SALES_ID
+		                            WHERE 1 = 1
+		                            AND B.SALES_ST IN ('809001', '8012001')
+		                            AND A.SALES_ST IN ('809001')
+		                            <include refid="getWhen_Where" />
+		                            GROUP BY B.PAY_METHOD, HOUR) B
+		                    GROUP BY HOUR) BB ON AA.HOUR = BB.HOUR
+                    
+	</select>
+	
+	<resultMap id="ServiceSalesListResultMap" type="java.util.LinkedHashMap">
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="SUB_TITLE" property="subTitle" jdbcType="VARCHAR" />
+		<result column="ORDER_CNT" property="orderCnt" jdbcType="DOUBLE" />
+		<result column="SALES" property="sales" jdbcType="DOUBLE" />
+		<result column="AVERAGE_SALES" property="averageSales" jdbcType="DOUBLE" />
+	</resultMap>
+
+	<select id="getServiceSalesSummaryList" parameterType="hashMap" resultMap="ServiceSalesListResultMap">
+		SELECT 'OffLine Total' AS TITLE
+		     , 'ToTal' AS SUB_TITLE
+		     , COUNT(*) AS ORDER_CNT
+		     , ROUND(SUM(SALES),2) SALES
+		     , ROUND((SUM(SALES) / COUNT(*)),2) AS AVERAGE_SALES
+		  FROM TB_SVC_SALES 
+		 WHERE 1=1
+		 AND SALES_ST IN ('809001')
+		 <include refid="getWhen_Where" />
+		   AND PATH_TP IN ('606001', '606003', '606004')
+		 GROUP BY BRAND_ID
+
+		 UNION ALL
+
+		SELECT (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = PATH_TP) AS TITLE
+		     , 'OffLine' AS SUB_TITLE
+		     , COUNT(*) ORDER_CNT
+		     , ROUND(SUM(SALES),2) SALES
+		     , ROUND((SUM(SALES) / COUNT(*)),2) AS AVERAGE_SALES
+		  FROM TB_SVC_SALES
+		 WHERE 1=1
+		 AND SALES_ST IN ('809001')
+		 <include refid="getWhen_Where" />
+		   AND PATH_TP IN ('606001', '606003', '606004')
+		 GROUP BY PATH_TP
+
+		 UNION ALL
+
+		SELECT 'OnLine Total' TITLE
+		     , 'ToTal' AS SUB_TITLE
+		     , COUNT(*) ORDER_CNT
+		     , ROUND(SUM(SALES),2) SALES
+		     , ROUND((SUM(SALES) / COUNT(*)),2) AS AVERAGE_SALES
+		  FROM TB_SVC_SALES
+		 WHERE 1=1
+		 AND SALES_ST IN ('809001')
+		 <include refid="getWhen_Where" />
+		   AND PATH_TP IN ('606002')
+		 GROUP BY PATH_TP
+
+		 UNION ALL
+
+		SELECT (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = ORDER_TP) TITLE
+		     , 'OnLine' AS SUB_TITLE
+		     , COUNT(*) ORDER_CNT
+		     , ROUND(SUM(SALES),2) SALES
+		     , ROUND((SUM(SALES) / COUNT(*)),2) AS AVERAGE_SALES
+		  FROM TB_SVC_SALES
+		 WHERE 1=1
+		 AND SALES_ST IN ('809001')
+		 <include refid="getWhen_Where" />
+		   AND PATH_TP IN ('606002')
+		 GROUP BY ORDER_TP
+
+		 UNION ALL
+
+		SELECT 'ToTal' TITLE
+		     , 'ToTal' AS SUB_TITLE
+		     , COUNT(*) ORDER_CNT
+		     , ROUND(SUM(SALES),2) SALES
+		     , ROUND((SUM(SALES) / COUNT(*)),2) AS AVERAGE_SALES
+		  FROM TB_SVC_SALES
+		 WHERE 1=1
+		 AND SALES_ST IN ('809001')
+		 <include refid="getWhen_Where" />
+		 GROUP BY BRAND_ID
+		<if test="storeId != null">, STORE_ID</if>
+	</select>
+
+	<select id="getServiceSalesList" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		SELECT /* CustomSalesMapper.getServiceSalesList */
+		       TEMPLATE.TITLE AS HEADER
+		     , TEMPLATE.SUB_TITLE AS SUB_TITLE  
+		     , COALESCE(SUM(VALUE),0) AS TOTAL
+			<foreach collection="calendarList" item="calendarList" index="index" >
+				<!-- 검색날짜별 타입분류 -->
+            	<include refid="getCalendar_Tp" />
+        	</foreach>
+		FROM ( SELECT YMD
+		            , FF.BRAND_ID
+		            , FF.STORE_ID
+		            , FF.ROWNUM
+		            , FF.TITLE
+		            , FF.SUB_TITLE
+				 FROM TB_BASE_CALENDAR CL
+				      CROSS JOIN ( SELECT @RNUM := @RNUM + 1 AS ROWNUM
+                                        , CC.* 
+				                     FROM (SELECT 'OffLine Total' AS TITLE
+												, 'Total' AS SUB_TITLE
+												, BRAND_ID
+												, STORE_ID    
+										     FROM TB_SVC_SALES 
+											WHERE 1=1
+											  AND SALES_ST IN ('809001')
+											  <include refid="getWhen_Where" />
+											  AND PATH_TP IN ('606001', '606003', '606004')
+										    GROUP BY BRAND_ID
+										
+											UNION ALL
+										
+											SELECT (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = PATH_TP) AS TITLE
+												 , 'OffLine' AS SUB_TITLE
+												 , BRAND_ID
+												 , STORE_ID
+											  FROM TB_SVC_SALES
+											 WHERE 1=1
+											   AND SALES_ST IN ('809001')
+											   <include refid="getWhen_Where" />
+											   AND PATH_TP IN ('606001', '606003', '606004')
+											 GROUP BY PATH_TP
+										
+											 UNION ALL
+										
+											SELECT 'OnLine Total' TITLE
+											     , 'Total' AS SUB_TITLE
+											     , BRAND_ID
+												 , STORE_ID
+											  FROM TB_SVC_SALES
+											 WHERE 1=1
+											   AND SALES_ST IN ('809001')
+											   <include refid="getWhen_Where" />
+											   AND PATH_TP IN ('606002')
+											 GROUP BY PATH_TP
+										
+											 UNION ALL
+										
+											SELECT (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = ORDER_TP) TITLE
+											     , 'OnLine' AS SUB_TITLE
+											     , BRAND_ID
+											     , STORE_ID
+											  FROM TB_SVC_SALES
+											 WHERE 1=1
+											   AND SALES_ST IN ('809001')
+											   <include refid="getWhen_Where" />
+											   AND PATH_TP IN ('606002')
+											 GROUP BY ORDER_TP
+										
+											 UNION ALL
+										
+											SELECT 'Total' TITLE
+											     , 'Total' AS SUB_TITLE
+											     , BRAND_ID
+											     , STORE_ID
+											  FROM TB_SVC_SALES
+											 WHERE 1=1
+											   AND SALES_ST IN ('809001')
+											   <include refid="getWhen_Where" />
+											 GROUP BY BRAND_ID
+											 <if test="storeId != null">, STORE_ID</if>
+											) AS CC, ( SELECT @RNUM := 0 ) R
+				                 ) FF 
+				WHERE CL.YMD BETWEEN #{fromdate} AND #{todate}
+		     ) TEMPLATE LEFT JOIN ( SELECT * 
+		                              FROM (    SELECT 'OffLine Total' AS TITLE
+												     , 'Total' AS SUB_TITLE
+												     , DATE(SALES_TM_LOCAL) AS YMD
+												     <!-- Sales Type별 조건 추가 -->
+		                                 			 <include refid="getSales2_Tp" />
+												  FROM TB_SVC_SALES 
+												 WHERE 1=1
+												 AND SALES_ST IN ('809001')
+												 <include refid="getWhen_Where" />
+												   AND PATH_TP IN ('606001', '606003', '606004')
+												 GROUP BY BRAND_ID, YMD 
+										
+												 UNION ALL
+										
+												SELECT (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = PATH_TP) AS TITLE
+												     , 'OffLine' AS SUB_TITLE
+												     , DATE(SALES_TM_LOCAL) AS YMD
+												     <!-- Sales Type별 조건 추가 -->
+		                                 			 <include refid="getSales2_Tp" />
+												  FROM TB_SVC_SALES
+												 WHERE 1=1
+												 AND SALES_ST IN ('809001')
+												 <include refid="getWhen_Where" />
+												   AND PATH_TP IN ('606001', '606003', '606004')
+												 GROUP BY PATH_TP, YMD 
+										
+												 UNION ALL
+										
+												SELECT 'OnLine Total' TITLE
+												     , 'Total' AS SUB_TITLE
+												     , DATE(SALES_TM_LOCAL) AS YMD
+												     <!-- Sales Type별 조건 추가 -->
+		                                 			 <include refid="getSales2_Tp" />
+												  FROM TB_SVC_SALES
+												 WHERE 1=1
+												 AND SALES_ST IN ('809001')
+												 <include refid="getWhen_Where" />
+												   AND PATH_TP IN ('606002')
+												 GROUP BY PATH_TP, YMD 
+										
+												 UNION ALL
+										
+												SELECT (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = ORDER_TP) TITLE
+												     , 'OnLine' AS SUB_TITLE
+												     , DATE(SALES_TM_LOCAL) AS YMD
+												     <!-- Sales Type별 조건 추가 -->
+		                                 			 <include refid="getSales2_Tp" />
+												  FROM TB_SVC_SALES
+												 WHERE 1=1
+												 AND SALES_ST IN ('809001')
+												 <include refid="getWhen_Where" />
+												   AND PATH_TP IN ('606002')
+												 GROUP BY ORDER_TP, YMD 
+										
+												 UNION ALL
+										
+												SELECT 'Total' TITLE
+												     , 'Total' AS SUB_TITLE
+												     , DATE(SALES_TM_LOCAL) AS YMD
+												     <!-- Sales Type별 조건 추가 -->
+		                                 			 <include refid="getSales2_Tp" />
+												  FROM TB_SVC_SALES
+												 WHERE 1=1
+												 AND SALES_ST IN ('809001')
+												 <include refid="getWhen_Where" />
+												 GROUP BY BRAND_ID <if test="storeId != null">, STORE_ID</if> , YMD 
+		                                   ) AS AA
+		                           ) GG ON GG.YMD = TEMPLATE.YMD AND GG.TITLE = TEMPLATE.TITLE AND GG.SUB_TITLE = TEMPLATE.SUB_TITLE
+       GROUP BY TEMPLATE.TITLE
+	   ORDER BY TEMPLATE.ROWNUM		
+	</select>
+	
+	<resultMap id="SalesSummaryListResultMap" type="java.util.LinkedHashMap">
+		<result column="STORE_NM" property="storeNm" jdbcType="VARCHAR" />
+		<result column="SALES" property="sales" jdbcType="DOUBLE" />
+		<result column="DISCOUNT" property="discount" jdbcType="DOUBLE" />
+		<result column="REAL_SALES" property="realSales" jdbcType="DOUBLE" />
+		<result column="TAX" property="tax" jdbcType="DOUBLE" />
+		<result column="NET_SALES" property="netSales" jdbcType="DOUBLE" />
+		<result column="CUSTOMER_CNT" property="customerCnt" jdbcType="SMALLINT" />
+	</resultMap>
+
+	<select id="getSalesSummaryList" parameterType="hashMap" resultMap="SalesSummaryListResultMap">
+		SELECT STORE.STORE_NM
+		     , S.SALES
+		     , S.DISCOUNT
+		     , S.REAL_SALES
+		     , S.TAX
+		     , S.NET_SALES
+		     , S.CUSTOMER_CNT
+		  FROM TB_SVC_STORE STORE
+		       LEFT JOIN(SELECT STORE_ID
+		                      , ROUND(SUM(SALES), 2) AS SALES							/* 매출금액 */
+		                      , ROUND(SUM(DISCOUNT), 2) AS   DISCOUNT					/* 할인금액 */
+		                      , ROUND(SUM(SALES - DISCOUNT),2) AS REAL_SALES			/* 실매출금액 = (매출금액 - 할인금액) */
+		                      , ROUND(SUM(TAX),2) AS TAX								/* 부가세 : 우리나라기준(10%) */
+		                      , ROUND(SUM(((SALES - DISCOUNT) - TAX)),2) AS NET_SALES	/* 순매출금액 = 실매출금액 - 부가세(10%)*/
+		                      , ROUND(SUM(CUSTOMER_CNT),2) AS CUSTOMER_CNT				/* 객수 */
+		                   FROM TB_SVC_SALES
+		                  WHERE 1=1
+		                  AND SALES_ST IN ('809001')
+						    <include refid="getWhen_Where" />
+		                  GROUP BY STORE_ID
+		                  ORDER BY STORE_ID ASC) S ON STORE.ID = S.STORE_ID
+		 WHERE STORE.BRAND_ID = #{brandId}
+		
+		 UNION ALL 
+		
+		SELECT 'TOTAL' AS STORE_ID
+		     , ROUND(SUM(SALES), 2) AS SALES							/* 매출금액 */
+		     , ROUND(SUM(DISCOUNT), 2) AS DISCOUNT						/* 할인금액 */
+		     , ROUND(SUM(SALES - DISCOUNT),2) AS REAL_SALES				/* 실매출금액 = (매출금액 - 할인금액) */
+		     , ROUND(SUM(TAX),2) AS TAX									/* 부가세 : 우리나라기준(10%) */
+		     , ROUND(SUM(((SALES - DISCOUNT) - TAX)),2) AS NET_SALES	/* 순매출금액 = 실매출금액 - 부가세(10%)*/
+		     , ROUND(SUM(CUSTOMER_CNT),2) AS  CUSTOMER_CNT				/* 객수 */
+		  FROM TB_SVC_SALES
+		 WHERE BRAND_ID = #{brandId}
+		   AND SALES_ST = '809001'
+		 <if test="fromdate != null and todate != null">
+		   AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+		                          AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		 </if>
+		 GROUP BY BRAND_ID
+	</select>
+
+	<!-- 검색 기간 범위의 날짜(YYYY-MM-DD) 리턴 -->
+	<resultMap id="calendarYMDListMap" type="java.util.LinkedHashMap">
+		<result column="YMD" property="YMD" jdbcType="DATE" />
+		<result column="LABEL" property="LABEL" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getCalendarYMDList" parameterType="hashMap" resultMap="calendarYMDListMap">
+		SELECT YMD
+		     , YMD AS LABEL
+		  FROM TB_BASE_CALENDAR 			
+		 WHERE YMD BETWEEN #{fromdate} AND #{todate}
+		 ORDER BY YMD		
+	</select>
+	
+	<!-- 검색 기간 범위의 날짜(YYYYWW) 리턴 -->
+	<resultMap id="calendarYearWeekListMap" type="java.util.LinkedHashMap">
+		<result column="YEARWEEK" property="YEARWEEK" jdbcType="INTEGER" />
+		<result column="LABEL" property="LABEL" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getCalendarYearWeekList" parameterType="hashMap" resultMap="calendarYearWeekListMap">
+		SELECT DISTINCT(YEARWEEK) AS YEARWEEK
+		     , CONCAT(DATE_FORMAT(STR_TO_DATE(CONCAT(YEARWEEK, 0), '%X%V%w'), '%Y-%m-%d'), ' ~ ', DATE_FORMAT(STR_TO_DATE(CONCAT(YEARWEEK, 6), '%X%V%w'), '%Y-%m-%d')) AS LABEL
+		FROM TB_BASE_CALENDAR
+		WHERE YMD BETWEEN #{fromdate} AND #{todate}
+		ORDER BY YEARWEEK		
+	</select>
+	
+	<!-- 검색 기간 범위의 날짜(YYYY) 리턴 -->
+	<resultMap id="calendarYearMonthListMap" type="java.util.LinkedHashMap">
+		<result column="YEARMONTH" property="YEARMONTH" jdbcType="INTEGER" />
+		<result column="LABEL" property="LABEL" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getCalendarYearMonthList" parameterType="hashMap" resultMap="calendarYearMonthListMap">
+		SELECT T1.YEARMONTH AS YEARMONTH
+		     , T1.YEARMONTH AS LABEL
+		  FROM ( SELECT DISTINCT(DATE_FORMAT(YMD,'%Y-%m')) AS YEARMONTH
+		           FROM TB_BASE_CALENDAR
+		          WHERE YMD BETWEEN #{fromdate} AND #{todate}
+		          ORDER BY YEARMONTH
+		       ) T1
+	</select>
+	
+	<!-- Brand Summary ->(Table)  브랜드 섬머리(테이블)-->
+	<select id="getBrandSummaryList" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		SELECT /* CustomSalesMapper.getBrandSummaryList */
+		       TEMPLATE.STORE_NM AS HEADER
+		     , COALESCE(SUM(VALUE),0) AS TOTAL
+			<foreach collection="calendarList" item="calendarList" index="index" >
+				<!-- 검색날짜별 타입분류 -->
+            	<include refid="getCalendar_Tp" />
+        	</foreach>
+		FROM ( SELECT YMD
+		            , FF.BRAND_ID
+		            , FF.STORE_ID
+		            , FF.STORE_NM
+				 FROM TB_BASE_CALENDAR CL
+				      CROSS JOIN ( SELECT YY.BRAND_ID
+				                        , YY.ID AS STORE_ID
+				                        , YY.STORE_NM
+				                     FROM TB_SVC_STORE  YY
+				                    WHERE BRAND_ID = #{brandId}
+				                 ) FF 
+				WHERE CL.YMD BETWEEN #{fromdate} AND #{todate}
+		     ) TEMPLATE LEFT JOIN ( SELECT BRAND_ID
+		                                 , STORE_ID
+		                                 , DATE(T1.SALES_TM_LOCAL) AS YMD
+		                                 ,<!-- Sales Type별 조건 추가 -->
+		                                 <include refid="getSales_Tp" />
+		                              FROM TB_SVC_SALES T1
+            		                 WHERE 1=1
+            		                 AND T1.SALES_ST IN ('809001')
+									 <include refid="getWhen_Where" />
+            		                 GROUP BY STORE_ID
+		                           ) GG ON GG.YMD = TEMPLATE.YMD AND TEMPLATE.STORE_ID = GG.STORE_ID 
+       GROUP BY TEMPLATE.STORE_ID
+	   ORDER BY TEMPLATE.STORE_ID
+	</select>
+	
+	<!-- Sales > 매출목표관리 : 리스트 조회-->
+	<select id="getSalesGoalList" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		<!-- CustomSales > getSalesGoalList -->
+		SELECT	ID,
+ 				BRAND_ID,
+ 				STORE_ID,
+				YEAR,
+				MONTH1_GOAL_AMT,
+				MONTH2_GOAL_AMT,
+				MONTH3_GOAL_AMT,
+				MONTH4_GOAL_AMT,
+				MONTH5_GOAL_AMT,
+				MONTH6_GOAL_AMT,
+				MONTH7_GOAL_AMT,
+				MONTH8_GOAL_AMT,
+				MONTH9_GOAL_AMT,
+				MONTH10_GOAL_AMT,
+				MONTH11_GOAL_AMT,
+				MONTH12_GOAL_AMT
+		FROM	tb_svc_sales_goal
+		WHERE	BRAND_ID = #{brandId}
+		    AND STORE_ID = #{storeId}
+			AND YEAR = #{year}
+	</select>
+	
+	<!-- Sales > 매출목표관리 : 입력 수정-->	
+	<insert id="insertUpdateSalesGoal" parameterType="hashMap">
+		INSERT INTO tb_svc_sales_goal
+			(
+				id,					brand_id,			
+				store_id,			year,				
+				month1_goal_amt,	month2_goal_amt,
+				month3_goal_amt,	month4_goal_amt,	
+				month5_goal_amt,	month6_goal_amt,	
+				month7_goal_amt,	month8_goal_amt,
+				month9_goal_amt,	month10_goal_amt,	
+				month11_goal_amt,	month12_goal_amt
+            )
+        VALUES
+            (
+				NULL,									#{brandId,jdbcType=BIGINT},	
+				#{storeId,jdbcType=BIGINT},				#{year,jdbcType=CHAR},	
+				#{month1_goal_amt,jdbcType=DOUBLE},		#{month2_goal_amt,jdbcType=DOUBLE},
+				#{month3_goal_amt,jdbcType=DOUBLE},		#{month2_goal_amt,jdbcType=DOUBLE},
+				#{month5_goal_amt,jdbcType=DOUBLE},		#{month2_goal_amt,jdbcType=DOUBLE},
+				#{month7_goal_amt,jdbcType=DOUBLE},		#{month2_goal_amt,jdbcType=DOUBLE},
+				#{month9_goal_amt,jdbcType=DOUBLE},		#{month2_goal_amt,jdbcType=DOUBLE},
+				#{month11_goal_amt,jdbcType=DOUBLE},	#{month2_goal_amt,jdbcType=DOUBLE}	
+            )
+		on duplicate KEY UPDATE 							
+				brand_id = #{brandId,jdbcType=BIGINT},
+				store_id = #{storeId,jdbcType=BIGINT},	
+				year = #{year,jdbcType=CHAR}, 
+       			month1_goal_amt = #{month1_goal_amt,jdbcType=DOUBLE},
+       			month2_goal_amt = #{month2_goal_amt,jdbcType=DOUBLE},
+       			month3_goal_amt = #{month3_goal_amt,jdbcType=DOUBLE},
+       			month4_goal_amt = #{month4_goal_amt,jdbcType=DOUBLE},
+       			month5_goal_amt = #{month5_goal_amt,jdbcType=DOUBLE},
+       			month6_goal_amt = #{month6_goal_amt,jdbcType=DOUBLE},
+       			month7_goal_amt = #{month7_goal_amt,jdbcType=DOUBLE},
+       			month8_goal_amt = #{month8_goal_amt,jdbcType=DOUBLE},
+       			month9_goal_amt = #{month9_goal_amt,jdbcType=DOUBLE},
+       			month10_goal_amt = #{month10_goal_amt,jdbcType=DOUBLE},
+       			month11_goal_amt = #{month11_goal_amt,jdbcType=DOUBLE},
+       			month12_goal_amt = #{month12_goal_amt,jdbcType=DOUBLE}
+  </insert>
+  
+  <!-- Sales > 목표대비 실적분석 : 목표매출 조회-->
+  <select id="getAPGoalList" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		<!-- CustomSales > getAPGoalList -->
+		SELECT	MONTH1_GOAL_AMT,
+				MONTH2_GOAL_AMT,
+				MONTH3_GOAL_AMT,
+				MONTH4_GOAL_AMT,
+				MONTH5_GOAL_AMT,
+				MONTH6_GOAL_AMT,
+				MONTH7_GOAL_AMT,
+				MONTH8_GOAL_AMT,
+				MONTH9_GOAL_AMT,
+				MONTH10_GOAL_AMT,
+				MONTH11_GOAL_AMT,
+				MONTH12_GOAL_AMT
+		FROM	tb_svc_sales_goal
+		WHERE	BRAND_ID = #{brandId}
+		    AND STORE_ID = #{storeId}
+			AND YEAR = #{year}
+	</select>
+	
+  <!-- Sales > 목표대비 실적분석 : 매출실적 조회-->
+  <select id="getAPSalesList" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		<!-- CustomSales > getAPSalesList -->
+		SELECT		DATE_FORMAT(CL.YMD, '%Y-%m') AS label, 
+					ROUND(COALESCE(A.salesTotal, 0), 2) AS salesTotal, 
+					COALESCE(A.customerTotal, 0) AS customerTotal
+		FROM 		TB_BASE_CALENDAR CL
+		LEFT JOIN (
+					SELECT	YEAR(SALES_TM_LOCAL) AS YEAR, 
+							MONTH(SALES_TM_LOCAL) AS MONTH, 
+							SUM(SALES) AS salesTotal, 
+							SUM(CUSTOMER_CNT) AS customerTotal
+					FROM 	TB_SVC_SALES
+					WHERE	BRAND_ID = #{brandId}
+		    				AND STORE_ID = #{storeId}
+		    				AND SALES_ST = 809001
+							AND SALES_TM_LOCAL BETWEEN DATE_ADD(CONCAT(#{year},'-01-01'), INTERVAL 0 SECOND) 
+							AND DATE_ADD(CONCAT(#{year},'-12-31'), INTERVAL '23:59:59' HOUR_SECOND)
+					GROUP BY YEAR, MONTH	
+				   ) A
+		ON			CL.YEAR = A.YEAR
+					AND CL.MONTH = A.MONTH
+		WHERE		CL.YMD BETWEEN CONCAT('2016','-01-01') AND CONCAT('2016','-12-31')
+		GROUP BY CL.YEAR, CL.MONTH
+		ORDER BY CL.YEAR, CL.MONTH
+	</select>
+	
+	
+	
+	
+	<!--Category Sales ->(Table) 카테고리 판매현황 검색(테이블)-->
+	<select id="getCategorySalesList" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		<!-- /* CustomSalesMapper.getCategorySalesList */ --> 
+		SELECT TEMPLATE.CAT_NM AS HEADER
+		     , COALESCE(SUM(VALUE),0) AS TOTAL
+		       <foreach collection="calendarList" item="calendarList" index="index" >
+		         <include refid="getCalendar_Tp" /> <!-- 검색날짜별 타입분류 -->
+		       </foreach>
+		  FROM ( SELECT YMD
+		              , FF.CAT_CD
+		              , FF.CAT_NM
+		           FROM TB_BASE_CALENDAR CL
+		                CROSS JOIN (SELECT YY.ID AS CAT_CD
+		                                 , YY.NAME AS CAT_NM
+		                              FROM TB_SVC_ITEM_CAT YY
+		                             WHERE BRAND_ID = #{brandId}
+		                             <if test="storeId != null and storeId != ''">
+								       AND STORE_ID = #{storeId}
+									 </if> 
+		                           ) FF 
+		          WHERE CL.YMD BETWEEN #{fromdate} AND #{todate}
+		       ) TEMPLATE
+		         LEFT JOIN ( SELECT CAT_CD
+		                          , CAT_NM
+		                          , DATE(T1.SALES_TM_LOCAL) AS YMD
+		                          , <include refid="getSales_Tp" /> <!-- Sales Type별 조건 추가 -->
+		                       FROM TB_SVC_SALES T1
+		                            INNER JOIN TB_SVC_SALES_ITEM T2 ON T1.ID = T2.SALES_ID
+		                      WHERE T1.SALES_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+		                                                  AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		                        AND T1.BRAND_ID = #{brandId}
+		                        AND T1.SALES_ST = 809001
+					          <if test="storeId != null and storeId != ''">
+								AND T1.STORE_ID = #{storeId}
+						      </if>
+					          GROUP BY CAT_CD
+				           ) GG ON GG.YMD = TEMPLATE.YMD AND TEMPLATE.CAT_CD = GG.CAT_CD 
+		 GROUP BY TEMPLATE.CAT_CD, TEMPLATE.CAT_NM
+		 ORDER BY TEMPLATE.CAT_CD
+	</select>
+
+	<sql id="getSalesTotalList_When">
+		<if test="option1 == 'daily'">
+			,( SELECT GROUP_CONCAT(LEFT(`SALES_TM_LOCAL`, 10))
+			     FROM TB_SVC_SALES
+			    WHERE BRAND_ID = A.BRAND_ID
+			    AND SALES_ST = 809001
+				<if test="fromdate != null and todate != null">
+				  AND `SALES_TM_LOCAL` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+				                           AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+				</if>
+			) AS `WHEN`
+		</if>
+		<if test="option1 == 'weekly'">
+			,( SELECT GROUP_CONCAT(WEEK(`SALES_TM_LOCAL`, 0) + 1)
+			     FROM TB_SVC_SALES
+			    WHERE BRAND_ID = A.BRAND_ID
+			    AND SALES_ST = 809001
+				<if test="fromdate != null and todate != null">
+				  AND `SALES_TM_LOCAL` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+				                           AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+				</if>
+			) AS 'WHEN'
+		</if>
+		<if test="option1 == 'monthly'">
+			,( SELECT GROUP_CONCAT(DATE_FORMAT(`SALES_TM_LOCAL`, '%Y-%m'))
+			     FROM TB_SVC_SALES
+			    WHERE BRAND_ID = A.BRAND_ID
+			    AND SALES_ST = 809001
+				<if test="fromdate != null and todate != null">
+				  AND `SALES_TM_LOCAL` BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+				                           AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+				</if>
+			) AS `WHEN`
+		</if>
+	</sql>
+
+	<resultMap id="SelectDetailListResultMap" type="java.util.LinkedHashMap">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="PAY_DAY" property="payDay" jdbcType="VARCHAR" />
+		<result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+		<result column="PAY_TIME" property="payTime" jdbcType="VARCHAR" />
+		<result column="ORDER_ST" property="orderSt" jdbcType="VARCHAR" />
+		<result column="SALES" property="sales" jdbcType="INTEGER" />
+		<result column="DISCOUNT" property="discount" jdbcType="INTEGER" />
+		<result column="REAL_SALES" property="realSales" jdbcType="INTEGER" />
+		<result column="TAX" property="tax" jdbcType="INTEGER" />
+		<result column="NET_SALES" property="netSales" jdbcType="INTEGER" />
+	</resultMap>
+
+	<select id="getDetailList" parameterType="hashMap" resultMap="SelectDetailListResultMap">
+		/* CustomSalesMapper.selectDetailList */
+		SELECT ALL_LIST.ID
+             , ALL_LIST.PAY_DAY
+             , ALL_LIST.ORDER_NO
+             , ALL_LIST.PAY_TIME
+             , ALL_LIST.ORDER_ST
+		     , IFNULL(ROUND(ALL_LIST.SALES, 2), 0) AS SALES
+		     , IFNULL(ROUND(ALL_LIST.DISCOUNT, 2), 0) AS DISCOUNT
+		     , IFNULL(ROUND(ALL_LIST.REAL_SALES, 2), 0) AS REAL_SALES
+		     , IFNULL(ROUND(ALL_LIST.TAX, 2), 0) AS TAX
+		     , IFNULL(ROUND(ALL_LIST.NET_SALES, 2), 0) AS NET_SALES
+		 FROM ( SELECT ID 
+		             , DATE_FORMAT(SALES_TM_LOCAL, '%Y-%m-%d') AS PAY_DAY
+		             , ORDER_NO
+		             , TIME_FORMAT(SALES_TM_LOCAL, '%H:%i:%s') AS PAY_TIME
+		             , ORDER_ST
+		             , if(ORDER_ST = 607003, (SALES * -1), SALES) AS SALES
+		             , if(ORDER_ST = 607003, (DISCOUNT * -1), DISCOUNT) AS DISCOUNT
+		             , if(ORDER_ST = 607003, ((SALES - DISCOUNT) * -1), (SALES - DISCOUNT)) AS REAL_SALES
+		             <!-- , if(ORDER_ST = 607003, (((SALES - DISCOUNT) * TAX) * -1), ((SALES - DISCOUNT) * TAX)) AS TAX -->
+		             , if(ORDER_ST = 607003, (TAX * -1), TAX) AS TAX
+		             <!-- , if(ORDER_ST = 607003, (((SALES - DISCOUNT) - ((SALES - DISCOUNT) * TAX)) * -1), ((SALES - DISCOUNT) - ((SALES - DISCOUNT) * TAX))) AS NET_SALES -->
+		             , if(ORDER_ST = 607003, (((SALES - DISCOUNT) - TAX) * -1), ((SALES - DISCOUNT) - TAX)) AS NET_SALES
+		          FROM TB_SVC_SALES
+		         WHERE ORDER_NO != ''
+		         AND SALES_ST = 809001
+		           AND BRAND_ID = #{brandId}
+				 <if test="storeId != null and storeId != ''">
+				   AND STORE_ID = #{storeId}
+				 </if> 
+		         <if test="statusSt != null and statusSt != ''">
+		           AND ORDER_ST = #{statusSt}
+		         </if>
+				 <if test="serviceSt != null and serviceSt != ''">
+				   AND PATH_TP = #{serviceSt}
+				 </if>
+				 <if test="orderTp != null and orderTp != ''">
+				   AND ORDER_TP = #{orderTp}
+				 </if>
+				 <if test="posNo != null and posNo != ''">
+				   AND POS_NO = #{posNo}
+				 </if>
+				 <if test="fromdate != null and todate != null">
+				  AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) 
+				                         AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+				 </if>
+		         
+		         UNION ALL
+		         
+		        SELECT 0 AS ID 
+		             , 'TOTAL' AS ORDER_NO
+		             , '' AS PAY_DAY
+		             , '' AS PAY_TIME
+		             , '' AS ORDER_ST
+		             , SUM(B.SALES) AS SALES
+		             , SUM(B.DISCOUNT) AS DISCOUNT
+		             , SUM(B.REAL_SALES) AS REAL_SALES
+		             , SUM(B.TAX) AS TAX
+		             , SUM(B.NET_SALES) AS NET_SALES
+		          FROM ( SELECT SALES
+		                      , DISCOUNT
+		                      , (SALES - DISCOUNT) AS REAL_SALES
+		                      <!-- , ((SALES - DISCOUNT) * TAX) AS TAX -->
+		                      , (TAX) AS TAX
+		                      <!-- , ((SALES - DISCOUNT) - ((SALES - DISCOUNT) * TAX)) AS NET_SALES -->
+		                      , ((SALES - DISCOUNT) - TAX) AS NET_SALES
+		                   FROM TB_SVC_SALES
+		                  WHERE ORDER_NO != ''
+		                  AND SALES_ST = 809001
+							AND BRAND_ID = #{brandId}
+						  <if test="storeId != null and storeId != ''">
+							AND STORE_ID = #{storeId}
+						  </if>
+						  <if test="statusSt != null and statusSt != ''">
+				            AND ORDER_ST = #{statusSt}
+				          </if>
+						  <if test="serviceSt != null and serviceSt != ''">
+						    AND PATH_TP = #{serviceSt}
+						  </if>
+						  <if test="orderTp != null and orderTp != ''">
+							AND ORDER_TP = #{orderTp}
+						  </if>
+						  <if test="posNo != null and posNo != ''">
+						    AND POS_NO = #{posNo}
+						  </if>
+						  <if test="fromdate != null and todate != null">
+							AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) 
+							                       AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+						  </if>
+		               ) B
+		          GROUP BY ID
+		      ) ALL_LIST
+		ORDER BY ID DESC
+	</select>
+
+	<select id="getDetail" parameterType="hashmap" resultType="hashmap">
+		SELECT A.ID
+		     , A.ORDER_NO
+		     , DATE_FORMAT(A.SALES_TM_LOCAL, '%Y-%m-%d') AS PAY_DAY
+		     , TIME_FORMAT(A.SALES_TM_LOCAL, '%H:%i:%s') AS PAY_TIME
+		     , A.SALES
+		     , A.DISCOUNT
+		     , (SALES - DISCOUNT) AS REAL_SALES
+		     <!-- ,((SALES - DISCOUNT) * TAX) AS TAX -->
+		     , (TAX) AS TAX
+		     <!-- ,((SALES - DISCOUNT) - ((SALES - DISCOUNT) * TAX)) AS NET_SALES -->
+		     , ((SALES - DISCOUNT) - TAX) AS NET_SALES
+		     , A.CUSTOMER_CNT
+		     , A.ORDER_ST
+		     , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = A.PATH_TP) AS PATH_TYPE
+		     , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = A.ORDER_TP) SERVICE_TYPE
+		     , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = A.ORDER_ST) AS ORDER_TYPE
+		     , CASE WHEN A.PATH_TP = '606001' THEN 'Offline' 
+		            ELSE 'Online' 
+		            END AS GUBUN
+		  FROM TB_SVC_SALES A
+		 WHERE A.ID = #{id}
+		 AND A.SALES_ST = 809001
+	</select>
+
+	<resultMap id="SelectDetailItemListResultMap" type="java.util.LinkedHashMap">
+		<result column="ITEM_NM" property="itemNm" jdbcType="VARCHAR" />
+		<result column="CNT" property="cnt" jdbcType="INTEGER" />
+		<result column="SALES" property="sales" jdbcType="INTEGER" />
+		<result column="DISCOUNT" property="discount" jdbcType="INTEGER" />
+		<result column="REAL_SALES" property="realSales" jdbcType="INTEGER" />
+	</resultMap>
+
+	<select id="getDetailItemList" parameterType="hashMap" resultMap="SelectDetailItemListResultMap">
+		/* CustomSalesMapper.getDetailItemList */
+		SELECT ALL_LIST.* 
+		  FROM ( SELECT ITEM_NM
+		              , COALESCE(SUM(COUNT)) AS CNT
+		              , COALESCE(SUM(SALES)) AS SALES
+		              , COALESCE(SUM(DISCOUNT)) AS DISCOUNT
+		              , COALESCE(SUM(SALES - DISCOUNT)) AS REAL_SALES
+		           FROM TB_SVC_SALES_ITEM
+		          WHERE SALES_ID = #{id}
+		          AND SALES_ST = 809001
+		          GROUP BY ITEM_CD
+		          
+		          UNION ALL
+		         SELECT 'Total' AS ITEM_NM
+		              , COALESCE(SUM(COUNT)) AS CNT
+		              , COALESCE(SUM(SALES)) AS SALES
+		              , COALESCE(SUM(DISCOUNT)) AS DISCOUNT
+		              , COALESCE(SUM(SALES - DISCOUNT)) AS REAL_SALES
+		           FROM TB_SVC_SALES_ITEM
+		          WHERE SALES_ID = #{id}
+		          AND SALES_ST = 809001
+		       ) ALL_LIST
+		 ORDER BY ITEM_NM
+	</select>
+
+	<resultMap id="SelectDetailServiceListResultMap" type="java.util.LinkedHashMap">
+		<result column="LABEL" property="label" jdbcType="VARCHAR" />
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getDetailServiceList" parameterType="hashMap" resultMap="SelectDetailServiceListResultMap">
+		/* CustomSalesMapper.getDetailServiceList */
+		SELECT POS_NO AS LABEL
+		     , POS_NO AS ID
+		  FROM TB_SVC_SALES
+		 WHERE STORE_ID = #{storeId}
+		 AND SALES_ST = 809001F
+		   AND PATH_TP = '606001'
+		GROUP BY POS_NO
+
+		UNION
+
+		SELECT TITLE AS LABEL
+		     , BASE_CD AS ID
+		  FROM TB_BASE_BCODE
+		 WHERE MAIN_CD = '605'
+	</select>
+
+	<resultMap id="SelectCardApprovalListResultMap" type="java.util.LinkedHashMap">
+		<result column="ID" property="id" jdbcType="INTEGER" />
+		<result column="PAY_DAY" property="payDay" jdbcType="VARCHAR" />
+		<result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+		<result column="AMOUNT" property="amount" jdbcType="VARCHAR" />
+		<result column="PAY_ST" property="paySt" jdbcType="VARCHAR" />
+		<result column="PAY_ST_NM" property="payStNm" jdbcType="VARCHAR" />
+		<result column="CARD_NO" property="cardNo" jdbcType="VARCHAR" />
+		<result column="TRAN_NO" property="tranNo" jdbcType="VARCHAR" />
+		<result column="MONTHLY_PLAIN" property="monthlyPlain" jdbcType="VARCHAR" />
+		<result column="PAY_METHOD" property="payMethod" jdbcType="VARCHAR" />
+		<result column="PAY_METHOD_NM" property="payMethodNm" jdbcType="VARCHAR" />
+		<result column="APPROVAL_DAY" property="approvalDay" jdbcType="VARCHAR" />
+		<result column="APPROVAL_TIME" property="approvalTime" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getCardApprovalList" parameterType="hashMap" resultMap="SelectCardApprovalListResultMap">
+		SELECT A.ID
+		     , DATE_FORMAT(A.PAY_TM, '%Y-%m-%d') AS PAY_DAY               								/* 판매일자 */                                         
+             , B.ORDER_NO                                                 								/* 주문번호 */        
+             , A.AMOUNT                                                  								/* 승인금액 */      
+             , A.PAY_ST                                                   								/* 승인구분 */   
+             , (SELECT TITLE FROM TB_BASE_BCODE C WHERE C.BASE_CD = A.PAY_ST) AS PAY_ST_NM  			/* 승인구분 */
+             , A.CARD_NO                                                  								/* 카드번호 */       
+             , A.TRAN_NO                                                  								/* 승인번호 */                  
+             , A.MONTHLY_PLAIN                                            								/* 할부 */    
+             , A.PAY_METHOD                                               								/* 결제형태 */ 
+             , (SELECT TITLE FROM TB_BASE_BCODE C WHERE C.BASE_CD = A.PAY_METHOD) AS PAY_METHOD_NM		/* 결제형태명 */          
+             , DATE_FORMAT(A.PAY_TM, '%Y-%m-%d') AS APPROVAL_DAY               							/* 승인일자 */                                          
+             , TIME_FORMAT(A.PAY_TM, '%H:%i:%s') AS APPROVAL_TIME             							/* 승인시간 */
+          FROM TB_SVC_ORDER_PAY A LEFT JOIN TB_SVC_SALES B ON B.ORDER_ID = A.ORDER_ID
+		 WHERE 1=1
+		 AND B.SALES_ST = 809001  
+			<if test="brandId != null and brandId != ''">
+				AND B.BRAND_ID = #{brandId}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND B.STORE_ID = #{storeId}
+			</if>
+		    <if test="statusSt != null and statusSt != ''">
+	           AND B.ORDER_ST = #{statusSt}
+	        </if>
+			<if test="serviceSt != null and serviceSt != ''">
+				AND B.PATH_TP = #{serviceSt}
+			</if>
+			<if test="payMethod != null and payMethod != ''">
+				AND A.PAY_METHOD = #{payMethod}
+			</if>			
+			<if test="fromdate != null and todate != null">
+				AND B.SALES_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+										 AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+			</if>
+			<if test="orderby != null">
+				ORDER BY ${orderby}
+			</if>
+	</select>
+	
+	<select id="getCountCardApprovalList" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+          FROM TB_SVC_ORDER_PAY A LEFT JOIN TB_SVC_SALES B ON B.ORDER_ID = A.ORDER_ID
+		 WHERE 1=1
+		 AND B.SALES_ST = 809001 
+			<if test="brandId != null and brandId != ''">
+				AND B.BRAND_ID = #{brandId}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND B.STORE_ID = #{storeId}
+			</if>
+		    <if test="statusSt != null and statusSt != ''">
+	           AND B.ORDER_ST = #{statusSt}
+	        </if>
+			<if test="serviceSt != null and serviceSt != ''">
+				AND B.PATH_TP = #{serviceSt}
+			</if>
+			<if test="payMethod != null and payMethod != ''">
+				AND A.PAY_METHOD = #{payMethod}
+			</if>
+			<if test="fromdate != null and todate != null">
+				AND B.SALES_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+										 AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+			</if>
+			<if test="orderby != null">
+				ORDER BY ${orderby}
+			</if>
+	</select>
+	
+	
+	
+	
+	
+	<!-- Item Sales -->
+	<resultMap id="ItemSalesSummaryListResultMap" type="java.util.LinkedHashMap">
+		<result column="ID" property="id" jdbcType="INTEGER" />
+		<result column="SALES_ID" property="salesId" jdbcType="INTEGER" />
+		<result column="ITEM_ID" property="itemId" jdbcType="INTEGER" />
+		<result column="ITEM_NM" property="itemNm" jdbcType="VARCHAR" />
+		<result column="CAT_NM" property="catNm" jdbcType="VARCHAR" />
+		<result column="PRICE" property="price" jdbcType="DOUBLE" />
+		<result column="PURCHASE_PRICE" property="purchasePrice" jdbcType="DOUBLE" />
+		<result column="COUNT" property="count" jdbcType="INTEGER" />
+		<result column="SALES" property="sales" jdbcType="DOUBLE" />
+		<result column="ACTUAL_SALES_AMT" property="actualSalesAmt" jdbcType="DOUBLE" />
+		<result column="DISCOUNT" property="discount" jdbcType="DOUBLE" />
+	</resultMap>
+
+	<select id="getItemSalesSummaryList" parameterType="hashMap" resultMap="ItemSalesSummaryListResultMap">
+		SELECT /* getItemSalesSummaryList, 2016-08-05, ikinox */
+		       *
+		  FROM ( SELECT A.ID
+		              , A.SALES_ID
+		              , A.ITEM_ID
+		              , A.ITEM_NM /* 메뉴이름 */
+		              , A.CAT_NM
+		              , ROUND(SUM(A.PRICE), #{currencyFraction}) AS PRICE 						/* 가격 */
+		              , ROUND(SUM(A.PURCHASE_PRICE), #{currencyFraction}) AS PURCHASE_PRICE		/* 매입단가 */
+		              , ROUND(SUM(A.COUNT), #{currencyFraction}) AS COUNT 						/* 수량 */
+		              , ROUND(SUM(A.SALES), #{currencyFraction}) AS SALES 						/* 매출 */
+		              , ROUND(SUM(A.ACTUAL_SALES_AMT), #{currencyFraction}) AS ACTUAL_SALES_AMT /* 실매출 */
+		              , ROUND(SUM(A.NET_SALES), #{currencyFraction}) AS NET_SALES 				/* 순매출 */
+		              , ROUND(SUM(A.DISCOUNT), #{currencyFraction}) AS DISCOUNT 				/* 할인 */
+		              , B.BRAND_ID
+		           FROM TB_SVC_SALES_ITEM A
+		                LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+		          WHERE B.BRAND_ID = #{brandId}
+		          AND A.SALES_ST = 809001
+		          AND B.SALES_ST = 809001
+		          <if test="storeId != null and storeId != ''">
+			      	AND B.STORE_ID = #{storeId}
+			      </if>
+		          <if test="fromdate != null and todate != null">
+		            AND B.SALES_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+		                                     AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		          </if>
+		          GROUP BY ITEM_ID
+		          ORDER BY SALES DESC
+		       ) AS AO
+		
+	     UNION ALL
+	     
+	    SELECT '' AS ID
+	         , '' AS SALES_ID
+	         , '' AS ITEM_ID
+	         , 'Total' AS ITEM_NM 	/* 메뉴이름 */
+	         , '' AS CAT_NM
+	         , ROUND(SUM(A.PRICE), #{currencyFraction}) AS PRICE 						/* 가격 */
+	         , ROUND(SUM(A.PURCHASE_PRICE), #{currencyFraction}) AS PURCHASE_PRICE		/* 매입단가 */
+	         , ROUND(SUM(A.COUNT), #{currencyFraction}) AS COUNT 						/* 수량 */
+	         , ROUND(SUM(A.SALES), #{currencyFraction}) AS SALES 						/* 매출 */
+	         , ROUND(SUM(A.ACTUAL_SALES_AMT), #{currencyFraction}) AS ACTUAL_SALES_AMT  /* 실매출 */
+	         , ROUND(SUM(A.NET_SALES), #{currencyFraction}) AS NET_SALES				/* 순매출 */
+	         , ROUND(SUM(A.DISCOUNT), #{currencyFraction}) AS DISCOUNT 					/* 할인 */
+	         , B.BRAND_ID
+	      FROM TB_SVC_SALES_ITEM A
+	           LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+	     WHERE B.BRAND_ID = #{brandId}
+	     AND A.SALES_ST = 809001
+	     AND B.SALES_ST = 809001
+	     <if test="storeId != null and storeId != ''">
+	       AND B.STORE_ID = #{storeId}
+	     </if>
+	     <if test="fromdate != null and todate != null">
+	       AND B.SALES_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+	                                AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		 </if>
+
+	</select>
+
+	<select id="getItemSalesTop5SummaryChart" parameterType="hashMap" resultMap="SalesChartMap">
+		SELECT /* getItemSalesTop5SummaryChart , 2016-08-05, ikinox */
+		       ITEM_NM AS LABEL
+		     , SALES AS VALUE
+		  FROM ( SELECT A.ID
+		              , A.SALES_ID
+		              , A.ITEM_ID
+		              , A.ITEM_NM
+		              , A.CAT_NM
+		              , ROUND(SUM(A.PRICE), 2) AS PRICE 						/* 가격 */
+		              , ROUND(SUM(A.PURCHASE_PRICE), 2) AS PURCHASE_PRICE 		/* 매입단가 */
+		              , ROUND(SUM(A.COUNT), 2) AS COUNT 						/* 수량 */
+		              , ROUND(SUM(A.SALES), 2) AS SALES 						/* 매출 */
+		              , B.BRAND_ID
+		           FROM TB_SVC_SALES_ITEM A
+		                LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+		          WHERE B.BRAND_ID = #{brandId}
+		          AND A.SALES_ST = 809001
+		          AND B.SALES_ST = 809001
+		          <if test="storeId != null and storeId != ''">
+			      	AND B.STORE_ID = #{storeId}
+			      </if>
+		          <if test="fromdate != null and todate != null">
+		            AND B.SALES_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+		                                     AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		          </if>
+		          GROUP by A.ITEM_ID
+		       ) AS A
+		 ORDER BY A.SALES DESC
+		 LIMIT 0, 5
+	</select>
+	
+	<!--Item Sales TOP 5 Day Of Month Chart -->
+	<select id="getItemDayOfMonthChart" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		SELECT /* getItemDayOfMonthChart */
+		       TEMPLATE.ITEM_NM AS itemNm
+		     , SUM(IF(TEMPLATE.DAY = '1', VALUE, 0)) AS '1'
+		     , SUM(IF(TEMPLATE.DAY = '2', VALUE, 0)) AS '2'
+		     , SUM(IF(TEMPLATE.DAY = '3', VALUE, 0)) AS '3'
+		     , SUM(IF(TEMPLATE.DAY = '4', VALUE, 0)) AS '4'
+		     , SUM(IF(TEMPLATE.DAY = '5', VALUE, 0)) AS '5'
+		     , SUM(IF(TEMPLATE.DAY = '6', VALUE, 0)) AS '6'
+		     , SUM(IF(TEMPLATE.DAY = '7', VALUE, 0)) AS '7'
+		     , SUM(IF(TEMPLATE.DAY = '8', VALUE, 0)) AS '8'
+		     , SUM(IF(TEMPLATE.DAY = '9', VALUE, 0)) AS '9'
+		     , SUM(IF(TEMPLATE.DAY = '10', VALUE, 0)) AS '10'
+		     , SUM(IF(TEMPLATE.DAY = '11', VALUE, 0)) AS '11'
+		     , SUM(IF(TEMPLATE.DAY = '12', VALUE, 0)) AS '12'
+		     , SUM(IF(TEMPLATE.DAY = '13', VALUE, 0)) AS '13'
+		     , SUM(IF(TEMPLATE.DAY = '14', VALUE, 0)) AS '14'
+		     , SUM(IF(TEMPLATE.DAY = '15', VALUE, 0)) AS '15'
+		     , SUM(IF(TEMPLATE.DAY = '16', VALUE, 0)) AS '16'
+		     , SUM(IF(TEMPLATE.DAY = '17', VALUE, 0)) AS '17'
+		     , SUM(IF(TEMPLATE.DAY = '18', VALUE, 0)) AS '18'
+		     , SUM(IF(TEMPLATE.DAY = '19', VALUE, 0)) AS '19'
+		     , SUM(IF(TEMPLATE.DAY = '20', VALUE, 0)) AS '20'
+		     , SUM(IF(TEMPLATE.DAY = '21', VALUE, 0)) AS '21'
+		     , SUM(IF(TEMPLATE.DAY = '22', VALUE, 0)) AS '22'
+		     , SUM(IF(TEMPLATE.DAY = '23', VALUE, 0)) AS '23'
+		     , SUM(IF(TEMPLATE.DAY = '24', VALUE, 0)) AS '24'
+		     , SUM(IF(TEMPLATE.DAY = '25', VALUE, 0)) AS '25'
+		     , SUM(IF(TEMPLATE.DAY = '26', VALUE, 0)) AS '26'
+		     , SUM(IF(TEMPLATE.DAY = '27', VALUE, 0)) AS '27'
+		     , SUM(IF(TEMPLATE.DAY = '28', VALUE, 0)) AS '28'
+		     , SUM(IF(TEMPLATE.DAY = '29', VALUE, 0)) AS '29'
+		     , SUM(IF(TEMPLATE.DAY = '20', VALUE, 0)) AS '30'
+		     , SUM(IF(TEMPLATE.DAY = '31', VALUE, 0)) AS '31'
+		  FROM ( SELECT DAY(YMD) DAY
+		              , FF.ITEM_ID 
+		              , FF.ITEM_NM
+		           FROM TB_BASE_CALENDAR CL CROSS JOIN ( SELECT ID AS ITEM_ID
+						                                      , NAME AS ITEM_NM
+				                                           FROM TB_SVC_ITEM
+				                                          WHERE STATUS = '602001'
+				                                            AND BRAND_ID = #{brandId}
+				                                          <if test="storeId != null and storeId != ''">
+														    AND STORE_ID = #{storeId}
+													      </if> ) FF
+				  WHERE CL.YMD BETWEEN #{fromdate} AND #{todate} ) TEMPLATE LEFT JOIN ( SELECT DAY(B.`SALES_TM_LOCAL`) AS DAY 
+				                                                                             , A.ITEM_ID
+				                                                                             , A.ITEM_NM
+				                                                                             <include refid="getTopOption2_Tp" />
+				                                                                          FROM TB_SVC_SALES_ITEM A 
+				                                                                               LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+				                                                                         WHERE 1=1 
+				                                                                         AND A.SALES_ST = 809001
+				                                                                         AND B.SALES_ST IN ('809001')
+				                                                                         <include refid="getWhen_Where" />
+				                                                                           AND ITEM_ID IN ( SELECT ITEM_ID 
+				                                                                                             FROM( SELECT A.ITEM_ID
+				                                                                                                        , SUM(A.SALES) SALES
+                                                                                                                     FROM TB_SVC_SALES_ITEM A
+                                                                                                                          LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+                                                                                                                    WHERE 1 = 1
+                                                                                                                    AND A.SALES_ST = 809001
+                                                                                                                    AND B.SALES_ST IN ('809001')
+                                                                                                                    <include refid="getWhen_Where" />
+                                                                                                                    GROUP BY A.ITEM_ID
+                                                                                                                    ORDER BY SALES DESC
+                                                                                                                    LIMIT 0, 5
+                                                                                                                  ) A
+                                                                                                          )
+                                                                                         GROUP BY A.ITEM_ID, DAY
+                                                                                         ORDER BY DAY, ITEM_ID 
+                                                                                       ) GG ON GG.DAY = TEMPLATE.DAY AND GG.ITEM_ID = TEMPLATE.ITEM_ID
+         GROUP BY GG.ITEM_ID, GG.ITEM_NM
+         ORDER BY GG.VALUE DESC
+		 LIMIT 0,5
+	</select>
+	
+	<!--Item Sales TOP 5 Day Of Week Chart -->
+	<select id="getItemDayOfWeekChart" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		SELECT /* getItemDayOfWeekChart */
+		       TEMPLATE.ITEM_NM AS itemNm
+		     , SUM(IF(TEMPLATE.DAYOFWEEK = 1, VALUE,0)) AS 'Sun'
+		     , SUM(IF(TEMPLATE.DAYOFWEEK = 2, VALUE,0)) AS 'Mon'
+		     , SUM(IF(TEMPLATE.DAYOFWEEK = 3, VALUE,0)) AS 'Tue'
+		     , SUM(IF(TEMPLATE.DAYOFWEEK = 4, VALUE,0)) AS 'Wed'
+		     , SUM(IF(TEMPLATE.DAYOFWEEK = 5, VALUE,0)) AS 'Thu'
+		     , SUM(IF(TEMPLATE.DAYOFWEEK = 6, VALUE,0)) AS 'Fri'
+		     , SUM(IF(TEMPLATE.DAYOFWEEK = 7, VALUE,0)) AS 'Sat'
+		  FROM ( SELECT DAYOFWEEK(YMD) DAYOFWEEK
+		              , FF.ITEM_ID 
+		              , FF.ITEM_NM
+		           FROM TB_BASE_CALENDAR CL CROSS JOIN ( SELECT ID AS ITEM_ID
+						                                      , NAME AS ITEM_NM
+				                                           FROM TB_SVC_ITEM
+				                                          WHERE STATUS = '602001'
+				                                            AND BRAND_ID = #{brandId}
+				                                          <if test="storeId != null and storeId != ''">
+														    AND STORE_ID = #{storeId}
+													      </if> ) FF 
+		          WHERE CL.YMD BETWEEN #{fromdate} AND #{todate} ) TEMPLATE LEFT JOIN (SELECT DAYOFWEEK(B.`SALES_TM_LOCAL`) AS DAYOFWEEK 
+					  	                                                                    , A.ITEM_ID
+						                                                                    , A.ITEM_NM
+						                                                                    <include refid="getTopOption2_Tp" />
+						                                                                 FROM TB_SVC_SALES_ITEM A LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID 
+						                                                                WHERE 1=1 
+						                                                                AND A.SALES_ST = 809001
+						                                                                AND B.SALES_ST IN ('809001')
+						                                                                <include refid="getWhen_Where" />
+						                                                                  AND ITEM_ID IN ( SELECT ITEM_ID 
+						                                                                                    FROM( SELECT A.ITEM_ID
+						                                                                                               , SUM(A.SALES) SALES
+						                                                                                             FROM TB_SVC_SALES_ITEM A
+						                                                                                                  LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+						                                                                                            WHERE 1 = 1
+						                                                                                            AND A.SALES_ST = 809001
+						                                                                                            AND B.SALES_ST IN ('809001')
+						                                                                                            <include refid="getWhen_Where" />
+						                                                                                            GROUP BY A.ITEM_ID
+						                                                                                            ORDER BY SALES DESC
+						                                                                                            LIMIT 0, 5
+						                                                                                         ) A 
+						                                                                                )
+						                                                                GROUP BY A.ITEM_ID, DAYOFWEEK
+						                                                                ORDER BY DAYOFWEEK, ITEM_ID ) GG ON GG.DAYOFWEEK = TEMPLATE.DAYOFWEEK AND GG.ITEM_ID = TEMPLATE.ITEM_ID
+		 GROUP BY GG.ITEM_ID, GG.ITEM_NM
+		 ORDER BY GG.VALUE DESC
+		 LIMIT 0,5
+	</select>
+	
+	<!--Category Sales TOP 5 Month Of Year Chart -->
+	<select id="getItemMonthOfYeeaChart" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		SELECT /* getItemMonthOfYeeaChart, 2016-12-12 */
+		       TEMPLATE.ITEM_NM AS itemNm
+		     , SUM(IF(TEMPLATE.MONTH = 1  , VALUE,0)) AS 'Jan'
+		     , SUM(IF(TEMPLATE.MONTH = 2  , VALUE,0)) AS 'Feb'
+		     , SUM(IF(TEMPLATE.MONTH = 3  , VALUE,0)) AS 'Mar'
+		     , SUM(IF(TEMPLATE.MONTH = 4  , VALUE,0)) AS 'Apr'
+		     , SUM(IF(TEMPLATE.MONTH = 5  , VALUE,0)) AS 'May'
+		     , SUM(IF(TEMPLATE.MONTH = 6  , VALUE,0)) AS 'Jun'
+		     , SUM(IF(TEMPLATE.MONTH = 7  , VALUE,0)) AS 'Jul'
+		     , SUM(IF(TEMPLATE.MONTH = 8  , VALUE,0)) AS 'Aug'
+		     , SUM(IF(TEMPLATE.MONTH = 9  , VALUE,0)) AS 'Sep'
+		     , SUM(IF(TEMPLATE.MONTH = 10 , VALUE,0)) AS 'Oct'
+		     , SUM(IF(TEMPLATE.MONTH = 11 , VALUE,0)) AS 'Nov'
+		     , SUM(IF(TEMPLATE.MONTH = 12 , VALUE,0)) AS 'Dec'
+		  FROM ( SELECT MONTH(YMD) MONTH
+		              , FF.ITEM_ID 
+		              , FF.ITEM_NM
+		           FROM TB_BASE_CALENDAR CL CROSS JOIN ( SELECT ID AS ITEM_ID
+						                                      , NAME AS ITEM_NM
+				                                           FROM TB_SVC_ITEM
+				                                          WHERE STATUS = '602001'
+				                                            AND BRAND_ID = #{brandId}
+				                                          <if test="storeId != null and storeId != ''">
+														    AND STORE_ID = #{storeId}
+													      </if> ) FF 
+		          WHERE CL.YMD BETWEEN #{fromdate} AND #{todate} ) TEMPLATE LEFT JOIN (SELECT MONTH(B.`SALES_TM_LOCAL`) AS MONTH 
+					  	                                                                    , A.ITEM_ID
+						                                                                    , A.ITEM_NM
+						                                                                    <include refid="getTopOption2_Tp" />
+						                                                                 FROM TB_SVC_SALES_ITEM A LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID 
+						                                                                WHERE 1=1 
+						                                                                AND A.SALES_ST = 809001
+						                                                                AND B.SALES_ST IN ('809001')
+						                                                                <include refid="getWhen_Where" />
+						                                                                  AND ITEM_ID IN ( SELECT ITEM_ID 
+						                                                                                    FROM( SELECT A.ITEM_ID
+						                                                                                               , SUM(A.SALES) SALES
+						                                                                                             FROM TB_SVC_SALES_ITEM A
+						                                                                                                  LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+						                                                                                            WHERE 1 = 1
+						                                                                                            AND A.SALES_ST = 809001
+						                                                                                            AND B.SALES_ST IN ('809001')
+						                                                                                            <include refid="getWhen_Where" />
+						                                                                                            GROUP BY A.ITEM_ID
+						                                                                                            ORDER BY SALES DESC
+						                                                                                            LIMIT 0, 5
+						                                                                                         ) A 
+						                                                                                )
+						                                                                GROUP BY A.ITEM_ID, MONTH
+						                                                                ORDER BY MONTH, ITEM_ID ) GG ON GG.MONTH = TEMPLATE.MONTH AND GG.ITEM_ID = TEMPLATE.ITEM_ID
+		 GROUP BY GG.ITEM_ID, GG.ITEM_NM
+		 ORDER BY GG.VALUE DESC
+		 LIMIT 0,5
+	</select>
+	
+	<!--Item Sales TOP 5 Hour Of Day Chart -->
+	<select id="getItemHourOfDayChart" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		SELECT /* getItemHourOfDayChart, 2016-12-20 */
+		       TEMPLATE.ITEM_NM AS itemNm
+		     , SUM(IF(TEMPLATE.HOUR = 0  , VALUE,0)) AS '0' 
+		     , SUM(IF(TEMPLATE.HOUR = 1  , VALUE,0)) AS '1' 
+		     , SUM(IF(TEMPLATE.HOUR = 2  , VALUE,0)) AS '2' 
+		     , SUM(IF(TEMPLATE.HOUR = 3  , VALUE,0)) AS '3' 
+		     , SUM(IF(TEMPLATE.HOUR = 4  , VALUE,0)) AS '4' 
+		     , SUM(IF(TEMPLATE.HOUR = 5  , VALUE,0)) AS '5' 
+		     , SUM(IF(TEMPLATE.HOUR = 6  , VALUE,0)) AS '6' 
+		     , SUM(IF(TEMPLATE.HOUR = 7  , VALUE,0)) AS '7' 
+		     , SUM(IF(TEMPLATE.HOUR = 8  , VALUE,0)) AS '8' 
+		     , SUM(IF(TEMPLATE.HOUR = 9  , VALUE,0)) AS '9' 
+		     , SUM(IF(TEMPLATE.HOUR = 10 , VALUE,0)) AS '10' 
+		     , SUM(IF(TEMPLATE.HOUR = 11 , VALUE,0)) AS '11' 
+		     , SUM(IF(TEMPLATE.HOUR = 12 , VALUE,0)) AS '12' 
+		     , SUM(IF(TEMPLATE.HOUR = 13 , VALUE,0)) AS '13' 
+		     , SUM(IF(TEMPLATE.HOUR = 14 , VALUE,0)) AS '14' 
+		     , SUM(IF(TEMPLATE.HOUR = 15 , VALUE,0)) AS '15' 
+		     , SUM(IF(TEMPLATE.HOUR = 16 , VALUE,0)) AS '16' 
+		     , SUM(IF(TEMPLATE.HOUR = 17 , VALUE,0)) AS '17' 
+		     , SUM(IF(TEMPLATE.HOUR = 18 , VALUE,0)) AS '18' 
+		     , SUM(IF(TEMPLATE.HOUR = 19 , VALUE,0)) AS '19' 
+		     , SUM(IF(TEMPLATE.HOUR = 20 , VALUE,0)) AS '20' 
+		     , SUM(IF(TEMPLATE.HOUR = 21 , VALUE,0)) AS '21' 
+		     , SUM(IF(TEMPLATE.HOUR = 22 , VALUE,0)) AS '22' 
+		     , SUM(IF(TEMPLATE.HOUR = 23 , VALUE,0)) AS '23' 
+		  FROM ( SELECT CL.HOUR
+		              , FF.ITEM_ID
+		              , FF.ITEM_NM
+		           FROM ( SELECT 0 AS HOUR UNION SELECT 1 AS HOUR UNION SELECT 2 AS HOUR UNION SELECT 3 AS HOUR UNION SELECT 4 AS HOUR UNION 
+		    		      SELECT 5 AS HOUR UNION SELECT 6 AS HOUR UNION SELECT 7 AS HOUR UNION SELECT 8 AS HOUR UNION SELECT 9 AS HOUR UNION 
+		    		      SELECT 10 AS HOUR UNION SELECT 11 AS HOUR UNION SELECT 12 AS HOUR UNION SELECT 13 AS HOUR UNION SELECT 14 AS HOUR UNION 
+		    		      SELECT 15 AS HOUR UNION SELECT 16 AS HOUR UNION SELECT 17 AS HOUR UNION SELECT 18 AS HOUR UNION SELECT 19 AS HOUR UNION 
+		    		      SELECT 20 AS HOUR UNION SELECT 21 AS HOUR UNION SELECT 22 AS HOUR UNION SELECT 23 AS HOUR
+		                 ) CL CROSS JOIN (SELECT ID AS ITEM_ID
+		                                       , NAME AS ITEM_NM
+                                            FROM TB_SVC_ITEM
+                                           WHERE STATUS = '602001'
+                                             AND BRAND_ID = #{brandId}
+                                           <if test="storeId != null and storeId != ''">
+											 AND STORE_ID = #{storeId}
+										   </if> ) FF 
+		        ) TEMPLATE LEFT JOIN (SELECT HOUR(B.`SALES_TM_LOCAL`) AS HOUR 
+                                            , A.ITEM_ID
+	                                        , A.ITEM_NM
+	                                        <include refid="getTopOption2_Tp" />
+	                                     FROM TB_SVC_SALES_ITEM A LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID 
+	                                    WHERE 1=1 
+	                                    AND A.SALES_ST = 809001
+	                                    AND B.SALES_ST IN ('809001') 
+	                                    <include refid="getWhen_Where" />
+	                                      AND ITEM_ID IN ( SELECT ITEM_ID 
+	                                                        FROM( SELECT A.ITEM_ID, SUM(A.SALES) SALES
+	                                                                FROM TB_SVC_SALES_ITEM A
+	                                                                     LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+	                                                               WHERE 1 = 1
+	                                                               AND A.SALES_ST = 809001
+	                                                               AND B.SALES_ST IN ('809001')
+	                                                               <include refid="getWhen_Where" />
+	                                                               GROUP BY A.ITEM_ID
+	                                                               ORDER BY SALES DESC
+	                                                               LIMIT 0, 5
+	                                                            ) A 
+	                                                    )
+	                                    GROUP BY A.ITEM_ID, HOUR
+	                                    ORDER BY HOUR, ITEM_ID ) GG ON GG.HOUR = TEMPLATE.HOUR AND GG.ITEM_ID = TEMPLATE.ITEM_ID
+		 GROUP BY GG.ITEM_ID, GG.ITEM_NM
+		 ORDER BY GG.VALUE DESC
+		 LIMIT 0,5
+	</select>
+	
+	<!--Item Sales ->(Table) 아이템 판매현황 검색(테이블)-->
+	<select id="getItemSalesList" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		<!-- /* CustomSalesMapper.getItemSalesList*/ --> 
+		SELECT TEMPLATE.ITEM_NM AS HEADER
+		     , COALESCE(SUM(VALUE),0) AS TOTAL
+		       <foreach collection="calendarList" item="calendarList" index="index" >
+		       	<!-- 검색날짜별 타입분류 -->
+		       	<include refid="getCalendar_Tp" />
+		       </foreach>
+		 FROM ( SELECT YMD
+		             , FF.ITEM_ID
+		             , FF.ITEM_NM
+		          FROM TB_BASE_CALENDAR CL
+		               CROSS JOIN (SELECT YY.ID AS ITEM_ID
+		                                , YY.NAME AS ITEM_NM
+		                             FROM TB_SVC_ITEM YY
+		                            WHERE BRAND_ID = #{brandId}
+		                            <if test="storeId != null and storeId != ''">
+									  AND STORE_ID = #{storeId}
+								    </if>
+		                          ) FF 
+		         WHERE CL.YMD BETWEEN #{fromdate} AND #{todate}
+		) TEMPLATE
+		LEFT JOIN ( SELECT ITEM_ID
+		                 , ITEM_NM
+		                 , DATE(T1.SALES_TM_LOCAL) AS YMD
+		                 , <include refid="getSales_Tp" /> <!-- Sales Type별 조건 추가 -->
+            		  FROM TB_SVC_SALES T1
+            		       INNER JOIN TB_SVC_SALES_ITEM T2 ON T1.ID = T2.SALES_ID
+            		 WHERE T1.SALES_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) 
+            		                             AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+				       AND T1.BRAND_ID = #{brandId}
+				       AND T1.SALES_ST = 809001
+				     <if test="storeId != null and storeId != ''">
+				       AND STORE_ID = #{storeId}
+					 </if>
+					 GROUP BY ITEM_ID
+		) GG ON GG.YMD = TEMPLATE.YMD AND TEMPLATE.ITEM_ID = GG.ITEM_ID 
+		GROUP BY TEMPLATE.ITEM_ID, TEMPLATE.ITEM_NM
+		ORDER BY TEMPLATE.ITEM_ID
+	</select>
+
+	<!-- Category Ssles -->
+	<resultMap id="CateSalesSummaryListResultMap" type="java.util.LinkedHashMap">
+		<result column="ID" property="id" jdbcType="INTEGER" />
+		<result column="SALES_ID" property="salesId" jdbcType="INTEGER" />
+		<result column="CAT_CD" property="catCd" jdbcType="INTEGER" />
+		<result column="CAT_NM" property="catNm" jdbcType="VARCHAR" />
+		<result column="COUNT" property="count" jdbcType="INTEGER" />
+		<result column="SALES" property="sales" jdbcType="DOUBLE" />
+	</resultMap>
+
+	<select id="getCateSalesSummaryList" parameterType="hashMap" resultMap="CateSalesSummaryListResultMap">
+		SELECT /* getCateSalesSummaryList, 2016-08-05, ikinox */
+		       A.ID
+		     , A.SALES_ID
+		     , A.CAT_CD
+		     , A.CAT_NM
+		     , ROUND(SUM(A.COUNT), 2) AS COUNT /* 수량 */
+		     , ROUND(SUM(A.SALES), 2) AS SALES /* 매출 */
+		  FROM TB_SVC_SALES_ITEM A
+		       LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+		 WHERE B.BRAND_ID = #{brandId}
+		 AND A.SALES_ST = 809001
+		 AND B.SALES_ST = 809001
+		 <if test="storeId != null and storeId != ''">
+		   AND B.STORE_ID = #{storeId}
+		 </if>
+		 <if test="fromdate != null and todate != null">
+		   AND B.SALES_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+		                            AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		 </if>
+		 GROUP BY A.CAT_CD
+		
+		 UNION ALL
+		 
+		SELECT '' AS ID
+		     , '' AS SALES_ID
+		     , '' AS CAT_CD
+		     , '' AS CAT_NM
+		     , ROUND(SUM(A.COUNT), 2) AS COUNT /* 수량 */
+		     , ROUND(SUM(A.SALES), 2) AS SALES /* 매출 */
+		  FROM TB_SVC_SALES_ITEM A 
+		       LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+		 WHERE B.BRAND_ID = #{brandId}
+		 AND A.SALES_ST = 809001
+		 AND B.SALES_ST = 809001
+		 <if test="storeId != null and storeId != ''">
+		   AND B.STORE_ID = #{storeId}
+		 </if>
+		 <if test="fromdate != null and todate != null">
+		   AND B.SALES_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+		                            AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		 </if>
+	</select>
+
+
+	<!-- Category Sales Chart -->
+	<select id="getCateSalesTop5SummaryChart" parameterType="hashMap" resultMap="SalesChartMap">
+		SELECT /* getCateSalesTop5SummaryChart , 2016-08-05, ikinox */
+		       CAT_CD AS LABEL
+		     , SALES AS VALUE
+		  FROM ( SELECT A.ID
+		              , A.SALES_ID
+		              , A.CAT_CD
+		              , A.CAT_NM
+		              , ROUND(SUM(A.SALES), 2) AS SALES				/* 매출 */
+		           FROM TB_SVC_SALES_ITEM A
+		                LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+		          WHERE B.BRAND_ID = #{brandId}
+		          AND A.SALES_ST = 809001
+		          AND B.SALES_ST = 809001
+		          <if test="storeId != null and storeId != ''">
+		            AND B.STORE_ID = #{storeId}
+		          </if>
+		          <if test="fromdate != null and todate != null">
+		            AND B.SALES_TM_LOCAL BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND)
+		                                     AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+		          </if>
+		          GROUP BY A.CAT_CD
+		       ) AS A
+		 ORDER BY A.SALES DESC
+		 LIMIT 0, 5
+	</select>
+	
+	<!--Category Sales -> 카테고리 판매현황 TOP 5 목록-->
+	<select id="getCategoryTopList" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		SELECT T.CAT_CD AS catCd
+		     , T.CAT_NM AS catNm
+		  FROM (SELECT A.CAT_CD
+		             , A.CAT_NM
+		             , SUM(A.SALES)
+		          FROM TB_SVC_SALES_ITEM A
+		               LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+		          WHERE 1=1 
+		          AND A.SALES_ST = 809001
+		          AND B.SALES_ST IN ('809001')
+		          <include refid="getWhen_Where" />
+		          GROUP BY A.CAT_CD
+		          ORDER BY A.SALES DESC
+		          LIMIT 0, 5) T
+	</select>
+	
+	<!--Category Sales TOP 5 Day Of Month Chart -->
+	<select id="getCateDayOfMonthChart" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		SELECT /* getCateDayOfMonthChart */
+		       TEMPLATE.CAT_NM AS catNm
+		     , SUM(IF(TEMPLATE.DAY = '1', VALUE, 0)) AS '1'
+		     , SUM(IF(TEMPLATE.DAY = '2', VALUE, 0)) AS '2'
+		     , SUM(IF(TEMPLATE.DAY = '3', VALUE, 0)) AS '3'
+		     , SUM(IF(TEMPLATE.DAY = '4', VALUE, 0)) AS '4'
+		     , SUM(IF(TEMPLATE.DAY = '5', VALUE, 0)) AS '5'
+		     , SUM(IF(TEMPLATE.DAY = '6', VALUE, 0)) AS '6'
+		     , SUM(IF(TEMPLATE.DAY = '7', VALUE, 0)) AS '7'
+		     , SUM(IF(TEMPLATE.DAY = '8', VALUE, 0)) AS '8'
+		     , SUM(IF(TEMPLATE.DAY = '9', VALUE, 0)) AS '9'
+		     , SUM(IF(TEMPLATE.DAY = '10', VALUE, 0)) AS '10'
+		     , SUM(IF(TEMPLATE.DAY = '11', VALUE, 0)) AS '11'
+		     , SUM(IF(TEMPLATE.DAY = '12', VALUE, 0)) AS '12'
+		     , SUM(IF(TEMPLATE.DAY = '13', VALUE, 0)) AS '13'
+		     , SUM(IF(TEMPLATE.DAY = '14', VALUE, 0)) AS '14'
+		     , SUM(IF(TEMPLATE.DAY = '15', VALUE, 0)) AS '15'
+		     , SUM(IF(TEMPLATE.DAY = '16', VALUE, 0)) AS '16'
+		     , SUM(IF(TEMPLATE.DAY = '17', VALUE, 0)) AS '17'
+		     , SUM(IF(TEMPLATE.DAY = '18', VALUE, 0)) AS '18'
+		     , SUM(IF(TEMPLATE.DAY = '19', VALUE, 0)) AS '19'
+		     , SUM(IF(TEMPLATE.DAY = '20', VALUE, 0)) AS '20'
+		     , SUM(IF(TEMPLATE.DAY = '21', VALUE, 0)) AS '21'
+		     , SUM(IF(TEMPLATE.DAY = '22', VALUE, 0)) AS '22'
+		     , SUM(IF(TEMPLATE.DAY = '23', VALUE, 0)) AS '23'
+		     , SUM(IF(TEMPLATE.DAY = '24', VALUE, 0)) AS '24'
+		     , SUM(IF(TEMPLATE.DAY = '25', VALUE, 0)) AS '25'
+		     , SUM(IF(TEMPLATE.DAY = '26', VALUE, 0)) AS '26'
+		     , SUM(IF(TEMPLATE.DAY = '27', VALUE, 0)) AS '27'
+		     , SUM(IF(TEMPLATE.DAY = '28', VALUE, 0)) AS '28'
+		     , SUM(IF(TEMPLATE.DAY = '29', VALUE, 0)) AS '29'
+		     , SUM(IF(TEMPLATE.DAY = '20', VALUE, 0)) AS '30'
+		     , SUM(IF(TEMPLATE.DAY = '31', VALUE, 0)) AS '31'
+		  FROM ( SELECT DAY(YMD) DAY
+		              , FF.CAT_CD 
+		              , FF.CAT_NM
+		           FROM TB_BASE_CALENDAR CL CROSS JOIN ( SELECT CAT_CD
+					                                          , NAME AS CAT_NM
+														   FROM TB_SVC_ITEM_CAT
+														  WHERE 1=1
+														    AND BRAND_ID = #{brandId}
+				                                          <if test="storeId != null and storeId != ''">
+														    AND STORE_ID = #{storeId}
+													      </if> ) FF
+				  WHERE CL.YMD BETWEEN #{fromdate} AND #{todate} ) TEMPLATE LEFT JOIN ( SELECT DAY(B.`SALES_TM_LOCAL`) AS DAY 
+				                                                                             , A.CAT_CD
+				                                                                             , A.CAT_NM
+				                                                                             <include refid="getTopOption2_Tp" />
+				                                                                          FROM TB_SVC_SALES_ITEM A 
+				                                                                               LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+				                                                                         WHERE 1=1 
+				                                                                         AND A.SALES_ST = 809001
+				                                                                         AND B.SALES_ST IN ('809001')
+				                                                                         <include refid="getWhen_Where" />
+				                                                                           AND CAT_CD IN ( SELECT CAT_CD 
+				                                                                                             FROM( SELECT A.CAT_CD
+				                                                                                                        , SUM(A.SALES) SALES
+                                                                                                                     FROM TB_SVC_SALES_ITEM A
+                                                                                                                          LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+                                                                                                                    WHERE 1 = 1
+                                                                                                                    AND A.SALES_ST = 809001
+                                                                                                                    AND B.SALES_ST IN ('809001')
+                                                                                                                    <include refid="getWhen_Where" />
+                                                                                                                    GROUP BY A.CAT_CD
+                                                                                                                    ORDER BY SALES DESC
+                                                                                                                    LIMIT 0, 5
+                                                                                                                  ) A
+                                                                                                          )
+                                                                                         GROUP BY A.CAT_CD, DAY
+                                                                                         ORDER BY DAY, CAT_CD 
+                                                                                       ) GG ON GG.DAY = TEMPLATE.DAY AND GG.CAT_CD = TEMPLATE.CAT_CD
+         GROUP BY GG.CAT_CD, GG.CAT_NM
+         ORDER BY GG.VALUE DESC
+		 LIMIT 0,5
+	</select>
+	
+	<!--Category Sales TOP 5 Day Of Week Chart -->
+	<select id="getCateDayOfWeekChart" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		SELECT /* getCateDayOfWeekChart */
+		       TEMPLATE.CAT_NM AS catNm
+		     , SUM(IF(TEMPLATE.DAYOFWEEK = 1, VALUE,0)) AS 'Sun'
+		     , SUM(IF(TEMPLATE.DAYOFWEEK = 2, VALUE,0)) AS 'Mon'
+		     , SUM(IF(TEMPLATE.DAYOFWEEK = 3, VALUE,0)) AS 'Tue'
+		     , SUM(IF(TEMPLATE.DAYOFWEEK = 4, VALUE,0)) AS 'Wed'
+		     , SUM(IF(TEMPLATE.DAYOFWEEK = 5, VALUE,0)) AS 'Thu'
+		     , SUM(IF(TEMPLATE.DAYOFWEEK = 6, VALUE,0)) AS 'Fri'
+		     , SUM(IF(TEMPLATE.DAYOFWEEK = 7, VALUE,0)) AS 'Sat'
+		  FROM ( SELECT DAYOFWEEK(YMD) DAYOFWEEK
+		              , FF.CAT_CD 
+		              , FF.CAT_NM
+		           FROM TB_BASE_CALENDAR CL CROSS JOIN ( SELECT CAT_CD
+					                                          , NAME AS CAT_NM
+														   FROM TB_SVC_ITEM_CAT
+														  WHERE 1=1
+														    AND BRAND_ID = #{brandId}
+				                                          <if test="storeId != null and storeId != ''">
+														    AND STORE_ID = #{storeId}
+													      </if> ) FF 
+		          WHERE CL.YMD BETWEEN #{fromdate} AND #{todate} ) TEMPLATE LEFT JOIN (SELECT DAYOFWEEK(B.`SALES_TM_LOCAL`) AS DAYOFWEEK 
+					  	                                                                    , A.CAT_CD
+						                                                                    , A.CAT_NM
+						                                                                    <include refid="getTopOption2_Tp" />
+						                                                                 FROM TB_SVC_SALES_ITEM A LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID 
+						                                                                WHERE 1=1 
+						                                                                AND A.SALES_ST = 809001
+						                                                                AND B.SALES_ST IN ('809001') 
+						                                                                <include refid="getWhen_Where" />
+						                                                                  AND CAT_CD IN ( SELECT CAT_CD 
+						                                                                                    FROM( SELECT A.CAT_CD, SUM(A.SALES) SALES
+						                                                                                             FROM TB_SVC_SALES_ITEM A
+						                                                                                                  LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+						                                                                                            WHERE 1 = 1
+						                                                                                            AND A.SALES_ST = 809001
+						                                                                                            AND B.SALES_ST IN ('809001')
+						                                                                                            <include refid="getWhen_Where" />
+						                                                                                            GROUP BY A.CAT_CD
+						                                                                                            ORDER BY SALES DESC
+						                                                                                            LIMIT 0, 5
+						                                                                                         ) A 
+						                                                                                )
+						                                                                GROUP BY A.CAT_CD, DAYOFWEEK
+						                                                                ORDER BY DAYOFWEEK, CAT_CD ) GG ON GG.DAYOFWEEK = TEMPLATE.DAYOFWEEK AND GG.CAT_CD = TEMPLATE.CAT_CD
+		 GROUP BY GG.CAT_CD, GG.CAT_NM
+		 ORDER BY GG.VALUE DESC
+		 LIMIT 0,5
+	</select>
+	
+	<!--Category Sales TOP 5 Month Of Year Chart -->
+	<select id="getCateMonthOfYeeaChart" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		SELECT /* getCateMonthOfYeeaChart, 2016-12-12 */
+		       TEMPLATE.CAT_NM AS catNm
+		     , SUM(IF(TEMPLATE.MONTH = 1  , VALUE,0)) AS 'Jan'
+		     , SUM(IF(TEMPLATE.MONTH = 2  , VALUE,0)) AS 'Feb'
+		     , SUM(IF(TEMPLATE.MONTH = 3  , VALUE,0)) AS 'Mar'
+		     , SUM(IF(TEMPLATE.MONTH = 4  , VALUE,0)) AS 'Apr'
+		     , SUM(IF(TEMPLATE.MONTH = 5  , VALUE,0)) AS 'May'
+		     , SUM(IF(TEMPLATE.MONTH = 6  , VALUE,0)) AS 'Jun'
+		     , SUM(IF(TEMPLATE.MONTH = 7  , VALUE,0)) AS 'Jul'
+		     , SUM(IF(TEMPLATE.MONTH = 8  , VALUE,0)) AS 'Aug'
+		     , SUM(IF(TEMPLATE.MONTH = 9  , VALUE,0)) AS 'Sep'
+		     , SUM(IF(TEMPLATE.MONTH = 10 , VALUE,0)) AS 'Oct'
+		     , SUM(IF(TEMPLATE.MONTH = 11 , VALUE,0)) AS 'Nov'
+		     , SUM(IF(TEMPLATE.MONTH = 12 , VALUE,0)) AS 'Dec'
+		  FROM ( SELECT MONTH(YMD) MONTH
+		              , FF.CAT_CD 
+		              , FF.CAT_NM
+		           FROM TB_BASE_CALENDAR CL CROSS JOIN ( SELECT CAT_CD
+					                                          , NAME AS CAT_NM
+														   FROM TB_SVC_ITEM_CAT
+														  WHERE 1=1
+														    AND BRAND_ID = #{brandId}
+				                                          <if test="storeId != null and storeId != ''">
+														    AND STORE_ID = #{storeId}
+													      </if> ) FF 
+		          WHERE CL.YMD BETWEEN #{fromdate} AND #{todate} ) TEMPLATE LEFT JOIN (SELECT MONTH(B.`SALES_TM_LOCAL`) AS MONTH 
+					  	                                                                    , A.CAT_CD
+						                                                                    , A.CAT_NM
+						                                                                    <include refid="getTopOption2_Tp" />
+						                                                                 FROM TB_SVC_SALES_ITEM A LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID 
+						                                                                WHERE 1=1 
+						                                                                AND A.SALES_ST = 809001
+						                                                                AND B.SALES_ST IN ('809001') 
+						                                                                <include refid="getWhen_Where" />
+						                                                                  AND CAT_CD IN ( SELECT CAT_CD 
+						                                                                                    FROM( SELECT A.CAT_CD, SUM(A.SALES) SALES
+						                                                                                             FROM TB_SVC_SALES_ITEM A
+						                                                                                                  LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+						                                                                                            WHERE 1 = 1
+						                                                                                            AND A.SALES_ST = 809001
+						                                                                                            AND B.SALES_ST IN ('809001')
+						                                                                                            <include refid="getWhen_Where" />
+						                                                                                            GROUP BY A.CAT_CD
+						                                                                                            ORDER BY SALES DESC
+						                                                                                            LIMIT 0, 5
+						                                                                                         ) A 
+						                                                                                )
+						                                                                GROUP BY A.CAT_CD, MONTH
+						                                                                ORDER BY MONTH, CAT_CD ) GG ON GG.MONTH = TEMPLATE.MONTH AND GG.CAT_CD = TEMPLATE.CAT_CD
+		 GROUP BY GG.CAT_CD, GG.CAT_NM
+		 ORDER BY GG.VALUE DESC
+		 LIMIT 0,5
+	</select>
+	
+	<!--Category Sales TOP 5 Hour Of Day Chart -->
+	<select id="getCateHourOfDayChart" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		SELECT /* getCateHourOfDayChart, 2016-12-12 */
+		       TEMPLATE.CAT_NM AS catNm
+		     , SUM(IF(TEMPLATE.HOUR = 0  , VALUE,0)) AS '0' 
+		     , SUM(IF(TEMPLATE.HOUR = 1  , VALUE,0)) AS '1' 
+		     , SUM(IF(TEMPLATE.HOUR = 2  , VALUE,0)) AS '2' 
+		     , SUM(IF(TEMPLATE.HOUR = 3  , VALUE,0)) AS '3' 
+		     , SUM(IF(TEMPLATE.HOUR = 4  , VALUE,0)) AS '4' 
+		     , SUM(IF(TEMPLATE.HOUR = 5  , VALUE,0)) AS '5' 
+		     , SUM(IF(TEMPLATE.HOUR = 6  , VALUE,0)) AS '6' 
+		     , SUM(IF(TEMPLATE.HOUR = 7  , VALUE,0)) AS '7' 
+		     , SUM(IF(TEMPLATE.HOUR = 8  , VALUE,0)) AS '8' 
+		     , SUM(IF(TEMPLATE.HOUR = 9  , VALUE,0)) AS '9' 
+		     , SUM(IF(TEMPLATE.HOUR = 10 , VALUE,0)) AS '10' 
+		     , SUM(IF(TEMPLATE.HOUR = 11 , VALUE,0)) AS '11' 
+		     , SUM(IF(TEMPLATE.HOUR = 12 , VALUE,0)) AS '12' 
+		     , SUM(IF(TEMPLATE.HOUR = 13 , VALUE,0)) AS '13' 
+		     , SUM(IF(TEMPLATE.HOUR = 14 , VALUE,0)) AS '14' 
+		     , SUM(IF(TEMPLATE.HOUR = 15 , VALUE,0)) AS '15' 
+		     , SUM(IF(TEMPLATE.HOUR = 16 , VALUE,0)) AS '16' 
+		     , SUM(IF(TEMPLATE.HOUR = 17 , VALUE,0)) AS '17' 
+		     , SUM(IF(TEMPLATE.HOUR = 18 , VALUE,0)) AS '18' 
+		     , SUM(IF(TEMPLATE.HOUR = 19 , VALUE,0)) AS '19' 
+		     , SUM(IF(TEMPLATE.HOUR = 20 , VALUE,0)) AS '20' 
+		     , SUM(IF(TEMPLATE.HOUR = 21 , VALUE,0)) AS '21' 
+		     , SUM(IF(TEMPLATE.HOUR = 22 , VALUE,0)) AS '22' 
+		     , SUM(IF(TEMPLATE.HOUR = 23 , VALUE,0)) AS '23' 
+		  FROM ( SELECT CL.HOUR
+		              , FF.CAT_CD
+		              , FF.CAT_NM
+		           FROM ( SELECT 0 AS HOUR UNION SELECT 1 AS HOUR UNION SELECT 2 AS HOUR UNION SELECT 3 AS HOUR UNION SELECT 4 AS HOUR UNION 
+		    		      SELECT 5 AS HOUR UNION SELECT 6 AS HOUR UNION SELECT 7 AS HOUR UNION SELECT 8 AS HOUR UNION SELECT 9 AS HOUR UNION 
+		    		      SELECT 10 AS HOUR UNION SELECT 11 AS HOUR UNION SELECT 12 AS HOUR UNION SELECT 13 AS HOUR UNION SELECT 14 AS HOUR UNION 
+		    		      SELECT 15 AS HOUR UNION SELECT 16 AS HOUR UNION SELECT 17 AS HOUR UNION SELECT 18 AS HOUR UNION SELECT 19 AS HOUR UNION 
+		    		      SELECT 20 AS HOUR UNION SELECT 21 AS HOUR UNION SELECT 22 AS HOUR UNION SELECT 23 AS HOUR
+		                 ) CL CROSS JOIN ( SELECT CAT_CD
+		                                        , NAME AS CAT_NM
+											 FROM TB_SVC_ITEM_CAT
+											WHERE 1=1
+											  AND BRAND_ID = #{brandId}
+	                                        <if test="storeId != null and storeId != ''">
+											  AND STORE_ID = #{storeId}
+										    </if> ) FF 
+		        ) TEMPLATE LEFT JOIN (SELECT HOUR(B.`SALES_TM_LOCAL`) AS HOUR 
+                                            , A.CAT_CD
+	                                        , A.CAT_NM
+	                                        <include refid="getTopOption2_Tp" />
+	                                     FROM TB_SVC_SALES_ITEM A LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID 
+	                                    WHERE 1=1 
+	                                    AND A.SALES_ST = 809001
+	                                    AND B.SALES_ST IN ('809001') 
+	                                    <include refid="getWhen_Where" />
+	                                      AND CAT_CD IN ( SELECT CAT_CD 
+	                                                        FROM( SELECT A.CAT_CD, SUM(A.SALES) SALES
+	                                                                FROM TB_SVC_SALES_ITEM A
+	                                                                     LEFT OUTER JOIN TB_SVC_SALES B ON A.SALES_ID = B.ID
+	                                                               WHERE 1 = 1
+	                                                               AND A.SALES_ST = 809001
+	                                                               AND B.SALES_ST IN ('809001')
+	                                                               <include refid="getWhen_Where" />
+	                                                               GROUP BY A.CAT_CD
+	                                                               ORDER BY SALES DESC
+	                                                               LIMIT 0, 5
+	                                                            ) A 
+	                                                    )
+	                                    GROUP BY A.CAT_CD, HOUR
+	                                    ORDER BY HOUR, CAT_CD ) GG ON GG.HOUR = TEMPLATE.HOUR AND GG.CAT_CD = TEMPLATE.CAT_CD
+		 GROUP BY GG.CAT_CD, GG.CAT_NM
+		 ORDER BY GG.VALUE DESC
+		 LIMIT 0,5
+	</select>	
+</mapper>

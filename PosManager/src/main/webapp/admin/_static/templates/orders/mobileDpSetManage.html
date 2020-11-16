@@ -1,0 +1,124 @@
+<form id="rollSearchFrom">
+	<ul class="filemanager-options" {{#isSt}} style="display: none" {{/isSt}}>
+		<li class="select2-padding" {{#isFr}} style="display: none" {{/isFr}}>
+			<div class="itemopt">
+				<select class="select2" id="franchise_select">
+					<option value="">{{i18n.BO1031}}</option>
+					{{#frList}}
+					<option value="{{id}}" >{{companyNm}}</option>
+					{{/frList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding" {{#isBr}} style="display: none" {{/isBr}}>
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="brand_select">
+					<option value="">{{i18n.BO1032}}</option>
+					{{#brList}}
+					<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+					{{/brList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select class="js-states form-control" name="storeId" tabindex="-1" style="display: none; width: 100%" id="store_select">
+					<option value="">{{i18n.BO1033}}</option>
+					{{#stList}}
+					<option value="{{id}}" {{{selections}}}>{{storeNm}}</option>
+					{{/stList}}
+				</select>
+			</div>
+		</li>
+	</ul>
+	<ul class="filemanager-options">
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select class="select2" name="cateType" id="cateType_select">
+					<option value="">Category Type</option>
+				</select>
+			</div>
+		</li>
+	</ul>
+</form>
+
+<div class="row">
+	<div class="col-md-7">
+		<div class="panel panel-white">
+			<div class="panel panel-default">
+				<div class="panel-body style="overflow-y:scroll; max-height: 500px;"">
+					<div class="table-responsive" >
+						<table class="table table-striped table_fullwidth" id="table1">
+							<thead>
+								<tr>
+									<th>{{i18n.BO2214}}</th>
+									<th>{{i18n.BO2215}}</th>
+									<th>{{i18n.BO2245}}</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+					<!-- table-responsive -->
+					<form id="gdlForm">
+			   		<input type="hidden" name="catId" value="" id="pluTypeId"/>
+						<ul id="sortable">
+						</ul>
+					</form>
+				</div>
+				<!-- panel-body -->
+			</div>
+		</div>
+		<div class="float-right">
+			<button type="button" class="btn btn-xs btn-primary gridly-btn" id="savePluItem">{{i18n.BO0014}}</button>
+		</div>
+	</div>
+	
+	<div class="col-md-5">
+		<div class="panel panel-white">
+			<div class="panel panel-default">
+				<div class="panel-body ">
+				<div class="itemopt">
+					<ul class="filemanager-options">
+						<li class="select2-padding">
+							<div class="itemopt">
+								<select class="select2" name="catId" id="category_select">
+									<option value="">All Category</option>
+								</select>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="table-responsive" style="overflow-y:scroll; max-height: 500px;">
+					<table class="table table-striped" id="table2">
+						<thead>
+							<tr class="dataTables_wrapper_th_min">
+								<th>{{i18n.BO2214}}</th>
+								<th>{{i18n.BO2215}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="dataTables_wrapper_th_min">
+								<td colspan="2">
+									<span >{{i18n.BO4045}}</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+					<!-- table-responsive -->
+
+				</div>
+				<!-- panel-body -->
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- <div class="float-right"> -->
+<!-- 	<button type="button" class="btn btn-xs btn-primary gridly-btn">전체선택</button> -->
+<!-- 	<button type="button" class="btn btn-xs btn-primary gridly-btn">선택등록</button> -->
+<!-- </div> -->
+
+
+<!-- Row -->

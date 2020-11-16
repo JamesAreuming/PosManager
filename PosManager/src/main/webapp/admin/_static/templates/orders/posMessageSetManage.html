@@ -1,0 +1,85 @@
+<form id="be-search-form" class="search-form">
+	<ul class="filemanager-options" {{#isSt}} style="display: none" {{/isSt}}>
+		<li class="select2-padding" {{#isFr}} style="display: none" {{/isFr}}>
+			<div class="itemopt">
+				<select class="select2" id="franchise_select">
+					<option value="">{{i18n.BO1031}}</option>
+					{{#frList}}
+					<option value="{{id}}" >{{companyNm}}</option>
+					{{/frList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding" {{#isBr}} style="display: none" {{/isBr}}>
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="brand_select">
+					<option value="">{{i18n.BO1032}}</option>
+					{{#brList}}
+					<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+					{{/brList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="store_select">
+					<option value="">{{i18n.BO1033}}</option>
+					{{#stList}}
+					<option value="{{id}}" {{{selections}}}>{{storeNm}}</option>
+					{{/stList}}
+				</select>
+			</div>
+		</li>
+	</ul>
+	<ul class="filemanager-options">
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select class="select2" name="cateType" id="category_select">
+					<option value="">Category Type</option>
+				</select>
+			</div>
+		</li>
+	</ul>
+</form>
+
+<div class="row" id="posMessageSet">
+{{#search}}
+	<input type="hidden" name="totCnt" value="{{totCnt}}" readonly="readonly">
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="floor-title">
+					<div class="float-right">
+						<button type="button" id="add-row" class="btn btn-xs btn-primary">+ {{i18n.BO3035}}</button>
+					</div>
+				</div>
+				<div class="table-responsive">
+				   <table class="table table-striped" id="table2">
+						<thead>
+							<tr class="dataTables_wrapper_th_min-sales">
+								<th>{{i18n.BO2001}}</th>
+								<th colspan="1">Kitchen Message</th>
+							</tr>
+						</thead>
+						<tbody id="table-tbody">
+							{{#list}}
+								<tr class="odd gradeX txt-center">
+									<td class="title">{{id}}</td>
+									<td class="txt-left">
+										<input type="text" class="form-control" placeholder="Kitchen Message" value="{{message}}" name="message" id="message{{id}}"/>
+										<input type="hidden" name="ordinal" id="ordinal{{id}}" value="{{ordinal}}"/>
+									</td>
+									<td class="pos_msg_txt_modify">
+										<a class="mod-row" id="{{id}}">{{i18n.BO0015}}</a> | <a class="del-row" id="{{id}}">{{i18n.BO0016}}</a>
+									</td>
+								</tr>
+							{{/list}}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+{{/search}}
+</div>
+<!-- Row -->

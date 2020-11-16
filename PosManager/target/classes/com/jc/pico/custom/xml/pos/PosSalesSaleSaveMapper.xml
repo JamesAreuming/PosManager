@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: PosSalesSaleSaveMapper.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History		: 
+  ~
+  ~ Version		: 1.0
+  ~ Author   	: 
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.pos.PosSalesSaleSaveMapper">
+
+  <select id="selectDefault" parameterType="hashmap" resultType="com.jc.pico.utils.bean.PosSalesSaleSave">
+    SELECT  /* PosSalesSaleSaveMapper.selectDefault : POS.S_SALE_SAVE, 2016-07-11, green */
+			${companyId} AS cdCompany /* 회사코드 */
+			, ${storeId} AS cdStore /* 매장코드 */
+			, TB_SVC_SALES.OPEN_DT AS ymdSale /* 날짜 */
+			, TB_SVC_SALES.POS_NO AS noPos /* 포스번호 */
+			, TB_SVC_SALES.RECEIPT_NO AS noRcp /* 전표번호 */
+			, TB_SVC_SALES.SALES_TP AS dsSale /* 판매형태코드(1:정상, 2:반품, 3:주문, 4:시식, 5:증정, 6:폐기, 7:접대, 8:손실, 9:Void, 10:점간이동, 11:배달, 12:선입금, 13:외상매출입금, 14:상품교환) */
+			, TB_SVC_SALES.USER_ID AS cdMember /* 고객번호 */
+			, TB_USER.NAME AS nmMember /* 고객명 */
+			, TB_SVC_SALES.STAFF_ID AS cdEmployee /* 결제자 */
+			, TB_SVC_SALES.SALES AS amtSale /* 금액 */
+			, TB_SVC_SALES.SUPPLY_VALUE AS amtSupply /* 공급가액 */
+			, TB_SVC_SALES.TAX AS amtTax /* 부가세 */
+			, TB_SVC_SALES.DISCOUNT AS amtDc /* 할인금액 */
+			, TB_SVC_SALES.SERVICE_CHARGE AS amtTip /* 봉사료 */
+			, TB_SVC_SALES.CUSTOMER_TP AS cdMemberType /* 고객형태코드 */
+			, TB_SVC_SALES.CUSTOMER_AGE_TP AS cdMemberAge /* 고객연령대코드 */
+			, TB_SVC_SALES.CUSTOMER_GENDER AS cdMemberSex /* 고객성별코드 */
+			, TB_SVC_SALES.CUSTOMER_CNT AS cntCustomer /* 객수 */
+			, TB_SVC_SALES.SALES_TM, SALES_TM_LOCAL AS dtSale /* 매출일시 */
+			, TB_SVC_SALES.DATE_FORMAT(TB_SVC_ORDER.ADMISSION_TM, '%Y%m%d%H%i%s') AS dtAdmission /* 입장일시 */
+			, TB_SVC_SALES.DATE_FORMAT(TB_SVC_ORDER.EXIT_TM, '%Y%m%d%H%i%s') AS dtExit /* 퇴장일시 */
+			, TB_SVC_SALES.TABLE_NO AS noTable /* 테이블번호 */
+			, 0 AS cdSection /* 테이블섹션코드 */
+			, '' AS cdTour /* 여행사코드 */
+			, 0 AS noGuide /* 가이드번호 */
+			, 0 AS ynForeigner /* 외국인유무 */
+			, 0 AS cdCurrency /* 통화단위코드 */
+			, 0 AS rtExchange /* 환율 */
+			, 0 AS amtForeignCurrency /* 외화금액 */
+			, 0 AS rtExchangeUsd /* 달러환율 */
+			, 0 AS amtUsd /* 달러금액 */
+			, 0 AS pntOccur /* 적립 포인트 */
+			, 0 AS pntRest /* 잔여 포인트 */
+			, TB_SVC_SALES.MEMO AS memo /* 메모 */
+			, TB_SVC_SALES.BRAND_ID AS cdBrand /* 브랜드코드 */
+			, TB_SVC_SALES.OPEN_DT AS ymdSaleOrg /* 원 매출일자 */
+			, TB_SVC_SALES.POS_NO AS noPosOrg /* 원 포스번호 */
+			, TB_SVC_SALES.RECEIPT_NO AS noRcpOrg /* 원 영수증번호 */
+			, 0 AS noClosing /* 마감번호 */
+			, TB_SVC_SALES.REASON AS cdReturnReason /* 반품사유코드 */
+			, TB_SVC_SALES.ORDER_TM AS ymdOrder /* 주문일자 */
+			, TB_SVC_SALES.ORDER_NO AS noOrder /* 주문번호 */
+			, '' AS cdVendor /* 거래처코드 */
+			, 0 AS noPager /* 진동벨번호 */
+			, '' AS cdBalju /* 발주번호 */
+			, '' AS detail /* 상세 내역 */
+			, '' AS pay /* 결제 내역 */
+			, '' AS discount /* 할인 내역 */
+			, '' AS cash /* 현금영수증 내역 */
+			, '' AS card /* 신용카드 내역 */
+			, '' AS okcashbag /* 캐쉬백 내역 */
+      FROM TB_SVC_SALES
+      LEFT OUTER JOIN TB_USER ON TB_SVC_SALES.USER_ID = TB_USER.ID
+	<trim prefix="WHERE" prefixOverrides="AND |OR ">
+		<if test="_parameter.containsKey('storeId')">
+	   AND SS.ID = #{storeId}
+		</if>
+	</trim>
+  </select>
+
+	<select id="selectItemAndCatInfos" parameterType="map" resultType="singlemap">
+		/* PosSalesSaleSaveMapper.selectItemAndCatInfos, 2016-10-17, hyo */
+		SELECT
+			A.ID AS itemId
+			, A.NAME AS itemNm
+			, A.ITEM_TP AS itemTp
+		    , A.ITEM_CD AS itemCd		    
+		    , B.NAME AS catNm
+		    , B.CAT_CD AS catCd
+		FROM
+			TB_SVC_ITEM A
+		INNER JOIN 
+			TB_SVC_ITEM_CAT B
+		ON A.CAT_ID = B.ID
+		WHERE
+			A.ID IN
+		<foreach collection="itemIds" item="itemId" open="(" separator="," close=")" >
+			#{itemId}
+		</foreach>
+	</select>
+		
+	<select id="lockSaveSales" parameterType="map" resultType="boolean">
+		/* PosSalesSaleSaveMapper.lockSaveSales */ 
+		SELECT GET_LOCK('save_sales' + #{storeId} + #{receiptNo}, 10)		
+	</select>	
+	
+	<select id="unlockSaveSales" parameterType="map"  resultType="boolean">
+		/* PosSalesSaleSaveMapper.unlockSaveSales */ 
+		SELECT RELEASE_LOCK('save_sales' + #{storeId} + #{receiptNo})
+	</select>
+	
+</mapper>

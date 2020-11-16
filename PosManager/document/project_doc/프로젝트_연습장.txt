@@ -1,0 +1,12 @@
+<구조파악>
+
+키오스크 api 작동원리 : Controller > Service > ServiceImpl > 해당Mapper Class > Mapper xml-쿼리연결
+
+ex) /clerk/api/store/info  :   clerkOrderService(StoreInfo)   ----->   clerkOrderServiceImpl   ----->     해당Mapper Class    -----      Mapper xml-쿼리연결
+
+/clerk/api/license/registerkiosk
+
+
+admin 웹 사이트 api 작동원리 : Controller > 해당Mapper Class > Mapper xml-쿼리연결
+
+ex) /admin/model/store/store  :   AdminStroeController(Stroe)   ----->   해당Mapper Class    -----      Mapper xml-쿼리연결

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.jc.pico.utils.customMapper.store.StoreBrandSalesMapper">
+	
+	<select id="selectSummaryTotal" parameterType="map" resultType="SingleMap">
+		/* StoreBrandSalesMapper.selectSummaryTotal */
+		SELECT
+			ROUND(COALESCE(SUM(SALES), 0), #{currencyFraction}) AS salesTotal
+		    , COALESCE(SUM(CUSTOMER_CNT), 0) AS customerTotal       
+		FROM TB_SVC_SALES
+		WHERE 
+			BRAND_ID = #{brandId}
+		AND SALES_ST = '809001'
+		AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+	</select>
+	
+	<select id="selectSummaryList" parameterType="map" resultType="SingleMap">
+		/* StoreBrandSalesMapper.selectSummaryList */
+		SELECT
+			B.STORE_NM AS label
+		    , ROUND(COALESCE(SUM(A.SALES), 0), #{currencyFraction}) AS salesTotal
+		    , COALESCE(SUM(A.CUSTOMER_CNT), 0) AS customerTotal
+		FROM TB_SVC_SALES A
+		INNER JOIN TB_SVC_STORE B
+			ON A.STORE_ID = B.ID
+		WHERE
+			A.BRAND_ID = #{brandId}
+		AND SALES_ST = '809001'
+		AND A.SALES_TM_LOCAL BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+		GROUP BY A.STORE_ID
+		ORDER BY STORE_NM
+		LIMIT #{count}
+		OFFSET #{start}
+	</select>
+	
+	<select id="selectDailyList" parameterType="map" resultType="SingleMap">
+		/* StoreBrandSalesMapper.selectDailyList */		
+		SELECT
+			DATE_FORMAT(CL.YMD, '%Y-%m-%d') AS label
+			, ROUND(COALESCE(A.salesTotal, 0), #{currencyFraction}) AS salesTotal
+			, COALESCE(A.customerTotal, 0) AS customerTotal
+		FROM 
+			TB_BASE_CALENDAR CL
+		LEFT JOIN (
+			SELECT	
+				DATE(SALES_TM_LOCAL) AS YMD
+				, SUM(SALES) AS salesTotal
+				, SUM(CUSTOMER_CNT) AS customerTotal
+			FROM TB_SVC_SALES
+			WHERE
+				BRAND_ID = #{brandId}
+			AND SALES_ST = '809001'
+			AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{pagination.startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{pagination.endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+			GROUP BY YMD	
+		) A
+		ON CL.YMD = A.YMD
+		WHERE
+			CL.YMD BETWEEN #{pagination.startDate} AND #{pagination.endDate}
+		ORDER BY CL.YMD
+	</select>
+	
+	<select id="selectWeeklyList" parameterType="map" resultType="SingleMap">
+		/* StoreBrandSalesMapper.selectWeeklyList */
+		SELECT
+			CONCAT(DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 0), '%X%V%w'), '%Y-%m-%d')
+				, ' ~ ' 
+		        , DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 6), '%X%V%w'), '%Y-%m-%d')
+			) AS label
+			, DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 0), '%X%V%w'), '%Y-%m-%d') AS startDate
+		    , DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 6), '%X%V%w'), '%Y-%m-%d') AS endDate   
+			, ROUND(COALESCE(A.salesTotal, 0), #{currencyFraction}) AS salesTotal
+			, COALESCE(A.customerTotal, 0) AS customerTotal
+		FROM 
+			TB_BASE_CALENDAR CL
+		LEFT JOIN (
+			SELECT	
+				YEARWEEK(SALES_TM_LOCAL) AS YEARWEEK		
+				, SUM(SALES) AS salesTotal
+				, SUM(CUSTOMER_CNT) AS customerTotal
+			FROM TB_SVC_SALES
+			WHERE
+				BRAND_ID = #{brandId}
+			AND SALES_ST = '809001'
+			AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{pagination.startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{pagination.endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+			GROUP BY YEARWEEK
+		) A
+		ON CL.YEARWEEK = A.YEARWEEK
+		WHERE
+			CL.YMD BETWEEN #{pagination.startDate} AND #{pagination.endDate}
+		GROUP BY CL.YEARWEEK
+		ORDER BY CL.YEARWEEK
+	</select>
+	
+	<select id="selectMonthlyList" parameterType="map" resultType="SingleMap">
+		/* StoreBrandSalesMapper.selectMonthlyList */		
+		SELECT
+			DATE_FORMAT(CL.YMD, '%Y-%m') AS label
+			, ROUND(COALESCE(A.salesTotal, 0), #{currencyFraction}) AS salesTotal
+			, COALESCE(A.customerTotal, 0) AS customerTotal
+		FROM 
+			TB_BASE_CALENDAR CL
+		LEFT JOIN (
+			SELECT	
+				YEAR(SALES_TM_LOCAL) AS YEAR
+				, MONTH(SALES_TM_LOCAL) AS MONTH
+				, SUM(SALES) AS salesTotal
+				, SUM(CUSTOMER_CNT) AS customerTotal
+			FROM TB_SVC_SALES
+			WHERE
+				BRAND_ID = #{brandId}
+			AND SALES_ST = '809001'
+			AND SALES_TM_LOCAL BETWEEN DATE_ADD(#{pagination.startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{pagination.endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+			GROUP BY YEAR, MONTH
+		) A
+		ON CL.YEAR = A.YEAR 
+			AND CL.MONTH = A.MONTH
+		WHERE
+			CL.YMD BETWEEN #{pagination.startDate} AND #{pagination.endDate}
+		GROUP BY CL.YEAR, CL.MONTH
+		ORDER BY CL.YEAR, CL.MONTH
+	</select>
+
+</mapper>

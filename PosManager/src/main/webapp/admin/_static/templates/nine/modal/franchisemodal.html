@@ -1,0 +1,212 @@
+<div class="modal-dialog modal-lg">
+	<form>
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title">
+				{{i18n.BO2007}} <b>* {{i18n.BO0008}}<b>
+			</h4>
+		</div>
+		<div class="modal-body" id="modal-form">
+		 	<input type="hidden" name="id" value="{{id}}" readonly="readonly">
+		 	<input type="hidden" name="franCdEx" value="{{franCd}}" readonly="readonly">
+			<div class="row">
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2002}}*</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{franCd}}" name="franCd" data-validation="required" maxlength="6"/>
+						<!-- <input type="text" class="form-control" id="input-Default" value="{{franCd}}" name="franCd" data-validation="length" data-validation-length="6"/> -->
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2005}}</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{bizNo}}" name="bizNo">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2003}}*</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{franNm}}" name="franNm" data-validation="required" >
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2004}}*</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{companyNm}}" name="companyNm" data-validation="required" >
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2023}}*</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{bizCat}}" name="bizCat" data-validation="required" >
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2011}}</label>
+					<div class="col-sm-9">
+						<select class="form-control m-b-sm" tabindex="-1"
+							style="display: none; width: 100%" name="countryCd">
+							<option value="">{{i18n.BO2011}}</option>
+							{{#countrycd}}
+							<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+							{{/countrycd}}
+						</select>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2008}}</label>
+					<div class="col-sm-9">
+						<div class="input-group col-sm-12 m-b-sm input-append bootstrap-timepicker float-left">
+							<input id="timepicker1" type="text" class="form-control date-picker" placeholder="{{i18n.BO2008}}" value="{{#formatDay}}{{openDt}}{{/formatDay}}"> 
+							<span class="input-group-addon add-on add-on-datepicker">
+								<i class="fa fa-calendar"></i>
+								<input id="openDt" name="openDt" value="{{openDt}}" type="hidden"/>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2009}}</label>
+					<div class="col-sm-9">
+						<div class="input-group col-sm-12 m-b-sm input-append bootstrap-timepicker float-left">
+							<input id="timepicker2" type="text" class="form-control date-picker" placeholder="{{i18n.BO2009}}" value="{{#formatDay}}{{closeDt}}{{/formatDay}}"> 
+							<span class="input-group-addon add-on add-on-datepicker">
+								<i class="fa fa-calendar"></i>
+								<input id="closeDt" name="closeDt" value="{{closeDt}}" type="hidden"/>
+							</span>
+						</div>
+					</div>
+				</div>				
+				<div class="form-group min-height-30 col-sm-9 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2010}}</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="input-Default" name="homepage" value="{{homepage}}">
+					</div>
+				</div>
+				
+				<!-- <div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">우편번호 </label>
+					<div class="col-sm-9">
+						<div class="input-group m-b-sm">
+							<input type="text" class="form-control" value="{{zip}}" id="zipcode" name="zip"> <span
+								class="input-group-btn">
+								<button class="btn btn-primary" type="button" id="zipcode_bt">우편번호 조회</button>
+							</span>
+						</div>
+					</div>
+				</div> -->
+				<div class="form-group min-height-30 col-sm-9 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2013}}</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control addr1" id="input-Default" value="{{addr1}}" name="addr1">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-9 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2014}}</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control addr2" id="input-Default" value="{{addr2}}" name="addr2">
+						<!--input-error 에는 has-error 추가할것-->
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2015}}</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{ceoNm}}" name="ceoNm">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2017}}</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{fax}}" name="fax" placeholder="(ex:02-1234-5678)">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2016}}</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{tel}}" name="tel" placeholder="(ex:02-1234-5678)">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2018}}</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{email}}" name="email">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-9 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2451}}</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="input-Default" value="{{intro}}" name="intro">
+					</div>
+				</div>
+
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2012}}*</label>
+					<div class="col-sm-9">
+						<select class="form-control m-b-sm" tabindex="-1"
+							style="width: 100%" data-validation="required" name="svcSt">
+							<option value="">{{i18n.BO2012}}</option>
+							{{#svcst}}
+							<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+							{{/svcst}}
+						</select>
+					</div>
+				</div>
+			</div>
+
+			<hr>
+			<!--
+			<div class="row">
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">법인로고</label>
+					<div class="col-sm-9">
+							<div class="fallback">
+								<input name="file" type="file" />
+							</div>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-3 padding-0">
+					<div class="file-upload-box"></div>
+				</div>
+			</div>
+			 -->
+			<!--
+			<div class="row">
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">법인직인</label>
+					<div class="col-sm-9">
+							<div class="fallback">
+								<input name="file" type="file" />
+							</div>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-3 padding-0">
+					<div class="file-upload-box"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">법인직인</br>(증명서용)
+					</label>
+					<div class="col-sm-9">
+							<div class="fallback">
+								<input name="file" type="file" />
+							</div>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-3 padding-0">
+					<div class="file-upload-box"></div>
+				</div>
+			</div>
+ 			-->
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+			<button type="submit" class="btn btn-primary">{{i18n.BO0014}}</button>
+		</div>
+	</div>
+	</form>
+</div>

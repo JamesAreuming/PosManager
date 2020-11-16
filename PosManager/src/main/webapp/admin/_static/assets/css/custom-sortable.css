@@ -1,0 +1,119 @@
+/*
+ *  ikinox
+ */
+#sortable {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+#sortable li {
+	margin: 0 3px 3px 3px;
+	padding: 0.5em;
+	padding-left: 1.5em;
+	font-size: 1.4em;
+	height: 45px;
+}
+
+#sortable li span {
+	position: absolute;
+	margin-left: -0.3em;
+}
+
+#sortable li p {
+	position: absolute;
+}
+
+.data-box-a {
+	text-align: center;
+	width: 30%;
+	margin: 0 auto;
+	font-size: 16px;
+	/* 	color: #ddd; */
+}
+
+.data-box-b {
+	text-align: center;
+	width: 30%;
+	margin: 0 30%;
+	font-size: 16px;
+	/* 	color: #ddd; */
+}
+
+.data-box-del {
+	text-align: center;
+	width: 10%;
+	margin: 0 75%;
+	font-size: 16px;
+	/* 	color: #ddd; */
+}
+
+.data-box-a-1 {
+	text-align: center;
+	width: 30%;
+	margin: 0 auto;
+	font-size: 16px;
+	/* 	color: #ddd; */
+}
+
+.data-box-b-1 {
+	text-align: center;
+	width: 20%;
+	margin: 0 30%;
+	font-size: 16px;
+	/* 	color: #ddd; */
+}
+
+.data-box-c-1 {
+	text-align: center;
+	width: 20%;
+	margin: 0 55%;
+	font-size: 16px;
+	/* 	color: #ddd; */
+}
+
+.data-box-mng {
+	text-align: center;
+	width: 15%;
+	margin: 0 75%;
+	font-size: 16px;
+	/* 	color: #ddd; */
+}
+
+#sortableBox {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+#sortableBox li {
+	margin: 3px 3px 3px 0;
+	padding: 1px;
+	float: left;
+	width: 200px;
+	height: 180px;
+	font-size: 4em;
+	text-align: center;
+}
+
+.data-box-a-3 {
+	text-align: center;
+	width: -1%%;
+	margin-top: 10px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+	font-size: 16px;
+	/* 	color: #ddd; */
+}
+
+.data-box-del-2 {
+	text-align: center;
+	width: 10%;
+	margin: 0 65%;
+	font-size: 16px;
+	/* 	color: #ddd; */
+}
+

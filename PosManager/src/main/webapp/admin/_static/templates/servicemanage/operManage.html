@@ -1,0 +1,33 @@
+<ul class="filemanager-options">
+	<li class="select2-padding">
+		<div class="itemopt">
+			<select class="select2" id="franchise_select">
+							<option value="">법인 선택</option>
+							{{#fr.list}}
+								<option value="{{id}}">{{companyNm}}</option>
+							{{/fr.list}}
+			</select>
+		</div>
+	</li>
+	<li class="select2-padding">
+		<div class="itemopt">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%" id="brand_select">
+							<option>{{i18n.BO1032}}</option>
+						</select>
+		</div>
+	</li>
+	 <li class="float-right">
+        <button type="button" class="btn btn-xs btn-primary " id="search_oper">검색</button>
+      </li>
+</ul>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body" id="stamp-form-body">
+			
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Row -->

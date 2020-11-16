@@ -1,0 +1,153 @@
+<form id="rollSearchFrom">
+	{{#brandlist}}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<div class="panel-btns">
+				<!-- <a href="" class="panel-close">&times;</a> -->
+				<a href="" class="minimize">&minus;</a>
+			</div>
+			<h4 class="panel-title" title="{{#formatDay}} {{today}}  {{/formatDay}}">{{brandNm}} ({{storeCnt}} {{i18n.BO1033}})</h4>
+		</div><!-- panel-heading -->
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="panel-heading">
+						<h4 class="panel-title">{{i18n.BO2275}}</h4>
+					</div>
+					<div class="well">
+						<ul class="list-unstyled index-info">
+							<li>{{i18n.BO2278}}<span class="pull-right"><b></b></span></li>
+							<li>{{i18n.BO1003}}<span class="pull-right"><b>{{#formatPrice}}{{totalSalesAmt}}{{/formatPrice}}</b></span></li>
+							<li>{{i18n.BO2279}}<span class="pull-right"><b>{{#formatNumber}}{{totalSalesCnt}}{{/formatNumber}}</b></span></li>
+							<li>&nbsp; &nbsp; <span class="pull-right"><b> </b></span></li>
+							<hr>
+							<li>{{i18n.BO2280}}<span class="pull-right"><b></b></span></li>
+							<li>{{i18n.BO1003}}<span class="pull-right"><b>{{#formatPrice}}{{averageSalesAmt}}{{/formatPrice}}</b></span></li>
+							<li>{{i18n.BO2279}}<span class="pull-right"><b>{{#formatNumber}}{{averageSalesCnt}}{{/formatNumber}}</b></span></li>
+							<li>&nbsp; &nbsp; <span class="pull-right"><b> </b></span></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="panel-heading">
+						<h4 class="panel-title">{{i18n.BO2276}}</h4>
+					</div>
+					<div class="well">
+						<ul class="list-unstyled index-info">
+							<li>{{i18n.BO2278}}<span class="pull-right"><b></b></span></li>
+							<li>{{i18n.BO2281}}<span class="pull-right"><b>{{#formatNumber}}{{totalSoCnt}}{{/formatNumber}}</b></span></li>
+							<li>{{i18n.BO2282}}<span class="pull-right"><b>{{#formatNumber}}{{totalRvCnt}}{{/formatNumber}}</b></span></li>
+							<li>{{i18n.BO2283}}<span class="pull-right"><b>{{#formatNumber}}{{totalPcCnt}}{{/formatNumber}}</b></span></li>
+							<hr>
+							<li>{{i18n.BO2280}}<span class="pull-right"><b></b></span></li>
+							<li>{{i18n.BO2281}}<span class="pull-right"><b>{{#formatNumber}}{{averageSoCnt}}{{/formatNumber}}</b></span></li>
+							<li>{{i18n.BO2282}}<span class="pull-right"><b>{{#formatNumber}}{{averageRvCnt}}{{/formatNumber}}</b></span></li>
+							<li>{{i18n.BO2283}}<span class="pull-right"><b>{{#formatNumber}}{{averagePcCnt}}{{/formatNumber}}</b></span></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="panel-heading">
+						<h4 class="panel-title">{{i18n.BO2277}}</h4>
+					</div>
+					<div class="well">
+						<ul class="list-unstyled index-info">
+							<li>{{i18n.BO2278}}<span class="pull-right"><b></b></span></li>
+							<li>{{i18n.BO2284}} <span class="pull-right"><b>{{#formatNumber}}{{stampCnt}}{{/formatNumber}}</b></span></li>
+							<li>{{i18n.BO2285}}<span class="pull-right"><b>{{#formatNumber}}{{couponCnt}}{{/formatNumber}}</b></span></li>
+							<li>{{i18n.BO2286}}<span class="pull-right"><b>{{#formatNumber}}{{couponUsedCnt}}{{/formatNumber}}</b></span></li>						
+							<hr>
+							<li>{{i18n.BO2278}}<span class="pull-right"><b></b></span></li>
+							<li>{{i18n.BO2284}} <span class="pull-right"><b>{{#formatNumber}}{{averageStampCnt}}{{/formatNumber}}</b></span></li>
+							<li>{{i18n.BO2285}}<span class="pull-right"><b>{{#formatNumber}}{{averageCouponCnt}}{{/formatNumber}}</b></span></li>
+							<li>{{i18n.BO2286}}<span class="pull-right"><b>{{#formatNumber}}{{averageCuCnt}}{{/formatNumber}}</b></span></li>		
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    {{/brandlist}}  
+	
+	<!-- 
+	{{#brandlist}}
+	<div class="row">
+		<h4 class="panel-title col-md-12"> {{brandNm}} ({{storeCnt}} Stores)</h4>
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="panel-btns">
+						<a href="" class="panel-close">&times;</a>
+						<a class="minimize">&minus;</a>
+					</div>
+					<h4 class="panel-title">Today Sales</h4>
+				</div>
+				<div class="panel-body">
+					<ul class="list-unstyled index-info">
+						<li>Total<span class="pull-right"><b></b></span></li>
+						<li>Sales<span class="pull-right"><b>{{#formatPrice}}{{totalSalesAmt}}{{/formatPrice}}</b></span></li>
+						<li>Order<span class="pull-right"><b>{{#formatNumber}}{{totalSalesCnt}}{{/formatNumber}}</b></span></li>
+						<li>&nbsp; &nbsp; <span class="pull-right"><b> </b></span></li>
+						<hr>
+						<li>Average<span class="pull-right"><b></b></span></li>
+						<li>Sales<span class="pull-right"><b>{{#formatPrice}}{{averageSalesAmt}}{{/formatPrice}}</b></span></li>
+						<li>Order<span class="pull-right"><b>{{#formatNumber}}{{averageSalesCnt}}{{/formatNumber}}</b></span></li>
+						<li>&nbsp; &nbsp; <span class="pull-right"><b> </b></span></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	        
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="panel-btns">
+						<a href="" class="panel-close">&times;</a>
+						<a class="minimize">&minus;</a>
+					</div>
+					<h4 class="panel-title">Today Service</h4>
+				</div>
+				<div class="panel-body">
+					<ul class="list-unstyled index-info">
+						<li>Total<span class="pull-right"><b></b></span></li>
+						<li>Self-order<span class="pull-right"><b>{{#formatNumber}}{{totalSoCnt}}{{/formatNumber}}</b></span></li>
+						<li>Reservation<span class="pull-right"><b>{{#formatNumber}}{{totalRvCnt}}{{/formatNumber}}</b></span></li>
+						<li>Party contract<span class="pull-right"><b>{{#formatNumber}}{{totalPcCnt}}{{/formatNumber}}</b></span></li>
+						<hr>
+						<li>Average<span class="pull-right"><b></b></span></li>
+						<li>Self-order<span class="pull-right"><b>{{#formatNumber}}{{averageSoCnt}}{{/formatNumber}}</b></span></li>
+						<li>Reservation<span class="pull-right"><b>{{#formatNumber}}{{averageRvCnt}}{{/formatNumber}}</b></span></li>
+						<li>Party contract<span class="pull-right"><b>{{#formatNumber}}{{averagePcCnt}}{{/formatNumber}}</b></span></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	        
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="panel-btns">
+						<a href="" class="panel-close">&times;</a>
+						<a href="" class="minimize">&minus;</a>
+					</div>
+					<h4 class="panel-title">Today Stamp</h4>
+				</div>
+				<div class="panel-body">
+					<ul class="list-unstyled index-info">
+						<li>Total<span class="pull-right"><b></b></span></li>
+						<li>Stamp <span class="pull-right"><b>{{#formatNumber}}{{stampCnt}}{{/formatNumber}}</b></span></li>
+						<li>Coupon issue<span class="pull-right"><b>{{#formatNumber}}{{couponCnt}}{{/formatNumber}}</b></span></li>
+						<li>Coupon use<span class="pull-right"><b>{{#formatNumber}}{{couponUsedCnt}}{{/formatNumber}}</b></span></li>						
+						<hr>
+						<li>Average<span class="pull-right"><b></b></span></li>
+						<li>Stamp <span class="pull-right"><b>{{#formatNumber}}{{averageStampCnt}}{{/formatNumber}}</b></span></li>
+						<li>Coupon issue<span class="pull-right"><b>{{#formatNumber}}{{averageCouponCnt}}{{/formatNumber}}</b></span></li>
+						<li>Coupon use<span class="pull-right"><b>{{#formatNumber}}{{averageCuCnt}}{{/formatNumber}}</b></span></li>		
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	{{/brandlist}}
+	 -->
+</form>

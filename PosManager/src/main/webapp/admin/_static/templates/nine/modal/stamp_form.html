@@ -1,0 +1,219 @@
+<div class="table-responsive" id="modal-form">
+	<form>
+		<input type="hidden" name="id" value="{{id}}" readonly="readonly">
+		<input type="hidden" name="brandId" value="{{brandId}}" readonly="readonly">
+		<input type="hidden" name="storeId" value="{{storeId}}" readonly="readonly">
+		<input type="hidden" name="gubun" readonly="readonly">
+
+		<div class="form-group min-height-30 col-sm-12 padding-0">
+			<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2071}}*</label>
+			<div class="col-md-10 m-b-sm">
+				<select class="js-states form-control" tabindex="-1"
+					style="display: none; width: 100%" name="stampCnt" data-validation="required">
+					<option value="">{{i18n.BO2071}}</option>
+					<option value="12" {{#stampCnt=12}} selected="selected" {{/stampCnt=12}}>12</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group min-height-30 col-sm-12 padding-0">
+			<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2072}}</label>
+			<div class="col-sm-10">
+				<div class="fallback">
+					<input type="file" id="stampBg" name="stampBg" value="{{stampBg}}" />
+				</div>
+			</div>
+		</div>
+		<div class="form-group min-height-30 col-sm-12 padding-0" id="main_img_container">
+			<label for="input-Default" class="col-sm-2 control-label"></label>
+			<div class="col-sm-10" id="main_img_target">
+				<!-- <div class="row filemanager"> -->
+					<!-- <div class="col-xs-3 col-sm-2 col-md-3 image"> -->
+						<div class="thmb">
+							<div class="thmb-prev">
+								<img alt="Stamp Bg" src="{{stampBg}}" class="img-responsive" style="height: 180px; width: 200px"/>
+							</div>
+						</div>
+					<!-- </div> -->				
+				<!-- </div> -->
+			</div>
+		</div>
+
+		<div class="form-group min-height-30 col-sm-12 padding-0">
+			<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2073}}</label>
+			<div class="col-sm-10">
+				<div class="fallback">
+					<input type="file" id="stampIcon" name="stampIcon" value="{{stampIcon}}" />
+				</div>
+			</div>
+		</div>
+		<div class="form-group min-height-30 col-sm-12 padding-0" id="main_img_container2">
+			<label for="input-Default" class="col-sm-2 control-label"></label>
+			<div class="col-sm-10" id="main_img_target2">
+				<!-- <div class="row filemanager"> -->
+					<!-- <div class="col-xs-3 col-sm-2 col-md-3 image"> -->
+						<div class="thmb">
+							<div class="thmb-prev">
+								<img alt="Stamp Icon" src="{{stampIcon}}" class="img-responsive" style="height: 180px; width: 200px"/>
+							</div>
+						</div>
+					<!-- </div> -->
+				<!-- </div> -->
+			</div>
+		</div>
+
+		<div class="form-group min-height-30 col-sm-12 padding-0">
+			<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2074}}*</label>
+			<div class="col-sm-10">
+				<div class="col-md-2 m-b-sm padding-0">
+					<p>{{i18n.BO2075}}</p>
+				</div>
+				<div class="col-md-3 m-b-sm">
+					<input id="timepicker" type="text" class="form-control date-picker" placeholder="{{formatTerm}}"
+					name="stampTerm" value="{{stampTerm}}" data-validation="required">
+				</div>
+			</div>
+		</div>
+		<div class="form-group min-height-30 col-sm-12 padding-0">
+			<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2076}}</label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" id="couponNm" name="couponNm" value="{{couponNm}}">
+				<input type="hidden" id="couponId" name="couponId" value="{{couponId}}">
+			</div>
+		</div>
+		<div class="form-group min-height-30 col-sm-12 padding-0">
+			<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2077}}*</label>
+			
+			<div class="form-group min-height-30 col-sm-10 padding-0">
+				<div class="col-sm-5">
+					<div class="rdio rdio-primary col-sm-5">
+						<input type="radio" name="discountTp" id="radioDefault" value="403001" {{#discountTp=403001}} checked="checked" {{/discountTp=403001}} />
+						<label for="radioDefault">{{i18n.BO2079}}</label>
+					</div>
+	                      
+					<div class="rdio rdio-primary col-sm-5">
+						<input type="radio" name="discountTp" value="403002" id="radioPrimary" {{#discountTp=403002}} checked="checked" {{/discountTp=403002}}/>
+	                    <label for="radioPrimary">{{i18n.BO2078}}</label>
+					</div>
+				</div>
+				
+				<div class="form-group col-sm-7">
+	              <label class="col-sm-3 control-label" id="discountLabel">
+	              	{{#discountTp=403001}}
+                  {{i18n.BO2431}}
+	              	{{/discountTp=403001}}
+	              	{{#discountTp=403002}}
+                  {{i18n.BO2170}}
+	              	{{/discountTp=403002}}
+	              </label>
+	              <div class="col-sm-3">
+	                <input type="text" class="form-control" id="discount" name="discount" value="{{discount}}" data-validation="number">
+	              </div>
+	              <label class="col-sm-3 control-label" id="discountLimitLabel">{{i18n.BO2162}}</label>
+	              <div class="col-sm-3">
+	                <input type="text" class="form-control" id="discountLimit" name="discountLimit" value="{{discountLimit}}" data-validation="number" {{#discountTp=403002}} readonly {{/discountTp=403002}} >
+	              </div>
+	            </div>							
+			</div>
+		</div>
+		<div class="form-group min-height-30 col-sm-12 padding-0">
+			<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2081}}</label>
+			<div class="col-sm-10">
+				<div class="col-md-2 m-b-sm padding-0">
+					<p>{{i18n.BO2075}}</p>
+				</div>
+				<div class="col-md-3 m-b-sm">
+					<input id="timepicker" type="text" class="form-control date-picker" placeholder="{{formatTerm}}"
+					name="couponTerm" value="{{couponTerm}}" data-validation="required">
+				</div>
+				<!-- <div class="col-md-3 m-b-sm">
+				  <select class="js-states form-control" tabindex="-1"
+				    style="display: none; width: 100%" name="clifeY">
+				    <option value="0" {{#clifeY=0}} selected="selected" {{/clifeY=0}} >0년</option>
+				    <option value="1" {{#clifeY=1}} selected="selected" {{/clifeY=1}} >1년</option>
+				    <option value="2" {{#clifeY=2}} selected="selected" {{/clifeY=2}} >2년</option>
+				    <option value="3" {{#clifeY=3}} selected="selected" {{/clifeY=3}} >3년</option>
+				    <option value="4" {{#clifeY=4}} selected="selected" {{/clifeY=4}} >4년</option>
+				    <option value="5" {{#clifeY=5}} selected="selected" {{/clifeY=5}} >5년</option>
+				  </select>
+				</div>
+				<div class="col-md-3 m-b-sm">
+				  <select class="js-states form-control" tabindex="-1"
+				    style="display: none; width: 100%" name="clifeM">
+				    <option value="0" {{#clifeM=0}} selected="selected" {{/clifeM=0}}>0월</option>
+				    <option value="1" {{#clifeM=1}} selected="selected" {{/clifeM=1}}>1월</option>
+				    <option value="2" {{#clifeM=2}} selected="selected" {{/clifeM=2}}>2월</option>
+				    <option value="3" {{#clifeM=3}} selected="selected" {{/clifeM=3}}>3월</option>
+				    <option value="4" {{#clifeM=4}} selected="selected" {{/clifeM=4}}>4월</option>
+				    <option value="5" {{#clifeM=5}} selected="selected" {{/clifeM=5}}>5월</option>
+				    <option value="6" {{#clifeM=6}} selected="selected" {{/clifeM=6}}>6월</option>
+				    <option value="7" {{#clifeM=7}} selected="selected" {{/clifeM=7}}>7월</option>
+				    <option value="8" {{#clifeM=8}} selected="selected" {{/clifeM=8}}>8월</option>
+				    <option value="9" {{#clifeM=9}} selected="selected" {{/clifeM=9}}>9월</option>
+				    <option value="10" {{#clifeM=10}} selected="selected" {{/clifeM=10}}> 10월</option>
+				    <option value="11" {{#clifeM=11}} selected="selected" {{/clifeM=11}}> 11월</option>
+				    <option value="12" {{#clifeM=12}} selected="selected" {{/clifeM=12}}> 12월</option>
+				  </select>
+				</div>
+				<div class="col-md-3 m-b-sm">
+				  <select class="js-states form-control" tabindex="-1"
+				    style="display: none; width: 100%" name="clifeD">
+				    <option value="0" {{#clifeD=0}} selected="selected" {{/clifeD=0}}>0일</option>
+				    <option value="1" {{#clifeD=1}} selected="selected" {{/clifeD=1}}>1일</option>
+				    <option value="2" {{#clifeD=2}} selected="selected" {{/clifeD=2}}>2일</option>
+				    <option value="3" {{#clifeD=3}} selected="selected" {{/clifeD=3}}>3일</option>
+				    <option value="4" {{#clifeD=4}} selected="selected" {{/clifeD=4}}>4일</option>
+				    <option value="5" {{#clifeD=5}} selected="selected" {{/clifeD=5}}>5일</option>
+				    <option value="6" {{#clifeD=6}} selected="selected" {{/clifeD=6}}>6일</option>
+				    <option value="7" {{#clifeD=7}} selected="selected" {{/clifeD=7}}>7일</option>
+				    <option value="8" {{#clifeD=8}} selected="selected" {{/clifeD=8}}>8일</option>
+				    <option value="9" {{#clifeD=9}} selected="selected" {{/clifeD=9}}>9일</option>
+				    <option value="10" {{#clifeD=10}} selected="selected" {{/clifeD=10}}>10일</option>
+				    <option value="11" {{#clifeD=11}} selected="selected" {{/clifeD=11}}>11일</option>
+				    <option value="12" {{#clifeD=12}} selected="selected" {{/clifeD=12}}>12일</option>
+				    <option value="13" {{#clifeD=13}} selected="selected" {{/clifeD=13}}>13일</option>
+				    <option value="14" {{#clifeD=14}} selected="selected" {{/clifeD=14}}>14일</option>
+				    <option value="15" {{#clifeD=15}} selected="selected" {{/clifeD=15}}>15일</option>
+				    <option value="16" {{#clifeD=16}} selected="selected" {{/clifeD=16}}>16일</option>
+				    <option value="17" {{#clifeD=17}} selected="selected" {{/clifeD=17}}>17일</option>
+				    <option value="18" {{#clifeD=18}} selected="selected" {{/clifeD=18}}>18일</option>
+				    <option value="19" {{#clifeD=19}} selected="selected" {{/clifeD=19}}>19일</option>
+				    <option value="20" {{#clifeD=20}} selected="selected" {{/clifeD=20}}>20일</option>
+				    <option value="21" {{#clifeD=21}} selected="selected" {{/clifeD=21}}>21일</option>
+				    <option value="22" {{#clifeD=22}} selected="selected" {{/clifeD=22}}>22일</option>
+				    <option value="23" {{#clifeD=23}} selected="selected" {{/clifeD=23}}>23일</option>
+				    <option value="24" {{#clifeD=24}} selected="selected" {{/clifeD=24}}>24일</option>
+				    <option value="25" {{#clifeD=25}} selected="selected" {{/clifeD=25}}>25일</option>
+				    <option value="26" {{#clifeD=26}} selected="selected" {{/clifeD=26}}>26일</option>
+				    <option value="27" {{#clifeD=27}} selected="selected" {{/clifeD=27}}>27일</option>
+				    <option value="28" {{#clifeD=28}} selected="selected" {{/clifeD=28}}>28일</option>
+				    <option value="29" {{#clifeD=29}} selected="selected" {{/clifeD=29}}>29일</option>
+				    <option value="30" {{#clifeD=30}} selected="selected" {{/clifeD=30}}>30일</option>
+				    <option value="31" {{#clifeD=31}} selected="selected" {{/clifeD=31}}>31일</option>
+				  </select>
+				</div> -->
+			</div>
+		</div>
+		<div class="form-group min-height-30 col-sm-12 padding-0">
+			<label class="col-sm-2 control-label">{{i18n.BO2082}}</label>
+			<div class="col-sm-10">
+				<textarea class="note-codable" name="stampNotice">{{stampNotice}}</textarea>
+			</div>
+		</div>
+		<div class="form-group min-height-30 col-sm-12 padding-0">
+			<label class="col-sm-2 control-label">{{i18n.BO2083}}</label>
+			<div class="col-sm-10">
+				<textarea class="note-codable" name="stampDesc">{{stampDesc}}</textarea>
+			</div>
+		</div>
+		<div class="form-group min-height-30 col-sm-12 padding-0">
+			<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2084}}</label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" id="input-Default" value="{{#formatDate}}{{updated}}{{/formatDate}}" readonly>
+			</div>
+		</div>
+
+		<div class="form-group min-height-30 col-sm-12">
+			<button type="submit" class="btn btn-primary float-right margin-b-15">{{i18n.BO0014}}</button>
+		</div>
+	</form>
+</div>

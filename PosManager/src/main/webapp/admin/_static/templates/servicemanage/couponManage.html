@@ -1,0 +1,74 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="form-group">
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%" id="franchise_select">
+							<option value="">법인 선택</option>
+							{{#fr.list}}
+								<option value="{{id}}">{{companyNm}}</option>
+							{{/fr.list}}
+						</select>
+					</div>
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%" id="brand_select">
+							<option>{{i18n.BO1032}}</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="table-responsive">
+					<div class="float-right">
+						<button type="button"
+							class="btn btn-primary btn-sm float-right margin-top-b-15"
+							data-toggle="modal" data-target=".bs-coupon-modal-lg" id="new-coupon">
+							신규등록</button>
+						<div class="modal fade bs-coupon-modal-lg" tabindex="-1"
+							role="dialog" aria-labelledby="myLargeModalLabel"
+							aria-hidden="true" id="coupon-modal">
+						</div>
+					</div>
+					<table id="coupon_table" class="display table"
+						style="width: 100%; cellspacing: 0;">
+						<thead>
+							<tr>
+								<th>번호</th>
+								<th>{{i18n.BO2159}}</th>
+								<th>{{i18n.BO2076}}</th>
+								<th>{{i18n.BO2169}}</th>
+								<th>{{i18n.BO2170}}</th>
+								<th>{{i18n.BO2124}}</th>
+								<th>{{i18n.BO2171}}</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th>번호</th>
+								<th>{{i18n.BO2159}}</th>
+								<th>{{i18n.BO2076}}</th>
+								<th>{{i18n.BO2169}}</th>
+								<th>{{i18n.BO2170}}</th>
+								<th>{{i18n.BO2124}}</th>
+								<th>{{i18n.BO2171}}</th>
+								<th></th>
+							</tr>
+						</tfoot>
+						<tbody>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Row -->

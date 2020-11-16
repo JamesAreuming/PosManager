@@ -1,0 +1,92 @@
+<div class="row" id="promotion-main">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<form id="be-search">
+				<ul class="filemanager-options" {{#isBr}} style="display: none" {{/isBr}}>
+					<li class="select2-padding" {{#isFr}} style="display: none" {{/isFr}}>
+						<div class="itemopt">
+							<select class="select2" id="franchise_select" >
+								<option value="">{{i18n.BO1031}}</option>
+								{{#frList}}
+								<option value="{{id}}" >{{companyNm}}</option>
+								{{/frList}}
+							</select>
+						</div>
+					</li>
+					<li class="select2-padding" {{#isBr}} style="display: none" {{/isBr}}>
+						<div class="itemopt">
+							<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="brand_select" >
+								<option value="">{{i18n.BO1032}}</option>
+								{{#brList}}
+								<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+								{{/brList}}
+							</select>
+						</div>
+					</li>
+				</ul>
+			</form>
+			
+		</div>
+
+		<div class="panel panel-default" >
+			<div class="panel panel-white">
+				<div class="panel-body">
+					<div class="table-responsive">
+						<div class="float-right">
+							<button type="button" class="btn btn-primary btn-sm float-right margin-top-b-15"
+								data-toggle="modal" data-target=".bs-promotion-modal-lg" id="new-promotion">{{i18n.BO2357}}</button>
+							<div class="modal fade bs-promotion-modal-lg"
+								role="dialog" aria-labelledby="myLargeModalLabel"
+								aria-hidden="true" id="promotion-modal">
+							</div>
+						</div>
+						<table id="promotion_table" class="display table" style="width: 100%; cellspacing: 0;">
+							<thead>
+								<tr>
+									<th>{{i18n.BO2001}}</th>	<!-- 프로모션ID -->
+									<th>{{i18n.BO2149}}</th>	<!-- 프로모션명 -->
+									<th></th>					<!-- 프랜차이즈ID -->
+									<th></th>					<!-- 브랜드ID -->
+									<th>{{i18n.BO2021}}</th>	<!-- 브랜드명 -->
+									<th>{{i18n.BO3032}}</th>	<!-- 시작일 -->
+									<th>{{i18n.BO3033}}</th>	<!-- 종료일 -->
+									<th>{{i18n.BO2397}}</th>	<!-- 발행일자 -->
+									<!-- <th>{{i18n.BO2267}}</th>
+									<th>{{i18n.BO2419}}</th>
+									<th>{{i18n.BO2397}}</th>
+									<th>{{i18n.BO2420}}</th> -->
+									<th></th>
+									<th></th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th>{{i18n.BO2001}}</th>	<!-- 프로모션ID -->
+									<th>{{i18n.BO2149}}</th>	<!-- 프로모션명 -->
+									<th></th> 					<!-- 프랜차이즈ID -->
+									<th></th>					<!-- 브랜드ID -->
+									<th>{{i18n.BO2021}}</th>	<!-- 브랜드명 -->
+									<th>{{i18n.BO3032}}</th>	<!-- 시작일 -->
+									<th>{{i18n.BO3033}}</th>	<!-- 종료일 -->
+									<th>{{i18n.BO2397}}</th>	<!-- 발행일자 -->
+									<!-- <th>{{i18n.BO2267}}</th>
+									<th>{{i18n.BO2419}}</th>
+									<th>{{i18n.BO2397}}</th>
+									<th>{{i18n.BO2420}}</th> -->
+									<th></th>
+									<th></th>
+								</tr>
+							</tfoot>
+							<tbody>
+	
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>	
+	<div class="panel panel-default" id="issue-detail"></div>
+
+<!-- Row -->

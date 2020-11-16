@@ -1,0 +1,114 @@
+
+<form>
+ 
+<ul class="filemanager-options">
+		<li class="select2-padding" {{#isFr}} style="display: none" {{/isFr}}>
+			<div class="itemopt">
+				<select class="select2" id="franchise_select_m" >
+					<option value="">{{i18n.BO1031}}</option>
+					{{#frList}}
+					<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+					{{/frList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding" {{#isBr}} style="display: none" {{/isBr}}>
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="brand_select_m">
+					<option value="">{{i18n.BO1032}}</option>
+					{{#brList}}
+					<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+					{{/brList}}
+				</select>
+			</div>
+		</li>
+	<li class="select2-padding">
+		<div class="itemopt">
+			<select class="select2" name="deviceTpSearch">
+				<option value="">{{i18n.BO2066}}</option>
+				{{#cd}}
+					{{#876}}
+						<option value="{{baseCd}}">{{title}}</option>
+					{{/876}}
+				{{/cd}}
+			</select>
+		</div>
+	</li>
+	<li class="select2-padding">
+		<div class="itemopt">
+			<select class="select2" name="statusSearch">
+				<option value="">{{i18n.BO2333}}</option>
+				{{#cd}}
+					{{#354}}
+						<option value="{{baseCd}}">{{title}}</option>
+					{{/354}}
+				{{/cd}}
+			</select>
+		</div>
+	</li>
+	 <li class="sch-toolbar">
+      <div class="input-group ">
+        <input type="text" class="form-control ckbox-border sch-input" id="demo"  placeholder="search..." name="searchKeyword">
+        <button type="button" id="search">
+          <i class="glyphicon glyphicon-search sch-btn-i"></i>
+        </button>
+      </div>
+      </li>
+	 <li class="float-right" {{#showAdd}} style="display: none" {{/showAdd}}>
+        <button type="button" id="new-posLicense" class="btn btn-xs btn-primary" data-toggle="modal" data-target=".bs-posLicense-modal-lg">+ {{i18n.BO3070}}</button>
+		<div class="modal fade bs-posLicense-modal-lg" tabindex="-1"
+			role="dialog" aria-labelledby="myLargeModalLabel"
+			aria-hidden="true" id="posLicense-modal">
+		</div>
+        <!-- <button type="button" id="csv-posLicense" class="btn btn-xs btn-primary" data-toggle="modal" data-target=".bs-brand-modal-lg">+ 일괄등록</button>
+        <button type="button" id="excel" class="btn btn-xs btn-primary" >+ EXCEL</button> -->
+      </li>
+</ul>
+</form>
+	<div class="modal fade bs-brand-modal-lg" tabindex="-1"
+		role="dialog" aria-labelledby="myLargeModalLabel2"
+		aria-hidden="true" id="posLicense-csv">
+	</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table id="posLicense-table" class="display table"
+						style="width: 100%; cellspacing: 0;">
+						<thead>
+							<tr>
+								<th>{{i18n.BO2001}}</th>
+								<th>{{i18n.BO2065}}</th>
+								<th>{{i18n.BO2066}}</th>
+								<th>{{i18n.BO2067}}</th>
+								<th>{{i18n.BO2333}}</th>
+								<th>{{i18n.BO1032}}</th>
+								<th>{{i18n.BO2089}}</th>
+								<th>{{i18n.BO2334}}</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th>{{i18n.BO2001}}</th>
+								<th>{{i18n.BO2065}}</th>
+								<th>{{i18n.BO2066}}</th>
+								<th>{{i18n.BO2067}}</th>
+								<th>{{i18n.BO2333}}</th>
+								<th>{{i18n.BO1032}}</th>
+								<th>{{i18n.BO2089}}</th>
+								<th>{{i18n.BO2334}}</th>
+								<th></th>
+							</tr>
+						</tfoot>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Row -->

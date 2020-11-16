@@ -1,0 +1,304 @@
+<div class="modal-dialog modal-lg">
+	<form id="itemModalForm" data-toggle="validator" role="form" action="./model/items/Items">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title" id="myLargeModalLabel">
+				{{i18n.BO1015}} <b>* {{i18n.BO0008}}<b>
+			</h4>
+		</div>
+			{{#id}}<input type="hidden"  name="id" value="{{id}} " id="id" />{{/id}}
+<!-- 		{{#catId}}<input type="text" name="catId" value="{{catId}}" id="catId" />{{/catId}} -->
+			{{#brandId}}<input type="hidden" name="brandId" value="{{brandId}}" id="brandId" />{{/brandId}}
+			{{#storeId}}<input type="hidden" name="storeId" value="{{storeId}}" id="storeId"  />{{/storeId}}
+			 <input type="hidden"  name="tax" value="0" id="tax" />
+			 <input type="hidden"  name="intro" value="intro" id="intro" />
+			 <input type="hidden"  name="itemCd" value="{{itemCd}}" id="itemCd" />
+			 <input type="hidden"  name="barcode" value="{{barcode}}" id="barcode" />
+			<div class="modal-body" id="modal-form">
+				<div class="col-md-6">
+					<div class="row" style="padding-bottom:60px;">
+<!-- 						<img class="img_item" src="#" /> -->
+						<div class="col-sm-10" style="height: 250px;  border-style:solid; border-width:1px; border-color:initial;"  id="main_img_target">
+							{{#imgInfo}}
+								<img class="img_item"  src="{{image}}" alt="" />
+							{{/imgInfo}}
+							{{^imgInfo}}
+							 <img class="img_item"  src="/img-resource/items/default_product.png" alt="" />
+							{{/imgInfo}}
+				           <div class="img_upload_btn">
+				              <form action="/file-upload" class="dropzone">
+				                <div class="fallback">
+				                  <input type="file" id="mainImage" value="{{eventImgPath}}"  style="display:none;"/>
+				                </div>
+				                <div>
+					                <input type="button" id="imgFile"  value="{{i18n.BO2434}}"/>
+				                     {{#imgInfo}}
+				                     <span id="fileName">{{imageView}}</span>
+				                     {{/imgInfo}}
+				                </div>
+				              </form>
+			
+			<!--              <button type="button" class="btn btn-xs btn-primary">+ 추가/수정</button> -->
+			<!--              <button type="button" class="btn btn-xs btn-danger">- 삭제</button> -->
+			              </div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="tab-pane active" id="info">
+						<div class="row">
+							<div class="form-group min-height-30 col-sm-12 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2140}}</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" name="id_reg" value="{{id}}" id="id_reg"  disabled="disabled" />
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-12 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2220}} *</label>
+								<div class="col-sm-9 ">
+									<select class="form-control m-b-sm" tabindex="-1" name="isStore" id="input-Default" data-validation="required">
+										<!-- <option value="{{brandId}}" {{^storeId}} selected="selected" {{/storeId}}>{{i18n.BO1032}}</option>-->
+										<option value="{{storeId}}" {{#storeId}} selected="selected" {{/storeId}}>{{i18n.BO1033}}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-12 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2221}} *</label>
+								<div class="col-sm-9 ">
+									<select class="form-control m-b-sm" tabindex="-1" name="itemTp" id="itemTp" data-validation="required">
+										<option value="">{{i18n.BO2221}}</option>
+										{{#itemtp}}
+											<option value="{{baseCd}}" {{{selections}}}>{{dsc}}</option>
+										{{/itemtp}}
+									</select>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-12 padding-0" style="display: none;">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2452}} *</label>
+								<div class="col-sm-9">
+									<div class="input-group m-b-sm">
+										<input type="text" class="form-control" name="catId" value="{{catId}}" id="catId" data-validation="required" />
+<!-- 										<span class="input-group-btn"> -->
+<!-- 											<button class="btn btn-primary" type="button" id="zipcode">검색</button> -->
+<!-- 										</span> -->
+									</div>
+<!-- 									<div class="atcmp_expand"> -->
+<!-- 										<ul> -->
+<!-- 											<li><a href="#">main > sub > sub > sub > sub</a></li> -->
+<!-- 										</ul> -->
+<!-- 									</div> -->
+								</div>
+							</div>
+							
+							<div class="form-group min-height-30 col-sm-12 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2214}} *</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" name="name" value="{{name}}" id="name" data-validation="required" />
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-12 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2219}} *</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" name="shortName" value="{{shortName}}" id="shortName" data-validation="required"/>
+								</div>
+							</div>							
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="row">
+											
+						<div class="form-group min-height-30 col-sm-6 padding-0">
+							<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2443}} *</label>
+							<div class="col-sm-9">
+								<input type="number" class="form-control" name="price" value="{{price}}" id="price" data-validation="required" step="10"/>
+							</div>
+						</div>
+						<div class="form-group min-height-30 col-sm-6 padding-0">
+							<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2222}}</label>
+							<div class="col-sm-9">
+								<select class="form-control m-b-sm" tabindex="-1" name="status" id="status">
+									<option value="">{{i18n.BO2222}}</option>
+									{{#itemstatus}}
+									<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+									{{/itemstatus}}
+								</select>
+							</div>
+						</div>
+						<div class="form-group min-height-30 col-sm-6 padding-0">
+							<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2223}} *</label>
+							<div class="col-sm-9">
+								<select class="form-control m-b-sm" tabindex="-1" name="taxTp" id="taxTp" data-validation="required" data-placeholder="Choose One">
+									<option value="" >{{i18n.BO2223}}</option>
+									{{#taxtp}}
+									<option value="{{baseCd}}" {{{selections}}}>{{dsc}}</option>
+									{{/taxtp}}
+								</select>
+							<!-- 	<div class="radio">
+									<label><input type="radio" name="isTaxIncluded" value="true" {{#isTaxIncluded}} checked="checked" {{/isTaxIncluded}} id="isTaxIncluded_t"/> {{i18n.BO2224}}</label>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								 	<label><input type="radio" name="isTaxIncluded" value="false" {{^isTaxIncluded}} checked="checked" {{/isTaxIncluded}} id="isTaxIncluded_f"/> {{i18n.BO2225}}</label>
+								</div> -->
+							</div>
+						</div>
+						<div class="form-group min-height-30 col-sm-6 padding-0">
+							<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2226}} </label>
+							<div class="col-sm-9">
+								<div class="input-group col-sm-5 m-b-sm input-append bootstrap-datepicker float-left">
+									<input type="text" id="daterangepicker"  class="form-control date-picker" placeholder="{{i18n.BO2358}}" value="{{#formatDay}}{{salesBegin}}{{/formatDay}}-{{#formatDay}}{{salesEnd}}{{/formatDay}}">
+									<span class="input-group-addon add-on add-on-datepicker">
+										<i class="fa fa-calendar"></i>
+									</span>
+									<input type="hidden" id="from-date" name="salesBegin" value="{{salesBegin}}"  />
+									<input type="hidden" id="to-date" name="salesEnd" value="{{salesEnd}}"  />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<!-- <div class="form-group min-height-30 col-sm-6 padding-0">
+							<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2227}} </label>
+							<div class="col-sm-9">
+								<div class="radio">
+									<label><input type="radio" name="isTipIncluded" value="true" {{#isTipIncluded}} checked="checked" {{/isTipIncluded}} id="isTipIncluded_t"/> {{i18n.BO2228}}</label>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								 	<label><input type="radio" name="isTipIncluded" value="false" {{^isTipIncluded}} checked="checked" {{/isTipIncluded}} id="isTipIncluded_f"/> {{i18n.BO2229}}</label>
+								</div>
+
+							</div>
+						</div> 
+						<div class="form-group min-height-30 col-sm-6 padding-0">
+							<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2230}} </label>
+							<div class="col-sm-9">
+								<select class="form-control m-b-sm" tabindex="-1" name="mbIconTp" id="mbIconTp" >
+									<option value="">{{i18n.BO2230}}</option>
+									{{#mbicon}}
+										<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+									{{/mbicon}}
+								</select>
+							</div>
+						</div>
+						<div class="form-group min-height-30 col-sm-6 padding-0">
+							<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2233}} </label>
+							<div class="col-sm-9">
+								<div class="radio">
+									<label><input type="radio" name="isReward" value="true" {{#isReward}} checked="checked" {{/isReward}} id="isReward_t"/> {{i18n.BO2234}}</label>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								 	<label><input type="radio" name="isReward" value="false" {{^isReward}} checked="checked" {{/isReward}} id="isReward_f"/> {{i18n.BO2235}}</label>
+								</div>
+							</div>
+						</div>-->
+						<div class="form-group min-height-30 col-sm-6 padding-0">
+							<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2236}} </label>
+							<div class="col-sm-9">
+								<div class="radio">
+									<label><input type="radio" name="isPackable" value="true" {{#isPackable}} checked="checked" {{/isPackable}} id="isPackable_t"/> {{i18n.BO2237}}</label>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								 	<label><input type="radio" name="isPackable" value="false" {{^isPackable}} checked="checked" {{/isPackable}} id="isPackable_f"/> {{i18n.BO2238}}</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group min-height-30 col-sm-6 padding-0">
+							<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2444}}</label>
+							<div class="col-sm-9">
+								<div class="radio">
+									<label><input type="radio" name="isStockUse" value="true" {{#isStockUse}} checked="checked" {{/isStockUse}} id="isStockUse"/> {{i18n.BO2031}}</label>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								 	<label><input type="radio" name="isStockUse" value="false" {{^isStockUse}} checked="checked" {{/isStockUse}} id="isStockUse"/> {{i18n.BO2032}}</label>
+								</div>
+								<label for="input-Default" class="col-sm-6 control-label">{{i18n.BO2445}}</label>
+								<div class="col-sm-6">
+									<input type="number" class="form-control" name="safeStockCnt" value="{{#safeStockCnt}}{{safeStockCnt}}{{/safeStockCnt}}{{^safeStockCnt}}0{{/safeStockCnt}}" id="safeStockCnt" {{^isStockUse}} readonly="readonly" {{/isStockUse}}/>
+								</div>
+							</div>
+						</div>						
+					</div>
+					<!-- <div class="form-group min-height-30 col-sm-12 padding-0">
+						<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2446}}</label>
+						<div class="col-sm-10">
+							<textarea class="note-codable" name="recipe">{{recipe}}</textarea>
+						</div>			
+					</div> -->
+				</div>
+
+
+				 {{#id}}
+				<div class="col-sm-12">
+				<input type="hidden"  name="isOptUsed" value="" id="isOptUsed" />
+				<!--<hr />
+					<div class="row">
+						<div class="form-group min-height-30 col-sm-6 padding-0">
+							<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2116}}</label>
+							<div class="col-sm-6">
+								<div class="cont-option-table">
+									<div class="col-sm-12">
+										<div class="radio">
+											<label><input type="radio" name="isOptUsed" value="true" {{#isOptUsed}} checked="checked" {{/isOptUsed}} id="isOptUsed_t"/> {{i18n.BO2031}}</label>
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										 	<label><input type="radio" name="isOptUsed" value="false" {{^isOptUsed}} checked="checked" {{/isOptUsed}} id="isOptUsed_f"/> {{i18n.BO2032}}</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>-->
+				</div>
+				{{/id}} 
+				
+				</form>
+				<div class="col-sm-12" style="display : none;" id="optDiv">
+					<hr />
+					<div class="row">
+						<div class="form-group min-height-30 col-sm-12 padding-0">
+							<div class="col-sm-12">
+								<div class="cont-option-table">
+									<div class="col-sm-4">
+
+									</div>
+									<div class="col-sm-8">
+										<button type="button" class="btn btn-xs btn-primary float-right m-l-5" id="getItemOptData">+ {{i18n.BO3038}}</button>
+										<button type="button" class="btn btn-xs btn-primary float-right" id="addItemOptDtl">+ {{i18n.BO3035}}</button>
+									</div>
+								</div>
+
+								<hr />
+								<table id="item_opt_dtl" class="display table" style="width: 100%; cellspacing: 0;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>{{i18n.BO2239}}</th>
+											<th>{{i18n.BO2376}}</th>
+											<th>{{i18n.BO2124}}</th>
+											<th>{{i18n.BO2377}}</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+								<form id="gdlForm">
+									<ul id="sortable">
+									</ul>
+								</form>
+								<div class="cont-option-table">
+									<div class="col-sm-4">
+									</div>
+									<div class="col-sm-8">
+										<button type="button" class="btn btn-xs btn-primary float-right m-l-5 saveOptListUpt" id="saveOptListUpt">{{i18n.BO3067}}</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr />
+			<div class="modal-footer" style="border: 0;">
+				<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+				<button type="submit" class="btn btn-primary">{{i18n.BO0014}}</button>
+			</div>
+	</div>
+</div>
+

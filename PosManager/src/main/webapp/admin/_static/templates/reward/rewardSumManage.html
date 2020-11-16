@@ -1,0 +1,82 @@
+<form id="be-search">
+	<ul class="filemanager-options" {{#isBr}} style="display: none" {{/isBr}}>
+		<li class="select2-padding" {{#isFr}} style="display: none" {{/isFr}}>
+			<div class="itemopt">
+				<select class="select2" id="franchise_select">
+					<option value="">{{i18n.BO1031}}</option>
+					{{#frList}}
+					<option value="{{id}}" >{{companyNm}}</option>
+					{{/frList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding" {{#isBr}} style="display: none" {{/isBr}}>
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="brand_select">
+					<option value="">{{i18n.BO1032}}</option>
+					{{#brList}}
+					<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+					{{/brList}}
+				</select>
+			</div>
+		</li>
+	</ul>
+	<ul class="filemanager-options">		
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select name="option1" id="summary_select" class="select2" data-placeholder="{{i18n.BO2351}}">
+					<option value="summary">{{i18n.BO2351}}</option>
+					<option value="daily">{{i18n.BO2352}}</option>
+					<option value="weekly">{{i18n.BO2353}}</option>
+					<option value="monthly">{{i18n.BO2354}}</option>
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding">
+			<div class="itemopt" id="forEtcOption" style="display:none;">
+				<select name="option2" class="select2" data-placeholder="{{i18n.BO2350}}" id="option2_select">
+					<option value="">+ {{i18n.BO2350}}</option>
+					<option value="01">{{i18n.BO2120}}</option>
+					<option value="02">{{i18n.BO2312}}</option>
+					<option value="03">{{i18n.BO2303}}</option>
+				</select>
+			</div>
+		</li>
+		<li class="datepicker-range">
+			<div class="input-group">
+				<input id="daterangepicker" type="text" class="form-control date-picker" placeholder="{{i18n.BO2064}}" value="{{data.fromdate}} - {{data.todate}}">
+				<span class="input-group-addon add-on add-on-datepicker">
+				<i class="fa fa-calendar"></i></span>
+				<input id="label-date" name="labeldate" value="{{data.label}}" type="hidden" />
+				<input id="from-date" name="fromdate" value="{{data.fromdate}}" type="hidden" />
+				<input id="to-date" name="todate" value="{{data.todate}}" type="hidden" />
+			</div>
+		</li>
+		<li class="sch-toolbar">
+			<div class="itemopt">
+		        <button type="button" id="search">
+		        	<i class="glyphicon glyphicon-search sch-btn-i"></i>
+		        </button>
+	        </div>
+	    </li>
+		<li class="float-right">
+			<div class="btn-group">
+				<button type="button" class="btn btn-xs btn-primary" id="csv-exp">{{i18n.BO3066}}</button>
+				<!-- <button type="button" class="btn btn-xs btn-primary dropdown-toggle"
+					data-toggle="dropdown">
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="#">.xls</a></li>
+					<li><a href="#">.csv</a></li>
+				</ul> -->
+			</div>
+		</li>
+	</ul>
+</form>
+
+<div class="row" id="search-table">
+
+</div>
+
+<!-- Row -->

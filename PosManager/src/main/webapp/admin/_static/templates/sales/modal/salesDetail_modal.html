@@ -1,0 +1,90 @@
+<div class="modal-dialog modal-lg">
+	<form>
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title">{{i18n.BO2392}}</h4>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+
+				<div class="col-md-12">
+					<div class="panel panel-white">
+						<div class="panel-body ">
+							<div class="table-responsive">
+								<table class="table table-striped table_fullwidth"">
+									<thead>
+									   <tr>
+									      <th>{{i18n.BO2323}}</th>
+									      <th>{{i18n.BO2322}}</th>
+									      <th>{{i18n.BO2324}}</th>
+									      <th>{{i18n.BO2303}}</th>
+									   </tr>
+									</thead>
+									<tbody>
+										<tr class="even gradeC">
+									       <td>{{#formatDay}}{{list.payDay}}{{/formatDay}}</td>
+									       <td>{{list.orderNo}}</td>
+									       <td>{{#formatTime}}{{list.payTime}}{{/formatTime}}</td>
+									       <td>{{#formatPrice2}}{{list.sales}}{{/formatPrice2}}</td>
+									    </tr>
+									</tbody>
+								</table>
+								<table class="table table-striped table_fullwidth" >
+									<thead>
+									   <tr>
+									      <th>{{i18n.BO2385}}</th>
+									      <th>{{i18n.BO2025}}</th>
+									      <th>{{i18n.BO2333}}</th>
+									      <th>{{i18n.BO2325}}</th>
+									   </tr>
+									</thead>
+									<tbody>
+										<tr class="even gradeC">
+									       <td>{{list.gubun}}</td>
+									       <td>{{list.serviceType}}</td>
+									       <td>{{list.orderSt}}</td>
+									       <td></td>
+									    </tr>
+									</tbody>
+								</table>
+								<table class="table table-striped table_fullwidth" >
+									<thead>
+									   <tr>
+									      <th>{{i18n.BO1015}}</th>
+									      <th>{{i18n.BO2326}}</th>
+									      <th>{{i18n.BO2303}}</th>
+									      <th>{{i18n.BO2170}}</th>
+									      <th>{{i18n.BO2304}}</th>
+									   </tr>
+									</thead>
+									<tbody>
+										{{#itemList}}
+										<tr class="even gradeC">
+									       <td>{{itemNm}}</td>
+									       <td>{{#formatNumber}}{{cnt}}{{/formatNumber}}</td>
+									       <td>{{#formatPrice2}}{{sales}}{{/formatPrice2}}</td>
+									       <td>{{#formatPrice2}}{{discount}}{{/formatPrice2}}</td>
+									       <td>{{#formatPrice2}}{{realSales}}{{/formatPrice2}}</td>
+									    </tr>
+										{{/itemList}}
+									</tbody>
+								</table>
+							</div><!-- table-responsive -->
+						</div><!-- panel-body -->
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="modal-footer">
+		{{^orderCancel}}
+			<button type="button" class="btn btn-primary" id="cancel-btn" target-code="{{list.id}}">{{i18n.BO3034}}</button>
+		{{/orderCancel}}
+			<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">{{i18n.BO0026}}</button>
+		</div>
+	</div>
+	</form>
+</div>

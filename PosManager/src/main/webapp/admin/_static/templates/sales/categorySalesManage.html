@@ -1,0 +1,102 @@
+<form id="be-search">
+	<ul class="filemanager-options" {{#isSt}} style="display: none" {{/isSt}}>
+		<li class="select2-padding" {{#isFr}} style="display: none" {{/isFr}}>
+			<div class="itemopt">
+				<select class="select2" id="franchise_select" >
+					<option value="">{{i18n.BO1031}}</option>
+					{{#frList}}
+					<option value="{{id}}" >{{companyNm}}</option>
+					{{/frList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding" {{#isBr}} style="display: none" {{/isBr}}>
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" id="brand_select" >
+					<option value="">{{i18n.BO1032}}</option>
+					{{#brList}}
+					<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+					{{/brList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" id="store_select">
+					<option value="">{{i18n.BO1033}}</option>
+					{{#stList}}
+					<option value="{{id}}" {{{selections}}}>{{storeNm}}</option>
+					{{/stList}}
+				</select>
+			</div>
+		</li>
+	</ul>
+	<ul class="filemanager-options">
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select name="option1" class="select2" data-placeholder="Summary" id="summary_select">
+					<option value="summary">{{i18n.BO2351}}</option>
+					<option value="daily">{{i18n.BO2352}}</option>
+					<option value="weekly">{{i18n.BO2353}}</option>
+					<option value="monthly">{{i18n.BO2354}}</option>
+				</select>
+			</div>
+		</li>
+		<li class="datepicker-range">
+			<div class="input-group">
+				<input id="daterangepicker" type="text" class="form-control date-picker" placeholder="{{i18n.BO2064}}" value="{{data.fromdate}} - {{data.todate}}">
+				<span class="input-group-addon add-on add-on-datepicker">
+				<i class="fa fa-calendar"></i></span>
+				<input id="label-date" name="labeldate" value="{{data.label}}" type="hidden" />
+				<input id="from-date" name="fromdate" value="{{data.fromdate}}" type="hidden" />
+				<input id="to-date" name="todate" value="{{data.todate}}" type="hidden" />
+			</div>
+		</li>
+		<li class="sch-toolbar">
+			<div class="itemopt">
+		        <button type="button" id="search">
+		        	<i class="glyphicon glyphicon-search sch-btn-i"></i>
+		        </button>
+	        </div>
+	    </li>
+	</ul>
+
+	<ul class="filemanager-options">
+		<li class="float-right">
+				<div class="btn-group">
+					<button type="button" class="btn btn-xs btn-primary" id="csv-exp">{{i18n.BO3066}}</button>
+				</div>
+			</li>
+		<li class="select2-padding">
+			<div style="text-align:right;">
+				<div class="checkbox block" id="forSummaryOption" style="display:;">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<label><input type="checkbox" name="col1" value="01" id="chOpt_01" checked="checked"/>{{i18n.BO2120}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					<label><input type="checkbox" name="col2" value="02" id="chOpt_02" checked="checked"/>{{i18n.BO2312}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					<label><input type="checkbox" name="col3" value="03" id="chOpt_03" checked="checked"/>{{i18n.BO2303}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+				</div>
+				<div class="itemopt" id="forEtcOption" style="display:none;">
+					<select name="option2" class="select2" data-placeholder="{{i18n.BO2350}}" id="option2_select">
+						<!-- ------------------------------
+						  -- 01:����ݾ�(Sales Amount)  
+						  -- 02:�Ǹż���(Sales )
+						  -- 03:���αݾ�(Discount Amount)
+						  -- 04:�Ǹ���� (Actual Sales Amount)
+						  -- 05:����(Customer Count) 
+						------------------------------------>
+						
+						<option value="">+ {{i18n.BO2350}}</option>					
+						<option value="01">{{i18n.BO2303}}</option> <!-- ����ݾ�(Sales Amount) --> 
+						<option value="02">{{i18n.BO2312}}</option> <!-- �Ǹż���(Sales ) -->
+						<option value="03">{{i18n.BO2170}}</option> <!-- ���αݾ�(Discount Amount) -->
+						<option value="04">{{i18n.BO2304}}</option> <!-- �Ǹ���� (Actual Sales Amount)-->
+					</select>
+				</div>
+			</div>
+		</li>
+	</ul>
+</form>
+<div class="row" id="search-table">
+</div>
+
+<!-- Row -->

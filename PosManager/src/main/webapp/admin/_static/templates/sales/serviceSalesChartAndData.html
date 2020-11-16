@@ -1,0 +1,50 @@
+{{#searchYn}}
+	{{#summaryYn}}
+		<div class="col-md-12">
+			<div class="panel panel-white">
+				<div class="panel-body" id="chart01"></div>
+			</div>
+		</div>
+	{{/summaryYn}}
+
+	{{^summaryYn}}
+		<div class="col-md-12">
+			<div class="panel panel-white">
+				<div class="panel-body" id="dayMonthChart"></div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-white">
+				<div class="panel-body" id="dayofweekChart"></div>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="panel panel-white">
+				<div class="panel-body" id="hourChart"></div>
+			</div>
+		</div>
+	{{/summaryYn}}
+
+<!-- <input style="margin:10px 10px 10px 0" type="button" id="convert" value="Create chart from table"> -->
+
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel panel-default">
+				<div class="panel-body ">
+					<div class="table-responsive table-responsive-overflow">
+						
+						<table class="table table-success mb30 table-striped table_fullwidth" id="summary-table">
+							
+						</table>
+						
+						
+					</div>
+					<!-- table-responsive -->
+
+				</div>
+				<!-- panel-body -->
+			</div>
+		</div>
+	</div>
+
+{{/searchYn}}

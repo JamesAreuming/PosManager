@@ -1,0 +1,46 @@
+<ul class="filemanager-options" {{#isSt}} style="display: none" {{/isSt}}>
+	<li class="select2-padding" {{#isFr}} style="display: none" {{/isFr}}>
+		<div class="itemopt">
+			<select class="select2" id="franchise_select">
+				<option value="">{{i18n.BO1031}}</option>
+				{{#frList}}
+				<option value="{{id}}" >{{companyNm}}</option>
+				{{/frList}}
+			</select>
+		</div>
+	</li>
+	<li class="select2-padding" {{#isBr}} style="display: none" {{/isBr}}>
+		<div class="itemopt">
+			<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="brand_select">
+				<option value="">{{i18n.BO1032}}</option>
+				{{#brList}}
+				<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+				{{/brList}}
+			</select>
+		</div>
+	</li>
+	<li class="select2-padding">
+		<div class="itemopt">
+			<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="store_select">
+				<option value="">{{i18n.BO1033}}</option>
+				{{#stList}}
+				<option value="{{id}}" {{{selections}}}>{{storeNm}}</option>
+				{{/stList}}
+			</select>
+		</div>
+	</li>
+	<li class="float-right">
+		<button type="button" class="btn btn-xs btn-primary " id="search_oper">{{i18n.BO0011}}</button>
+    </li>
+</ul>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body" id="stamp-form-body" style="display: none;">
+
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Row -->

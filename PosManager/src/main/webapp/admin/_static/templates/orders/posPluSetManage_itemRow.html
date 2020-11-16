@@ -1,0 +1,20 @@
+{{#cate}}
+	<tr class="odd gradeX" >
+		<td>
+			<button type="button" class="btn btn-xs btn-success add" id="{{id}}">{{name}}</button>
+			<input type="hidden" name="itemName" value="{{name}}" id="itemName_{{id}}" />
+		</td>
+		<td>
+			<span >{{#formatPrice2}}{{price}}{{/formatPrice2}}</span>
+			<input type="hidden" name="itemPrice" value="{{price}}" id="itemPrice_{{id}}" />
+		</td>
+		<input type="hidden" name="image" value="{{image}}" id="image_{{id}}" />
+	</tr>
+{{/cate}}
+{{^cate}}
+	<tr class="odd gradeX" >
+		<td colspan="2">
+			<span >{{i18n.BO0010}}</span>
+		</td>
+	</tr>
+{{/cate}}

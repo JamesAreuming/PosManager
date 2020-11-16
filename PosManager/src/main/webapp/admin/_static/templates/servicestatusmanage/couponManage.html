@@ -1,0 +1,327 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="form-group min-height-30">
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%">
+							<option value="HI">{{i18n.BO1032}}</option>
+							<option value="AK">오더나인</option>
+						</select>
+					</div>
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%">
+							<option>매장명</option>
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<div class="col-sm-5">
+						<div
+							class="input-group col-sm-6 m-b-sm input-append bootstrap-timepicker float-left margin-b-15">
+							<input id="timepicker1" type="text"
+								class="form-control date-picker" placeholder="조회기간 시작일">
+							<span class="input-group-addon add-on"><i
+								class="fa fa-calendar"></i></span>
+						</div>
+						<div
+							class="input-group  col-sm-5 m-b-sm input-append bootstrap-timepicker float-left margin-left-5 margin-b-15">
+							<input id="timepicker1" type="text"
+								class="form-control date-picker" placeholder="조회기간 종료일">
+							<span class="input-group-addon add-on"><i
+								class="fa fa-calendar"></i></span>
+						</div>
+					</div>
+					<div class="col-sm-7 float-left margin-b-15">
+						<button type="submit" class="btn btn-primary">오늘</button>
+						<button type="submit" class="btn btn-primary">이번주</button>
+						<button type="submit" class="btn btn-primary">이번달</button>
+						<label> <input type="checkbox"> 유효기간내 검색
+						</label>
+					</div>
+				</div>
+				<div class="form-group min-height-30">
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%">
+							<option>고객코드</option>
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+						</select>
+					</div>
+					<div class="col-md-2 m-b-sm">
+						<input type="text" class="form-control" id="input-Default"
+							placeholder="검색어 입력...">
+					</div>
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%">
+							<option>발행구분</option>
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+						</select>
+					</div>
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%">
+							<option>쿠폰상태</option>
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+						</select>
+					</div>
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%">
+							<option>사용상태</option>
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+						</select>
+					</div>
+					<div class="col-md-2 m-b-sm">
+						<button type="submit" class="btn btn-primary float-right">
+							검색</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="table-responsive">
+					<div class="float-right">
+						<div class="modal fade bs-example-modal-lg" tabindex="-1"
+							role="dialog" aria-labelledby="myLargeModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog modal-lg">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+										<h4 class="modal-title" id="myLargeModalLabel">쿠폰상세정보</h4>
+									</div>
+									<div class="modal-body">
+										<div class="row">
+											<div class="form-group min-height-30 col-sm-6 padding-0">
+												<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2159}}</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="input-Default"
+														value="1231233" readonly>
+												</div>
+											</div>
+											<div class="form-group min-height-30 col-sm-6 padding-0">
+												<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2076}}</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="input-Default"
+														value="Free쿠폰" readonly>
+												</div>
+											</div>
+											<div class="form-group min-height-30 col-sm-6 padding-0">
+												<label for="input-Default" class="col-sm-3 control-label">발행일자</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="input-Default"
+														value="2016—01-02" readonly>
+												</div>
+											</div>
+											<div class="form-group min-height-30 col-sm-6 padding-0">
+												<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2171}}</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="input-Default"
+														value="2016—01-02~2016—01-02" readonly>
+												</div>
+											</div>
+											<div class="form-group min-height-30 col-sm-6 padding-0">
+												<label for="input-Default" class="col-sm-3 control-label">고객코드</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="input-Default"
+														value="1234567890" readonly>
+												</div>
+											</div>
+											<div class="form-group min-height-30 col-sm-6 padding-0">
+												<label for="input-Default" class="col-sm-3 control-label">휴대폰번호</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="input-Default"
+														value="010-****-0000" readonly>
+												</div>
+											</div>
+											<div class="form-group min-height-30 col-sm-6 padding-0">
+												<label for="input-Default" class="col-sm-3 control-label">발행구분</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="input-Default"
+														value="적립발행" readonly>
+												</div>
+											</div>
+											<div class="form-group min-height-30 col-sm-6 padding-0">
+												<label for="input-Default" class="col-sm-3 control-label">쿠폰타입</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="input-Default"
+														value="금액쿠폰/ 3000원" readonly>
+												</div>
+											</div>
+											<div class="form-group min-height-30 col-sm-6 padding-0">
+												<label for="input-Default" class="col-sm-3 control-label">쿠폰상태</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="input-Default"
+														value="정상" readonly>
+												</div>
+											</div>
+											<div class="form-group min-height-30 col-sm-6 padding-0">
+												<label for="input-Default" class="col-sm-3 control-label">사용상태</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="input-Default"
+														value="사용" readonly>
+												</div>
+											</div>
+											<div class="form-group min-height-30 col-sm-6 padding-0">
+												<label for="input-Default" class="col-sm-3 control-label">선물가능</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="input-Default"
+														value="불가능" readonly>
+												</div>
+											</div>
+											<div class="form-group min-height-30 col-sm-6 padding-0">
+												<label for="input-Default" class="col-sm-3 control-label">발행매장</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="input-Default"
+														value="전주점" readonly>
+												</div>
+											</div>
+											<div class="form-group min-height-30 col-sm-6 padding-0">
+												<label for="input-Default" class="col-sm-3 control-label">사용매장</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="input-Default"
+														value="전주점" readonly>
+												</div>
+											</div>
+											<div class="form-group min-height-30 col-sm-6 padding-0">
+												<label for="input-Default" class="col-sm-3 control-label">사용제한</label>
+												<div class="col-sm-9">
+													<input type="text" class="form-control" id="input-Default"
+														value="제한없음" readonly>
+												</div>
+											</div>
+										</div>
+										<hr>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-default"
+											data-dismiss="modal">발행취소</button>
+										<button type="button" class="btn btn-primary">사용취소</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<table id="example" class="display table"
+						style="width: 100%; cellspacing: 0;">
+						<thead>
+							<tr>
+								<th>번호</th>
+								<th>{{i18n.BO2159}}</th>
+								<th>{{i18n.BO2076}}</th>
+								<th>{{i18n.BO2385}}</th>
+								<th>발행일자</th>
+								<th>{{i18n.BO2171}}</th>
+								<th>고객코드</th>
+								<th>휴대폰번호</th>
+								<th>{{i18n.BO2333}}</th>
+								<th>사용</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th>번호</th>
+								<th>{{i18n.BO2159}}</th>
+								<th>{{i18n.BO2076}}</th>
+								<th>{{i18n.BO2385}}</th>
+								<th>발행일자</th>
+								<th>{{i18n.BO2171}}</th>
+								<th>고객코드</th>
+								<th>휴대폰번호</th>
+								<th>{{i18n.BO2333}}</th>
+								<th>사용</th>
+								<th></th>
+							</tr>
+						</tfoot>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>1231233</td>
+								<td>Free쿠폰</td>
+								<td>적립발행</td>
+								<td>2016—01-02</td>
+								<td>2016—01-02</td>
+								<td>12345678900</td>
+								<td>010-****-0000</td>
+								<td>정상</td>
+								<td>Y</td>
+								<td>
+									<button type="submit" class="btn btn-primary"
+										data-toggle="modal" data-target=".bs-example-modal-lg">
+										상세내역</button>
+								</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>1231233</td>
+								<td>Free쿠폰</td>
+								<td>적립발행</td>
+								<td>2016—01-02</td>
+								<td>2016—01-02</td>
+								<td>12345678900</td>
+								<td>010-****-0000</td>
+								<td>정상</td>
+								<td>Y</td>
+								<td>
+									<button type="submit" class="btn btn-primary"
+										data-toggle="modal" data-target=".bs-example-modal-lg">
+										상세내역</button>
+								</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>1231233</td>
+								<td>Free쿠폰</td>
+								<td>적립발행</td>
+								<td>2016—01-02</td>
+								<td>2016—01-02</td>
+								<td>12345678900</td>
+								<td>010-****-0000</td>
+								<td>정상</td>
+								<td>Y</td>
+								<td>
+									<button type="submit" class="btn btn-primary"
+										data-toggle="modal" data-target=".bs-example-modal-lg">
+										상세내역</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Row -->

@@ -1,0 +1,135 @@
+{{#searchYn}}
+
+
+	{{#summaryYn}}
+		<div class="col-md-12">
+			<div class="panel panel-white">
+				<div class="panel-body" id="chart01"></div>
+			</div>
+		</div>
+		<!-- <div class="col-md-12">
+			<div class="panel panel-white">
+				<div class="panel-body" id="chart02"></div>
+			</div>
+		</div> -->
+	{{/summaryYn}}
+
+	{{^summaryYn}}
+		<div class="col-md-12">
+			<div class="panel panel-white">
+				<div class="panel-body" id="dayMonthChart"></div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-white">
+				<div class="panel-body" id="dayofweekChart"></div>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="panel panel-white">
+				<div class="panel-body" id="hourChart"></div>
+			</div>
+		</div>
+	{{/summaryYn}}
+
+<!-- <input style="margin:10px 10px 10px 0" type="button" id="convert" value="Create chart from table"> -->
+
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel panel-default">
+				<div class="panel-body ">
+					<div class="table-responsive table-responsive-overflow">
+						{{#summaryYn}}
+							<table class="table table-success mb30 table-striped table_fullwidth" id="summary-table">
+								<thead>
+									<tr>
+										<th >{{i18n.BO2455}}</th>
+										<th class="col1">{{i18n.BO2390}}</th>
+									</tr>
+								</thead>
+								<tbody>
+									{{#list}}
+										<tr class="even gradeC">
+											<td>{{i18n.BO2303}}</td>
+											<td class="price">{{#formatPrice}}{{sales}}{{/formatPrice}}</td>
+										</tr>
+										<tr class="even gradeC">
+											<td>{{i18n.BO2170}}</td>
+											<td class="price">{{#formatPrice}}{{discount}}{{/formatPrice}}</td>
+										</tr>
+										<tr class="even gradeC">
+											<td>{{i18n.BO2304}}</td>
+											<td class="price">{{#formatPrice}}{{realSales}}{{/formatPrice}}</td>
+										</tr>
+										<tr class="odd gradeX back_blue">
+											<td>- {{i18n.BO2310}}</td>
+											<td class="price">{{#formatPrice}}{{cash}}{{/formatPrice}}</td>
+										</tr>
+										<tr class="odd gradeX back_blue">
+											<td>- {{i18n.BO2309}}</td>
+											<td class="price">{{#formatPrice}}{{card}}{{/formatPrice}}</td>
+										</tr>
+										<tr class="eodd gradeX back_blue">
+											<td>- {{i18n.BO2311}}</td>
+											<td class="price">{{#formatPrice}}{{etc}}{{/formatPrice}}</td>
+										</tr>
+										<tr class="even gradeC">
+											<td>{{i18n.BO2305}}</td>
+											<td class="price">{{#formatPrice}}{{tax}}{{/formatPrice}}</td>
+										</tr>
+										<tr class="even gradeC">
+											<td>{{i18n.BO2306}}</td>
+											<td class="price">{{#formatPrice}}{{netSales}}{{/formatPrice}}</td>
+										</tr>
+										<tr class="even gradeC">
+											<td>{{i18n.BO2307}}</td>
+											<td class="price">{{#formatNumber}}{{customerCnt}}{{/formatNumber}}</td>
+										</tr>
+									{{/list}}
+								</tbody>
+							</table>
+						{{/summaryYn}}
+						{{^summaryYn}}
+							<table class="table table-success mb30 table-striped" id="etc-table">
+								<thead>
+									<tr>
+										<th >{{i18n.BO4042}}</th>
+										<th class="price">{{i18n.BO2303}}</th>
+										<th class="price">{{i18n.BO2170}}</th>
+										<th class="price">{{i18n.BO2304}}</th>
+										<th class="price">{{i18n.BO2310}}</th>
+										<th class="price">{{i18n.BO2309}}</th>
+										<th class="price">{{i18n.BO2311}}</th>
+										<th class="price">{{i18n.BO2305}}</th>
+										<th class="price">{{i18n.BO2306}}</th>
+										<th class="price">{{i18n.BO2307}}</th>
+									</tr>
+								</thead>
+								<tbody>
+									{{#list}}
+										<tr class="even gradeC">
+											<td>{{label}}</td>
+											<td class="price">{{#formatPrice}}{{sales}}{{/formatPrice}}</td>
+											<td class="price">{{#formatPrice}}{{discount}}{{/formatPrice}}</td>
+											<td class="price">{{#formatPrice}}{{realSales}}{{/formatPrice}}</td>
+											<td class="price">{{#formatPrice}}{{cash}}{{/formatPrice}}</td>
+											<td class="price">{{#formatPrice}}{{card}}{{/formatPrice}}</td>
+											<td class="price">{{#formatPrice}}{{etc}}{{/formatPrice}}</td>
+											<td class="price">{{#formatPrice}}{{tax}}{{/formatPrice}}</td>
+											<td class="price">{{#formatPrice}}{{netSales}}{{/formatPrice}}</td>
+											<td class="price">{{#formatNumber}}{{customerCount}}{{/formatNumber}}</td>
+										</tr>
+									{{/list}}
+								</tbody>
+							</table>
+						{{/summaryYn}}
+					</div>
+					<!-- table-responsive -->
+
+				</div>
+				<!-- panel-body -->
+			</div>
+		</div>
+	</div>
+
+{{/searchYn}}

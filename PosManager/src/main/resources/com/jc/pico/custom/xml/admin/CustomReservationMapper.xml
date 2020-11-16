@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: CustomReservation.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History	: 
+  ~
+  ~ Version	: 1.0
+  ~ Author   :
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.admin.CustomReservationMapper">
+
+	<select id="getPushReservationUserListCnt" parameterType="hashMap" resultType="int">
+		SELECT	COUNT(1)
+		FROM	tb_svc_order AS T1
+		left outer join ( select	USER_ID,	OS,
+									DEVICE_ID,	UUID,
+									PUSH_ID,	LOCALE,
+									NAME,		IS_ALIVE,
+                                    IS_SVC_PUSH 
+						  from		tb_user_device TT1
+						  left outer join	tb_user TT2	on	TT1.USER_ID = TT2.ID
+		) AS T2	ON T1.USER_ID = T2.USER_ID
+		where	(T1.ORDER_TP = 605002 OR T1.ORDER_TP = 605003) 
+				AND T1.ORDER_ST = 607002
+	        	AND T1.PATH_TP = 606002
+	        	AND T1.RESERVE_TM_LOCAL between DATE_ADD(date_add(date_format(now(),"%Y-%m-%d"), interval 1 DAY), INTERVAL 0 SECOND)
+								 		AND     DATE_ADD(date_add(date_format(now(),"%Y-%m-%d"), interval 1 DAY), INTERVAL '23:59:59' HOUR_SECOND)
+				<![CDATA[  AND	T2.PUSH_ID <> '' ]]>      
+				AND T2.IS_SVC_PUSH = 1
+	</select>
+
+	<select id="getPushReservationUserList" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+		SELECT	T1.BRAND_ID,			T1.STORE_ID,
+				(SELECT STORE_NM FROM TB_SVC_STORE WHERE ID = T1.STORE_ID) AS STORE_NM,
+				T1.USER_ID,				T1.ORDER_NO,
+				T1.ORDERER_NAME,		T1.ORDER_TM_LOCAL,
+				T1.ORDER_TM,			T1.RESERVE_TM,
+				T1.RESERVE_TM_LOCAL,	T2.USER_ID,
+				T2.OS,					T2.DEVICE_ID,
+				T2.UUID,				T2.PUSH_ID,
+				T2.LOCALE
+		FROM	tb_svc_order AS T1
+		left outer join ( select	USER_ID,	OS,
+									DEVICE_ID,	UUID,
+									PUSH_ID,	LOCALE,
+									NAME,		IS_ALIVE,
+                                    IS_SVC_PUSH 
+						  from		tb_user_device TT1
+						  left outer join	tb_user TT2	on	TT1.USER_ID = TT2.ID
+		) AS T2	ON T1.USER_ID = T2.USER_ID
+		where	(T1.ORDER_TP = 605002 OR T1.ORDER_TP = 605003) 
+				AND T1.ORDER_ST = 607002
+	        	AND T1.PATH_TP = 606002
+	        	AND T1.RESERVE_TM_LOCAL between DATE_ADD(date_add(date_format(now(),"%Y-%m-%d"), interval 1 DAY), INTERVAL 0 SECOND)
+								 		AND     DATE_ADD(date_add(date_format(now(),"%Y-%m-%d"), interval 1 DAY), INTERVAL '23:59:59' HOUR_SECOND)      
+				<![CDATA[  AND	T2.PUSH_ID <> '' ]]>
+				AND T2.IS_SVC_PUSH = 1                             
+	</select>
+	
+</mapper>

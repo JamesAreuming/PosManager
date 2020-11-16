@@ -1,0 +1,68 @@
+<form>
+	<div class="form-group min-height-30 col-sm-12 padding-0">
+		<label for="input-Default" class="col-sm-3 control-label">상위메뉴
+			 {{#upCd}}* {{/upCd}}</label>
+		<div class="col-sm-5">
+			<input type="text" class="form-control" readonly="readonly"  value="{{ upCd }}" {{#upCd}} data-validation="length" data-validation-length="3" {{/upCd}}>
+			<input type="hidden" name="id" value="{{ id }}" >
+			<input type="hidden" name="menuCd" value="{{ menuCd }}" >
+			<input type="hidden" name="upCd" value="{{ upCd }}" > 
+		</div>
+		{{^upCd}}
+		<div class="col-sm-4">
+			<button 
+			type="button"
+			class="btn btn-primary float-right basecode-main-new"
+			data-toggle="modal" data-target=".bs-main-modal-lg">
+			하위메뉴등록</button>
+		</div>
+		{{/upCd}}
+	</div>
+	<div class="form-group min-height-30 col-sm-12 padding-0">
+		<label for="input-Default" class="col-sm-3 control-label">메뉴코드
+			*</label>
+		<div class="col-sm-9">
+			<input type="text" class="form-control" value="{{ subCd }}" data-validation="length" data-validation-length="3" name="subCd">
+		</div>
+	</div>
+	<div class="form-group min-height-30 col-sm-12 padding-0">
+		<label for="input-Default" class="col-sm-3 control-label">타이틀
+			*</label>
+		<div class="col-sm-9">
+			<input type="text" class="form-control" value="{{ title }}" data-validation="required" name="title"> 
+		</div>
+	</div>
+	<div class="form-group min-height-30 col-sm-12 padding-0">
+		<label for="input-Default" class="col-sm-3 control-label">타겟 URL
+			*</label>
+		<div class="col-sm-9">
+			<input type="text" class="form-control"  value="{{ url }}" data-validation="required" name='url'>
+		</div>
+	</div>
+	<div class="form-group min-height-30 col-sm-12 padding-0">
+		<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2124}}
+			*</label>
+		<div class="col-sm-9">
+			<select class="form-control m-b-sm" tabindex="-1"
+				style="width: 100%" name="useYn" data-validation="required" >
+				<option value="">{{i18n.BO2124}}</option>
+				<option value="true" {{#useYn=true}} selected="selected"{{/useYn=true}}>{{i18n.BO2031}}</option>
+				<option value="false" {{#useYn=false}} selected="selected"{{/useYn=false}}>{{i18n.BO2032}}</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group min-height-30 col-sm-12 padding-0">
+		<label for="input-Default" class="col-sm-3 control-label">비고
+			</label>
+		<div class="col-sm-9">
+			<input type="text" class="form-control" name="dsc">
+		</div>
+	</div>
+	<div class="form-group min-height-30 col-sm-12 padding-0">
+		<div class="col-sm-12">
+			<button type="submit" class="btn btn-primary float-right margin-top-b-15 basecode-main-new"
+			data-toggle="modal" data-target=".bs-main-modal-lg">
+			수정</button>
+		</div>
+	</div>
+</form>

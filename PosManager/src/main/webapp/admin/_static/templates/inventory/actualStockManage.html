@@ -1,0 +1,128 @@
+
+<!-- content goes here... -->
+<!-- toorbar start -->
+<form id="actualStockList">
+  <ul class="filemanager-options" {{#isSt}} style="display:none;" {{/isSt}}>
+     <li class="select2-padding" {{#isFr}} style="display:none;" {{/isFr}}>
+       <div class="itemopt">
+         <select class="select2" id="selectFranchise" name="franId">
+           <option value="">{{i18n.BO1031}}</option>
+           {{#frList}}
+            <option value="{{id}}">{{companyNm}}</option>
+           {{/frList}}
+          </select>
+       </div>
+     </li>
+     <li class="select2-padding" {{#isBr}} style="display:none;" {{/isBr}}>
+       <div class="itemopt">
+         <select class="select2" id="selectBrand" name="brandId">
+           <option value="">{{i18n.BO1032}}</option>
+           {{#brList}}
+            <option value="{{id}}">{{companyNm}}</option>
+           {{/brList}}
+          </select>
+       </div>
+     </li>
+     <li class="select2-padding">
+       <div class="itemopt">
+         <select class="select2" id="selectStore" name="storeId">
+           <option value="">{{i18n.BO1033}}</option>
+           {{#stList}}
+            <option value="{{id}}">{{storeNm}}</option>
+           {{/stList}}
+          </select>
+       </div>
+     </li>
+  </ul>
+	<ul class="filemanager-options" >
+    <li class="datepicker-range">
+     <div class="input-group">
+       <input id="daterangepicker" type="text" class="form-control date-picker"  placeholder="{{i18n.BO2064}}" value="">
+       <span class="input-group-addon add-on add-on-datepicker">
+       <i class="fa fa-calendar"></i></span>
+       <input id="from-date" name="fromdate" value="{{data.fromdate}}" type="hidden" />
+       <input id="to-date" name="todate" value="{{data.todate}}" type="hidden" />
+     </div>
+    </li>
+    <li class="select2-padding">
+      <div class="itemopt">
+        <select class="select2" id="searchKeywordType" name="searchKeywordType">
+           <option value="">{{i18n.BO5023}}</option>
+           <option value="itemCd">{{i18n.BO2140}}</option>
+           <option value="itemNm">{{i18n.BO2214}}</option>
+        </select>
+      </div>
+    </li>
+    <li class="sch-toolbar">
+     <div class="input-group ">
+       <input type="text" class="form-control ckbox-border sch-input" id="demo"  placeholder="search..." name="searchKeyword">
+     </div>
+     </li>
+<!--      <li class="select2-padding">
+      <div class="itemopt">
+        <select class="select2" id="itemCat"  name="itemCat">
+            <option value="">{{i18n.BO2248}}</option>
+        </select>
+      </div>
+    </li> -->
+    <li class="select2-padding">
+      <div class="itemopt">
+        <select class="select2" id="status"  name="status">
+            <option value="">{{i18n.BO2216}}</option>
+            <option value="602001" selected>{{i18n.BO1003}}</option>
+            <option value="602002">{{i18n.BO5022}}</option>
+        </select>
+      </div>
+    </li>
+     <li class="sch-icon">
+      <button type="button" id="search" >
+        <i class="glyphicon glyphicon-search sch-btn-i"></i>
+      </button>
+    </li>
+	</ul>
+	<div class="row">
+	    <div class="col-md-12">
+	        <div class="panel panel-white">
+	            <div class="panel-body">
+	                <div class="table-responsive">
+	                    <div class="float-right">
+	                        <div id="franchise-modal" class="modal fade bs-example-modal-lg"
+	                            tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+	                            aria-hidden="true"></div>
+	                    </div>
+	                    <table id="actualStock-tables" class="display table" style="width: 100%; cellspacing: 0;">
+	                        <thead>
+	                            <tr>
+	                                <th><span class="all-checked"><input type="checkbox"></span></th>
+	                                <th>{{i18n.BO2140}}</th>
+	                                <th>{{i18n.BO2214}}</th>
+	                                <th>{{i18n.BO5003}}</th>
+	                                <th>{{i18n.BO5004}}</th>
+	                                <th>{{i18n.BO5005}}</th>
+	                                <th>{{i18n.BO5006}}</th>
+	                            </tr>
+	                        </thead>
+	                        <tfoot>
+	                            <tr>
+	                                <th><span class="all-checked"><input type="checkbox"></span></th>
+	                                <th>{{i18n.BO2140}}</th>
+	                                <th>{{i18n.BO2214}}</th>
+	                                <th>{{i18n.BO5003}}</th>
+	                                <th>{{i18n.BO5004}}</th>
+	                                <th>{{i18n.BO5005}}</th>
+	                                <th>{{i18n.BO5006}}</th>
+	                            </tr>
+	                        </tfoot>
+	                        <tbody>
+	                        </tbody>
+	                    </table>
+	                    <div class="modal-footer">
+									      <button type="submit" id="atcualStock_save" class="btn btn-primary">{{i18n.BO0014}}</button>
+									    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+</form>
+<!-- Row -->

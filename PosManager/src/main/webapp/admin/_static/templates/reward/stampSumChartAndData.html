@@ -1,0 +1,47 @@
+{{#searchYn}}
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body" id="dayMonthChart"></div>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="panel panel-white">
+			<div class="panel-body" id="dayofweekChart"></div>
+		</div>
+	</div>
+	<div class="col-md-8">
+		<div class="panel panel-white">
+			<div class="panel-body" id="hourChart"></div>
+		</div>
+	</div>
+
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body ">
+				<div class="table-responsive table-responsive-overflow">
+					{{#summaryYn}}
+						<table class="table table-striped table_fullwidth" id="summary-table">
+							<thead>
+							   <tr>
+							      <th>{{i18n.BO2243}}</th>
+							      <th>{{i18n.BO2071}}</th>
+							   </tr>
+							</thead>
+							<tbody>
+								{{#list}}
+								    <tr class="even gradeC">
+								       <td class="title">{{typeNm}}</td>
+								       <td>{{stampSumCnt}}</td>
+								    </tr>
+								{{/list}}
+							</tbody>
+						</table>
+					{{/summaryYn}}
+					{{^summaryYn}}
+						<table class="table table-striped" id="etc-table"></table>
+					{{/summaryYn}}
+				</div><!-- table-responsive -->
+			</div><!-- panel-body -->
+		</div>
+	</div>
+{{/searchYn}}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: PosSalesTableOrderMapper.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History		: 
+  ~
+  ~ Version		: 1.0
+  ~ Author   	: 
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.pos.PosSalesTableOrderMapper">
+
+  <select id="selectDefault" parameterType="hashmap" resultType="com.jc.pico.utils.bean.PosSalesTableOrder">
+    SELECT  /* PosSalesTableOrderMapper.selectDefault : POS.S_TABLE_ORDER, 2016-07-11, green */
+			${companyId} AS cdCompany /* 회사코드 */
+			, ${storeId} AS cdStore /* 매장코드 */
+			, TB_SVC_TABLE.ID AS noTable /* 테이블번호 */
+			, TB_SVC_TABLE.SECTION_ID AS noPartition /* 파티션번호 */
+			, DATE_FORMAT(TB_SVC_ORDER.OPEN_DT, '%Y%m%d') AS ymdOrder /* 주문일자(yyyymmdd) */
+			, TB_SVC_ORDER.ORDER_NO AS noOrder /* 주문번호 */
+			, TB_SVC_TABLE.ORDER_ID AS orderId /* 주문 ID */
+			, 0 AS noParty /* 단체번호 */
+			, '' AS bgParty /* 단체색깔 */
+			, '' AS nmTable /* 단체테이블명 */
+			, TB_SVC_ORDER.POS_NO AS noPosLast /* 최종사용 포스번호 */
+			, 0 AS dsStatus /* 상태(0:미사용 1:사용중) */
+			, TB_SVC_ORDER.OPEN_DT AS dtAdmission /* 입장시간 */
+			, TB_SVC_ORDER.CUSTOMER_CNT AS cntCustomer /* 객수 */
+			, TB_SVC_ORDER.SALES AS amtOrder /* 주문금액합계 */
+			, TB_SVC_ORDER.SUPPLY_VALUE AS amtSupply /* 공급가 */
+			, TB_SVC_ORDER.TAX AS amtTax /* 부가세 */
+			, TB_SVC_ORDER.DISCOUNT AS amtDc /* 할인금액 */
+			, DATE_FORMAT(TB_SVC_ORDER.CREATED, '%Y%m%d%H%i%s') AS dtInsert /* 등록일시 */
+			, TB_SVC_ORDER.STAFF_ID AS cdEmployeeInsert /* 등록자 */
+			, DATE_FORMAT(TB_SVC_ORDER.UPDATED, '%Y%m%d%H%i%s') AS dtUpdate /* 수정일시 */
+			, TB_SVC_ORDER.STAFF_ID AS cdEmployeeUpdate /* 수정자 */
+			, '' AS detail /* 상세 내역 */
+      FROM TB_SVC_TABLE
+      LEFT OUTER JOIN TB_SVC_ORDER ON TB_SVC_TABLE.ORDER_ID = TB_SVC_ORDER.ID
+	<trim prefix="WHERE" prefixOverrides="AND |OR ">
+		<if test="_parameter.containsKey('storeId')">
+	   AND TB_SVC_TABLE.STORE_ID = #{storeId}
+		</if>
+		AND ((TB_SVC_TABLE.ORDER_ID IS NOT NULL) OR (TB_SVC_TABLE.ORDER_ID != 0))
+	</trim>
+  </select>
+
+	<update id="updateOrderInfoById" parameterType="map">
+		/* PosSalesTableOrderMapper.updateOrderInfoById 2016-09-19 hyo */
+		UPDATE 
+			TB_SVC_TABLE
+		SET
+			ORDER_ID = #{orderId}
+		WHERE
+			ID = #{tableId}
+	</update>
+	
+	<update id="updateOrderInfoResetByStoreId" parameterType="long">
+		/* PosSalesTableOrderMapper.updateOrderInfoResetByStoreId 2016-09-19 hyo */
+		UPDATE 
+			TB_SVC_TABLE
+		SET
+			IS_USED = 0
+		    , POS_NO = ''
+		    , ORDER_ID = NULL
+		    , MASTER_TABLE_NO = NULL
+		WHERE
+			STORE_ID = #{storeId}
+	</update>
+</mapper>

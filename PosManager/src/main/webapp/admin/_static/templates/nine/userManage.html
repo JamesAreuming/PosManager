@@ -1,0 +1,71 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="form-group">
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%" id="franchise_select">
+							<option value="">{{i18n.BO2158}}</option>
+							{{#fr.list}}
+								<option value="{{id}}">{{companyNm}}</option>
+							{{/fr.list}}
+						</select>
+					</div>
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%" id="brand_select">
+							<option>{{i18n.BO1032}}</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="table-responsive">
+					<div class="float-right">
+						<button type="button"
+							class="btn btn-primary float-right margin-top-b-15"
+							data-toggle="modal" data-target=".bs-user-modal-lg" id="new-user">
+							{{i18n.BO2357}}</button>
+						<div class="modal fade bs-user-modal-lg" tabindex="-1"
+							role="dialog" aria-labelledby="myLargeModalLabel"
+							aria-hidden="true" id="user-modal">
+						</div>
+					</div>
+					<table id="user-tables" class="display table"
+						style="width: 100%; cellspacing: 0;">
+						<thead>
+							<tr>
+								<th>{{i18n.BO2001}}</th>
+								<th>{{i18n.BO2345}}</th>
+								<th>{{i18n.BO2384}}</th>
+								<th>{{i18n.BO2135}}</th>
+								<th>{{i18n.BO2024}}</th>
+								<th>{{i18n.BO2124}}</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th>{{i18n.BO2001}}</th>
+								<th>{{i18n.BO2345}}</th>
+								<th>{{i18n.BO2384}}</th>
+								<th>{{i18n.BO2135}}</th>
+								<th>{{i18n.BO2024}}</th>
+								<th>{{i18n.BO2124}}</th>
+								<th></th>
+							</tr>
+						</tfoot>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Row -->

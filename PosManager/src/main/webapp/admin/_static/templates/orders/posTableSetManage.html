@@ -1,0 +1,87 @@
+<form id="be-search-form" class="search-form">
+	<ul class="filemanager-options" {{#isSt}} style="display: none" {{/isSt}}>
+		<li class="select2-padding" {{#isFr}} style="display: none" {{/isFr}}>
+			<div class="itemopt">
+				<select class="select2" id="franchise_select">
+					<option value="">{{i18n.BO1031}}</option>
+					{{#frList}}
+					<option value="{{id}}" >{{companyNm}}</option>
+					{{/frList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding" {{#isBr}} style="display: none" {{/isBr}}>
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="brand_select">
+					<option value="">{{i18n.BO1032}}</option>
+					{{#brList}}
+					<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+					{{/brList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="store_select">
+					<option value="">{{i18n.BO1033}}</option>
+					{{#stList}}
+					<option value="{{id}}" {{{selections}}}>{{storeNm}}</option>
+					{{/stList}}
+				</select>
+			</div>
+		</li>
+	</ul>
+</form>
+
+<div class="row" id="posTableSet">
+{{#search}}
+	<div class="modal fade bs-floor-modal-lg" role="dialog"	aria-labelledby="myLargeModalLabel" aria-hidden="true" id="posFloorModal"></div>
+	<div class="modal fade bs-table-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel2" aria-hidden="true" id="posTableModal"></div>
+	<div class="modal fade bs-table-amt-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel3" aria-hidden="true" id="posTableAmtModal"></div>
+	
+	<div class="col-md-2">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="floor-title">
+					<span>Floor</span>
+				</div>
+				<div class="floor-count" id="floor-list">
+					{{#floor}}
+						<button class="btn btn-white btn-lg btn-block table-select" id="{{id}}">{{name}}</button>
+					{{/floor}}
+					<button class="btn btn-white btn-lg btn-block" id="floor-modal" data-toggle="modal" data-target=".bs-floor-modal-lg">+ {{i18n.BO0017}}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	{{#floorCnt}}
+	<div class="col-md-10">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="floor-title">
+					<span>Table : {{tableCnt}}</span>
+					<div class="float-right">
+						&nbsp;
+						<button class="btn btn-xs btn-primary" value="{{sectionId}}" id="floor-del">{{i18n.BO2253}}</button>
+					</div>
+					<div class="float-right">
+						<button class="btn btn-xs btn-primary" value="{{sectionId}}" id="table-amt-modal" data-toggle="modal" data-target=".bs-table-amt-modal-lg">
+						{{i18n.BO2252}}</button>
+					</div>
+				</div>
+
+				{{#table}}
+					<div class="col-md-3">
+						<div class="floor-count">
+							<button class="btn btn-white btn-lg btn-block" id="table-modal" data-toggle="modal" data-target=".bs-table-modal-lg" value="{{id}}">{{name}}</button>
+						</div>
+					</div>
+				{{/table}}
+
+			</div>
+		</div>
+	</div>
+	{{/floorCnt}}
+{{/search}}
+</div>
+<!-- Row -->

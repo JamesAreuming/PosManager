@@ -1,0 +1,400 @@
+]<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title" id="myLargeModalLabel">
+				{{i18n.BO1033}} <b>* {{i18n.BO0008}}<b>
+			</h4>
+		</div>
+		<form id="storeForm" enctype="multipart/form-data">
+			<input type="hidden" value="{{brandId}}" name="brandId" id="brandId">
+			<input type="hidden" value="{{franId}}" name="franId" id="franId">
+			<input type="hidden" value="{{storeId}}" name="storeId">
+			<input type="hidden" value="{{id}}" name="id" id="storeId">
+	  		<input type="hidden" name="mode" id="mode">
+			<div class="modal-body" id="modal-form">
+			
+				{{#id}}
+					<ul class="nav nav-tabs nav-justified nav-dark" id="store-modal-tabs">
+						<li value="info" class="active"><a href="#info" data-toggle="tab"><strong>{{i18n.BO2044}}</strong></a></li> 
+						<li value="service"><a href="#service" data-toggle="tab"><strong>{{i18n.BO2045}}</strong></a></li>
+						<li value="pos"><a href="#pos" data-toggle="tab"><strong>{{i18n.BO2048}}</strong></a></li>
+						<li value="staff"><a href="#staff" data-toggle="tab"><strong>{{i18n.BO2049}}</strong></a></li> 
+						<li value="printer"><a href="#printer" data-toggle="tab"><strong>{{i18n.BO2456}}</strong></a></li>
+					</ul>
+				{{/id}}
+
+				<div class="tab-content">
+					<div class="tab-pane active" id="info">
+					{{#mode=info}}
+		 				<input type="hidden" name="storeCdEx" value="{{storeCd}}" readonly="readonly">
+						<input type="hidden" name="deposit" value="{{deposit}}">
+						<input type="hidden" name="businessHour" value="{{businessHour}}">
+						<div class="row">
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2039}}*</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default" value="{{storeCd}}" name="storeCd" data-validation="required">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="modal_brand_select" class="col-sm-3 control-label">{{i18n.BO1032}}*</label>
+								<div class="col-sm-9">
+									<div class="col-sm-12 p-l-0">
+										<select id="modal_brand_select" class="form-control m-b-sm" tabindex="-1" style="width: 100%" data-validation="required" name="brandId">
+											<option value="">{{i18n.BO1032}}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="storeNm" class="col-sm-3 control-label">{{i18n.BO2040}}*</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="storeNm"
+										value="{{storeNm}}" name="storeNm" data-validation="required">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="storeSt" class="col-sm-3 control-label">{{i18n.BO2042}}*</label>
+								<div class="col-sm-9">
+									<div class="col-sm-12 p-l-0">
+										<select id="storeSt" class="form-control m-b-sm" tabindex="-1" style="width: 100%" data-validation="required" name="storeSt">
+											<option value="">{{i18n.BO2042}}</option>
+										{{#storest}}
+											<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+										{{/storest}}
+										</select>
+									</div> 
+								</div>
+							</div> 
+										
+														
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2023}}</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default" value="{{bizCat}}" name="bizCat">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="storeTp" class="col-sm-3 control-label">{{i18n.BO2341}}
+									*</label>
+								<div class="col-sm-9">
+									<div class="col-sm-12 p-l-0">
+										<select id="storeTp" class="form-control m-b-sm" tabindex="-1" style="width: 100%" data-validation="required" name="storeTp">
+											<option value="">{{i18n.BO2341}}</option>
+										{{#storetp}}
+											<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+										{{/storetp}}
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2005}}</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default" value="{{bizNo}}" name="bizNo">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2015}}</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default" value="{{ownerNm}}" name="ownerNm">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2024}}</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default" placeholder="(010-1234-5678)" value="{{tel}}" name="tel">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2017}}</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default" placeholder="(02-1234-5678)" value="{{fax}}" name="fax">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2342}}</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default" placeholder="(010-1234-5678)" value="{{mb}}" name="mb">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2018}}</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default" value="{{email}}" name="email">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2496}}*</label>
+								<div class="col-sm-9">
+									<select class="form-control m-b-sm" id="timezone" name="timezone" data-validation="required">
+										<option value="">{{i18n.BO2496}}</option>
+										{{#tz}}
+											<option value="{{id}}"  {{#selected}} selected="selected" {{/selected}}>{{country}} ({{id}})</option>
+										{{/tz}}
+									</select>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-9 padding-0">
+								<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2013}}</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control addr1" id="input-Default" value="{{addr1}}" name="addr1">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-9 padding-0">
+								<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2014}}</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control addr2" id="input-Default" value="{{addr2}}" name="addr2">
+									<!--input-error 에는 has-error 추가할것-->
+								</div>
+							</div>  
+							
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2012}}*</label>
+								<div class="col-sm-9">
+								
+									<div class="col-sm-12 p-l-0">
+										<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+											style="width: 100%" data-validation="required" name="svcSt">
+											{{#svcst}}
+											<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+											{{/svcst}}
+										</select>
+									</div> 
+								</div>
+							</div> 										
+														
+						</div>
+					{{/mode=info}}
+					</div>
+  
+
+					<div class="tab-pane" id="service">
+					{{#mode=service}}
+					 <input type="hidden" value="{{storeSetId}}" name="storeSetId"/>
+						<input type="hidden" value="{{allowStoreSet}}" name="allowStoreSet"/>
+						<div class="row" id="service"> 
+ 
+
+							<div class="form-group min-height-30 col-sm-12 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2036}}</label>
+								<div class="col-sm-9">
+									<div class="col-sm-6 p-l-0">
+										<select id="input-Default"
+											class="form-control m-b-sm form-timepicker" tabindex="-1"
+											data-validation="required" name="orderBegin" style="width: 100%">
+											<option value="">{{i18n.BO2059}}</option>
+										</select>
+									</div>
+									<div class="col-sm-6">
+										<select id="input-Default"
+											class="form-control m-b-sm form-timepicker" tabindex="-1"
+											data-validation="required" name="orderEnd" style="width: 100%">
+											<option value="">{{i18n.BO2059}}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-12 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2033}}</label>
+								<div class="col-sm-9">
+									<div class="radio">
+										<label><input type="radio" name="useSelforder" value="true" {{#useselforder=true}} checked="checked" {{/useselforder=true}}>{{i18n.BO2031}}</label>
+										&nbsp;&nbsp;
+										<label><input type="radio" name="useSelforder" value="false" {{#useselforder=false}} checked="checked" {{/useselforder=false}}>{{i18n.BO2032}}</label>
+									</div>
+								</div>
+							</div>							
+							<div class="form-group min-height-30 col-sm-12 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2034}}</label>
+								<div class="col-sm-9">
+									<div class="radio">
+										<label><input type="radio" name="useReserve" value="true" {{#usereserve=true}} checked="checked" {{/usereserve=true}}>{{i18n.BO2031}}</label>
+										&nbsp;&nbsp;
+										<label><input type="radio" name="useReserve" value="false" {{#usereserve=false}} checked="checked" {{/usereserve=false}}>{{i18n.BO2032}}</label>
+									</div>
+								</div>
+							</div> 
+							<div class="form-group min-height-30 col-sm-12 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2035}}</label>
+								<div class="col-sm-9">
+									<div class="radio">
+										<label><input type="radio" name="useParty" value="true" {{#useparty=true}} checked="checked" {{/useparty=true}}>{{i18n.BO2031}}</label>
+										&nbsp;&nbsp;
+										<label><input type="radio" name="useParty" value="false" {{#useparty=false}} checked="checked" {{/useparty=false}}>{{i18n.BO2032}}</label>
+									</div>
+								</div>
+							</div> 
+						</div>
+						 <hr>
+			            <div class="row">
+			              <label for="input-Default" class="col-sm-5 label-txt control-label">{{i18n.BO2497}}</label>
+		                  <div class="form-group min-height-30 col-sm-6 padding-0">
+	                        <div class="ckbox ckbox-primary">
+	                          <input name="pgUseTp" id="pgUseTp" class="ckbox ckbox-primary" value="true" type="checkbox" {{#pgUseTp}}checked="checked"{{/pgUseTp}}>
+	                          <label for="pgUseTp" >{{i18n.BO2501}}</label>
+	                      </div>
+	                    </div>
+                    
+			              <div class="form-group min-height-30 col-sm-6 padding-0 storePg">
+			                <label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2498}}</label>
+			                <div class="col-sm-9">
+			                  <input type="text" class="form-control" name="pgMerchantId" id="pgMerchantId" value="{{pgMerchantId}}"/>
+			                </div>
+			             </div>
+			              
+			              <div class="form-group min-height-30 col-sm-6 padding-0 storePg">
+			               <label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2499}}</label>
+			               <div class="col-sm-9">
+			                  <input type="text" class="form-control" name="pgPrivateKey" id="pgPrivateKey" value="{{pgPrivateKey}}"/>
+			               </div>
+			              </div>
+			              
+			              <div class="form-group min-height-30 col-sm-6 padding-0 storePg">
+			               <label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2500}}</label>
+			               <div class="col-sm-9">
+			                 <input type="text" class="form-control" name="pgPaymentKey" id="pgPaymentKey" value="{{pgPaymentKey}}"/>
+			                </div>
+			              </div>
+			            </div>
+					{{/mode=service}}
+					</div>
+					
+					<div class="tab-pane" id="pos">
+					{{#mode=pos}}
+						<div class="float-right">
+							{{#isShowButton}}
+							<button type="button" class="btn btn-xs btn-danger" id="del-row">- {{i18n.BO0016}}</button>
+							<button type="button" class="btn btn-xs btn-primary" data-target=".bs-pos-modal-lg" id="new-pos">+ {{i18n.BO0017}}</button>
+							{{/isShowButton}}
+						</div>
+						<div class="table-responsive">
+							<table id="poslist_table" class="display table" style="width: 100%; cellspacing: 0;">
+								<thead>
+									<tr>
+										<th>{{i18n.BO0024}}</th>
+										<th>{{i18n.BO2065}}</th>
+										<th>{{i18n.BO2066}}</th>
+										<th>{{i18n.BO2067}}</th>
+										<th>{{i18n.BO2068}}</th>
+										<th>{{i18n.BO2069}}</th>
+										<th>{{i18n.BO2356}}</th>
+									</tr>
+								</thead>
+								<tbody>
+									{{#list}}
+									<tr>
+										<td>
+											<input type="checkbox" name="ckl{{id}}" id="ckl_{{id}}" value="{{id}}" class="table-checkbox">
+											<input type="hidden" name="posIU{{id}}" value="U">
+											<input type="hidden" name="pId{{id}}" value="{{id}}">
+										</td>
+										<td>{{licenseKey}}</td>
+										<td>{{deviceTpNm}}</td>
+										<td>{{beginEnd}}</td>
+										<td><input type="text" class="col-sm-10" name="posNo{{id}}" value="{{posNo}}"></td>
+										<td>{{userNm}}</td>
+										<td>{{#formatDay}}{{created}}{{/formatDay}}</td>
+									</tr>
+									{{/list}}
+								</tbody>
+							</table>
+						</div>
+					{{/mode=pos}}
+					</div>
+
+					<div class="tab-pane" id="staff">
+					{{#mode=staff}}
+						<div class="float-right">
+							<button type="button" class="btn btn-xs btn-danger" id="del-row">- {{i18n.BO3053}}</button>
+							<button type="button" class="btn btn-xs btn-primary" data-target=".bs-staff-modal-lg" id="new-staff">+ {{i18n.BO3052}}</button>
+						</div>
+						<div class="table-responsive">
+							<table id="stafflist_table" class="display table" style="width: 100%; cellspacing: 0;">
+								<thead>
+									<tr>
+										<th>{{i18n.BO0024}}</th>
+										<th>{{i18n.BO2345}}*</th>
+										<th>{{i18n.BO2346}}*</th>
+										<th>{{i18n.BO2347}}*</th>
+										<th>{{i18n.BO2024}}</th>
+										<th>{{i18n.BO2356}}</th>
+									</tr>
+								</thead>
+								<tbody>
+									{{#list}}
+									<tr>
+										<td>
+											<input type="checkbox" name="chk{{id}}" id="ckl_{{id}}" value="{{id}}" class="table-checkbox">
+											<input type="hidden" name="staffIU{{id}}" value="U">
+											<input type="hidden" name="staffId{{id}}" value="{{id}}">
+										</td>
+										<td><input type="text" name="username{{id}}" value="{{username}}" data-validation="required"></td>
+										<td><input type="password" name="password{{id}}" value="" ></td>
+										<td><input type="text" name="name{{id}}" value="{{name}}" data-validation="required"></td>
+										<td><input type="text" name="mb{{id}}" value="{{mb}}"></td>
+										<td>{{#formatDay}}{{created}}{{/formatDay}}</td>
+									</tr>
+									{{/list}}
+								</tbody>
+							</table>
+						</div>
+					{{/mode=staff}}
+					</div>
+ 
+					
+					<div class="tab-pane" id="printer">
+          {{#mode=printer}}
+            <div class="float-right">
+              <button type="button" class="btn btn-xs btn-danger" id="del-row">- {{i18n.BO0016}}</button>
+              <button type="button" class="btn btn-xs btn-primary" id="new-printer" data-toggle="modal" data-target=".bs-printer-modal-lg"  data-validation="required">+ {{i18n.BO0017}}</button>
+            </div>
+              <div class="table-responsive">
+              <table id="printerlist_table" class="display table" style="width: 100%; cellspacing: 0;">
+                <thead>
+                  <tr>
+                    <th>{{i18n.BO0024}}</th>
+                    <th>{{i18n.BO2459}}*</th>
+                    <th>{{i18n.BO2457}}*</th>
+                    <th>{{i18n.BO2458}}*</th>
+                    <th>{{i18n.BO2460}}*</th>
+                    <th>{{i18n.BO2124}}*</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#list}}
+                  <tr>
+                    <td>
+                      <input type="checkbox" name="chk{{id}}" id="ckl_{{id}}" value="{{id}}" class="table-checkbox">
+                    </td>
+                    <td><input type="text" class="col-sm-12" id="printerName" name="printerName" value="{{name}}" data-validation="required"></td>
+                    <td><input type="text" class="col-sm-10" id="printerType" name="printerType" value="{{printerType}}" data-validation="required"></td>
+                    <td><input type="text" class="col-sm-10" id="printerCompanyCd" name="printerCompanyCd" value="{{printerCompanyCd}}" data-validation="required"></td>
+                    <td><input type="text" class="col-sm-10" id="posNo" name="posNo" value="{{posNo}}" data-validation="required"></td>
+                    <td><input type="text" class="col-sm-10" id="isUsed" name="isUsed" 
+                          {{#isUsed}} value="{{i18n.BO2031}}" {{/isUsed}}
+                          {{^isUsed}} value="{{i18n.BO2032}}" {{/isUsed}} 
+                          data-validation="required"></td>
+                      <!-- <td>{{#formatDay}}{{created}}{{/formatDay}}</td> -->
+                    <td><button type="button" class="btn btn-primary btn-sm" id="modal-printer" data-toggle="modal" data-target=".bs-printer-modal-lg" target-code="{{id}}" readonly="readonly" data-validation="required">detail</button></td>
+                  </tr>
+                  {{/list}}
+                </tbody>
+              </table>
+            </div>
+          {{/mode=printer}}
+					
+					</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+				<button type="submit" class="btn btn-primary">{{i18n.BO0014}}</button>
+			</div>
+		</form>
+	</div>
+</div>
+

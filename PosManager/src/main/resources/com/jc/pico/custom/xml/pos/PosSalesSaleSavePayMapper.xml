@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: PosSalesSaleSavePayMapper.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History		: 
+  ~
+  ~ Version		: 1.0
+  ~ Author   	: 
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.pos.PosSalesSaleSavePayMapper">
+
+  <select id="selectDefault" parameterType="hashmap" resultType="com.jc.pico.utils.bean.PosSalesSaleSavePay">
+    SELECT  /* PosSalesSaleSavePayMapper.selectDefault : POS.S_SALE_SAVE, 2016-07-11, green */
+			TB_SVC_SALES_PAY.ORDINAL AS seq /* 일련번호 */
+			, TB_SVC_SALES_PAY.PAY_METHOD AS cdPay /* 결제형태코드 */
+			, TB_SVC_SALES_PAY.AMOUNT AS amtPay /* 금액 */
+			, 0 AS ynChange /* 거스름 여부 */
+			, '' AS barcode /* 바코드 */
+      FROM DUAL
+	<trim prefix="WHERE" prefixOverrides="AND |OR ">
+		<if test="_parameter.containsKey('storeId')">
+	   AND SS.ID = #{storeId}
+		</if>
+	</trim>
+  </select>
+
+</mapper>

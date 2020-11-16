@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: PosStoreMapper.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History	: 
+  ~
+  ~ Version	: 1.0
+  ~ Author   : 
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.pos.PosStoreMapper">
+
+  <select id="selectStoreInfos" parameterType="hashmap" resultType="com.jc.pico.utils.bean.PosResultStoreInfo">
+    SELECT  /* PosStoreMapper.selectStoreInfos : POS.M_STORE_INFO, 2016-07-05, green */
+            SB.FRAN_ID									AS cdCompany
+		   , SS.ID										AS cdStore
+		   , SB.ID										AS cdBrand
+		   , SS.BIZ_NO									AS noRegist
+		   , SB.COMPANY_NM								AS nmCompany
+		   , SB.BRAND_NM								AS nmBrand
+		   , SS.STORE_NM								AS nmStore
+		   , SS.OWNER_NM								AS nmBoss
+		   , SS.BIZ_CAT									AS nmUpjong
+		   , SS.TEL										AS tel1
+		   , SS.MB										AS tel2
+		   , SS.FAX										AS fax
+		   , SS.ZIP										AS noPost
+		   , SS.ADDR1									AS addr1
+		   , SS.ADDR2									AS addr2
+		   , SB.TAX_RATE								AS taxRate
+		   , (SELECT SUB_CD + 0 FROM TB_BASE_BCODE WHERE ALIAS = SB.CURRENCY) AS cdCurrency
+			 , 1												AS storePluType
+			 , 1 AS ynTable /* 테이블사용유무 (1:사용 0:미사용) */
+		   , DATE_FORMAT(SS.CREATED, '%Y%m%d%H%i%s')	AS dtInsert
+		   , SS.ADMIN_ID								AS cdEmployeeInsert
+		   , DATE_FORMAT(SS.UPDATED, '%Y%m%d%H%i%s')	AS dtUpdate
+		   , SS.ADMIN_ID								AS cdEmployeeUpdate
+		   , SS.STORE_CD								AS strCd
+      FROM TB_SVC_STORE AS SS
+      JOIN TB_SVC_BRAND AS SB
+        ON SS.BRAND_ID = SB.ID
+	<if test="storeId != null">
+     WHERE SS.ID = ${storeId}
+	</if>
+  </select>
+  
+  <select id="selectUseSelfOrder" parameterType="map" resultType="boolean">
+	SELECT	/* PosStoreMapper.selectUseSelfOrder 2016-09-03, hyo */
+		IF(B.ALLOW_STORE_SET
+			, A.USE_SELFORDER
+	        , C.USE_SELFORDER)
+		AS USE_SELFORDER        
+	FROM 
+		TB_SVC_STORE_SET A
+	LEFT JOIN TB_SVC_BRAND B
+	ON A.BRAND_ID = B.ID
+	LEFT JOIN TB_SVC_BRAND_SET C
+	ON A.BRAND_ID = C.BRAND_ID
+	WHERE
+		A.STORE_ID = #{storeId}
+  </select>
+  
+  <select id="selectStoreIdListByActivated" resultType="long">
+  		/* PosStoreMapper.selectStoreIdListByActivated 2016-11-10, hyo */
+		SELECT 
+		    ID
+		FROM
+		    TB_SVC_STORE
+		WHERE
+		    SVC_ST = '202001'
+		AND STORE_ST = '350001'
+		ORDER BY BRAND_ID, ID
+	</select>
+	
+	<select id="selectPaymentGatewayStoreSet" resultType="com.jc.pico.bean.SvcStoreSet">
+  		/* PosStoreMapper.selectPaymentGatewayStoreSet 2017-01-03, hyo */
+		SELECT
+			IF(B.PG_KIND = '355001', A.PG_KIND, B.PG_KIND)
+			AS pgKind    
+			, IF(B.PG_USE_TP = '355001', A.PG_MERCHANT_ID, B.PG_MERCHANT_ID)
+			AS pgMerchantId
+			, IF(B.PG_USE_TP = '355001', A.PG_PRIVATE_KEY, B.PG_PRIVATE_KEY)
+			AS pgPrivateKey
+			, IF(B.PG_USE_TP = '355001', A.PG_PAYMENT_KEY, B.PG_PAYMENT_KEY)
+			AS pgPaymentKey
+		FROM
+			TB_SVC_BRAND_SET A
+		LEFT JOIN TB_SVC_STORE_SET B
+		ON A.BRAND_ID = B.BRAND_ID
+		WHERE			
+			B.STORE_ID = #{storeId}
+	</select>
+
+</mapper>

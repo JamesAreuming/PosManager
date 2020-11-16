@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: PosSalesOrderInfoMapper.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History		: 
+  ~
+  ~ Version		: 1.0
+  ~ Author   	: 
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.pos.PosSalesOrderInfoMapper">
+
+	<resultMap id="orderInfoMap" autoMapping="true" type="com.jc.pico.utils.bean.PosSalesOrderInfo" >
+		<result column="telMobileMember" jdbcType="VARCHAR" property="telMobileMember" typeHandler="com.jc.pico.utils.mybatis.typehandler.MobileSecurityTypeHandler" />
+	</resultMap>
+	
+  <select id="selectDefault" parameterType="hashmap" resultMap="orderInfoMap">
+    SELECT  /* PosSalesOrderInfoMapper.selectDefault : POS.S_ORDER_INFO, 2016-07-11, green */
+			${companyId} AS cdCompany /* 회사코드 */
+			, ${storeId} AS cdStore /* 매장코드 */
+			, DATE_FORMAT(TB_SVC_ORDER.OPEN_DT, '%Y%m%d') AS ymdOrder /* 주문일자(yyyymmdd) */
+			, TB_SVC_ORDER.ID AS orderId /* 주문ID */
+			, TB_SVC_ORDER.ORDER_NO AS noOrder /* 주문번호 */
+			, TB_SVC_ORDER.ORDER_TP AS cdOrderType /* 주문유형(605001:주문,605002:예약,605001:계약) */
+			, IF(TB_SVC_ORDER.PATH_TP IS NULL or TB_SVC_ORDER.PATH_TP = '', 0, TB_SVC_ORDER.PATH_TP) 
+			AS cdOrderPath /* 주문 경로 타입(pos: 606001, app: 606002,  cleck: 606003, tab: 606004) */
+			, TB_SVC_ORDER.TABLE_NO AS noTable
+			, TB_SVC_ORDER.ORDER_DIV AS dsOrder /* 주문형태 (1:테이블, 2:배달, 3:포장) */
+			, TB_SVC_ORDER.LAST_ST AS cdOrderStatus /* 주문상태코드(1.변동없음,2.신규,3.수정(수량변경),4.삭제) */
+			, TB_SVC_ORDER.ORDER_ST AS cdOrderVerify
+			, DATE_FORMAT(TB_SVC_ORDER.ADMISSION_TM, '%Y%m%d%H%i%s') AS dtAdmission /* 입장시간(yyyymmddhhnnss) */
+			, DATE_FORMAT(TB_SVC_ORDER.EXIT_TM, '%Y%m%d%H%i%s') AS dtExit /* 퇴장시간(yyyymmddhhnnss) */
+			, TB_SVC_ORDER.CUSTOMER_TP AS cdMemberType /* 고객형태코드 */
+			, TB_SVC_ORDER.CUSTOME_AGE_TP AS cdMemberAge /* 고객연령대코드 */
+			, TB_SVC_ORDER.CUSTOME_GENDER AS cdMemberSex /* 고객성별코드 */
+			, TB_SVC_ORDER.CUSTOMER_CNT AS cntCustomer /* 객수 */
+			, '' AS cdTour /* 여행사코드 */
+			, 0 AS noGuide /* 가이드번호 */
+			, 0 AS ynForeigner /* 외국인유무 */
+			, TB_SVC_ORDER.USER_ID AS cdMember /* 회원코드 */
+			, IFNULL(TB_SVC_ORDER.ORDERER_NAME, '') AS nmMember /* 회원명 */
+			, TB_SVC_ORDER.ORDERER_MB AS telMobileMember /* 주문자 휴대전화번호 */
+			, '' AS cdMemberDelivery /* 배달고객번호 */
+			, TB_SVC_ORDER.STAFF_ID AS cdEmployee /* 사원코드 */
+			, (TB_SVC_ORDER.SALES + TB_SVC_ORDER.DISCOUNT) AS amtOrder /* 주문금액 */
+			, TB_SVC_ORDER.SUPPLY_VALUE AS amtSupply /* 공급가 */
+			, TB_SVC_ORDER.TAX AS amtTax /* 부가세 */
+			, TB_SVC_ORDER.DISCOUNT AS amtDc /* 할인금액 */
+			, TB_SVC_ORDER.SERVICE_CHARGE AS amtTip /* 봉사료 */
+			, TB_SVC_ORDER.MEMO AS memo /* 메모 */
+			, 0 AS dsStatus /* 주문상태(1:주문 2:전체취소 3:합석) */
+			, TB_SVC_ORDER.IS_SALES AS ynSale /* 정산 완료 여부(1:예 0:아니오) */
+			, '' AS cdVendor /* 거래처 코드 */
+			, DATE_FORMAT(TB_SVC_ORDER.RESERVE_TM_LOCAL, '%Y%m%d') AS ymdBooking /* 예약일 */
+			, RESERVE_NO AS noBooking /* 예약번호 */
+			, DATE_FORMAT(TB_SVC_ORDER.RESERVE_TM_LOCAL, '%H%i') AS resTimeBooking
+			, DATE_FORMAT(TB_SVC_ORDER.RESERVE_REG_TM_LOCAL, '%Y%m%d%H%i%s') AS resDtInsert
+			, TB_SVC_ORDER.CUSTOMER_CNT AS resCntCustomer
+			, 0 AS noOrderPrint /* 주문번호출력 */
+			, COALESCE(RIGHT(CANCEL_TP, 3), 0) AS cdCancelReason /* 취소 사유 */
+			, DATE_FORMAT(ORDER_TM_LOCAL, '%Y%m%d%H%i%s') AS dtOrder /* 주문일시 */
+			, DATE_FORMAT(ACCEPT_TM_LOCAL, '%Y%m%d%H%i%s') AS dtApproval /* 승인일시 */
+			, TB_SVC_ORDER.EST_TM AS timeWait /* 예상 대기 시간 */			
+			, DATE_FORMAT(TB_SVC_ORDER.CREATED, '%Y%m%d%H%i%s') AS dtInsert /* 등록일시 */
+			, STAFF_ID AS cdEmployeeInsert /* 등록자 */
+			, DATE_FORMAT(TB_SVC_ORDER.UPDATED, '%Y%m%d%H%i%s') AS dtUpdate /* 수정일시 */
+			, STAFF_ID AS cdEmployeeUpdate /* 수정자 */
+      FROM TB_SVC_ORDER
+      LEFT OUTER JOIN TB_USER ON TB_USER.ID = TB_SVC_ORDER.USER_ID
+	<trim prefix="WHERE" prefixOverrides="AND |OR ">
+		<if test="_parameter.containsKey('storeId')">
+	   AND TB_SVC_ORDER.STORE_ID = #{storeId}
+		</if>
+		<if test="_parameter.containsKey('noOrder')">
+	   AND TB_SVC_ORDER.ORDER_NO = #{noOrder}
+		</if>
+		<if test="_parameter.containsKey('cdOrderType')">
+	   AND TB_SVC_ORDER.ORDER_TP = #{cdOrderType}
+		</if>
+		AND TB_SVC_ORDER.OPEN_DT BETWEEN #{startDtOpen} AND #{endDtOpen}
+	</trim>
+  </select>
+  
+  	<select id="lockSaveOrder" parameterType="map" resultType="boolean">
+		/* PosSalesOrderInfoMapper.lockSaveOrder */		
+		SELECT GET_LOCK('save_order' + #{storeId} + #{orderNo} , 10)
+	</select>	
+	
+	<select id="unlockSaveOrder" parameterType="map"  resultType="boolean">
+		/* PosSalesOrderInfoMapper.unlockSaveOrder */ 
+		SELECT RELEASE_LOCK('save_order' + #{storeId} + #{orderNo});
+	</select>
+
+</mapper>

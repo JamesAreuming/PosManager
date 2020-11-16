@@ -1,0 +1,1213 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: CustomMarketingMapper.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History	: 
+  ~
+  ~ Version	: 1.0
+  ~ Author   : 
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.admin.CustomMarketingMapper">
+
+  <resultMap id="PromotionList" type="java.util.LinkedHashMap" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="PROMOTION_NM" property="promotionNm" jdbcType="CHAR" />
+    <result column="DISCOUNT" property="discount" jdbcType="CHAR" />
+    <result column="DISCOUNT_TP" property="discountTp" jdbcType="CHAR" />
+    <result column="DISCOUNT_TP_NM" property="discountTpNm" jdbcType="CHAR" />
+    <result column="COUPON_NM" property="couponNm" jdbcType="CHAR" />
+    <result column="ISSUED_DT" property="issuedDt" jdbcType="CHAR" />
+    <result column="ISSUED_COUNT" property="issuedCount" jdbcType="CHAR" />
+  </resultMap>
+  
+	<select id="getPromotionMarketingList" parameterType="hashMap" resultMap="PromotionList">
+		select t.*, b.title as DISCOUNT_TP_NM, ifnull(c.ISSUED_COUNT, 0) as ISSUED_COUNT from (
+		SELECT c.ID, p.ISSUED_DT, c.COUPON_NM, c.DISCOUNT_TP, c.DISCOUNT, p.PROMOTION_NM, p.ID as PROMOTION_ID
+		FROM TB_SVC_COUPON c join TB_SVC_COUPON_PROMOTION p where c.ID = p.COUPON_ID and c.ID = #{couponId}
+		) t
+		left join 
+		TB_BASE_BCODE b on (t.DISCOUNT_TP=b.BASE_CD)
+		left join 
+		(SELECT PROMOTION_ID, count(PROMOTION_ID) as ISSUED_COUNT FROM TB_SVC_COUPON_LOG group by PROMOTION_ID) c
+		on c.PROMOTION_ID=t.PROMOTION_ID
+	</select>
+	
+	<select id="getCountPromotionMarketingList" parameterType="hashMap" resultType="int">
+		SELECT count(*) as count
+		FROM TB_SVC_COUPON c join TB_SVC_COUPON_PROMOTION p where c.ID = p.COUPON_ID and c.ID = #{couponId}
+	</select>
+	
+	<resultMap type="java.util.LinkedHashMap" id="UserListMap" autoMapping="false">
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="BARCODE" property="barcode" jdbcType="CHAR" />
+    <result column="MB" property="mb" jdbcType="CHAR" typeHandler="com.jc.pico.utils.mybatis.typehandler.MobileSecurityTypeHandler"/>
+    <result column="MB_COUNTRY_CD" property="mbCountryCd" jdbcType="CHAR"/>
+    <result column="NAME" property="name" jdbcType="CHAR" />
+    <result column="BIRTHDAY" property="birthday" jdbcType="CHAR" />
+    <result column="GENDER" property="gender" jdbcType="CHAR" />
+    <result column="EMAIL" property="email" jdbcType="CHAR"  typeHandler="com.jc.pico.utils.AES256Cipher"/>
+    <result column="LAST_LOGIN" jdbcType="TIMESTAMP" property="lastLogin" />
+   <result column="IS_SVC_SMS" jdbcType="BOOLEAN" property="isSvcSMS" />
+   <result column="IS_SVC_PUSH" jdbcType="BOOLEAN" property="isSvcPush" />
+   <result column="IS_SVC_BLUETOOTH" jdbcType="BOOLEAN" property="isSvcBluetooth" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+  </resultMap>
+
+  <select id="getUserList" parameterType="hashMap" resultMap="UserListMap">
+  	SELECT
+		U.ID,
+	    U.BARCODE,
+	    U.MB,
+	    U.MB_COUNTRY_CD,
+	    U.`NAME`,
+	    DATE_FORMAT(U.BIRTHDAY,'%Y-%m-%d') BIRTHDAY,
+	    B.TITLE as GENDER,
+	    U.EMAIL,
+	    U.LAST_LOGIN,
+	    U.IS_SVC_SMS,
+	    U.IS_SVC_PUSH,
+	    U.IS_SVC_BLUETOOTH,
+	    U.CREATED
+	FROM
+		TB_USER U
+	    LEFT JOIN TB_BASE_BCODE B ON (U.GENDER=b.BASE_CD)
+	where
+		1 = 1
+		<if test="storeId != null">
+			AND U.ID IN (SELECT DISTINCT USER_ID FROM TB_SVC_ORDER WHERE STORE_ID = #{storeId})
+		</if>
+		<if test="userId != null">
+			AND U.ID = #{userId}
+		</if>
+ 		<if test="types != null">
+  			AND U.`TYPE` IN <foreach collection="types" item="type" open="(" separator="," close=")">#{type}</foreach>
+  		</if>
+  		<if test="searchType == 'usercode'">
+			<if test="searchKeyword != null">
+				AND U.BARCODE LIKE CONCAT('%', #{searchKeyword}, '%')
+			</if>
+		</if>
+		<if test="searchType == 'username'">
+			<if test="searchKeyword != null">
+				AND U.NAME LIKE CONCAT('%', #{searchKeyword}, '%')
+			</if>
+		</if>
+		<if test="searchType == 'usermb'">
+			<if test="searchKeyword != null">
+				AND (    MB_BK = #{searchKeyword, typeHandler=com.jc.utils.mybatis.typehandler.MobileSecurityTypeHandler} 
+		  			  OR MB = #{searchKeyword, typeHandler=com.jc.utils.mybatis.typehandler.MobileSecurityTypeHandler}
+	  				)
+			</if>
+		</if>
+		<if test="searchType == 'useremail'">
+			<if test="searchKeyword != null">
+				AND U.EMAIL = #{searchKeyword}
+			</if>
+		</if>
+		
+		<if test="searchType2 == 'birthday'">
+			<if test="fromdate != null and todate != null">
+				AND u.BIRTHDAY BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+			</if>
+		</if>
+		
+		<if test="searchType2 == 'joinDay'">
+			<if test="fromdate != null and todate != null">
+				AND u.CREATED BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+			</if>
+		</if>
+
+		<if test="gender != null">
+			AND U.GENDER = #{gender}
+		</if>
+  </select>
+
+   <select id="getCountUserList" parameterType="hashMap" resultType="int">
+  	SELECT
+		count(*) as count
+	FROM
+		TB_USER u
+	    left join TB_BASE_BCODE b on (u.GENDER=b.BASE_CD)
+	where
+		1 = 1
+		<if test="storeId != null">
+			AND U.ID IN (SELECT DISTINCT USER_ID FROM TB_SVC_ORDER WHERE STORE_ID = #{storeId})
+		</if>
+		<if test="userId != null">
+			AND U.ID = #{userId}
+		</if>
+ 		<if test="types != null">
+  			AND U.`TYPE` IN <foreach collection="types" item="type" open="(" separator="," close=")">#{type}</foreach>
+  		</if>
+  		<if test="searchType == 'usercode'">
+			<if test="searchKeyword != null">
+				AND U.BARCODE LIKE CONCAT('%',  #{searchKeyword}, '%')
+			</if>
+		</if>
+		<if test="searchType == 'username'">
+			<if test="searchKeyword != null">
+				AND U.NAME LIKE CONCAT('%',  #{searchKeyword}, '%')
+			</if>
+		</if>
+		<if test="searchType == 'usermb'">
+			<if test="searchKeyword != null">
+				AND (    MB_BK = #{searchKeyword, typeHandler=com.jc.utils.mybatis.typehandler.MobileSecurityTypeHandler} 
+		  			  OR MB = #{searchKeyword, typeHandler=com.jc.utils.mybatis.typehandler.MobileSecurityTypeHandler}
+	  				)
+			</if>
+		</if>
+		<if test="searchType == 'useremail'">
+			<if test="searchKeyword != null">
+				AND U.EMAIL = #{searchKeyword}
+			</if>
+		</if>
+		
+		<if test="searchType2 == 'birthday'">
+			<if test="fromdate != null and todate != null">
+				AND u.BIRTHDAY BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+			</if>
+		</if>
+		
+		<if test="searchType2 == 'joinDay'">
+			<if test="fromdate != null and todate != null">
+				AND u.CREATED BETWEEN DATE_ADD(#{fromdate}, INTERVAL 0 SECOND) AND DATE_ADD(#{todate}, INTERVAL '23:59:59' HOUR_SECOND)
+			</if>
+		</if>
+
+		<if test="gender != null">
+			AND U.GENDER = #{gender}
+		</if>
+	</select>
+	
+	<resultMap id="CouponListResultMap" type="java.util.LinkedHashMap" autoMapping="false">
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="COUPON_CD" property="couponCd" jdbcType="INTEGER" />
+    <result column="COUPON_NM" property="couponNm" jdbcType="CHAR" />
+    <result column="COUPON_TP_NM" property="couponTp" jdbcType="CHAR" />
+    <result column="COUPON_ST_NM" property="division" jdbcType="CHAR" />
+    <result column="DISCOUNT_TP_NM" property="discountTp" jdbcType="CHAR"/>
+    <result column="DISCOUNT" property="discount" jdbcType="INTEGER" />
+    <result column="ISSUE_DATE" property="issueDt" jdbcType="CHAR" />
+    <result column="EXPIRE_DATE" property="expireDt" jdbcType="CHAR" />
+    <result column="BARCODE" property="barcode" jdbcType="CHAR" />
+    <result column="MB" property="mb" jdbcType="CHAR" typeHandler="com.jc.pico.utils.mybatis.typehandler.MobileSecurityTypeHandler"/>
+    <result column="USED" property="used" jdbcType="CHAR" />
+  </resultMap>
+
+  <select id="getCouponList" parameterType="hashMap" resultMap="CouponListResultMap">
+    SELECT
+		uc.id,
+		uc.COUPON_CD,
+	    c.COUPON_NM,
+        ba2.title as COUPON_TP_NM,
+        ba1.title as DISCOUNT_TP_NM,
+	    c.DISCOUNT,
+        uc.CREATED as ISSUE_DATE,
+	    uc.EXPIRE as EXPIRE_DATE,
+        ba.title as COUPON_ST_NM,
+        uc.`USED`,
+        us.`BARCODE`,
+        us.`NAME`,
+        us.`MB`
+	FROM
+		TB_SVC_USER_COUPON uc
+	    left join TB_SVC_COUPON c on (uc.COUPON_ID=c.ID)
+        left join (select * from TB_SVC_COUPON_LOG where id in
+			(SELECT max(ID) FROM TB_SVC_COUPON_LOG group by COUPON_ID)) cl on (uc.ID = cl.COUPON_ID)
+        left join TB_BASE_BCODE ba2 on (ba2.BASE_CD=uc.COUPON_TP)
+		left join TB_BASE_BCODE ba on (ba.BASE_CD=cl.LOG_TP)
+		left join TB_BASE_BCODE ba1 on (ba1.BASE_CD=c.DISCOUNT_TP)
+        left join TB_USER us on (uc.USER_ID=us.ID)
+	where
+		1 = 1
+		<if test=" userId == null">
+			and uc.BRAND_ID = #{brandId}
+			<if test="couponId != null">
+				and uc.id = #{couponId}
+			</if>
+		</if>
+		<if test=" userId != null">
+			and uc.USER_ID = #{userId}
+		</if>
+		<if test="fromdate != null">
+			and left(uc.CREATED, 10) >= #{fromdate}
+		</if>
+		<if test="todate != null">
+			and left(uc.CREATED, 10) <![CDATA[ <= ]]> #{todate}
+		</if>
+		<if test="couponSt != null" >
+			and cl.LOG_TP = #{couponSt}
+		</if>
+		<if test="couponTp != null">
+			and uc.COUPON_TP = #{couponTp}
+		</if>
+		<if test="used != null">
+			and uc.USED = #{used}
+		</if>
+		<if test=" searchType == 'usercode'">
+			<if test="searchKeyword != null">
+				and us.BARCODE = #{searchKeyword}
+			</if>
+		</if>
+		<if test=" searchType == 'usermb'">
+			<if test="searchKeyword != null">
+				and us.MB_BK = #{searchKeyword,typeHandler=com.jc.pico.utils.mybatis.typehandler.OnewaySecurityTypeHandler}
+			</if>
+		</if>
+    group by uc.id
+    <if test=" userId != null">
+    order by ISSUE_DATE DESC
+    </if>
+  </select>
+
+  <select id="getCountCouponList" parameterType="hashMap" resultType="int">
+  	select count(*) as count from (
+	  	select
+			uc.ID
+		FROM
+			TB_SVC_USER_COUPON uc
+		    left join TB_SVC_COUPON c on (uc.COUPON_ID=c.ID)
+	        left join (select * from TB_SVC_COUPON_LOG where id in
+				(SELECT max(ID) FROM TB_SVC_COUPON_LOG group by COUPON_ID)) cl on (uc.ID = cl.COUPON_ID)
+	        left join TB_BASE_BCODE ba2 on (ba2.BASE_CD=uc.COUPON_TP)
+			left join TB_BASE_BCODE ba on (ba.BASE_CD=cl.LOG_TP)
+			left join TB_BASE_BCODE ba1 on (ba1.BASE_CD=c.DISCOUNT_TP)
+	        left join TB_USER us on (uc.USER_ID=us.ID)
+		where
+			1 = 1
+			<if test=" userId == null">
+				and uc.BRAND_ID = #{brandId}
+				<if test="couponId != null">
+					and uc.id = #{couponId}
+				</if>
+			</if>
+			<if test=" userId != null">
+				and uc.USER_ID = #{userId}
+			</if>
+			<if test="fromdate != null">
+				and left(uc.CREATED, 10) >= #{fromdate}
+			</if>
+			<if test="todate != null">
+				and left(uc.CREATED, 10) <![CDATA[ <= ]]> #{todate}
+			</if>
+			<if test="couponSt != null" >
+				and cl.LOG_TP = #{couponSt}
+			</if>
+			<if test="couponTp != null">
+				and uc.COUPON_TP = #{couponTp}
+			</if>
+			<if test="used != null">
+				and uc.USED = #{used}
+			</if>
+			<if test=" searchType == 'usercode'">
+				<if test="searchKeyword != null">
+					and us.BARCODE = #{searchKeyword}
+				</if>
+			</if>
+			<if test=" searchType == 'usermb'">
+				<if test="searchKeyword != null">
+					and us.MB_BK = #{searchKeyword,typeHandler=com.jc.pico.utils.mybatis.typehandler.OnewaySecurityTypeHandler}
+				</if>
+			</if>
+	    group by uc.id
+	) as c
+  </select>
+  
+  <!-- 쿠폰 발행 고객 정보 조회 -->
+  <resultMap id="IssuedUserListResultMap" type="java.util.LinkedHashMap" autoMapping="false">
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="COUPON_CD" property="couponCd" jdbcType="INTEGER" />
+    <result column="BARCODE" property="barcode" jdbcType="CHAR" />
+    <result column="NAME" property="name" jdbcType="CHAR" />
+    <result column="MB" property="mb" jdbcType="CHAR" typeHandler="com.jc.pico.utils.mybatis.typehandler.MobileSecurityTypeHandler"/>
+    <result column="USED" property="used" jdbcType="CHAR" />
+    <result column="STORE_NM" property="storeNm" jdbcType="CHAR" />
+    <result column="USE_STORE_NM" property="useStoreNm" jdbcType="CHAR" />
+  </resultMap>
+
+  <select id="getIssedUserList" parameterType="hashMap" resultMap="IssuedUserListResultMap">
+  	SELECT CP.ID
+	     , CP.COUPON_CD
+	     , USR.BARCODE
+	     , USR.NAME
+	     , USR.MB
+	     , CP.USED
+	     , (select store_nm from tb_svc_store where id = cp.STORE_ID) STORE_NM
+     	 , (select store_nm from tb_svc_store where id = cp.USE_STORE_ID) USE_STORE_NM
+	FROM TB_SVC_USER_COUPON CP
+	     LEFT JOIN TB_USER USR ON (CP.USER_ID = USR.ID AND USR.TYPE IN ('300001', '300002'))
+	     <!-- JOIN TB_SVC_PROMOTION_COUPON PR ON (PR.COUPON_ID = CP.COUPON_ID AND PR.PROMOTION_ID = #{promotionId} AND PR.COUPON_ID = #{couponId}) -->
+	WHERE CP.PROMOTION_ID = #{promotionId} 
+	  AND CP.COUPON_ID = #{couponId}
+  </select>
+  
+  <select id="getCountIssedUserList" parameterType="hashMap" resultType="int">
+  	SELECT COUNT(*)
+	  FROM TB_SVC_USER_COUPON CP
+	       LEFT JOIN TB_USER USR ON (CP.USER_ID = USR.ID AND USR.TYPE IN ('300001', '300002'))
+	     <!-- JOIN TB_SVC_PROMOTION_COUPON PR ON (PR.COUPON_ID = CP.COUPON_ID AND PR.PROMOTION_ID = #{promotionId} AND PR.COUPON_ID = #{couponId}) -->
+	 WHERE CP.PROMOTION_ID = #{promotionId} 
+	   AND CP.COUPON_ID = #{couponId}
+  </select>
+  
+  <resultMap id="CouponDetailResultMap" type="java.util.LinkedHashMap" autoMapping="false">
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Thu Aug 04 11:39:46 KST 2016.
+    -->
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="BRAND_ID" jdbcType="BIGINT" property="brandId" />
+    <result column="BRAND_NM" jdbcType="VARCHAR" property="brandNm" />
+    <result column="STORE_ID" jdbcType="BIGINT" property="storeId" />
+    <result column="STORE_NM" jdbcType="VARCHAR" property="storeNm" />
+    <result column="IS_DEFAULT" jdbcType="BIT" property="isDefault" />
+    <result column="USED" jdbcType="BIT" property="used" />
+    <result column="COUPON_NM" jdbcType="VARCHAR" property="couponNm" />
+    <result column="HAS_COUNT_LIMIT" jdbcType="BIT" property="hasCountLimit" />
+    <result column="DISCOUNT_TP" jdbcType="CHAR" property="discountTp" />
+    <result column="EXPIRE_TP" jdbcType="CHAR" property="expireTp" />
+    <result column="MAX_CNT" jdbcType="INTEGER" property="maxCnt" />
+    <result column="ISSUE_CNT" jdbcType="INTEGER" property="issueCnt" />
+    <result column="TERM" jdbcType="CHAR" property="term" />
+    <result column="BEGIN" jdbcType="TIMESTAMP" property="begin" />
+    <result column="EXPIRE" jdbcType="TIMESTAMP" property="expire" />
+    <result column="DISCOUNT" jdbcType="DOUBLE" property="discount" />
+    <result column="DISCOUNT_LIMIT" jdbcType="DOUBLE" property="discountLimit" />
+    <result column="TARGET_MENU_ID" jdbcType="BIGINT" property="targetMenuId" />
+    <result column="SUPPLY_MENU_ID" jdbcType="BIGINT" property="supplyMenuId" />
+    <result column="HAS_USE_LIMIT" jdbcType="BIT" property="hasUseLimit" />    
+    <result column="WEEK_MON" jdbcType="CHAR" property="weekMon" />
+    <result column="WEEK_TUE" jdbcType="CHAR" property="weekTue" />
+    <result column="WEEK_WED" jdbcType="CHAR" property="weekWed" />
+    <result column="WEEK_THU" jdbcType="CHAR" property="weekThu" />
+    <result column="WEEK_FRI" jdbcType="CHAR" property="weekFri" />
+    <result column="WEEK_SAT" jdbcType="CHAR" property="weekSat" />
+    <result column="WEEK_SUN" jdbcType="CHAR" property="weekSun" />
+    <result column="ENABLE_DAYS" jdbcType="CHAR" property="enableDays" />    
+    <result column="OPEN_TM_H" jdbcType="CHAR" property="openTmH" />
+    <result column="OPEN_TM_M" jdbcType="CHAR" property="openTmM" />    
+    <result column="OPEN_TM" jdbcType="CHAR" property="openTm" />    
+    <result column="CLOSE_TM_H" jdbcType="CHAR" property="closeTmH" />
+    <result column="CLOSE_TM_M" jdbcType="CHAR" property="closeTmM" />    
+    <result column="CLOSE_TM" jdbcType="CHAR" property="closeTm" />
+    <result column="IMG" jdbcType="VARCHAR" property="img" />
+    <result column="SMALL_IMG" jdbcType="VARCHAR" property="smallImg" />
+    <result column="IS_ALL" jdbcType="BIT" property="isAll" />
+    <result column="STORE_IDS" jdbcType="LONGVARCHAR" property="storeIds" />
+    <result column="NOTICE" jdbcType="LONGVARCHAR" property="notice" />
+    <result column="ADMIN_ID" jdbcType="VARCHAR" property="adminId" />
+    <result column="STORE_IDS" jdbcType="VARCHAR" property="storeIds" />
+    <result column="NOTICE" jdbcType="VARCHAR" property="notice" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />
+  </resultMap>
+  
+  <select id="getCouponDetail" parameterType="java.lang.Long" resultMap="CouponDetailResultMap">
+  	SELECT ID
+  	     , BRAND_ID
+  	     , (SELECT BRAND_NM FROM TB_SVC_BRAND WHERE ID = CP.BRAND_ID) BRAND_NM
+  	     , STORE_ID
+  	     , (SELECT STORE_NM FROM TB_SVC_STORE WHERE ID = CP.STORE_ID) STORE_NM
+  	     , IS_DEFAULT
+  	     , USED
+  	     , COUPON_NM
+  	     , HAS_COUNT_LIMIT
+  	     , DISCOUNT_TP
+  	     , EXPIRE_TP
+  	     , MAX_CNT
+  	     , ISSUE_CNT
+  	     , TERM
+  	     , `BEGIN`
+  	     , EXPIRE
+  	     , DISCOUNT
+  	     , DISCOUNT_LIMIT
+  	     , TARGET_MENU_ID
+  	     , SUPPLY_MENU_ID
+  	     , HAS_USE_LIMIT
+  	     , SUBSTRING(ENABLE_DAYS, 1, 1) WEEK_MON
+         , SUBSTRING(ENABLE_DAYS, 2, 1) WEEK_TUE
+         , SUBSTRING(ENABLE_DAYS, 3, 1) WEEK_WED
+         , SUBSTRING(ENABLE_DAYS, 4, 1) WEEK_THU
+         , SUBSTRING(ENABLE_DAYS, 5, 1) WEEK_FRI
+         , SUBSTRING(ENABLE_DAYS, 6, 1) WEEK_SAT
+         , SUBSTRING(ENABLE_DAYS, 7, 1) WEEK_SUN
+         , ENABLE_DAYS
+         , SUBSTRING(OPEN_TM, 1, 2) OPEN_TM_H
+         , SUBSTRING(OPEN_TM, 3, 2) OPEN_TM_M
+         , OPEN_TM
+         , SUBSTRING(CLOSE_TM, 1, 2) CLOSE_TM_H
+         , SUBSTRING(CLOSE_TM, 3, 2) CLOSE_TM_M
+         , CLOSE_TM
+  	     , IMG
+  	     , SMALL_IMG
+  	     , IS_ALL
+  	     , STORE_IDS
+         , NOTICE
+  	     , ADMIN_ID
+  	     , CREATED
+  	     , UPDATED
+	FROM TB_SVC_COUPON CP
+   WHERE CP.ID = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <!-- 프로모션 목록 -->
+  <resultMap id="PromotionListResultMap" type="java.util.LinkedHashMap" autoMapping="false">
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="PROMOTION_NM" property="promotionNm" jdbcType="VARCHAR" />
+    <result column="FRAN_ID" property="franId" jdbcType="BIGINT" />
+    <result column="BRAND_ID" property="brandId" jdbcType="BIGINT" />
+    <result column="BRAND_NM" property="brandNm" jdbcType="VARCHAR" />
+    <result column="START_DT" property="startDt" jdbcType="TIMESTAMP" />
+    <result column="END_DT" property="endDt" jdbcType="TIMESTAMP" />
+    <result column="ISSUE_TP_NM" property="issueTpNm" jdbcType="VARCHAR" />
+    <result column="ISSUE_ST_NM" property="issueStNm" jdbcType="VARCHAR" />
+    <result column="ISSUED_DT" property="issuedDt" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getPromotionList" parameterType="hashMap" resultMap="PromotionListResultMap">
+  	SELECT  PRO.ID
+	      , PRO.PROMOTION_NM
+	      , BR.FRAN_ID
+	      , PRO.BRAND_ID
+	      , BR.BRAND_NM
+	      , DATE_FORMAT(PRO.START_DT,'%Y-%m-%d') START_DT
+	      , DATE_FORMAT(PRO.END_DT,'%Y-%m-%d') END_DT
+	      , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = PRO.ISSUE_TP ) ISSUE_TP_NM
+	      , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = PRO.ISSUE_ST ) ISSUE_ST_NM
+	      , DATE_FORMAT(PRO.ISSUED_DT, '%Y-%m-%d') ISSUED_DT
+	  FROM TB_SVC_PROMOTION PRO
+	     , TB_SVC_BRAND BR
+	 WHERE BR.ID = PRO.BRAND_ID
+	 <if test="franId != null" >
+		AND BR.FRAN_ID = #{franId}
+	</if>
+	<if test="brandId != null and brandId != 0" >
+		AND PRO.BRAND_ID = #{brandId}
+	</if>
+	<if test="orderby != null">
+    	ORDER BY #{orderby}
+    </if>
+
+   
+  </select>
+  
+  <!-- 프로모션 목록 수-->
+  <select id="getCountPromotionList" parameterType="hashMap" resultType="int">
+  	SELECT  COUNT(*)
+	  FROM TB_SVC_PROMOTION PRO
+	     , TB_SVC_BRAND BR
+	 WHERE BR.ID = PRO.BRAND_ID
+	   <if test="franId != null" >
+			AND BR.FRAN_ID = #{franId}
+		</if>
+		<if test="brandId != null and brandId != 0" >
+			AND PRO.BRAND_ID = #{brandId}
+		</if>
+		<if test=" orderby != null">
+	    	ORDER BY #{orderby}
+	    </if>
+  </select>
+  
+  <!-- 프로모션 상세-->
+  <resultMap id="PromotionDetailResultMap" type="java.util.LinkedHashMap" autoMapping="false">
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="PROMOTION_NM" property="promotionNm" jdbcType="VARCHAR" />
+    <result column="FRAN_ID" property="franId" jdbcType="BIGINT" />
+    <result column="BRAND_ID" property="brandId" jdbcType="BIGINT" />
+    <result column="BRAND_NM" property="brandNm" jdbcType="VARCHAR" />
+    <result column="START_DT" property="startDt" jdbcType="TIMESTAMP" />
+    <result column="END_DT" property="endDt" jdbcType="TIMESTAMP" />
+    <result column="ISSUE_TP_NM" property="issueTpNm" jdbcType="VARCHAR" />
+    <result column="ISSUE_ST_NM" property="issueStNm" jdbcType="VARCHAR" />
+    <result column="ISSUED_DT" property="issuedDt" jdbcType="VARCHAR" />
+    <result column="ISSUED_TM" property="issuedTm" jdbcType="VARCHAR" />
+    <result column="COUPON_ID" property="couponId" jdbcType="VARCHAR" />
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getPromotionDetail" parameterType="hashMap" resultMap="PromotionDetailResultMap">
+  	SELECT  PRO.ID
+	      , PRO.PROMOTION_NM
+	      , BR.FRAN_ID
+	      , PRO.BRAND_ID
+	      , BR.BRAND_NM
+	      , PRO.START_DT
+	      <!-- , DATE_FORMAT(PRO.START_DT,'%Y-%m-%d') START_DT -->
+		  , PRO.END_DT
+	      <!-- , DATE_FORMAT(PRO.END_DT,'%Y-%m-%d') END_DT -->
+	      , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = PRO.ISSUE_TP ) ISSUE_TP_NM
+	      , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = PRO.ISSUE_ST ) ISSUE_ST_NM
+	      , DATE_FORMAT(PRO.ISSUED_DT, '%Y-%m-%d') ISSUED_DT
+	      , TIME_FORMAT(PRO.ISSUED_TM, '%H:%i:%s') ISSUED_TM
+	      , PRCP.COUPON_ID
+	      , PRO.CONTENT
+	  FROM TB_SVC_PROMOTION PRO
+	     , TB_SVC_BRAND BR
+	     , (SELECT PROMOTION_ID 
+	             , GROUP_CONCAT(COUPON_ID) COUPON_ID
+              FROM TB_SVC_PROMOTION_COUPON
+              GROUP BY PROMOTION_ID) PRCP
+	 WHERE BR.ID = PRO.BRAND_ID
+	   AND PRCP.PROMOTION_ID = PRO.ID
+	   AND PRO.ID = #{id}
+  </select>
+  
+  <!-- 프로모션 쿠폰 목록-->
+  <resultMap id="PromotionCouponListResultMap" type="java.util.LinkedHashMap" autoMapping="false">
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="COUPON_NM" property="couponNm" jdbcType="VARCHAR" />
+    <result column="COUPON_ID" property="couponId" jdbcType="VARCHAR" />
+    <result column="PROMOTION_ID" property="promotionId" jdbcType="VARCHAR" />
+    <result column="DISCOUNT_TP_NM" property="discountTpNm" jdbcType="VARCHAR" />
+    <result column="EXPIRE_TP_NM" property="exipreTpNm" jdbcType="VARCHAR" />
+    <result column="ISSUE_CNT" property="iseeueCnt" jdbcType="BIGINT" />
+    <result column="ISSUE_TP" property="issueTp" jdbcType="VARCHAR" />
+    <result column="ISSUE_TP_NM" property="issueTpNm" jdbcType="VARCHAR" />
+    <result column="ISSUE_ST" property="issueSt" jdbcType="VARCHAR" />
+    <result column="ISSUE_ST_NM" property="issueStNm" jdbcType="VARCHAR" />
+    <result column="ISSUED_DT" property="issuedDt" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <select id="getPromotionCouponList" parameterType="hashMap" resultMap="PromotionCouponListResultMap">
+  	SELECT CP.ID
+  	     , CP.COUPON_NM
+  	     , CP.ID AS COUPON_ID
+         , PRCP.PROMOTION_ID
+  	     , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = CP.DISCOUNT_TP ) DISCOUNT_TP_NM
+  	     , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = CP.EXPIRE_TP ) EXPIRE_TP_NM
+  	     , ifnull(PRCP.ISSUE_CNT,0) ISSUE_CNT
+         , PRCP.ISSUE_TP
+         , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = PRCP.ISSUE_TP ) ISSUE_TP_NM
+         , PRCP.ISSUE_ST
+         , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = PRCP.ISSUE_ST ) ISSUE_ST_NM
+         , DATE_FORMAT(PRCP.ISSUED_DT, '%Y-%m-%d') ISSUED_DT 
+      FROM TB_SVC_COUPON CP
+         , TB_SVC_PROMOTION_COUPON PRCP
+      WHERE CP.ID = PRCP.COUPON_ID
+        AND PRCP.PROMOTION_ID = #{id}
+  </select>
+  
+  <!-- 프로모션 목록 수-->
+  <select id="getCountPromotionCouponList" parameterType="hashMap" resultType="int">
+  	SELECT COUNT(*)
+      FROM TB_SVC_COUPON CP
+         , TB_SVC_PROMOTION_COUPON PRCP
+      WHERE CP.ID = PRCP.COUPON_ID
+        AND PRCP.PROMOTION_ID = #{id}
+  </select>
+  
+  <!-- 프로모션 등록-->
+  <insert id="insertPromotionSelective" parameterType="hashMap">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO TB_SVC_PROMOTION
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="promotionNm != null">
+        PROMOTION_NM,
+      </if>
+      <if test="brandId != null">
+        BRAND_ID,
+      </if>
+      <if test="startDt != null">
+        START_DT,
+      </if>
+      <if test="endDt != null">
+        END_DT,
+      </if>
+      <if test="issueTp != null">
+        ISSUE_TP,
+      </if>
+      <if test="issueSt != null">
+        ISSUE_ST,
+      </if>
+      <if test="issuedDt != null">
+        ISSUED_DT,
+      </if>
+      <if test="issuedTm != null">
+        ISSUED_TM,
+      </if>
+      <if test="content != null">
+        CONTENT,
+      </if>
+      <if test="adminId != null">
+        ADMIN_ID,
+      </if>
+      <if test="promotionTp != null">
+        PROMOTION_TP,
+      </if>      
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="promotionNm != null">
+        #{promotionNm,jdbcType=VARCHAR},
+      </if>
+      <if test="brandId != null">
+        #{brandId,jdbcType=BIGINT},
+      </if>
+      <if test="startDt != null">
+        #{startDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDt != null">
+        #{endDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="issueTp != null">
+        #{issueTp,jdbcType=CHAR},
+      </if>
+      <if test="issueSt != null">
+        #{issueSt,jdbcType=CHAR},
+      </if>
+      <if test="issuedDt != null">
+        #{issuedDt,jdbcType=VARCHAR},
+      </if>
+      <if test="issuedTm != null">
+        #{issuedTm,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=VARCHAR},
+      </if>
+      <if test="promotionTp != null">
+        #{promotionTp,jdbcType=VARCHAR},
+      </if>      
+    </trim>
+  </insert>
+  
+  <!-- 프로모션 등록-->
+  <insert id="insertPromotionCouponSelective" parameterType="hashMap">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tb_svc_promotion_coupon
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="promotionId != null">
+        PROMOTION_ID,
+      </if>
+      <if test="couponId != null">
+        COUPON_ID,
+      </if>
+      <if test="issueCnt != null">
+        ISSUE_CNT,
+      </if>
+      <if test="issueTp != null">
+        ISSUE_TP,
+      </if>
+      <if test="issueSt != null">
+        ISSUE_ST,
+      </if>
+      <if test="issuedDt != null">
+        ISSUED_DT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="promotionId != null">
+        #{promotionId,jdbcType=BIGINT},
+      </if>
+      <if test="couponId != null">
+        #{couponId,jdbcType=BIGINT},
+      </if>      
+      <if test="issueCnt != null">
+        #{issueCnt,jdbcType=VARCHAR},
+      </if>
+      <if test="issueTp != null">
+        #{issueTp,jdbcType=VARCHAR},
+      </if>
+      <if test="issueSt != null">
+        #{issueSt,jdbcType=VARCHAR},
+      </if>
+      <if test="issuedDt != null">
+        #{issuedDt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 프로모션 쿠폰 매핑정보 삭제 -->
+  <delete id="deletePromotionCoupon" parameterType="java.lang.Long">
+    DELETE FROM TB_SVC_PROMOTION_COUPON
+    WHERE PROMOTION_ID = #{promotionId,jdbcType=BIGINT}
+  </delete>
+  
+  <!-- 프로모션 정보 수정 -->
+  <update id="updatePromotionSelective" parameterType="hashMap">
+    UPDATE TB_SVC_PROMOTION
+    <set>
+      <if test="promotionNm != null">
+        PROMOTION_NM = #{promotionNm,jdbcType=VARCHAR},
+      </if>
+      <if test="startDt != null">
+        START_DT = #{startDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDt != null">
+        END_DT = #{endDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="issuedDt != null">
+        ISSUED_DT = #{issuedDt,jdbcType=VARCHAR},
+      </if>
+      <if test="issuedTm != null">
+        ISSUED_TM = #{issuedTm,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        CONTENT = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="promotionTp != null">
+        PROMOTION_TP = #{promotionTp,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 프로모션 쿠폰 목록-->
+  <resultMap id="IssueCouponListResultMap" type="java.util.LinkedHashMap" autoMapping="false">
+    <result column="PROMOTION_ID" property="promotionId" jdbcType="BIGINT" />
+    <result column="COUPON_ID" property="couponId" jdbcType="BIGINT" />
+    <result column="PROMOTION_NM" property="promotionNm" jdbcType="VARCHAR" />
+    <result column="COUPON_NM" property="couponNm" jdbcType="VARCHAR" />
+    <result column="DISCOUNT_TP_NM" property="discountTpNm" jdbcType="VARCHAR" />
+    <result column="EXPIRE_TP_NM" property="exipreTpNm" jdbcType="VARCHAR" />
+    <result column="EXPIRE" property="expire" jdbcType="TIMESTAMP" />
+    <result column="DISCOUNT_TP" property="discountTp" jdbcType="VARCHAR" />
+    <result column="EXPIRE_TP" property="exipreTp" jdbcType="VARCHAR" />
+    <result column="BRAND_ID" property="brandId" jdbcType="BIGINT" />
+    <result column="BRAND_CD" property="brandCd" jdbcType="BIGINT" />
+    <result column="STORE_ID" property="storeId" jdbcType="BIGINT" />    
+    <result column="ISSUE_ST" property="issueSt" jdbcType="VARCHAR" />
+    <result column="ISSUE_ST_NM" property="issueStNm" jdbcType="VARCHAR" />
+    <result column="ISSUE_TP" property="issueTp" jdbcType="VARCHAR" />
+    <result column="ISSUE_TP_NM" property="issueTpNm" jdbcType="VARCHAR" />
+    <result column="ISSUED_DT" property="issuedDt" jdbcType="TIMESTAMP" />
+    <result column="TERM" property="term" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 프로모션 발행대상 쿠폰 목록-->
+  <select id="getIssueCouponList" parameterType="hashMap" resultMap="IssueCouponListResultMap">
+  	SELECT pc.PROMOTION_ID
+	     , pc.COUPON_ID
+	     , A.PROMOTION_NM
+	     , B.COUPON_NM
+	     , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = B.DISCOUNT_TP ) DISCOUNT_TP_NM
+  	     , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = B.EXPIRE_TP ) EXPIRE_TP_NM
+	     , B.DISCOUNT_TP
+	     , B.EXPIRE_TP
+	     , B.EXPIRE
+	     , B.BRAND_ID
+	     , (SELECT BRAND_CD FROM TB_SVC_BRAND AA WHERE AA.ID = B.BRAND_ID) BRAND_CD
+	     , B.STORE_ID
+	     , PC.ISSUE_ST
+         , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = PC.ISSUE_ST ) ISSUE_ST_NM
+         , PC.ISSUE_TP
+         , (SELECT TITLE FROM TB_BASE_BCODE WHERE BASE_CD = PC.ISSUE_TP ) ISSUE_TP_NM
+         , PC.ISSUED_DT
+         , B.TERM
+	FROM TB_SVC_PROMOTION_COUPON PC
+	     LEFT JOIN TB_SVC_PROMOTION A ON A.ID = PC.PROMOTION_ID
+	     LEFT JOIN TB_SVC_COUPON B ON B.ID = PC.COUPON_ID
+	WHERE 1=1 
+	  <if test="brandId != null and brandId !=0" >
+	  	AND B.BRAND_ID = #{brandId}
+	  </if>
+	  <if test="storeId != null and storeId !=0" >
+	  	AND B.STORE_ID = #{storeId}
+	  </if>
+	  <if test="promotionNm != null" >
+	  	AND A.PROMOTION_NM LIKE CONCAT('%', #{promotionNm}, '%')
+	  </if>
+	  <if test="couponNm != null" >
+	  	AND B.COUPON_NM LIKE CONCAT('%', #{couponNm}, '%')
+	  </if>
+	    AND (B.EXPIRE_TP = '404001' OR (B.EXPIRE_TP = '404002' AND B.EXPIRE >= now()))	
+	<if test="orderby != null">
+		ORDER BY ${orderby}
+	</if>
+  </select>
+  
+  <!-- 프로모션 발행대상 쿠폰 목록-->
+  <select id="getCountIssueCouponList" parameterType="hashMap" resultType="int">
+  	SELECT COUNT(*)	     
+	FROM TB_SVC_PROMOTION_COUPON PC
+	     LEFT JOIN TB_SVC_PROMOTION A ON A.ID = PC.PROMOTION_ID
+	     LEFT JOIN TB_SVC_COUPON B ON B.ID = PC.COUPON_ID
+	WHERE 1=1 
+	  <if test="brandId != null and brandId !=0" >
+	  	AND B.BRAND_ID = #{brandId}
+	  </if>
+	  <if test="storeId != null and storeId !=0" >
+	  	AND B.STORE_ID = #{storeId}
+	  </if>
+	  <if test="promotionNm != null" >
+	  	AND A.PROMOTION_NM LIKE CONCAT('%', #{promotionNm}, '%')
+	  </if>
+	  <if test="couponNm != null" >
+	  	AND B.COUPON_NM LIKE CONCAT('%', #{couponNm}, '%')
+	  </if>
+	    AND (B.EXPIRE_TP = '404001' OR (B.EXPIRE_TP = '404002' AND B.EXPIRE >= now()))
+	ORDER BY PC.PROMOTION_ID  
+  </select>
+  
+  
+  <!-- 프로모션 발행대상 회원 목록-->
+  <resultMap id="IssueUserList" type="java.util.LinkedHashMap" autoMapping="false">
+    <result column="USER_ID" property="userId" jdbcType="BIGINT" />
+    <result column="BRAND_ID" property="brandId" jdbcType="BIGINT" />
+    <result column="STORE_ID" property="storeId" jdbcType="BIGINT" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="BARCODE" property="barcode" jdbcType="VARCHAR" />
+    <result column="MB" property="mb" jdbcType="CHAR" typeHandler="com.jc.pico.utils.mybatis.typehandler.MobileSecurityTypeHandler"/>
+    <result column="EMAIL" property="email" jdbcType="VARCHAR"  typeHandler="com.jc.pico.utils.AES256Cipher"/>
+  </resultMap>
+  
+  <!-- 프로모션 발행대상 회원 목록-->
+  <select id="getIssueUserList" parameterType="hashMap" resultMap="IssueUserList">
+  	SELECT OD.USER_ID
+  	     , BRAND_ID
+  	     , STORE_ID
+  	     , US.NAME
+  	     , US.BARCODE
+         , US.MB
+         , US.EMAIL
+      FROM TB_SVC_ORDER OD
+         , TB_USER US
+     WHERE US.ID = OD.USER_ID
+       AND US.TYPE IN ('300001','300002')
+       AND US.STATUS = '301001'
+	  <if test="brandId != null and brandId !=0" >
+	  	AND OD.BRAND_ID = #{brandId}
+	  </if>
+	   <if test="storeId != null and storeId !=0" >
+	  	AND OD.STORE_ID = #{storeId}
+	  </if>
+	  <if test="lastLogin == 1" >
+		AND US.LAST_LOGIN >= SUBDATE(DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00'), INTERVAL 1 WEEK)
+	  </if>
+	  <if test="lastLogin == 2" >
+		AND US.LAST_LOGIN >= SUBDATE(DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00'), INTERVAL 2 WEEK)
+	  </if>
+	  <if test="lastLogin == 3" >
+		AND US.LAST_LOGIN >= SUBDATE(DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00'), INTERVAL 1 MONTH)
+	  </if>
+	  <if test="lastLogin == 4" >
+		AND US.LAST_LOGIN >= SUBDATE(DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00'), INTERVAL 3 MONTH)
+	  </if>
+	  <if test="lastLogin == 5" >
+		AND US.LAST_LOGIN >= SUBDATE(DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00'), INTERVAL 6 MONTH)
+	  </if>
+	  <if test="lastLogin == 6" >
+		AND US.LAST_LOGIN >= SUBDATE(DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00'), INTERVAL 1 YEAR)
+	  </if>
+	GROUP BY <if test="brandId != null and brandId !=0" >OD.BRAND_ID,</if> <if test="storeId != null and storeId !=0" >OD.STORE_ID,</if> OD.USER_ID
+	<if test="sales != null" >
+	HAVING SUM(OD.SALES) >= #{sales}
+	</if>
+	<if test="orderby != null">
+		ORDER BY ${orderby}
+	</if>
+  </select>
+  
+  <!-- 프로모션 발행대상 회원 목록 총건수-->
+  <select id="getCountIssueUserList" parameterType="hashMap" resultType="int">
+  	SELECT COUNT(*)
+  	  FROM (SELECT OD.USER_ID
+		  	     , BRAND_ID
+		  	     , STORE_ID
+		  	     , US.NAME
+		  	     , US.BARCODE
+		         , US.MB
+		         , US.EMAIL
+		      FROM TB_SVC_ORDER OD
+		         , TB_USER US
+		     WHERE US.ID = OD.USER_ID
+		       AND US.TYPE IN ('300001','300002')
+		       AND US.STATUS = '301001'
+			  <if test="brandId != null and brandId !=0" >
+			  	AND OD.BRAND_ID = #{brandId}
+			  </if>
+			   <if test="storeId != null and storeId !=0" >
+			  	AND OD.STORE_ID = #{storeId}
+			  </if>
+			  <if test="lastLogin == 1" >
+				AND US.LAST_LOGIN >= SUBDATE(DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00'), INTERVAL 1 WEEK)
+			  </if>
+			  <if test="lastLogin == 2" >
+				AND US.LAST_LOGIN >= SUBDATE(DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00'), INTERVAL 2 WEEK)
+			  </if>
+			  <if test="lastLogin == 3" >
+				AND US.LAST_LOGIN >= SUBDATE(DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00'), INTERVAL 1 MONTH)
+			  </if>
+			  <if test="lastLogin == 4" >
+				AND US.LAST_LOGIN >= SUBDATE(DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00'), INTERVAL 3 MONTH)
+			  </if>
+			  <if test="lastLogin == 5" >
+				AND US.LAST_LOGIN >= SUBDATE(DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00'), INTERVAL 6 MONTH)
+			  </if>
+			  <if test="lastLogin == 6" >
+				AND US.LAST_LOGIN >= SUBDATE(DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00'), INTERVAL 1 YEAR)
+			  </if>
+			GROUP BY <if test="brandId != null and brandId !=0" >OD.BRAND_ID,</if> <if test="storeId != null and storeId !=0" >OD.STORE_ID,</if> OD.USER_ID
+			<if test="sales != null" >
+			HAVING SUM(OD.SALES) >= #{sales}
+			</if>
+			) A
+  </select>
+  
+  <!-- 프로모션 쿠폰 발행 회원등록 -->
+  <insert id="insertUserCoupon" parameterType="hashMap">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO TB_SVC_USER_COUPON
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        USER_ID,
+      </if>
+      <if test="couponId != null">
+        COUPON_ID,
+      </if>
+      <if test="promotionId != null">
+        PROMOTION_ID,
+      </if>
+      <if test="brandId != null">
+        BRAND_ID,
+      </if>
+      <if test="storeId != null">
+        STORE_ID,
+      </if>
+      <if test="couponCd != null">
+        COUPON_CD,
+      </if>
+      <if test="couponTp != null">
+        COUPON_TP,
+      </if>
+      <if test="couponSt != null">
+        COUPON_ST,
+      </if>
+      <if test="used != null">
+        USED,
+      </if>
+      <if test="useStoreId != null">
+        USE_STORE_ID,
+      </if>
+      <if test="useTm != null">
+        USE_TM,
+      </if>
+      <if test="useTmLocal != null">
+        USE_TM_LOCAL,
+      </if>
+      <if test="expire != null">
+        EXPIRE,
+      </if>      
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="couponId != null">
+        #{couponId,jdbcType=BIGINT},
+      </if>
+      <if test="promotionId != null">
+        #{promotionId,jdbcType=BIGINT},
+      </if>
+      <if test="brandId != null">
+        #{brandId,jdbcType=BIGINT},
+      </if>
+      <if test="storeId != null">
+        #{storeId,jdbcType=BIGINT},
+      </if>
+      <if test="couponCd != null">
+        #{couponCd,jdbcType=VARCHAR},
+      </if>
+      <if test="couponTp != null">
+        #{couponTp,jdbcType=VARCHAR},
+      </if>
+      <if test="couponSt != null">
+        #{couponSt,jdbcType=VARCHAR},
+      </if>
+      <if test="used != null">
+        #{used,jdbcType=BIGINT},
+      </if>
+      <if test="useStoreId != null">
+        #{useStoreId,jdbcType=BIGINT},
+      </if>
+      <if test="useTm != null">
+        #{useTm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="useTmLocal != null">
+        #{useTmLocal,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expire != null">
+        #{expire,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 프로모션 쿠폰 발행 대상회원 등록 -->
+  <insert id="insertTargetUser" parameterType="hashMap">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO TB_SVC_PROMOTION_TARGET
+    <trim prefix="(" suffix=")" suffixOverrides=",">      
+      <if test="couponId != null">
+        COUPON_ID,
+      </if>      
+      <if test="promotionId != null">
+        PROMOTION_ID,
+      </if>
+      <if test="userId != null">
+        USER_ID,
+      </if>
+      <if test="isIssued != null">
+        IS_ISSUED,
+      </if>
+      <if test="issuedDt != null">
+        ISSUED_DT,
+      </if>      
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="couponId != null">
+        #{couponId,jdbcType=BIGINT},
+      </if>
+      <if test="promotionId != null">
+        #{promotionId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="isIssued != null">
+        #{isIssued,jdbcType=TINYINT},
+      </if>
+      <if test="issuedDt != null">
+        #{issuedDt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 프로모션 정보 수정 -->
+  <update id="updatePromotionCouponSelective" parameterType="hashMap">
+    UPDATE TB_SVC_PROMOTION_COUPON
+    <set>
+      <if test="issueCnt != null">
+        ISSUE_CNT = #{issueCnt,jdbcType=VARCHAR},
+      </if>
+      <if test="issueTp != null">
+        ISSUE_TP = #{issueTp,jdbcType=VARCHAR},
+      </if>
+      <if test="issueSt != null">
+        ISSUE_ST = #{issueSt,jdbcType=VARCHAR},
+      </if>
+      <if test="issuedDt != null">
+        ISSUED_DT = #{issuedDt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    WHERE PROMOTION_ID = #{promotionId,jdbcType=BIGINT}
+      AND COUPON_ID = #{couponId,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 프로모션 쿠폰 발행 대상회원 등록 -->
+  <insert id="insertUserCouponLog" parameterType="hashMap">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO TB_SVC_COUPON_LOG
+    <trim prefix="(" suffix=")" suffixOverrides=",">      
+      <if test="userId != null">
+        USER_ID,
+      </if>
+      <if test="storeId != null">
+        STORE_ID,
+      </if>      
+      <if test="brandId != null">
+        BRAND_ID,
+      </if>
+      <if test="couponId != null">
+        COUPON_ID,
+      </if>
+      <if test="promotionId != null">
+        PROMOTION_ID,
+      </if>
+      <if test="couponNm != null">
+        COUPON_NM,
+      </if>
+      <if test="couponCd != null">
+        COUPON_CD,
+      </if>
+      <if test="orderId != null">
+        ORDER_ID,
+      </if>
+      <if test="when != null">
+        WHEN,
+      </if>
+      <if test="logTp != null">
+        LOG_TP,
+      </if>
+      <if test="srcIp != null">
+        SRC_IP,
+      </if>
+      <if test="userAgent != null">
+        USER_AGENT,
+      </if>
+      <if test="clientId != null">
+        CLIENT_ID,
+      </if>
+      <if test="deviceId != null">
+        DEVICE_ID,
+      </if>
+      <if test="grantType != null">
+        GRANT_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="storeId != null">
+        #{storeId,jdbcType=BIGINT},
+      </if>
+      <if test="brandId != null">
+        #{brandId,jdbcType=BIGINT},
+      </if>
+      <if test="couponId != null">
+        #{couponId,jdbcType=BIGINT},
+      </if>
+      <if test="promotionId != null">
+        #{promotionId,jdbcType=BIGINT},
+      </if>
+      <if test="couponNm != null">
+        #{couponNm,jdbcType=VARCHAR},
+      </if>
+      <if test="couponCd != null">
+        #{couponCd,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="when != null">
+        #{when,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logTp != null">
+        #{logTp,jdbcType=CHAR},
+      </if>
+      <if test="srcIp != null">
+        #{srcIp,jdbcType=VARCHAR},
+      </if>
+      <if test="userAgent != null">
+        #{userAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="grantType != null">
+        #{grantType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+</mapper>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.jc.pico.utils.customMapper.store.StoreCommonMapper">
+
+	<select id="selectBrandListByFrndId" parameterType="SingleMap" resultType="SingleMap">
+		/* StoreCommonMapper.selectBrandListByFrndId */
+		SELECT 
+			ID AS brandId
+		    , BRAND_NM AS brandName
+		    , CURRENCY AS currency
+		FROM 
+			TB_SVC_BRAND 
+		WHERE 
+			FRAN_ID = #{franId}
+		ORDER BY BRAND_NM
+	</select>
+	
+	<select id="selectStoreListByBrandId" parameterType="SingleMap" resultType="SingleMap">
+		/* StoreCommonMapper.selectStoreListByBrandId */
+		SELECT 
+			ID AS storeId
+			, STORE_NM AS storeName
+		FROM 
+			TB_SVC_STORE
+		WHERE
+			BRAND_ID = #{brandId}
+		<if test="keyword != null and keyword != ''">
+		AND STORE_NM LIKE CONCAT('%', #{keyword},'%')
+		</if>
+		ORDER BY STORE_NM
+		LIMIT #{count}
+		OFFSET #{start}
+	</select>
+	
+	<select id="getStoreServiceListByStoreId" parameterType="SingleMap" resultType="SingleMap">
+		/* StoreCommonMapper.getStoreServiceListByStoreId */
+		SELECT 'all' AS serviceId, 'all' AS serviceType
+		UNION SELECT serviceId, serviceType
+		FROM (
+			SELECT 
+				POS_NO AS serviceId
+				, 'pos' AS serviceType
+			FROM
+				TB_SVC_DEVICE_LICENSE
+			WHERE
+				STORE_ID = #{storeId}
+			ORDER BY POS_NO
+		) A 
+		UNION SELECT 'order-type-order' AS serviceType, 'online' AS serviceType
+		UNION SELECT 'order-type-reservation' AS serviceType, 'online' AS serviceType 
+		UNION SELECT 'order-type-contract' AS serviceType, 'online' AS serviceType
+	</select>
+	
+	<select id="selectBaseCodeByAlias" parameterType="map" resultType="string">
+		/* StoreCommonMapper.selectBaseCodeByAlias */
+		SELECT 
+		    BASE_CD
+		FROM
+		    TB_BASE_BCODE
+		WHERE
+		    MAIN_CD = #{mainCd}
+		AND ALIAS = #{alias}
+	</select>
+	
+	<select id="selectCurrencyByBrandId" parameterType="SingleMap" resultType="string">
+		/* StoreCommonMapper.selectCurrencyByBrandId */
+		SELECT 
+		    CURRENCY AS currency
+		FROM
+		    TB_SVC_BRAND A
+		WHERE
+		    ID = #{brandId}
+	</select>
+	
+	<select id="selectCurrencyByStoreId" parameterType="SingleMap" resultType="string">
+		/* StoreCommonMapper.selectCurrencyByStoreId */
+		SELECT 
+		    B.CURRENCY AS currency
+		FROM
+			TB_SVC_STORE A
+		INNER JOIN TB_SVC_BRAND B
+		ON A.BRAND_ID = B.ID
+		WHERE
+		    A.ID = #{storeId}
+	</select>
+	
+	<select id="selectFranchiseInfoByFranId" parameterType="SingleMap" resultType="SingleMap">
+		/* StoreCommonMapper.selectFranchiseInfoByFranId */	
+		SELECT 
+			ID AS id
+		    , FRAN_NM AS name
+		FROM 
+			TB_SVC_FRANCHISE 
+		WHERE 
+			ID = #{franId}				
+	</select>
+	
+	<select id="selectBrandInfoByBrandId" parameterType="SingleMap" resultType="SingleMap">
+		/* StoreCommonMapper.selectBrandInfoByBrandId */
+		SELECT 
+		    ID AS id
+		    , BRAND_NM AS name
+		FROM
+		    TB_SVC_BRAND
+		WHERE
+		    ID = #{brandId}
+	</select>
+	
+	<select id="selectStoreInfoByStoreId" parameterType="SingleMap" resultType="SingleMap">
+		/* StoreCommonMapper.selectStoreInfoByStoreId */
+		SELECT 
+		    ID AS id
+		    , STORE_NM AS name
+		FROM
+		    TB_SVC_STORE
+		WHERE
+		    ID = #{storeId}
+	</select>
+	
+	<select id="selectUserMappingByUserName" parameterType="SingleMap" resultType="SingleMap">
+		/* StoreCommonMapper.selectUserMappingByUserName */
+		SELECT 
+			A.ID AS userId
+		    , B.FRAN_ID AS franId
+		    , B.BRAND_ID AS brandId
+		    , B.STORE_ID AS storeId    
+		    , CASE
+				WHEN B.STORE_ID != '' THEN 'store'
+		        WHEN B.BRAND_ID != '' THEN 'brand'
+		        WHEN B.FRAN_ID != ''  THEN 'fran'
+		        ELSE ''
+			END AS role		
+		FROM
+			TB_USER A
+		LEFT JOIN TB_SVC_USER_MAPPING B
+		ON A.ID = B.USER_ID
+		WHERE
+			A.USERNAME = #{userName}
+		AND A.TYPE = '300006'
+		AND A.STATUS = '301001'
+	</select>
+	
+	<select id="selectBrandIdByStoreId" parameterType="long" resultType="long">
+		/* StoreCommonMapper.selectBrandIdByStoreId */
+		SELECT 
+			BRAND_ID
+		FROM
+			TB_SVC_STORE
+		WHERE
+			ID = #{storeId}
+	</select>
+	
+	
+	<select id="selectPosNoByLicenseId" parameterType="SingleMap" resultType="com.jc.pico.bean.SvcDeviceLicense">
+		SELECT 
+			ID as id, 
+			BRAND_ID as brandId, 
+			STORE_ID as storeId, 
+			POS_NO as posNo
+		FROM
+			TB_SVC_DEVICE_LICENSE
+		WHERE
+			ID = #{licenseId}
+		AND
+			BRAND_ID = #{brandId}
+		AND
+			STORE_ID = #{storeId}
+	</select>
+	
+	
+</mapper>

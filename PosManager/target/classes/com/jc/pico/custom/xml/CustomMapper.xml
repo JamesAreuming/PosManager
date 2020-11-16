@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: CustomMapper.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History	: 
+  ~
+  ~ Version	: 1.0
+  ~ Author   : 
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.CustomMapper">
+  <select id="getNextIndex" parameterType="string" resultType="int">
+		SELECT `AUTO_INCREMENT`
+		  FROM  INFORMATION_SCHEMA.TABLES
+		  WHERE TABLE_SCHEMA = 'pos'
+		    AND TABLE_NAME   = #{value};
+	</select>
+
+ <update id="updateLoginFailCount" parameterType="hashmap">
+   UPDATE   TB_USER
+            SET   LOGIN_FAIL_CNT = ${loginFailCnt}, LOGIN_TRY_TM = NOW()
+     WHERE   ID = ${userId};
+ </update>
+
+  <resultMap id="closingResultMap" type="java.util.LinkedHashMap">
+    <id column="ID"  jdbcType="BIGINT" property="id"/>
+    <result column="OPEN_DT" jdbcType="TIMESTAMP" property="openDt" />
+    <result column="OPEN_TM" jdbcType="TIMESTAMP" property="openTm" />
+     <result column="CLOSE_TM" jdbcType="TIMESTAMP" property="closingTm" />
+     <result column="IS_CLOSING" jdbcType="BOOLEAN" property="isClosing" />
+  </resultMap>
+
+  <select id="getClosing" parameterType="hashmap" resultMap="closingResultMap">
+   <if test="storeId != null">
+    SELECT A.*
+    FROM 
+      (
+        SELECT *
+        FROM TB_SVC_CLOSING
+        WHERE OPEN_DT IS NOT NULL
+        AND OPEN_TM IS NOT NULL
+        AND CLOSE_TM IS NOT NULL
+        AND STORE_ID = ${storeId}
+        ORDER BY OPEN_DT DESC
+        LIMIT 0, 1    
+      ) A
+    WHERE IS_CLOSING = 0;
+    </if>
+  </select>
+
+  <select id="getTermsCount" parameterType="hashmap" resultType="int">
+    SELECT   COUNT(*)
+        FROM   TB_SVC_TERMS
+     WHERE   SERVICE_ID = ${serviceId}
+           AND   IS_USED = 1
+     <if test="termsSvcTp != null">
+           AND   TERMS_SVC_TP = ${termsSvcTp}
+     </if>
+  </select>
+
+  <select id="getTerms" parameterType="hashmap" resultType="hashmap">
+  SELECT   *
+			FROM   TB_SVC_TERMS
+	 WHERE   SERVICE_ID = ${serviceId}
+	       AND   IS_USED = 1
+   <if test="termsSvcTp != null">
+         AND   TERMS_SVC_TP = ${termsSvcTp}
+   </if>
+	 <if test="offset != null and limit != null">
+		    LIMIT    ${offset}, ${limit}
+	 </if>
+  </select>
+
+  <select id="getCardCount" parameterType="hashmap" resultType="int">
+    SELECT   COUNT(*)
+        FROM   TB_USER_CARD
+     WHERE   USER_ID = ${userId}
+    <if test="ids != null">
+      AND ID IN  (${ids})
+    </if>
+  </select>
+
+  <select id="getCard" parameterType="hashmap" resultType="hashmap">
+    SELECT   *
+        FROM   TB_USER_CARD
+     WHERE   USER_ID = ${userId}
+     <if test="ids != null">
+      AND ID IN  (${ids})
+    </if>
+     ORDER   BY CREATED DESC
+          LIMIT   ${offset}, ${limit}
+  </select>
+
+<select id="getNoticeCount" parameterType="hashmap" resultType="int">
+  SELECT   COUNT(*)
+      FROM   TB_NOTICE
+   WHERE   SHOW_IN_APP = 1
+         AND   OPEN <![CDATA[<=]]> NOW() 
+         AND   CLOSE <![CDATA[>=]]> NOW()
+  <if test="noticeTp">
+         AND   NOTICE_TP = ${noticeTp}
+  </if>
+  <if test="noticeId">
+         AND   ID = ${noticeId}
+  </if>
+  </select>
+
+  <select id="getNotice" parameterType="hashmap" resultType="hashmap">
+  SELECT   *
+      FROM   TB_NOTICE
+   WHERE   SHOW_IN_APP = 1
+	       AND   OPEN <![CDATA[<=]]> NOW() 
+	       AND   CLOSE <![CDATA[>=]]> NOW()
+  <if test="noticeTp">
+         AND   NOTICE_TP = ${noticeTp}
+  </if>
+  <if test="noticeId">
+         AND   ID = ${noticeId}
+  </if>
+  ORDER BY CREATED DESC
+  <if test="offset != null and limit != null">
+    LIMIT ${offset}, ${limit}
+    </if>
+  </select>
+
+  <select id="getStoreBeaconLog" parameterType="hashmap" resultType="hashmap">
+  SELECT   *
+  	  FROM   TB_SVC_STORE_BEACON_LOG
+   WHERE   BRAND_ID = ${brandId}
+		      AND   STORE_ID = ${storeId}
+		      AND   USER_ID = ${userId}
+  </select>
+  
+  <select id="getOrderHistoryCount" parameterType="hashmap" resultType="int">
+	  SELECT   COUNT(DISTINCT(so.ID))
+	      FROM   TB_SVC_ORDER so 
+	        LEFT OUTER JOIN TB_SVC_STORE ss       ON so.STORE_ID = ss.ID 
+	        LEFT OUTER JOIN TB_SVC_ORDER_ITEM soi ON soi.ORDER_ID = so.ID
+	        LEFT OUTER JOIN TB_USER u             ON u.ID = so.USER_ID
+	   WHERE   u.ID = ${userId}
+	   <if test="orderId != null">
+	       AND so.ID = ${orderId}
+	   </if>
+	   <if test="orderTp != null">
+           AND   so.ORDER_TP = ${orderTp}
+     </if>
+  </select>
+  
+  <select id="getOrderHistory" parameterType="hashmap" resultType="hashmap">
+  SELECT   so.*
+								    ,ss.ID AS 'STORE_ID'
+								    ,ss.STORE_NM
+								    ,ss.CITY
+								    ,ss.ADDR1
+								    ,ss.ADDR2
+								    ,ss.ZIP 
+								    ,sb.LOGO_IMG
+								    ,sb.CURRENCY
+								    ,sop.CARD_NO
+								    ,UTC_TIME() AS UTC_TM
+		  FROM   TB_SVC_ORDER so 
+		  LEFT OUTER JOIN TB_SVC_ORDER_PAY sop ON so.ID = sop.ORDER_ID
+		  LEFT OUTER JOIN TB_SVC_STORE ss       ON so.STORE_ID = ss.ID 
+		  LEFT OUTER JOIN TB_SVC_BRAND sb     ON ss.BRAND_ID = sb.ID
+		  LEFT OUTER JOIN TB_USER u             ON u.ID = so.USER_ID
+	 WHERE   u.ID = #{userId}
+     <if test="orderId != null">
+         AND so.ID = ${orderId}
+     </if>
+      <if test="orderTp != null">
+         AND   so.ORDER_TP = ${orderTp}
+     </if>
+   ORDER BY so.CREATED DESC
+      <if test="offset != null and limit != null">
+       LIMIT ${offset}, ${limit}
+    </if>
+  </select>
+  
+  <select id ="getHistoryStampCount" parameterType="hashmap" resultType="int">
+     SELECT   count(*) 
+         FROM   (
+												    SELECT   count(*)
+												        FROM   TB_SVC_STAMP_LOG sl
+												          LEFT   OUTER JOIN TB_SVC_STORE st ON sl.STORE_ID = st.ID
+												          LEFT   OUTER JOIN TB_SVC_BRAND br ON sl.BRAND_ID = br.ID
+												          LEFT   OUTER JOIN TB_SVC_FRANCHISE fr ON br.FRAN_ID = fr.ID
+												     WHERE   sl.USER_ID = ${userId}
+												           AND   sl.LOG_TP != 401003
+												     <if test="storeId"> 
+												           AND   sl.STORE_ID = ${storeId}
+								            </if>
+								            <if test="brandId">
+												           AND   sl.BRAND_ID = ${brandId}
+								            </if>
+												           AND   sl.WHEN BETWEEN #{start} AND #{end}
+												     GROUP   BY ORDER_ID, LOG_TP
+												) TBL
+  </select>
+  
+  <select id="getHistoryStamp" parameterType="hashmap" resultType="hashmap">
+    SELECT   count(sl.ID) as `count`
+                     , sl.*
+        FROM   TB_SVC_STAMP_LOG sl
+          LEFT    OUTER JOIN TB_SVC_STORE st ON sl.STORE_ID = st.ID
+          LEFT   OUTER JOIN TB_SVC_BRAND br ON sl.BRAND_ID = br.ID
+     WHERE   sl.USER_ID = ${userId}
+            AND   sl.LOG_TP != 401003
+     <if test="brandId != null">
+     AND sl.BRAND_ID = ${brandId}
+     </if>
+     <if test="storeId != null">
+      AND sl.STORE_ID = ${storeId}
+      </if>
+      <if test="start != null and end != null">
+      AND sl.WHEN BETWEEN #{start} AND #{end}
+     </if>
+      GROUP BY ORDER_ID, LOG_TP
+      ORDER BY sl.WHEN DESC
+      <if test="offset != null and limit != null">
+      LIMIT ${offset}, ${limit}
+    </if>
+      
+  </select>
+  
+   <select id="getHistoryCouponCount" parameterType="hashmap" resultType="int">
+    SELECT   count(*)
+        FROM   TB_SVC_COUPON_LOG cl
+          LEFT   OUTER JOIN TB_SVC_STORE st ON cl.STORE_ID = st.ID
+          LEFT   OUTER JOIN TB_SVC_BRAND br ON cl.BRAND_ID = br.ID
+          LEFT   OUTER JOIN TB_SVC_FRANCHISE fr ON br.FRAN_ID = fr.ID
+     WHERE   cl.USER_ID = ${userId}
+    <if test="storeId != null">
+      AND cl.STORE_ID = ${storeId}
+    </if>
+    <if test="brandId != null">
+      AND cl.BRAND_ID = ${brandId}
+    </if>
+    <if test="start != null and end != null">
+      AND cl.WHEN BETWEEN #{start} AND #{end}
+    </if>
+   
+  </select>
+  
+  <select id="getHistoryCoupon" parameterType="hashmap" resultType="hashmap">
+    SELECT   cl.*
+        FROM   TB_SVC_COUPON_LOG cl
+          LEFT   OUTER JOIN TB_SVC_STORE st ON cl.STORE_ID = st.ID
+          LEFT   OUTER JOIN TB_SVC_BRAND br ON cl.BRAND_ID = br.ID
+     WHERE   cl.USER_ID = ${userId}
+       <if test="brandId != null">
+     AND cl.BRAND_ID = ${brandId}
+     </if>
+     <if test="storeId != null">
+      AND cl.STORE_ID = ${storeId}
+      </if>
+      <if test="start != null and end != null">
+          AND cl.WHEN BETWEEN #{start} AND #{end}
+     </if>
+         ORDER BY cl.WHEN DESC
+      <if test="offset != null and limit != null">
+      LIMIT ${offset}, ${limit}
+    </if>
+  </select>
+  
+  <select id="getStoreStampCount" parameterType="hashmap" resultType="int">
+  SELECT   IFNULL(SUM(d.CNT), 0)
+      FROM  
+                    (SELECT   COUNT(DISTINCT(st.STORE_ID)) AS `CNT`
+                         FROM   TB_SVC_USER_STAMP st
+											      LEFT JOIN TB_USER us ON (st.USER_ID=us.ID)
+											      LEFT JOIN TB_SVC_STORE sto ON (st.STORE_ID=sto.ID)
+											  WHERE  
+											   <![CDATA[
+                             st.CREATED < st.EXPIRE
+                          ]]>
+                          <if test="now != null">
+                          AND st.EXPIRE &gt;= '${now}'
+                          </if>
+                          AND st.COUPON_ID = 0
+											     <if test="isHistory == null">
+											        AND  st.STAMP_ST = 401001
+									        </if>
+											    <if test="userId != null">
+											        AND  us.ID = ${userId}
+											    </if>
+											      <if test="storeId != null">
+											        AND sto.ID = ${storeId}
+											        GROUP BY st.ORDER_ID
+											      </if>
+											 ) d
+  </select>
+  
+  <select id="getStoreStampList" parameterType="hashMap"  resultType="hashMap">
+  SELECT  st.*
+					         ,ba2.`title` AS  `STAMP_TP_NM`
+					         ,sto.STORE_NM
+					         ,sto.CITY
+					         ,sto.ADDR1
+					         ,sto.ADDR2
+					         ,sto.ZIP
+                   ,COUNT(st.ORDER_ID) AS `STAMP_COUNT`
+     FROM  TB_SVC_USER_STAMP st
+      LEFT JOIN TB_USER us ON (st.USER_ID=us.ID)
+      LEFT JOIN TB_BASE_BCODE ba2 ON (ba2.BASE_CD=st.STAMP_TP)
+      LEFT JOIN TB_SVC_STORE sto ON (st.STORE_ID=sto.ID)
+  WHERE  
+       <![CDATA[
+           st.CREATED < st.EXPIRE
+        ]]>
+        <if test="now != null">
+        AND st.EXPIRE &gt;= '${now}'
+        </if>
+        AND st.COUPON_ID = 0
+    <if test="isHistory == null">
+        AND  st.STAMP_ST = 401001
+    </if>
+    <if test="userId != null">
+        AND  us.ID = ${userId}
+    </if>
+      
+      <if test="storeId != null">
+        AND sto.ID = ${storeId}
+        GROUP BY st.ORDER_ID
+      </if>
+      <if test="storeId == null">
+      GROUP BY st.STORE_ID
+      </if>
+      ORDER BY st.EXPIRE
+      <if test="offset != null and limit != null">
+      LIMIT ${offset}, ${limit}
+    </if>
+  </select>
+
+  <select id="getReviewCount" parameterType="hashmap" resultType="hashmap">
+    SELECT re.RATING
+    FROM TB_SVC_STORE_REVIEW re, TB_USER u
+    WHERE re.BRAND_ID = #{brandId} AND re.STORE_ID = #{storeId}
+    AND re.USER_ID = u.ID
+    AND u.STATUS = 301001
+    AND u.MB IS NOT NULL
+    AND u.MB_BK IS NOT NULL
+  </select>
+
+  <select id="getReview" parameterType="hashmap" resultType="hashmap">
+    SELECT re.ID, re.BRAND_ID, re.STORE_ID, u.ID AS USER_ID, re.CONTENT, re.RATING,  u.NAME, u.MB_BK, re.CREATED, re.UPDATED
+    FROM TB_SVC_STORE_REVIEW re, TB_USER u
+    WHERE re.BRAND_ID = #{brandId} AND re.STORE_ID = #{storeId}
+    AND re.USER_ID = u.ID
+    AND u.STATUS = 301001
+    AND u.MB IS NOT NULL
+    AND u.MB_BK IS NOT NULL
+    ORDER BY re.CREATED DESC
+   <if test="offset != null and limit != null">
+      LIMIT ${offset}, ${limit}
+    </if>
+  </select>
+
+  <select id="selectByDistinctStoreTp" resultType="hashmap">
+    SELECT DISTINCT(STORE_TP) 
+    FROM TB_SVC_STORE
+    WHERE STORE_TP IS NOT NULL
+    AND STORE_ST = 350001
+    AND STORE_ST IS NOT NULL
+  </select>
+
+  <select id="getMaxMemCode" parameterType="string" resultType="int">
+    SELECT MAX(MEM_CD) FROM TB_USER WHERE GRP_CD = #{grpCd}
+  </select>
+
+  <select id="getStore" parameterType="hashmap" resultType="hashmap">
+    SELECT
+    <if test="lat != null and lng != null">
+      GET_DISTANCE(#{lat}, #{lng}, st.LATITUDE, st.LONGITUDE) AS DISTANCE,
+    </if>
+      st.*,
+      IF(ub.USER_ID = ${userId}, true, false) AS BOOKMARK,
+      sb.CURRENCY AS CURRENCY,
+      sb.HOMEPAGE,
+      sc.OPEN_DT,
+      sc.OPEN_TM,
+      sc.IS_CLOSING,
+      sb.LOGO_IMG,
+      sb.TAX_RATE
+     FROM TB_SVC_STORE st
+     LEFT OUTER JOIN TB_SVC_BRAND sb ON st.BRAND_ID = sb.ID
+     LEFT OUTER JOIN (SELECT   USER_ID
+                                                            ,STORE_ID 
+                                             FROM   TB_USER_BOOKMARK 
+                                          WHERE   USER_ID = ${userId}) ub ON ub.STORE_ID = st.ID
+     LEFT OUTER JOIN (
+                                         SELECT
+																			                a.* 
+														             FROM
+																			                ( 
+																			                   SELECT
+																			                                  BRAND_ID
+																			                                 ,STORE_ID
+																			                                 ,OPEN_DT
+																			                                 ,OPEN_TM
+																			                                 ,IS_CLOSING
+																			                   FROM   TB_SVC_CLOSING 
+																			                   ORDER BY   CREATED DESC 
+																			                 ) a
+																			             GROUP BY
+																			                      BRAND_ID
+																			                     ,STORE_ID
+                                            ) sc ON st.ID = sc.STORE_ID
+     WHERE st.SERVICE_ID = #{serviceId} AND st.SVC_ST = #{svcSt} AND st.STORE_ST = #{storeSt}
+    AND st.STORE_ST IS NOT NULL
+    AND st.STORE_TP IS NOT NULL
+    
+    <if test="distance != null">
+    <![CDATA[
+        AND GET_DISTANCE(#{lat}, #{lng}, st.LATITUDE, st.LONGITUDE) <= ${distance}
+      ]]>
+    </if>
+     <if test="storeId != null">
+      AND st.ID = ${storeId}
+    </if>
+    <if test="isBookmark != null">
+      AND ub.USER_ID = ${userId}
+    </if>
+    <if test="storeTp != null">
+      AND st.STORE_TP = #{storeTp}
+    </if>
+    <if test="keyword != null">
+      AND st.STORE_NM LIKE CONCAT('%', #{keyword}, '%')
+    </if>
+    <if test="region != null">
+      AND st.REGION = #{region}
+    </if>
+     <if test="lat != null and lng != null">
+        <if test="orderBy == 'location'">
+           ORDER BY -DISTANCE DESC, CREATED DESC
+      </if>
+    </if>
+    <if test="orderBy == 'allnearby'">
+      ORDER BY st.CREATED DESC
+    </if>
+   <if test="orderBy == 'new'">
+      ORDER BY st.CREATED DESC
+    </if>
+     <if test="orderBy == 'alphabet'">
+      ORDER BY st.STORE_NM ASC
+    </if>
+    <if test="offset != null and limit != null">
+      LIMIT ${offset}, ${limit}
+    </if>
+  </select>
+
+  <select id="getStoreCount" parameterType="hashmap" resultType="int">
+    SELECT count(*)
+    FROM TB_SVC_STORE st
+     LEFT OUTER JOIN (SELECT   USER_ID
+                                                            ,STORE_ID 
+                                             FROM   TB_USER_BOOKMARK 
+                                          WHERE   USER_ID = ${userId}) ub ON ub.STORE_ID = st.ID
+    WHERE st.SERVICE_ID = #{serviceId} AND st.SVC_ST = #{svcSt} AND st.STORE_ST = #{storeSt}
+    <if test="isBookmark != null">
+      AND ub.USER_ID = ${userId}
+    </if>
+    <if test="keyword != null">
+      AND st.STORE_NM LIKE CONCAT('%', #{keyword}, '%')
+    </if>
+    <if test="region != null">
+      AND st.REGION = #{region}
+    </if>
+      <if test="storeTp != null">
+      AND st.STORE_TP = #{storeTp}
+    </if>
+  </select>
+
+  <select id="getItem" parameterType="hashmap" resultType="hashmap">
+    SELECT it.*
+    FROM TB_SVC_PLU_ITEM pi
+      LEFT OUTER JOIN TB_SVC_ITEM it ON pi.ITEM_ID = it.ID
+      LEFT OUTER JOIN TB_SVC_PLU_CAT pc ON pi.CAT_ID = pc.ID
+    WHERE pi.BRAND_ID = #{brandId}
+    <if test="pluTp != null">
+       AND pc.PLU_TP = ${pluTp}
+    </if>
+    <if test="status != null">
+      AND it.STATUS = ${status}
+      AND ((LENGTH(SALES_BEGIN) = 0 AND LENGTH(SALES_END) = 0) OR (SALES_BEGIN &lt;= NOW() AND SALES_END &gt;= NOW()))
+      
+    </if>
+    <if test="storeId != null">
+      AND (pi.STORE_ID = #{storeId} OR pi.STORE_ID IS NULL)
+    </if>
+    <if test="catId != null">
+      AND pi.CAT_ID = #{catId}
+    </if>
+    <if test="orderBy != null">
+      ORDER BY pi.ORDINAL ASC
+    </if>
+    <if test="offset != null and limit != null">
+      LIMIT ${offset}, ${limit}
+    </if>
+  </select>
+
+  <select id="getItemCount" parameterType="hashmap" resultType="int">
+    SELECT COUNT(*)
+    FROM TB_SVC_PLU_ITEM pi
+      LEFT OUTER JOIN TB_SVC_ITEM it ON pi.ITEM_ID = it.ID
+      LEFT OUTER JOIN TB_SVC_PLU_CAT pc ON pi.CAT_ID = pc.ID
+    WHERE pi.BRAND_ID = #{brandId}
+    <if test="status != null">
+      AND it.STATUS = ${status}
+    </if>
+    <if test="storeId != null">
+      AND (pi.STORE_ID = #{storeId} OR pi.STORE_ID IS NULL)
+    </if>
+    <if test="catId != null">
+      AND pi.CAT_ID = #{catId}
+    </if>
+    <if test="pluTp != null">
+       AND pc.PLU_TP = ${pluTp}
+    </if>
+  </select>
+
+  <select id="getStampHistory" parameterType="hashmap" resultType="hashmap">
+    SELECT sl.*, st.STORE_NM, br.BRAND_NM, fr.FRAN_NM
+    FROM TB_SVC_STAMP_LOG sl
+    LEFT OUTER JOIN TB_SVC_STORE st ON sl.STORE_ID = st.ID
+    LEFT OUTER JOIN TB_SVC_BRAND br ON sl.BRAND_ID = br.ID
+    LEFT OUTER JOIN TB_SVC_FRANCHISE fr ON br.FRAN_ID = fr.ID
+    WHERE sl.USER_ID = ${userId}
+    <if test="storeId != null">
+      AND sl.STORE_ID = ${storeId}
+    </if>
+    <if test="brandId != null">
+      AND sl.BRAND_ID = ${brandId}
+    </if>
+    <if test="start != null and end != null">
+      AND sl.`WHEN` BETWEEN #{start} AND #{end}
+    </if>
+    <if test="orderBy != null">
+      ORDER BY sl.`WHEN` ${orderBy}
+    </if>
+    <if test="offset != null and limit != null">
+      LIMIT ${offset}, ${limit}
+    </if>
+  </select>
+
+  <select id="getStampHistoryCount" parameterType="hashmap" resultType="int">
+    SELECT count(*)
+    FROM TB_SVC_STAMP_LOG sl
+    LEFT OUTER JOIN TB_SVC_STORE st ON sl.STORE_ID = st.ID
+    LEFT OUTER JOIN TB_SVC_BRAND br ON sl.BRAND_ID = br.ID
+    LEFT OUTER JOIN TB_SVC_FRANCHISE fr ON br.FRAN_ID = fr.ID
+    WHERE sl.USER_ID = ${userId}
+    <if test="storeId != null">
+      AND sl.STORE_ID = ${storeId}
+    </if>
+    <if test="brandId != null">
+      AND sl.BRAND_ID = ${brandId}
+    </if>
+    <if test="start != null and end != null">
+      AND sl.`WHEN` BETWEEN #{start} AND #{end}
+    </if>
+  </select>
+
+  <select id="getCouponHistory" parameterType="hashmap" resultType="hashmap">
+    SELECT  
+                     cl.*
+                     , st.STORE_NM
+                     , br.BRAND_NM
+                     , fr.FRAN_NM
+       FROM  TB_SVC_COUPON_LOG cl
+         LEFT  OUTER JOIN 
+                     TB_SVC_STORE st ON cl.STORE_ID = st.ID
+         LEFT OUTER JOIN 
+                    TB_SVC_BRAND br ON cl.BRAND_ID = br.ID
+         LEFT OUTER JOIN 
+                    TB_SVC_FRANCHISE fr ON br.FRAN_ID = fr.ID
+    WHERE  cl.USER_ID = ${userId}
+    <if test="storeId != null">
+          AND  cl.STORE_ID = ${storeId}
+    </if>
+    <if test="brandId != null">
+          AND  cl.BRAND_ID = ${brandId}
+    </if>
+    <if test="start != null and end != null">
+          AND  cl.`WHEN` BETWEEN #{start} AND #{end}
+    </if>
+    <if test="orderBy != null">
+      ORDER BY cl.`WHEN` ${orderBy}
+    </if>
+    <if test="offset != null and limit != null">
+        LIMIT  ${offset}, ${limit}
+    </if>
+  </select>
+
+  <select id="getCouponHistoryCount" parameterType="hashmap" resultType="int">
+    SELECT count(*)
+    FROM TB_SVC_COUPON_LOG cl
+    LEFT OUTER JOIN TB_SVC_STORE st ON cl.STORE_ID = st.ID
+    LEFT OUTER JOIN TB_SVC_BRAND br ON cl.BRAND_ID = br.ID
+    LEFT OUTER JOIN TB_SVC_FRANCHISE fr ON br.FRAN_ID = fr.ID
+    WHERE cl.USER_ID = ${userId}
+    <if test="storeId != null">
+      AND cl.STORE_ID = ${storeId}
+    </if>
+    <if test="brandId != null">
+      AND cl.BRAND_ID = ${brandId}
+    </if>
+    <if test="start != null and end != null">
+      AND cl.`WHEN` BETWEEN #{start} AND #{end}
+    </if>
+    <if test="orderBy != null">
+      ORDER BY cl.`WHEN` ${orderBy}
+    </if>
+    <if test="offset != null and limit != null">
+      LIMIT ${offset}, ${limit}
+    </if>
+  </select>
+
+  <select id="getCoupon" parameterType="hashmap" resultType="hashmap">
+    SELECT  uc.*
+                      , sc.COUPON_NM
+                      , sc.DISCOUNT_TP
+                      , sc.DISCOUNT
+                      , sc.IMG, sc.SMALL_IMG
+                      , sc.NOTICE
+                      , sc.BEGIN
+                      , ss.STORE_NM
+                      , sb.LOGO_IMG
+                      , sb.BRAND_NM
+        FROM  TB_SVC_USER_COUPON uc
+          LEFT OUTER JOIN 
+                      TB_SVC_COUPON sc ON sc.ID = uc.COUPON_ID
+          LEFT OUTER JOIN
+                      TB_SVC_STORE ss ON ss.ID = uc.STORE_ID
+          LEFT OUTER JOIN
+                      TB_SVC_BRAND sb ON sb.ID = uc.BRAND_ID
+     WHERE  uc.USER_ID = ${userId}
+     <if test="used != null">
+        AND uc.USED = ${used}
+        AND uc.COUPON_ST = 402001
+            AND uc.EXPIRE &gt;= '${now}'
+     </if>
+    <![CDATA[
+        AND uc.CREATED < uc.EXPIRE
+      ]]>
+    <if test="couponId != null">
+            AND  uc.ID = ${couponId}
+    </if>
+    <if test="storeId != null">
+            AND  uc.STORE_ID = ${storeId}
+    </if>
+    <if test="brandId != null">
+            AND  uc.BRAND_ID = ${brandId}
+    </if>
+    <!-- <if test="start != null and end != null">
+            AND  uc.`CREATED` BETWEEN #{start} AND #{end}
+    </if> -->
+    <if test="sort == 'created'">
+      ORDER BY uc.`CREATED` ${orderBy}
+    </if>
+    <if test="sort == 'expire'">
+      ORDER BY uc.`EXPIRE` ${orderBy}
+    </if>
+
+    <if test="offset != null and limit != null">
+          LIMIT  ${offset}, ${limit}
+    </if>
+  </select>
+
+  <select id="getCouponCount" parameterType="hashmap" resultType="int">
+    SELECT count(*)
+    FROM TB_SVC_USER_COUPON uc
+    LEFT OUTER JOIN TB_SVC_COUPON sc ON sc.ID = uc.COUPON_ID
+    WHERE uc.USER_ID = ${userId}
+    <if test="used != null">
+        AND uc.USED = ${used}
+        AND uc.COUPON_ST = 402001
+     </if>
+    <if test="storeId != null">
+      AND uc.STORE_ID = ${storeId}
+    </if>
+    <if test="brandId != null">
+      AND uc.BRAND_ID = ${brandId}
+    </if>
+    <if test="start != null and end != null">
+      AND uc.`CREATED` BETWEEN #{start} AND #{end}
+    </if>
+  </select>
+
+  <resultMap id="userSearchMap" type="java.util.LinkedHashMap" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="NAME" property="name" jdbcType="CHAR" />
+    <result column="BARCODE" property="barcode" jdbcType="CHAR" />
+    <result column="MB" property="mb" jdbcType="CHAR" typeHandler="com.jc.pico.utils.mybatis.typehandler.MobileSecurityTypeHandler"/>
+  </resultMap>
+  <select id="getPosUserSearchList" parameterType="com.jc.pico.bean.User" resultMap="userSearchMap">
+  	select
+  		id, name, mb, barcode
+  	from TB_USER
+  	where
+  		1 = 1
+  		<if test="user.barcode != null">
+  			and BARCODE = #{user.barcode}
+  		</if>
+  		<if test="user.mb != null">
+  			and MB_BK = #{user.mb, typeHandler=com.jc.pico.utils.mybatis.typehandler.OnewaySecurityTypeHandler}
+  		</if>
+ 		<if test="types != null">
+  			and Type in <foreach collection="types" item="type" open="(" separator="," close=")">#{type}</foreach>
+  		</if>
+  </select>
+
+  <select id="getUnUsedCoupon" parameterType="hashMap" resultType="java.util.LinkedHashMap">
+    SELECT
+		uc.id,
+		uc.COUPON_CD,
+	    c.COUPON_NM,
+	    c.DISCOUNT_TP,
+	    c.DISCOUNT,
+	    uc.EXPIRE as IssueDt
+	FROM
+		TB_SVC_USER_COUPON uc
+	    join TB_SVC_COUPON c
+	where
+		uc.COUPON_ID=c.ID
+	    and uc.USED = 0
+	    and uc.COUPON_CD = #{couponCd}
+	    and uc.USER_ID = #{userId}
+	limit 1;
+  </select>
+</mapper>
+

@@ -1,0 +1,102 @@
+<div class="modal-dialog modal-lg">
+	<form>
+	<input type="hidden" name="id" value="{{id}}" readonly="readonly">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title" id="myLargeModalLabel">
+				{{i18n.BO2048}} {{#id}}{{i18n.BO0015}}{{/id}}{{^id}}{{i18n.BO0025}}{{/id}} <b>* {{i18n.BO0008}}<b>
+			</h4>
+		</div>
+		<div class="modal-body" id="modal-form">
+			<div class="row">
+			{{#id}}
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">License Code</label>
+					<div class="col-sm-10">{{licenseKey}}</div>
+				</div>
+			{{/id}}
+			{{^id}}
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2326}}*</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="input-Default"
+							value="{{licenseCnt}}" name="licenseCnt" data-validation="required">
+					</div>
+				</div>
+			{{/id}}
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2066}}*</label>
+					<div class="col-sm-10">
+						<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+							style="width: 100%" name="deviceTp" data-validation="required">
+							<option value="">{{i18n.BO2066}}</option>
+							{{#876}}
+								<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+							{{/876}}
+						</select>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2067}}*</label>
+					<div class="col-sm-10">
+						<div class="input-group col-sm-12 m-b-sm input-append bootstrap-timepicker float-left">
+							<input id="daterangepicker" type="text"	class="form-control date-picker" placeholder="{{i18n.BO2067}}" value="{{#formatDay}}{{begin}}{{/formatDay}}-{{#formatDay}}{{end}}{{/formatDay}}" data-validation="required">
+							<span class="input-group-addon add-on add-on-datepicker">
+								<i class="fa fa-calendar"></i>
+							</span>
+							<input id="from-date" name="begin" value="{{begin}}" type="hidden"/>
+							<input id="to-date" name="end" value="{{end}}" type="hidden"/>
+						</div>
+					</div>
+				</div>
+			{{#id}}
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2333}}*</label>
+					<div class="col-sm-10">
+						<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+							style="width: 100%" name="status" data-validation="required">
+							<option value="">{{i18n.BO2333}}</option>
+							{{#354}}
+								<option value="{{baseCd}}" {{{selections}}}>{{title}}</option>
+							{{/354}}
+						</select>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2089}}</label>
+					<div class="col-sm-10">{{storeNm}}</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2338}}</label>
+					<div class="col-sm-10">{{userNm}}</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2339}}</label>
+					<div class="col-sm-10">-</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2084}}</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="input-Default" value="{{#formatDate}}{{updated}}{{/formatDate}}" readonly>
+					</div>
+				</div>
+			{{/id}}
+			</div>
+
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+		{{#id}}
+			{{#status=354001}}
+			<button type="submit" class="btn btn-danger" id="del-posLicense">{{i18n.BO0016}}</button>
+			{{/status=354001}}
+		{{/id}}
+			<button type="submit" class="btn btn-primary">{{i18n.BO0014}}</button>
+		</div>
+	</div>
+	</form>
+</div>

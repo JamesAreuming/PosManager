@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.mapper.SvcOrderSalesMapper">
+ 	<resultMap id="orderResult" type="SingleMap">
+		<id column="ID" jdbcType="BIGINT" property="orderId" />
+		<result column="BRAND_ID" jdbcType="BIGINT" property="brandId" />
+		<result column="STORE_ID" jdbcType="BIGINT" property="storeId" />
+		<result column="USER_ID" jdbcType="BIGINT" property="userId" />
+		<result column="STAFF_ID" jdbcType="BIGINT" property="staffId" />
+		<result column="ORDER_NO" jdbcType="VARCHAR" property="orderNo" />
+		<result column="LAST_ST" jdbcType="CHAR" property="lastSt" />
+		<result column="PATH_TP" jdbcType="CHAR" property="pathTp" />
+		<result column="ORDER_TP" jdbcType="CHAR" property="orderTp" />
+		<result column="ORDER_DIV" jdbcType="TINYINT" property="orderDiv" />
+		<result column="OPEN_DT" jdbcType="TIMESTAMP" property="openDt" />
+		<result column="ORDER_ST" jdbcType="CHAR" property="orderSt" />
+		<result column="ORDERER_NAME" jdbcType="VARCHAR" property="ordererName" />
+		<result column="ORDERER_MB" jdbcType="VARCHAR" property="ordererMb" />
+		<result column="RECEIPT_ID" jdbcType="VARCHAR" property="receiptId" />
+		<result column="RECEIPT_NO" jdbcType="VARCHAR" property="receiptNo" />
+		<result column="ORDER_TM" jdbcType="TIMESTAMP" property="orderTm" />
+		<result column="ORDER_TM_LOCAL" jdbcType="TIMESTAMP" property="orderTmLocal" />
+		<result column="RESERVE_NO" jdbcType="BIGINT" property="reserveNo" />
+		<result column="RESERVE_TM" jdbcType="TIMESTAMP" property="reserveTm" />
+		<result column="RESERVE_TM_LOCAL" jdbcType="TIMESTAMP" property="reserveTmLocal" />
+		<result column="RESERVE_END_TM" jdbcType="TIMESTAMP" property="reserveEndTm" />
+		<result column="RESERVE_END_TM_LOCAL" jdbcType="TIMESTAMP" property="reserveEndTmLocal" />
+		<result column="RESERVE_REG_TM" jdbcType="TIMESTAMP" property="reserveRegTm" />
+		<result column="RESERVE_REG_TM_LOCAL" jdbcType="TIMESTAMP" property="reserveRegTmLocal" />
+		<result column="EST_TM" jdbcType="CHAR" property="estTm" />
+		<result column="COMPLETE_TM" jdbcType="TIMESTAMP" property="completeTm" />
+		<result column="COMPLETE_TM_LOCAL" jdbcType="TIMESTAMP" property="completeTmLocal" />
+		<result column="ACCEPT_TM" jdbcType="TIMESTAMP" property="acceptTm" />
+		<result column="ACCEPT_TM_LOCAL" jdbcType="TIMESTAMP" property="acceptTmLocal" />
+		<result column="REJECT_TM" jdbcType="TIMESTAMP" property="rejectTm" />
+		<result column="REJECT_TM_LOCAL" jdbcType="TIMESTAMP" property="rejectTmLocal" />
+		<result column="CANCEL_TM" jdbcType="TIMESTAMP" property="cancelTm" />
+		<result column="CANCEL_TM_LOCAL" jdbcType="TIMESTAMP" property="cancelTmLocal" />
+		<result column="READY_TM" jdbcType="TIMESTAMP" property="readyTm" />
+		<result column="READY_TM_LOCAL" jdbcType="TIMESTAMP" property="readyTmLocal" />
+		<result column="CANCEL_TP" jdbcType="CHAR" property="cancelTp" />
+		<result column="USE_COUPON" jdbcType="TINYINT" property="useCoupon" />
+		<result column="SALES" jdbcType="DOUBLE" property="sales" />
+		<result column="DISCOUNT" jdbcType="DOUBLE" property="discount" />
+		<result column="SUPPLY_VALUE" jdbcType="DOUBLE" property="supplyValue" />
+		<result column="TAX" jdbcType="DOUBLE" property="tax" />
+		<result column="SERVICE_CHARGE" jdbcType="DOUBLE" property="serviceCharge" />
+		<result column="CUSTOMER_CNT" jdbcType="SMALLINT" property="customerCnt" />
+		<result column="PAY_METHOD" jdbcType="CHAR" property="payMethod" />
+		<result column="TABLE_NO" jdbcType="VARCHAR" property="tableNo" />
+		<result column="PERSON" jdbcType="VARCHAR" property="person" />
+		<result column="POS_NO" jdbcType="VARCHAR" property="posNo" />
+		<result column="MEMO" jdbcType="VARCHAR" property="memo" />
+		<result column="REASON" jdbcType="VARCHAR" property="reason" />
+		<result column="ADMISSION_TM" jdbcType="TIMESTAMP" property="admissionTm" />
+		<result column="EXIT_TM" jdbcType="TIMESTAMP" property="exitTm" />
+		<result column="CUSTOMER_TP" jdbcType="CHAR" property="customerTp" />
+		<result column="CUSTOME_AGE_TP" jdbcType="CHAR" property="customeAgeTp" />
+		<result column="CUSTOME_GENDER" jdbcType="CHAR" property="customeGender" />
+		<result column="IS_SALES" jdbcType="TINYINT" property="isSales" />
+		<result column="IS_CONFIRM" jdbcType="TINYINT" property="isConfirm" />
+		<result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+		<result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />
+		<collection property="items" javaType="java.util.List" ofType="SingleMap" >
+			<id column="OI_ID" jdbcType="BIGINT" property="id" />
+			<result column="OI_ORDER_ID" jdbcType="BIGINT" property="orderId" />
+			<result column="OI_ORDINAL" jdbcType="BIGINT" property="ordinal" />
+			<result column="OI_LAST_ST" jdbcType="CHAR" property="lastSt" />
+			<result column="OI_PATH_TP" jdbcType="CHAR" property="pathTp" />
+			<result column="OI_SALES_TP" jdbcType="CHAR" property="salesTp" />
+			<result column="OI_STAFF_ID" jdbcType="BIGINT" property="staffId" />
+			<result column="OI_IS_STAMP" jdbcType="TINYINT" property="isStamp" />
+			<result column="OI_CAT_NM" jdbcType="VARCHAR" property="catNm" />
+			<result column="OI_CAT_CD" jdbcType="VARCHAR" property="catCd" />
+			<result column="OI_ITEM_ID" jdbcType="BIGINT" property="itemId" />
+			<result column="OI_ITEM_NM" jdbcType="VARCHAR" property="itemNm" />
+			<result column="OI_ITEM_CD" jdbcType="VARCHAR" property="itemCd" />
+			<result column="OI_ITEM_TP" jdbcType="CHAR" property="itemTp" />
+			<result column="OI_PRICE" jdbcType="DOUBLE" property="price" />
+			<result column="OI_PURCHASE_PRICE" jdbcType="DOUBLE" property="purchasePrice" />
+			<result column="OI_COUNT" jdbcType="SMALLINT" property="count" />
+			<result column="OI_SALES" jdbcType="DOUBLE" property="sales" />
+			<result column="OI_DISCOUNT" jdbcType="DOUBLE" property="discount" />
+			<result column="OI_NET_SALES" jdbcType="DOUBLE" property="netSales" />
+			<result column="OI_SUPPLY_PRICE" jdbcType="DOUBLE" property="supplyPrice" />
+			<result column="OI_TAX" jdbcType="DOUBLE" property="tax" />
+			<result column="OI_SERVICE_CHARGE" jdbcType="DOUBLE" property="serviceCharge" />
+			<result column="OI_TAX_TP" jdbcType="CHAR" property="taxTp" />
+			<result column="OI_ORDER_TM" jdbcType="TIMESTAMP" property="orderTm" />
+			<result column="OI_ORDER_TM_LOCAL" jdbcType="TIMESTAMP" property="orderTmLocal" />
+			<result column="OI_OPT_ID" jdbcType="VARCHAR" property="optId" />
+			<result column="OI_OPT_NM" jdbcType="VARCHAR" property="optNm" />
+			<result column="OI_OPT_CD" jdbcType="VARCHAR" property="optCd" />
+			<result column="OI_OPT_PRICE" jdbcType="DOUBLE" property="optPrice" />
+			<result column="OI_SALES_DIV" jdbcType="TINYINT" property="salesDiv" />
+			<result column="OI_SALES_TYPE_DIV" jdbcType="TINYINT" property="salesTypeDiv" />
+			<result column="OI_IS_PACKING" jdbcType="TINYINT" property="isPacking" />
+			<result column="OI_MEMO" jdbcType="VARCHAR" property="memo" />
+			<result column="OI_CREATED" jdbcType="TIMESTAMP" property="created" />
+			<result column="OI_UPDATED" jdbcType="TIMESTAMP" property="updated" />
+			<collection property="options" javaType="java.util.List" ofType="SingleMap" >
+				<id column="OP_ID" jdbcType="BIGINT" property="id" />
+				<result column="OP_ORDER_ID" jdbcType="BIGINT" property="orderId" />
+				<result column="OP_ITEM_ID" jdbcType="BIGINT" property="itemId" />
+				<result column="OP_ORDINAL" jdbcType="BIGINT" property="ordinal" />
+				<result column="OP_OPT_ID" jdbcType="BIGINT" property="optId" />
+				<result column="OP_OPT_DTL_ID" jdbcType="BIGINT" property="optDtlId" />
+				<result column="OP_OPT_NM" jdbcType="VARCHAR" property="optNm" />
+				<result column="OP_OPT_DTL_NM" jdbcType="VARCHAR" property="optDtlNm" />
+				<result column="OP_OPT_PRICE" jdbcType="DOUBLE" property="optPrice" />
+				<result column="OP_CREATED" jdbcType="TIMESTAMP" property="created" />
+				<result column="OP_UPDATED" jdbcType="TIMESTAMP" property="updated" />
+				<result column="OP_OPT_DTL_COUNT" jdbcType="SMALLINT" property="optDtlCount" />
+		    </collection>
+	    </collection>
+ 	</resultMap>
+ 	
+ 	<resultMap id="orderPayResult" type="SingleMap">
+ 		<result column="ORDER_ID" jdbcType="BIGINT" property="orderId" />
+		<collection property="pays" javaType="java.util.List" ofType="SingleMap" >
+		    <result column="STAFF_ID" jdbcType="BIGINT" property="staffId" />
+		    <result column="ORDINAL" jdbcType="BIGINT" property="ordinal" />
+		    <result column="PAY_METHOD" jdbcType="CHAR" property="payMethod" />
+		    <result column="CARD_INFO" jdbcType="VARCHAR" property="cardInfo" />
+		    <result column="CARD_INFO_CD" jdbcType="CHAR" property="cardInfoCd" />
+		    <result column="CARD_NO" jdbcType="VARCHAR" property="cardNo" />
+		    <result column="AMOUNT" jdbcType="DOUBLE" property="amount" />
+		    <result column="PAY_ST" jdbcType="CHAR" property="paySt" />
+		    <result column="PAY_TM" jdbcType="TIMESTAMP" property="payTm" />
+		    <result column="PAY_TM_LOCAL" jdbcType="TIMESTAMP" property="payTmLocal" />
+		    <result column="TRAN_NO" jdbcType="VARCHAR" property="tranNo" />
+		    <result column="MONTHLY_PLAIN" jdbcType="TINYINT" property="monthlyPlain" />
+		    <result column="PG_KIND" jdbcType="VARCHAR" property="pgKind" />
+		    <result column="ACCEPTOR_CD" jdbcType="CHAR" property="acceptorCd" />
+		    <result column="ACCEPTOR_NM" jdbcType="VARCHAR" property="acceptorNm" />
+		    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+		    <result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />
+	    </collection>
+ 	</resultMap>
+  	
+  	
+  	<select id="selectOrder" parameterType="map" resultMap="orderResult">
+		SELECT 
+		    A.ID,
+		    A.BRAND_ID,
+			A.STORE_ID,
+			A.USER_ID,
+			A.STAFF_ID,
+			A.ORDER_NO,
+			A.LAST_ST,
+			A.PATH_TP,
+			A.ORDER_TP,
+			A.ORDER_DIV,
+			A.OPEN_DT,
+			A.ORDER_ST,
+			A.ORDERER_NAME,
+			A.ORDERER_MB,
+			A.RECEIPT_ID,
+			A.RECEIPT_NO,
+			A.ORDER_TM,
+			A.ORDER_TM_LOCAL,
+			A.RESERVE_NO,
+			A.RESERVE_TM,
+			A.RESERVE_TM_LOCAL,
+			A.RESERVE_END_TM,
+			A.RESERVE_END_TM_LOCAL,
+			A.RESERVE_REG_TM,
+			A.RESERVE_REG_TM_LOCAL,
+			A.EST_TM,
+			A.COMPLETE_TM,
+			A.COMPLETE_TM_LOCAL,
+			A.ACCEPT_TM,
+			A.ACCEPT_TM_LOCAL,
+			A.REJECT_TM,
+			A.REJECT_TM_LOCAL,
+			A.CANCEL_TM,
+			A.CANCEL_TM_LOCAL,
+			A.READY_TM,
+			A.READY_TM_LOCAL,
+			A.CANCEL_TP,
+			A.USE_COUPON,
+			A.SALES,
+			A.DISCOUNT,
+			A.SUPPLY_VALUE,
+			A.TAX,
+			A.SERVICE_CHARGE,
+			A.CUSTOMER_CNT,
+			A.PAY_METHOD,
+			A.TABLE_NO,
+			A.PERSON,
+			A.POS_NO,
+			A.MEMO,
+			A.REASON,
+			A.ADMISSION_TM,
+			A.EXIT_TM,
+			A.CUSTOMER_TP,
+			A.CUSTOME_AGE_TP,
+			A.CUSTOME_GENDER,
+			A.IS_SALES,
+			A.IS_CONFIRM,
+			A.CREATED,
+			A.UPDATED,
+			
+			B.ID as OI_ID,
+			B.ORDER_ID as OI_ORDER_ID,
+			B.ORDINAL as OI_ORDINAL,
+			B.LAST_ST as OI_LAST_ST,
+			B.PATH_TP as OI_PATH_TP,
+			B.SALES_TP as OI_SALES_TP,
+			B.STAFF_ID as OI_STAFF_ID,
+			B.IS_STAMP as OI_IS_STAMP,
+			B.CAT_NM as OI_CAT_NM,
+			B.CAT_CD as OI_CAT_CD,
+			B.ITEM_ID as OI_ITEM_ID,
+			B.ITEM_NM as OI_ITEM_NM,
+			B.ITEM_CD as OI_ITEM_CD,
+			B.ITEM_TP as OI_ITEM_TP,
+			B.PRICE as OI_PRICE,
+			B.PURCHASE_PRICE as OI_PURCHASE_PRICE,
+			B.COUNT as OI_COUNT,
+			B.SALES as OI_SALES,
+			B.DISCOUNT as OI_DISCOUNT,
+			B.NET_SALES as OI_NET_SALES,
+			B.SUPPLY_PRICE as OI_SUPPLY_PRICE,
+			B.TAX as OI_TAX,
+			B.SERVICE_CHARGE as OI_SERVICE_CHARGE,
+			B.TAX_TP as OI_TAX_TP,
+			B.ORDER_TM as OI_ORDER_TM,
+			B.ORDER_TM_LOCAL as OI_ORDER_TM_LOCAL,
+			B.OPT_ID as OI_OPT_ID,
+			B.OPT_NM as OI_OPT_NM,
+			B.OPT_CD as OI_OPT_CD,
+			B.OPT_PRICE as OI_OPT_PRICE,
+			B.SALES_DIV as OI_SALES_DIV,
+			B.SALES_TYPE_DIV as OI_SALES_TYPE_DIV,
+			B.IS_PACKING as OI_IS_PACKING,
+			B.MEMO as OI_MEMO,
+			B.CREATED as OI_CREATED,
+			B.UPDATED as OI_UPDATED,
+			
+			C.ID as OP_ID,
+			C.ORDER_ID as OP_ORDER_ID,
+			C.ITEM_ID as OP_ITEM_ID,
+			C.ORDINAL as OP_ORDINAL,
+			C.OPT_ID as OP_OPT_ID,
+			C.OPT_DTL_ID as OP_OPT_DTL_ID,
+			C.OPT_NM as OP_OPT_NM,
+			C.OPT_DTL_NM as OP_OPT_DTL_NM,
+			C.OPT_PRICE as OP_OPT_PRICE,
+			C.CREATED as OP_CREATED,
+			C.UPDATED as OP_UPDATED,
+			C.OPT_DTL_COUNT as OP_OPT_DTL_COUNT
+		FROM  TB_SVC_ORDER A
+	    LEFT JOIN TB_SVC_ORDER_ITEM B
+	    ON A.ID = B.ORDER_ID
+	    LEFT JOIN TB_SVC_ORDER_ITEM_OPT C
+	    ON B.ID = C.ITEM_ID
+	    WHERE
+	    	A.ID = #{orderId}
+	</select>
+	
+	
+	
+	<insert id="insertOrderToSales" parameterType="SingleMap" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO TB_SVC_SALES (
+			ACCEPT_TM,
+			ACCEPT_TM_LOCAL,
+			ADMISSION_TM,
+			BRAND_ID,
+			CANCEL_TM,
+			CANCEL_TM_LOCAL,
+			CREATED,
+			CUSTOME_AGE_TP,
+			CUSTOME_GENDER,
+			CUSTOMER_CNT,
+			CUSTOMER_TP,
+			DISCOUNT,
+			EXIT_TM,
+			MEMO,
+			OPEN_DT,
+			ORDER_DIV,
+			ORDER_ID,
+			ORDER_NO,
+			ORDER_ST,
+			ORDER_TM,
+			ORDER_TM_LOCAL,
+			ORDER_TP,
+			PATH_TP,
+			PAY_METHOD,
+			PERSON,
+			POS_NO,
+			REASON,
+			RECEIPT_ID,
+			RECEIPT_NO,
+			REJECT_TM,
+			REJECT_TM_LOCAL,
+			RESERVE_END_TM,
+			RESERVE_END_TM_LOCAL,
+			RESERVE_TM,
+			RESERVE_TM_LOCAL,
+			SALES,
+			SERVICE_CHARGE,
+			STAFF_ID,
+			STORE_ID,
+			SUPPLY_VALUE,
+			TABLE_NO,
+			TAX,
+			USE_COUPON,
+			USER_ID,
+			ACTUAL_SALES_AMT,
+			ORDINAL,
+			ORG_SALES_ID,
+			SALES_ST,
+			SALES_TM,
+			SALES_TM_LOCAL
+		)
+		VALUES (
+			#{acceptTm},
+			#{acceptTmLocal},
+			#{admissionTm},
+			#{brandId},
+			#{cancelTm},
+			#{cancelTmLocal},
+			NOW(),
+			#{customeAgeTp},
+			#{customeGender},
+			#{customerCnt},
+			#{customerTp},
+			#{discount},
+			#{exitTm},
+			#{memo},
+			#{openDt},
+			#{orderDiv},
+			#{orderId},
+			#{orderNo},
+			#{orderSt},
+			#{orderTm},
+			#{orderTmLocal},
+			#{orderTp},
+			#{pathTp},
+			#{payMethod},
+			#{person},
+			#{posNo},
+			#{reason},
+			#{receiptId},
+			#{receiptNo},
+			#{rejectTm},
+			#{rejectTmLocal},
+			#{reserveEndTm},
+			#{reserveEndTmLocal},
+			#{reserveTm},
+			#{reserveTmLocal},
+			#{sales},
+			#{serviceCharge},
+			#{staffId},
+			#{storeId},
+			#{supplyValue},
+			#{tableNo},
+			#{tax},
+			#{useCoupon},
+			#{userId},
+			#{sales},
+			0,
+			NULL,
+			809001,
+			#{orderTm},
+			#{orderTmLocal}
+		)
+	</insert>
+	
+	<insert id="insertOrderItemToSalesItem" parameterType="SingleMap" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO TB_SVC_SALES_ITEM (
+			CAT_CD,
+			CAT_NM,
+			COUNT,
+			CREATED,
+			DISCOUNT,
+			IS_PACKING,
+			IS_STAMP,
+			ITEM_CD,
+			ITEM_ID,
+			ITEM_NM,
+			ITEM_TP,
+			MEMO,
+			NET_SALES,
+			OPT_CD,
+			OPT_ID,
+			OPT_NM,
+			OPT_PRICE,
+			ORDER_TM,
+			ORDER_TM_LOCAL,
+			ORDINAL,
+			PATH_TP,
+			PRICE,
+			PURCHASE_PRICE,  
+			SALES,
+			SALES_ST,  
+			SERVICE_CHARGE,
+			STAFF_ID,
+			TAX,
+			PARTIAL_ORDINAL,
+			ACTUAL_SALES_AMT,
+			SALES_ID
+		) 
+		VALUES(
+			#{catCd},
+			#{catNm},
+			#{count},
+			NOW(),
+			#{discount},
+			#{isPacking},
+			#{isStamp},
+			#{itemCd},
+			#{itemId},
+			#{itemNm},
+			#{itemTp},
+			#{memo},
+			#{netSales},
+			#{optCd},
+			#{optId},
+			#{optNm},
+			#{optPrice},
+			#{orderTm},
+			#{orderTmLocal},
+			#{ordinal},
+			#{pathTp},
+			#{price},
+			#{purchasePrice},
+			#{sales},
+			'809001',
+			#{serviceCharge},
+			#{staffId},
+			#{tax},
+			0,
+			#{price},
+			#{salesId}
+		)
+	</insert>
+	
+		<insert id="insertOrderItemOptionToSalesItemOption" parameterType="SingleMap">
+		INSERT INTO TB_SVC_SALES_ITEM_OPT (
+			SALES_ID,
+			ITEM_ID,
+			ORDINAL,
+			OPT_ID,
+			OPT_DTL_ID,
+			OPT_NM,
+			OPT_DTL_NM,
+			OPT_PRICE,
+			CREATED
+		) 
+		VALUES(
+			#{salesId},
+			#{itemId},
+			#{ordinal},
+			#{optId},
+			#{optDtlId},
+			#{optNm},
+			#{optDtlNm},
+			#{optPrice},
+			NOW()
+		)
+	</insert>
+	
+	
+	
+	<insert id="insertOrderPay" parameterType="map">
+		INSERT INTO TB_SVC_SALES_PAY (
+			SALES_ID,
+			STAFF_ID,
+			SALES_ST,
+			ORDINAL,
+			PARTIAL_ORDINAL,
+			PAY_METHOD,
+			CARD_INFO,
+			CARD_INFO_CD,
+			CARD_NO,
+			AMOUNT,         
+			PAY_TM,         
+			PAY_TM_LOCAL,   
+			TRAN_NO,        
+			MONTHLY_PLAIN,  
+			PG_KIND,       
+			ACCEPTOR_CD,
+			ACCEPTOR_NM, 
+			CREATED
+		)
+		SELECT
+			#{salesId},
+			STAFF_ID,
+			#{salesSt},
+			ORDINAL,
+			0 AS PARTIAL_ORDINAL,
+			PAY_METHOD,
+			CARD_INFO,
+			CARD_INFO_CD,
+			CARD_NO,
+			AMOUNT,
+			PAY_TM,
+			PAY_TM_LOCAL,
+			TRAN_NO,
+			MONTHLY_PLAIN,
+			PG_KIND,
+			ACCEPTOR_CD,
+			ACCEPTOR_NM,
+			NOW()
+		FROM
+			TB_SVC_ORDER_PAY
+		WHERE
+			ORDER_ID = #{orderId}
+	</insert>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+
+<mapper namespace="com.jc.pico.utils.customMapper.store.StoreHomeStoreSalesMapper">
+
+	<select id="selectTodaySalesSummary" parameterType="map" resultType="SingleMap">
+		/* StoreHomeStoreSalesMapper.selectTodaySalesSummary */		
+		SELECT
+			ROUND(COALESCE(SUM(SALES), 0), #{currencyFraction}) AS salesTotal
+			, COALESCE(COUNT(*), 0) AS orderTotal
+		FROM
+			TB_SVC_SALES
+		WHERE
+			STORE_ID = #{storeId}
+		AND SALES_ST = '809001'
+		AND SALES_TM_LOCAL BETWEEN DATE_ADD(DATE(#{today}), INTERVAL 0 SECOND) AND #{today}		
+	</select>
+	
+	<select id="selectLastDaysSales" parameterType="SingleMap" resultType="SingleMap">
+		/* StoreHomeStoreSalesMapper.selectLastDaysSales */
+		SELECT
+			CL.YMD AS label
+		    , ROUND(COALESCE(A.salesTotal, 0), #{currencyFraction}) AS salesTotal
+		FROM (
+			SELECT 
+				YMD
+			FROM 
+				TB_BASE_CALENDAR 
+			WHERE				
+				YMD BETWEEN DATE_SUB(DATE(#{today}), INTERVAL #{lastDaysLimit} - 1 DAY) AND DATE(#{today})
+			ORDER BY YMD
+		) CL
+		LEFT JOIN (
+			SELECT
+				DATE(SALES_TM_LOCAL) AS YMD
+				, SUM(SALES) AS salesTotal
+			FROM 
+				TB_SVC_SALES
+			WHERE
+				STORE_ID = #{storeId}
+			AND SALES_ST = '809001'
+			AND
+		<foreach item="item" index="index" collection="lastDaysLimits" open="(" separator=" OR " close=")">
+        	(
+        		SALES_TM_LOCAL 
+        			BETWEEN DATE_SUB(DATE_ADD(DATE(#{today}), INTERVAL 0 SECOND), INTERVAL #{index} DAY)
+        			AND DATE_SUB(#{today}, INTERVAL #{index} DAY)
+        	)
+		</foreach>
+			GROUP BY DATE(SALES_TM_LOCAL)
+		) AS A
+		ON CL.YMD = A.YMD
+	</select>
+	
+	<select id="selectTodaySalesBestItem" parameterType="SingleMap" resultType="SingleMap">
+		/* StoreHomeStoreSalesMapper.selectTodaySalesBestItem */	
+		SELECT
+			COALESCE(MAX(label), '') AS label
+		    , ROUND(COALESCE(MAX(salesTotal), 0), #{currencyFraction}) AS salesTotal
+			, COALESCE(MAX(salesCount), 0) AS salesCount
+		FROM (
+			SELECT
+				B.ITEM_NM AS label
+				, SUM(B.SALES) AS salesTotal
+				, SUM(B.COUNT) AS salesCount
+			FROM TB_SVC_SALES A
+			INNER JOIN TB_SVC_SALES_ITEM B
+			ON A.ID = B.SALES_ID
+			WHERE
+				A.STORE_ID = #{storeId}
+			AND A.SALES_ST = '809001'
+			AND B.SALES_ST = '809001'
+			AND A.SALES_TM_LOCAL BETWEEN DATE_ADD(DATE(#{today}), INTERVAL 0 SECOND) AND #{today}
+			GROUP BY ITEM_CD
+			ORDER BY salesTotal DESC
+			LIMIT 1
+		) T
+	</select>
+	
+	<select id="selectTodayTimeSales" parameterType="SingleMap" resultType="SingleMap">
+		/* StoreHomeStoreSalesMapper.selectTodayTimeSales */
+		SELECT 	
+		    CONCAT(A.hour, '~', A.hour + 1, 'h') AS label
+		    , ROUND(COALESCE(B.salesTotal, 0), #{currencyFraction}) AS salesTotal 
+		FROM (
+			SELECT 0 AS hour UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+			UNION SELECT 6 AS hour UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11
+			UNION SELECT 12 AS hour UNION SELECT 13 UNION SELECT 14 UNION SELECT 15 UNION SELECT 16 UNION SELECT 17
+			UNION SELECT 18 AS hour UNION SELECT 19 UNION SELECT 20 UNION SELECT 21 UNION SELECT 22 UNION SELECT 23
+		) A
+		LEFT JOIN (
+			SELECT 
+				HOUR(SALES_TM_LOCAL) AS hour        
+				, SUM(SALES) AS salesTotal
+			FROM TB_SVC_SALES
+			WHERE
+				STORE_ID = #{storeId}
+			AND SALES_ST = '809001'
+			AND SALES_TM_LOCAL BETWEEN DATE_ADD(DATE(#{today}), INTERVAL 0 SECOND) AND #{today}
+			GROUP BY hour	
+		) B
+		ON A.hour = B.hour
+		ORDER BY A.hour
+	</select>
+
+</mapper>

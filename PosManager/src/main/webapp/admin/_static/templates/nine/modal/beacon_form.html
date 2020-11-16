@@ -1,0 +1,84 @@
+<div class="modal-dialog modal-lg">
+	<form>
+	<input type="hidden" name="id" value="{{id}}" readonly="readonly">
+	{{#id}}
+	<input type="hidden" name="status" value="{{status}}" readonly="readonly">
+	{{/id}}
+	{{^id}}
+	<!-- 동록시 재고상태 -->
+	<input type="hidden" name="status" value="412002" readonly="readonly">
+	{{/id}}
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title" id="myLargeModalLabel">
+				{{i18n.BO2047}} {{#id}}{{i18n.BO0015}}{{/id}}{{^id}}{{i18n.BO0025}}{{/id}} <b>* {{i18n.BO0008}}<b>
+			</h4>
+		</div>
+		<div class="modal-body" id="modal-form">
+			<div class="row">
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2060}}
+						*</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="input-Default"
+							value="{{uuid}}" name="uuid" data-validation="required">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2061}}
+						*</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="input-Default"
+							value="{{major}}" name="major" data-validation="required">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2062}}
+						*</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="input-Default"
+							value="{{minor}}" name="minor" data-validation="required">
+					</div>
+				</div>
+				{{#id}}
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2085}}</label>
+					<div class="col-sm-10">{{statusNm}}</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2086}}</label>
+					<div class="col-sm-10">{{storeNm}}</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2063}}</label>
+					<div class="col-sm-10">{{label}}</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2084}}</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="input-Default"
+							value="{{#formatDate}}{{updated}}{{/formatDate}}" readonly>
+					</div>
+				</div>
+				{{/id}}
+			</div>
+
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+		{{#id}}
+		<!-- 사용상태에선 삭제, 폐기 불가 -->
+		{{^status=412001}}
+			<button type="submit" class="btn btn-danger" id="del-beacon">{{i18n.BO0016}}</button>
+			<button type="submit" class="btn btn-warning" id="dsuse-beacon">{{i18n.BO3054}}</button>
+		{{/status=412001}}
+		{{/id}}
+			<button type="submit" class="btn btn-primary">{{i18n.BO0014}}</button>
+		</div>
+	</div>
+	</form>
+</div>

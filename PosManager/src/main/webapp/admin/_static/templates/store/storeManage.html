@@ -1,0 +1,93 @@
+
+<form id="rollSearchFrom">
+	<ul class="filemanager-options" {{#isSt}} style="display: none" {{/isSt}}>
+		<li class="select2-padding" {{#isFr}} style="display: none" {{/isFr}}>
+			<div class="itemopt">
+				<select class="select2" id="franchise_select" >
+					<option value="">{{i18n.BO1031}}</option>
+					{{#frList}}
+					<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+					{{/frList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding" {{#isBr}} style="display: none" {{/isBr}}>
+			<div class="itemopt">
+				<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="brand_select">
+					<option value="">{{i18n.BO1032}}</option>
+					{{#brList}}
+					<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+					{{/brList}}
+				</select>
+			</div>
+		</li>
+		<li class="select2-padding">
+			<div class="itemopt">
+				<select class="select2 base-select" id="svcSt" name="svcStSearch">
+					<option value="">{{i18n.BO2012}}</option>
+						{{#cd.svcst}}
+							<option value="{{baseCd}}">{{title}}</option>
+						{{/cd.svcst}}
+				</select>
+			</div>
+		</li>
+		<li class="sch-toolbar">
+	      <div class="input-group ">
+	        <input type="text" class="form-control ckbox-border sch-input" id="demo"  placeholder="search..." name="searchKeyword">
+	        <button type="button" id="search">
+	          <i class="glyphicon glyphicon-search sch-btn-i"></i>
+	        </button>
+	      </div>
+	      </li>
+		<li class="float-right">
+	        <button type="button" id="new-store" class="btn btn-xs btn-primary" data-toggle="modal" data-target=".bs-store-modal-lg">+ {{i18n.BO0025}}</button>
+	    </li>
+	</ul>
+</form>
+
+<div class="row">
+   <div class="col-md-12">
+      <div class="panel panel-white">
+         <div class="panel-body">
+            <div class="table-responsive">
+               <div class="float-right">
+                  <div class="modal fade bs-store-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="store-modal"></div>
+                  <div class="modal fade bs-beacon-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel2" aria-hidden="true" id="beacon-modal"></div>
+                  <div class="modal fade bs-pos-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel3" aria-hidden="true" id="pos-modal"></div>
+                  <div class="modal fade bs-cctv-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel4" aria-hidden="true" id="cctv-modal"></div>
+                  <div class="modal fade bs-printer-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel5" aria-hidden="true" id="printer-modal"></div>
+               </div>
+               <table id="store-tables" class="display table" style="width: 100%; cellspacing: 0;">
+                  <thead>
+                     <tr>
+                        <th>{{i18n.BO2001}}</th>
+                        <th></th>
+                        <th>{{i18n.BO2039}}</th>
+                        <th>{{i18n.BO2040}}</th>
+                        <th>{{i18n.BO2005}}</th>
+                        <th>{{i18n.BO2024}}</th>
+                        <th>{{i18n.BO2012}}</th>
+                        <th></th>
+                     </tr>
+                  </thead>
+                  <tfoot>
+                     <tr>
+                        <th>{{i18n.BO2001}}</th>
+                        <th></th>
+                        <th>{{i18n.BO2039}}</th>
+                        <th>{{i18n.BO2040}}</th>
+                        <th>{{i18n.BO2005}}</th>
+                        <th>{{i18n.BO2024}}</th>
+                        <th>{{i18n.BO2012}}</th>
+                        <th></th>
+                     </tr>
+                  </tfoot>
+                  <tbody>
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Row -->

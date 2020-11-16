@@ -1,0 +1,124 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="form-group min-height-30">
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%">
+							<option value="HI">{{i18n.BO1032}}</option>
+							<option value="AK">오더나인</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<div class="col-sm-5">
+						<div
+							class="input-group col-sm-6 m-b-sm input-append bootstrap-timepicker float-left margin-b-15">
+							<input id="timepicker1" type="text"
+								class="form-control date-picker" placeholder="조회기간 시작일">
+							<span class="input-group-addon add-on"><i
+								class="fa fa-calendar"></i></span>
+						</div>
+						<div
+							class="input-group  col-sm-5 m-b-sm input-append bootstrap-timepicker float-left margin-left-5 margin-b-15">
+							<input id="timepicker1" type="text"
+								class="form-control date-picker" placeholder="조회기간 종료일">
+							<span class="input-group-addon add-on"><i
+								class="fa fa-calendar"></i></span>
+						</div>
+					</div>
+					<div class="col-sm-7 float-left margin-b-15">
+						<button type="submit" class="btn btn-primary">오늘</button>
+						<button type="submit" class="btn btn-primary">이번주</button>
+						<button type="submit" class="btn btn-primary">이번달</button>
+					</div>
+				</div>
+				<div class="form-group min-height-30">
+					<div class="col-md-2 m-b-sm">
+						<select class="js-states form-control" tabindex="-1"
+							style="display: none; width: 100%">
+							<option>{{i18n.BO2159}}</option>
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+						</select>
+					</div>
+					<div class="col-md-2 m-b-sm">
+						<input type="text" class="form-control" id="input-Default"
+							placeholder="검색어 입력...">
+					</div>
+					<div class="col-md-8 m-b-sm">
+						<button type="submit" class="btn btn-primary float-right">
+							검색</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table id="example" class="display table"
+						style="width: 100%; cellspacing: 0;">
+						<thead>
+							<tr>
+								<th>번호</th>
+								<th>선물날짜</th>
+								<th>{{i18n.BO2159}}</th>
+								<th>{{i18n.BO2076}}</th>
+								<th>보낸고객코드</th>
+								<th>보낸휴대폰</th>
+								<th>받은휴대폰</th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th>번호</th>
+								<th>선물날짜</th>
+								<th>{{i18n.BO2159}}</th>
+								<th>{{i18n.BO2076}}</th>
+								<th>보낸고객코드</th>
+								<th>보낸휴대폰</th>
+								<th>받은휴대폰</th>
+							</tr>
+						</tfoot>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>2016—01-02</td>
+								<td>12345678900</td>
+								<td>3000원 Free쿠폰</td>
+								<td>12345678900</td>
+								<td>010-****-0000</td>
+								<td>010-****-1234</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>2016—01-02</td>
+								<td>12345678900</td>
+								<td>3000원 Free쿠폰</td>
+								<td>12345678900</td>
+								<td>010-****-0000</td>
+								<td>010-****-1234</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>2016—01-02</td>
+								<td>12345678900</td>
+								<td>3000원 Free쿠폰</td>
+								<td>12345678900</td>
+								<td>010-****-0000</td>
+								<td>010-****-1234</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Row -->

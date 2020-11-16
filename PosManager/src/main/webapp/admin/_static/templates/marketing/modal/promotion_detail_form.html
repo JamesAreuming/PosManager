@@ -1,0 +1,165 @@
+
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body">
+				<div class="col-lg-6 col-md-6">
+					<div class="panel panel-white panel-box-shadow">
+						<div class="widget">
+							<div class="row">
+								<div class="col-md-12">
+									<ul class="list-unstyled index-info">
+										<li>{{i18n.BO2421}} <span class="pull-right"><b>{{id}}</b></span></li>
+										<input type="hidden" id="promotionId" name="promotionId" value="{{id}}">
+										<li>{{i18n.BO2149}} <span class="pull-right"><b>{{promotionNm}}</b></span></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6">
+					<div class="panel panel-white  panel-box-shadow">
+						<div class="widget">
+							<div class="row">
+								<div class="col-md-12">
+									<ul class="list-unstyled index-info">
+										<li>{{i18n.BO1032}} <span class="pull-right"><b>{{brandNm}}</b></span></li>
+										<input type="hidden" id="brandId" name="brandId" value="{{brandId}}">
+										<li>&nbsp; &nbsp; <span class="pull-right"><b> </b></span></li>
+										<input type="hidden" id="storeId" name="storeId" value="{{storeId}}">
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="float-right">
+					<button type="button" class="btn btn-primary float-left margin-top-b-15 back-user-main">{{i18n.BO0013}}</button>
+				</div>
+			</div>			
+		</div>
+	</div><!-- 
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body padding-top-zero">
+				<div class="col-md-12">
+					<div class="panel-btn-padding">
+						<div class="float-left">
+							<button type="submit"
+								class="btn btn-primary float-left margin-top-b-15"
+								data-toggle="modal" data-target=".bs-example-modal-lg">
+								Mail발송</button>
+							<button type="submit"
+								class="btn btn-primary float-left margin-top-b-15 m-c-5"
+								data-toggle="modal" data-target=".bs-example-modal-lg2">
+								SMS발송</button>
+							<button type="submit"
+								class="btn btn-primary float-left margin-top-b-15"
+								data-toggle="modal" data-target=".bs-example-modal-lg3">
+								Push발송</button>
+						</div>
+						<div class="float-right">
+							<button type="button"
+								class="btn btn-primary float-left margin-top-b-15 back-user-main">
+								목록으로</button>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div> -->
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body padding-top-zero">
+				<div class="col-md-12">
+					<div class="panel-btn-padding">
+						<div class="table-responsive col-md-12">
+							<h3>{{i18n.BO2179}}</h3>
+							<table id="coupon-list" class="display table"
+								style="width: 100%; cellspacing: 0;">
+								<thead>
+									<tr>
+										<th>{{i18n.BO2001}}</th>
+										<th>{{i18n.BO2076}}</th>
+										<th></th>	<!-- 프로모션ID -->
+										<th></th>	<!-- 쿠폰ID -->
+										<th>{{i18n.BO2169}}</th>
+										<th>{{i18n.BO2161}}</th>
+										<th>{{i18n.BO2424}}</th>	<!-- 쿠폰발행건수 -->
+										<th></th>					<!-- 발행구분코드 -->
+										<th>{{i18n.BO2267}}</th>	<!-- 발행구분명 -->
+										<th></th>					<!-- 발행상태코드 -->
+										<th>{{i18n.BO2419}}</th>	<!-- 발행상태명 -->										
+										<th>{{i18n.BO2397}}</th>	<!-- 발행일자 -->
+									</tr>
+								</thead>
+								<tfoot>
+									<tr>
+										<th>{{i18n.BO2001}}</th>
+										<th>{{i18n.BO2076}}</th>
+										<th></th>	<!-- 프로모션ID -->
+										<th></th>	<!-- 쿠폰ID -->
+										<th>{{i18n.BO2169}}</th>
+										<th>{{i18n.BO2161}}</th>										
+										<th>{{i18n.BO2424}}</th>	<!-- 쿠폰발행건수 -->
+										<th></th>					<!-- 발행구분코드 -->
+										<th>{{i18n.BO2267}}</th>	<!-- 발행구분명 -->
+										<th></th>					<!-- 발행상태코드 -->
+										<th>{{i18n.BO2419}}</th>	<!-- 발행상태명 -->										
+										<th>{{i18n.BO2397}}</th>	<!-- 발행일자 -->
+									</tr>
+								</tfoot>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel-body padding-top-zero">
+				<div class="col-md-12">
+					<div class="panel-btn-padding">
+						<div class="table-responsive col-md-12">
+							<h3>{{i18n.BO2180}}</h3>
+							<table id="issue-list" class="display table"
+								style="width: 100%; cellspacing: 0;">
+								<thead>
+									<tr>
+										<th>{{i18n.BO2001}}</th>
+										<th>{{i18n.BO2159}}</th>
+										<th>{{i18n.BO2152}}</th>
+										<th>{{i18n.BO2151}}</th>
+										<th>{{i18n.BO2342}}</th>
+										<th>{{i18n.BO2124}}</th>
+										<th>{{i18n.BO2406}}</th>
+										<th>{{i18n.BO2407}}</th>
+									</tr>
+								</thead>
+								<tfoot>
+									<tr>
+										<th>{{i18n.BO2001}}</th>
+										<th>{{i18n.BO2159}}</th>
+										<th>{{i18n.BO2152}}</th>
+										<th>{{i18n.BO2151}}</th>
+										<th>{{i18n.BO2342}}</th>
+										<th>{{i18n.BO2124}}</th>
+										<th>{{i18n.BO2406}}</th>
+										<th>{{i18n.BO2407}}</th>
+									</tr>
+								</tfoot>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- Row -->

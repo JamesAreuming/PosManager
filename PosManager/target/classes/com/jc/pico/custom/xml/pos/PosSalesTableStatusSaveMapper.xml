@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: PosSalesTableStatusSaveMapper.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History		: 
+  ~
+  ~ Version		: 1.0
+  ~ Author   	: 
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.pos.PosSalesTableStatusSaveMapper">
+  <select id="selectCurrentTables" parameterType="hashmap" resultType="hashmap">
+  	SELECT /* PosSalesTableStatusSaveMapper.selectCurrentTables : POS.S_TABLE_STATUS_SAVE, 2016-07-11, green */
+  			ID, IS_USED, POS_NO, ORDER_ID, ADMIN_ID
+  	  FROM TB_SVC_TABLE
+	<trim prefix="WHERE" prefixOverrides="AND |OR ">
+		<if test="_parameter.containsKey('storeId')">
+		AND TB_SVC_TABLE.STORE_ID = #{storeId}
+		</if>
+		<if test="_parameter.containsKey('tableId')">
+		AND TB_SVC_TABLE.ID = #{tableId}
+		</if>
+		<if test="_parameter.containsKey('tableIds')">
+	    AND TB_SVC_TABLE.ID IN
+			<foreach item="tableIdz" index="inx" collection="tableIds" open="(" separator="," close=")">
+				#{tableIdz.TABLE_NO}
+			</foreach>
+		</if>
+	</trim>
+  </select>
+
+  <update id="updateCurrentTable" parameterType="hashmap">
+  	UPDATE /* PosSalesTableStatusSaveMapper.updateCurrentTable : POS.S_TABLE_STATUS_SAVE, 2016-07-11, green */
+  		     TB_SVC_TABLE
+	<trim prefix="SET" prefixOverrides=", ">
+		<if test="_parameter.containsKey('isUsed')">
+	   		, IS_USED = #{isUsed}
+		</if>
+		<if test="_parameter.containsKey('posNo')">
+	   		, POS_NO = #{posNo}
+		</if>
+		<if test="_parameter.containsKey('storeId')">
+	   		, STORE_ID = #{storeId}
+		</if>
+		<if test="_parameter.containsKey('masterTableNo')">
+	   		, MASTER_TABLE_NO = #{masterTableNo}
+		</if>
+		<if test="_parameter.containsKey('adminId')">
+	   		, ADMIN_ID = #{adminId}
+		</if>
+		<if test="_parameter.containsKey('updated')">
+	   		, UPDATED = #{updated}
+		</if>
+	</trim>
+	<trim prefix="WHERE" prefixOverrides="AND |OR ">
+		<if test="_parameter.containsKey('storeId')">
+		AND TB_SVC_TABLE.STORE_ID = #{storeId}
+		</if>
+		<if test="_parameter.containsKey('tableId')">
+		AND TB_SVC_TABLE.ID = #{tableId}
+		</if>
+		<if test="_parameter.containsKey('tableIds')">
+	    AND TB_SVC_TABLE.ID IN
+			<foreach item="tableIdz" index="inx" collection="tableIds" open="(" separator="," close=")">
+				#{tableIdz.TABLE_NO}
+			</foreach>
+		</if>
+	</trim>
+  </update>
+
+  <select id="selectDefault" parameterType="hashmap" resultType="com.jc.pico.utils.bean.PosSalesTableStatusSave">
+    SELECT  /* PosSalesTableStatusSaveMapper.selectDefault : POS.S_TABLE_STATUS_SAVE, 2016-07-11, green */
+			${companyId} AS cdCompany /* 회사코드 */
+			, ${storeId} AS cdStore /* 매장코드 */
+			, TB_SVC_TABLE.ID AS noTable /* 테이블번호 */
+			, TB_SVC_TABLE.SECTION_ID AS noPartition /* 파티션번호 */
+			, IF(TB_SVC_ORDER.ORDER_TM_LOCAL IS NULL, '', DATE_FORMAT(TB_SVC_ORDER.ORDER_TM_LOCAL, '%Y%m%d')) AS ymdOrder /* 주문일자(yyyymmdd) */
+			, TB_SVC_TABLE.ORDER_ID AS noOrder /* 주문번호 */
+			, 0 AS noParty /* 단체번호 */
+			, '' AS bgParty /* 단체색깔 */
+			, TB_SVC_TABLE.POS_NO AS noPosLast /* 최종사용 포스번호 */
+			, TB_SVC_TABLE.IS_USED AS dsStatus /* 상태(0:미사용 1:사용중) */
+			, IF(TB_SVC_ORDER.UPDATED IS NULL, '', DATE_FORMAT(TB_SVC_ORDER.UPDATED, '%Y%m%d%H%i%s')) AS dtUpdate /* 수정일시 */
+			, 'BAK' AS cdEmployeeUpdate /* 수정자 */
+      FROM TB_SVC_TABLE
+      LEFT OUTER JOIN TB_SVC_ORDER ON TB_SVC_ORDER.ID = TB_SVC_TABLE.ORDER_ID
+	<trim prefix="WHERE" prefixOverrides="AND |OR ">
+		<if test="_parameter.containsKey('storeId')">
+	   AND TB_SVC_TABLE.STORE_ID = #{storeId}
+		</if>
+		<if test="_parameter.containsKey('tableId')">
+	   AND TB_SVC_TABLE.ID = #{tableId}
+		</if>
+	</trim>
+  </select>
+
+</mapper>

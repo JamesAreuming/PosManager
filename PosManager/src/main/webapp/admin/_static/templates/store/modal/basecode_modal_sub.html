@@ -1,0 +1,79 @@
+<div class="modal-dialog modal-lg">
+	<form data-toggle="validator" role="form" action="./model/BaseCode">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myLargeModalLabel">
+					{{i18n.BO2126}} <b>* {{i18n.BO0008}}<b>
+				</h4>
+			</div>
+			<div class="modal-body" id="modal-form">
+				<div class="row">
+					<input type="hidden" value="{{mainCd}}" name="mainCd" data-validation="required"> 
+					<div class="form-group min-height-30 col-sm-9 padding-0">
+						<label for="input-Default" class="col-sm-2 control-label">기초코드</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" id="input-Default" name="baseCd"
+								value="{{baseCd}}" readOnly="readOnly">
+							<input type="hidden" value="{{id}}" readonly="readonly" data-validation="required" name="id">
+							<input type="hidden" value="{{mainId}}" readonly="readonly" data-validation="required" name="mainId">
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-9 padding-0">
+						<label for="input-Default" class="col-sm-2 control-label">대분류코드</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" id="input-Default"
+								value="{{mainCd}}" readOnly="readOnly">
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-9 padding-0">
+						<label for="input-Default" class="col-sm-2 control-label">소분류코드 *</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" id="input-Default" name="subCd"
+								value="{{subCd}}" data-validation="length" data-validation-length="3-5">
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-9 padding-0">
+						<label for="input-Default" class="col-sm-2 control-label">분류명
+							*</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" id="input-Default" name="title" 
+								value="{{title}}" data-validation="required">
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2124}} *</label>
+						<div class="col-sm-9">
+							<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+								style="width: 100%" name="useYn" data-validation="required">
+								<option value="">{{i18n.BO2124}}</option>
+								<option value="true" {{#useYn=true}} selected="selected"{{/useYn=true}}>{{i18n.BO2031}}</option>
+								<option value="false" {{#useYn=false}} selected="selected"{{/useYn=false}}>{{i18n.BO2032}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">설명</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="input-Default" name="dsc" value="{{dsc}}">
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">ALIAS</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="input-Default" name="alias" value="{{alias}}">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default"
+					data-dismiss="modal">{{i18n.BO0026}}</button>
+				<button type="submit" class="btn btn-primary corp-modal-submit">{{i18n.BO0014}}</button>
+			</div>
+		</div>
+	</form>
+</div>

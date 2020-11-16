@@ -1,0 +1,30 @@
+<div class="modal-dialog modal-lg">
+	<form id="csvUpForm" role="form" method="post" enctype="multipart/form-data">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title" id="myLargeModalLabel2">
+				{{i18n.BO1035}} {{i18n.BO3056}} <b>* {{i18n.BO0008}}<b>
+			</h4>
+		</div>
+		<div class="modal-body" id="modal-form">
+			<div class="row">
+				<div class="form-group min-height-30 col-sm-12 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2335}}*</label>
+					<div class="col-sm-10">
+						<input id="csv" type="file" name="csv" data-validation="required"/>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+			<button type="button" class="btn btn-primary" id="csvUp">{{i18n.BO0014}}</button>
+		</div>
+	</div>
+	</form>
+</div>

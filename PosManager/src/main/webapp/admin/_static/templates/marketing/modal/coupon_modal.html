@@ -1,0 +1,401 @@
+<div class="modal-dialog modal-lg">
+	<form id="couponDetail">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">
+					{{i18n.BO2160}} <b>* {{i18n.BO0008}}</b>
+				</h4>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" name="id" value="{{id}}" readonly="readonly">
+				<input type="hidden" name="brandId" value="{{brandId}}" readonly="readonly">
+				<div class="row">
+					<div class="form-group min-height-30 col-sm-12 padding-0">
+						<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2076}}*</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="input-Default" value="{{couponNm}}" name="couponNm" data-validation="required" />
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2161}}*</label>
+						<div class="col-sm-9">
+							<select id="expireTp" class="form-control m-b-sm"
+								tabindex="-1" style="width: 100%" name="expireTp" data-validation="required">
+								<option value="">{{i18n.BO2161}}</option> 
+								{{#expiretp}}
+								<option value="{{baseCd}}"{{{selections}}}>{{title}}</option>
+								{{/expiretp}}
+							</select>
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-6 padding-0" id="expire-tp-term" {{#expiretp=404002}}style="display: none;"{{/expiretp=404002}}>
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2171}}* </label>
+						<div class="col-sm-9">
+							<div class="input-group col-sm-12 m-b-sm input-append bootstrap-timepicker float-left">
+								<input id="term" type="text" class="form-control date-picker" placeholder="{{formatTerm}}" name="term" value="{{term}}" data-validation="required">
+							</div>
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-6 padding-0" id="expire-tp-fix" {{#expiretp=404001}}style="display: none;"{{/expiretp=404001}}>
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2373}}</label>
+						<div class="col-sm-9">
+							<div class="input-group col-sm-12 m-b-sm input-append bootstrap-timepicker float-left">
+								<input id="timepicker1" type="text" class="form-control date-picker" placeholder="{{i18n.BO2373}}">
+									<span class="input-group-addon add-on add-on-datepicker">
+										<i class="fa fa-calendar"></i>
+									</span> 
+									<input id="from-date" name="begin" value="{{begin}}" type="hidden" /> 
+									<input id="to-date" name="expire" value="{{expire}}" type="hidden"/>
+							</div>
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2169}}* </label>
+						<div class="col-sm-6">
+							<select id="discountTp" class="form-control m-b-sm" tabindex="-1" style="width: 100%" name="discountTp"	data-validation="required">
+								<option value="">{{i18n.BO2169}}</option> 
+								{{#discounttp}}
+								<option value="{{baseCd}}"{{{selections}}}>{{title}}</option>
+								{{/discounttp}}
+							</select>
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label" id="discountLabel">{{discountLabel}} *</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control date-picker" name="discount" id="discount" value="{{discount}}" data-validation="number" {{discountReadonly}} >
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label" id="discountLimitLabel">{{i18n.BO2162}} *</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control date-picker" name="discountLimit" id="discountLimit" value="{{discountLimit}}" data-validation="number" {{discountLimitReadonly}} >
+						</div>
+					</div><!--
+					<div class="form-group min-height-30 col-sm-9 padding-0">
+						<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2374}}
+						</label>
+						<div class="col-sm-10">
+							<select id="input-Default" class="form-control m-b-sm"
+								tabindex="-1" style="width: 100%" name="targetMenuId">
+								<option value="">{{i18n.BO2374}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-9 padding-0">
+						<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2375}}</label>
+						<div class="col-sm-10">
+							<select id="input-Default" class="form-control m-b-sm"
+								tabindex="-1" style="width: 100%" name="supplyMenuId">
+								<option value="">{{i18n.BO2375}}</option>
+							</select>
+						</div>
+					</div> -->
+					<div class="form-group min-height-30 col-sm-6 padding-0">
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2124}}</label>
+						<div class="col-sm-9">
+							<select id="used" class="form-control m-b-sm" tabindex="-1" style="width: 100%" name="used" data-validation="required">
+								<option value="">{{i18n.BO2124}}</option>
+								<option value="true" {{#used=true}} selected="selected" {{/used=true}}>{{i18n.BO2031}}</option>
+								<option value="false"{{#used=false}} selected="selected" {{/used=false}}>{{i18n.BO2032}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-6 padding-0" >
+						<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2164}}</label>
+						<div class="col-sm-9">
+							<select id="input-Default" class="form-control m-b-sm" tabindex="-1" style="width: 100%" name="hasCountLimit" data-validation="required">
+								<option value="">{{i18n.BO2124}}</option>
+								<option value="true" {{#hascountlimit=true}} selected="selected" {{/hascountlimit=true}}>{{i18n.BO2031}}</option>
+								<option value="false" {{#hascountlimit=false}} selected="selected" {{/hascountlimit=false}}>{{i18n.BO2032}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-12 padding-0" >
+						<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2165}}*</label>
+						<div class="col-sm-10">
+							<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="hasUseLimit" name="hasUseLimit" data-validation="required">
+								<option value="false" {{#hasuselimit=false}} selected="selected" {{/hasuselimit=false}} >{{i18n.BO2181}}</option>
+								<option value="true" {{#hasuselimit=true}} selected="selected" {{/hasuselimit=true}}>{{i18n.BO2182}}</option>
+							</select>
+							<!-- 상단 select 변경에의해 하단 사항 수정 -->
+							<div id="available" {{#hasuselimit=false}} style="display: none;" {{/hasuselimit=false}}>
+								<div class="form-group min-height-30 col-sm-9 padding-0">
+								<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2166}}</label>
+								<div class="col-sm-10">
+									<input name="tip" id="tip" value="{{enableDays}}" type="hidden">
+									<div class="ckbox ckbox-primary col-sm-3">
+										<input name="week_mon" id="weekMon" type="checkbox" {{#weekmon=1}}checked="checked"{{/weekmon=1}}>
+										<label for="weekMon">{{i18n.BO3025}}</label>
+									</div>
+									<div class="ckbox ckbox-primary col-sm-3">
+										<input name="week_tue" id="weekTue" type="checkbox" {{#weektue=1}}checked="checked"{{/weektue=1}}>
+										<label for="weekTue">{{i18n.BO3026}}</label>
+									</div>
+									<div class="ckbox ckbox-primary col-sm-3">
+										<input name="week_wed" id="weekWed" type="checkbox" {{#weekwed=1}}checked="checked"{{/weekwed=1}}>
+										<label for="weekWed">{{i18n.BO3027}}</label>
+									</div>
+									<div class="ckbox ckbox-primary col-sm-3">
+										<input name="week_thu" id="weekThu" type="checkbox" {{#weekthu=1}}checked="smallRoom"{{/weekthu=1}}>
+										<label for="weekThu">{{i18n.BO3028}}</label>
+									</div>
+									<div class="ckbox ckbox-primary col-sm-3">
+										<input name="week_fri" id="weekFri" type="checkbox" {{#weekfri=1}}checked="checked"{{/weekfri=1}}>
+										<label for="weekFri">{{i18n.BO3029}}</label>
+									</div>
+									<div class="ckbox ckbox-primary col-sm-3">
+										<input name="week_sat" id="weekSat" type="checkbox" {{#weeksat=1}}checked="checked"{{/weeksat=1}}>
+										<label for="weekSat">{{i18n.BO3030}}</label>
+									</div>
+									<div class="ckbox ckbox-primary col-sm-3">
+										<input name="week_sun" id="weekSun" type="checkbox" {{#weeksun}}checked="checked"{{/weeksun}}>
+										<label for="weekSun">{{i18n.BO3031}}</label>
+									</div>
+								</div>
+							</div>
+								<!-- <div class="m-t-5 disabled" style="float: left;" id="weekCheck">
+									<span style="float: left; line-height: 34px;">{{i18n.BO2166}}&nbsp;&nbsp;</span>
+									<div class="sub_select_checked">
+										<input type="checkbox" name="week_mon">{{i18n.BO3025}}
+										<input type="checkbox" name="week_tue">{{i18n.BO3026}}
+										<input type="checkbox" name="week_wed">{{i18n.BO3027}}
+										<input type="checkbox" name="week_thu">{{i18n.BO3028}}
+										<input type="checkbox" name="week_fri">{{i18n.BO3029}}
+										<input type="checkbox" name="week_sat">{{i18n.BO3030}}
+										<input type="checkbox" name="week_sun">{{i18n.BO3031}}
+									</div>
+								</div> -->
+							
+								<div class="m-t-5 col-md-12 p-l-0 disabled" style="float: left;">
+									<span style="float: left; line-height: 34px;">{{i18n.BO2167}}&nbsp;&nbsp;</span>
+									<div class="sub_select_checked">
+										<div class="sub_select-20">
+											<select class="js-states form-control" tabindex="-1"
+												style="display: none; width: 100%" name="openTm_h" id="openTm_h">
+												<!-- {{{ opentm_h_option }}} -->
+												<option value="00" {{#opentmh=00}} selected="selected" {{/opentmh=00}}>00</option>
+												<option value="01" {{#opentmh=01}} selected="selected" {{/opentmh=01}}>01</option>
+												<option value="02" {{#opentmh=02}} selected="selected" {{/opentmh=02}}>02</option>
+												<option value="03" {{#opentmh=03}} selected="selected" {{/opentmh=03}}>03</option>
+												<option value="04" {{#opentmh=04}} selected="selected" {{/opentmh=04}}>04</option>
+												<option value="05" {{#opentmh=05}} selected="selected" {{/opentmh=05}}>05</option>
+												<option value="06" {{#opentmh=06}} selected="selected" {{/opentmh=06}}>06</option>
+												<option value="07" {{#opentmh=07}} selected="selected" {{/opentmh=07}}>07</option>
+												<option value="08" {{#opentmh=08}} selected="selected" {{/opentmh=08}}>08</option>
+												<option value="09" {{#opentmh=09}} selected="selected" {{/opentmh=09}}>09</option>
+												<option value="10" {{#opentmh=10}} selected="selected" {{/opentmh=10}}>10</option>
+												<option value="11" {{#opentmh=11}} selected="selected" {{/opentmh=11}}>11</option>
+												<option value="12" {{#opentmh=12}} selected="selected" {{/opentmh=12}}>12</option>
+												<option value="13" {{#opentmh=13}} selected="selected" {{/opentmh=13}}>13</option>
+												<option value="14" {{#opentmh=14}} selected="selected" {{/opentmh=14}}>14</option>
+												<option value="15" {{#opentmh=15}} selected="selected" {{/opentmh=15}}>15</option>
+												<option value="16" {{#opentmh=16}} selected="selected" {{/opentmh=16}}>16</option>
+												<option value="17" {{#opentmh=17}} selected="selected" {{/opentmh=17}}>17</option>
+												<option value="18" {{#opentmh=18}} selected="selected" {{/opentmh=18}}>18</option>
+												<option value="19" {{#opentmh=19}} selected="selected" {{/opentmh=19}}>19</option>
+												<option value="20" {{#opentmh=20}} selected="selected" {{/opentmh=20}}>20</option>
+												<option value="21" {{#opentmh=21}} selected="selected" {{/opentmh=21}}>21</option>
+												<option value="22" {{#opentmh=22}} selected="selected" {{/opentmh=22}}>22</option>
+												<option value="23" {{#opentmh=23}} selected="selected" {{/opentmh=23}}>23</option>
+											</select>		
+										</div>
+										<div class="sub_select-20">
+											<select class="js-states form-control" tabindex="-1"
+												style="display: none; width: 100%" name="openTm_m" id="openTm_m">
+												<option value="00" {{#opentmm=00}} selected="selected" {{/opentmm=00}}>00</option>
+												<option value="01" {{#opentmm=01}} selected="selected" {{/opentmm=01}}>01</option>
+												<option value="02" {{#opentmm=02}} selected="selected" {{/opentmm=02}}>02</option>
+												<option value="03" {{#opentmm=03}} selected="selected" {{/opentmm=03}}>03</option>
+												<option value="04" {{#opentmm=04}} selected="selected" {{/opentmm=04}}>04</option>
+												<option value="05" {{#opentmm=05}} selected="selected" {{/opentmm=05}}>05</option>
+												<option value="06" {{#opentmm=06}} selected="selected" {{/opentmm=06}}>06</option>
+												<option value="07" {{#opentmm=07}} selected="selected" {{/opentmm=07}}>07</option>
+												<option value="08" {{#opentmm=08}} selected="selected" {{/opentmm=08}}>08</option>
+												<option value="09" {{#opentmm=09}} selected="selected" {{/opentmm=09}}>09</option>
+												<option value="10" {{#opentmm=10}} selected="selected" {{/opentmm=10}}>10</option>
+												<option value="11" {{#opentmm=11}} selected="selected" {{/opentmm=11}}>11</option>
+												<option value="12" {{#opentmm=12}} selected="selected" {{/opentmm=12}}>12</option>
+												<option value="13" {{#opentmm=13}} selected="selected" {{/opentmm=13}}>13</option>
+												<option value="14" {{#opentmm=14}} selected="selected" {{/opentmm=14}}>14</option>
+												<option value="15" {{#opentmm=15}} selected="selected" {{/opentmm=15}}>15</option>
+												<option value="16" {{#opentmm=16}} selected="selected" {{/opentmm=16}}>16</option>
+												<option value="17" {{#opentmm=17}} selected="selected" {{/opentmm=17}}>17</option>
+												<option value="18" {{#opentmm=18}} selected="selected" {{/opentmm=18}}>18</option>
+												<option value="19" {{#opentmm=19}} selected="selected" {{/opentmm=19}}>19</option>
+												<option value="20" {{#opentmm=20}} selected="selected" {{/opentmm=20}}>20</option>
+												<option value="21" {{#opentmm=21}} selected="selected" {{/opentmm=21}}>21</option>
+												<option value="22" {{#opentmm=22}} selected="selected" {{/opentmm=22}}>22</option>
+												<option value="23" {{#opentmm=23}} selected="selected" {{/opentmm=23}}>23</option>
+												<option value="24" {{#opentmm=24}} selected="selected" {{/opentmm=24}}>24</option>
+												<option value="25" {{#opentmm=25}} selected="selected" {{/opentmm=25}}>25</option>
+												<option value="26" {{#opentmm=26}} selected="selected" {{/opentmm=26}}>26</option>
+												<option value="27" {{#opentmm=27}} selected="selected" {{/opentmm=27}}>27</option>
+												<option value="28" {{#opentmm=28}} selected="selected" {{/opentmm=28}}>28</option>
+												<option value="29" {{#opentmm=29}} selected="selected" {{/opentmm=29}}>29</option>
+												<option value="30" {{#opentmm=30}} selected="selected" {{/opentmm=30}}>30</option>
+												<option value="31" {{#opentmm=31}} selected="selected" {{/opentmm=31}}>31</option>
+												<option value="32" {{#opentmm=32}} selected="selected" {{/opentmm=32}}>32</option>
+												<option value="33" {{#opentmm=33}} selected="selected" {{/opentmm=33}}>33</option>
+												<option value="34" {{#opentmm=34}} selected="selected" {{/opentmm=34}}>34</option>
+												<option value="35" {{#opentmm=35}} selected="selected" {{/opentmm=35}}>35</option>
+												<option value="36" {{#opentmm=36}} selected="selected" {{/opentmm=36}}>36</option>
+												<option value="37" {{#opentmm=37}} selected="selected" {{/opentmm=37}}>37</option>
+												<option value="38" {{#opentmm=38}} selected="selected" {{/opentmm=38}}>38</option>
+												<option value="39" {{#opentmm=39}} selected="selected" {{/opentmm=39}}>39</option>
+												<option value="40" {{#opentmm=40}} selected="selected" {{/opentmm=40}}>40</option>
+												<option value="41" {{#opentmm=41}} selected="selected" {{/opentmm=41}}>41</option>
+												<option value="42" {{#opentmm=42}} selected="selected" {{/opentmm=42}}>42</option>
+												<option value="43" {{#opentmm=43}} selected="selected" {{/opentmm=43}}>43</option>
+												<option value="44" {{#opentmm=44}} selected="selected" {{/opentmm=44}}>44</option>
+												<option value="45" {{#opentmm=45}} selected="selected" {{/opentmm=45}}>45</option>
+												<option value="46" {{#opentmm=46}} selected="selected" {{/opentmm=46}}>46</option>
+												<option value="47" {{#opentmm=47}} selected="selected" {{/opentmm=47}}>47</option>
+												<option value="48" {{#opentmm=48}} selected="selected" {{/opentmm=48}}>48</option>
+												<option value="49" {{#opentmm=49}} selected="selected" {{/opentmm=49}}>49</option>
+												<option value="50" {{#opentmm=50}} selected="selected" {{/opentmm=50}}>50</option>
+												<option value="51" {{#opentmm=51}} selected="selected" {{/opentmm=51}}>51</option>
+												<option value="52" {{#opentmm=52}} selected="selected" {{/opentmm=52}}>52</option>
+												<option value="53" {{#opentmm=53}} selected="selected" {{/opentmm=53}}>53</option>
+												<option value="54" {{#opentmm=54}} selected="selected" {{/opentmm=54}}>54</option>
+												<option value="55" {{#opentmm=55}} selected="selected" {{/opentmm=55}}>55</option>
+												<option value="56" {{#opentmm=56}} selected="selected" {{/opentmm=56}}>56</option>
+												<option value="57" {{#opentmm=57}} selected="selected" {{/opentmm=57}}>57</option>
+												<option value="58" {{#opentmm=58}} selected="selected" {{/opentmm=58}}>58</option>
+												<option value="59" {{#opentmm=59}} selected="selected" {{/opentmm=59}}>59</option>
+											</select>
+										</div>
+									<span style="float: left; line-height: 34px;">&nbsp;~&nbsp;</span>
+										<div class="sub_select-20">
+											<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" name="closeTm_h" id="closeTm_h">
+												<option value="00" {{#closetmh=00}} selected="selected" {{/closetmh=00}}>00</option>
+												<option value="01" {{#closetmh=01}} selected="selected" {{/closetmh=01}}>01</option>
+												<option value="02" {{#closetmh=02}} selected="selected" {{/closetmh=02}}>02</option>
+												<option value="03" {{#closetmh=03}} selected="selected" {{/closetmh=03}}>03</option>
+												<option value="04" {{#closetmh=04}} selected="selected" {{/closetmh=04}}>04</option>
+												<option value="05" {{#closetmh=05}} selected="selected" {{/closetmh=05}}>05</option>
+												<option value="06" {{#closetmh=06}} selected="selected" {{/closetmh=06}}>06</option>
+												<option value="07" {{#closetmh=07}} selected="selected" {{/closetmh=07}}>07</option>
+												<option value="08" {{#closetmh=08}} selected="selected" {{/closetmh=08}}>08</option>
+												<option value="09" {{#closetmh=09}} selected="selected" {{/closetmh=09}}>09</option>
+												<option value="10" {{#closetmh=10}} selected="selected" {{/closetmh=10}}>10</option>
+												<option value="11" {{#closetmh=11}} selected="selected" {{/closetmh=11}}>11</option>
+												<option value="12" {{#closetmh=12}} selected="selected" {{/closetmh=12}}>12</option>
+												<option value="13" {{#closetmh=13}} selected="selected" {{/closetmh=13}}>13</option>
+												<option value="14" {{#closetmh=14}} selected="selected" {{/closetmh=14}}>14</option>
+												<option value="15" {{#closetmh=15}} selected="selected" {{/closetmh=15}}>15</option>
+												<option value="16" {{#closetmh=16}} selected="selected" {{/closetmh=16}}>16</option>
+												<option value="17" {{#closetmh=17}} selected="selected" {{/closetmh=17}}>17</option>
+												<option value="18" {{#closetmh=18}} selected="selected" {{/closetmh=18}}>18</option>
+												<option value="19" {{#closetmh=19}} selected="selected" {{/closetmh=19}}>19</option>
+												<option value="20" {{#closetmh=20}} selected="selected" {{/closetmh=20}}>20</option>
+												<option value="21" {{#closetmh=21}} selected="selected" {{/closetmh=21}}>21</option>
+												<option value="22" {{#closetmh=22}} selected="selected" {{/closetmh=22}}>22</option>
+												<option value="23" {{#closetmh=23}} selected="selected" {{/closetmh=23}}>23</option>
+											</select>
+										</div>
+										<div class="sub_select-20">
+											<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" name="closeTm_m" id="closeTm_m">
+												<option value="00" {{#closetmm=00}} selected="selected" {{/closetmm=00}}>00</option>
+												<option value="01" {{#closetmm=01}} selected="selected" {{/closetmm=01}}>01</option>
+												<option value="02" {{#closetmm=02}} selected="selected" {{/closetmm=02}}>02</option>
+												<option value="03" {{#closetmm=03}} selected="selected" {{/closetmm=03}}>03</option>
+												<option value="04" {{#closetmm=04}} selected="selected" {{/closetmm=04}}>04</option>
+												<option value="05" {{#closetmm=05}} selected="selected" {{/closetmm=05}}>05</option>
+												<option value="06" {{#closetmm=06}} selected="selected" {{/closetmm=06}}>06</option>
+												<option value="07" {{#closetmm=07}} selected="selected" {{/closetmm=07}}>07</option>
+												<option value="08" {{#closetmm=08}} selected="selected" {{/closetmm=08}}>08</option>
+												<option value="09" {{#closetmm=09}} selected="selected" {{/closetmm=09}}>09</option>
+												<option value="10" {{#closetmm=10}} selected="selected" {{/closetmm=10}}>10</option>
+												<option value="11" {{#closetmm=11}} selected="selected" {{/closetmm=11}}>11</option>
+												<option value="12" {{#closetmm=12}} selected="selected" {{/closetmm=12}}>12</option>
+												<option value="13" {{#closetmm=13}} selected="selected" {{/closetmm=13}}>13</option>
+												<option value="14" {{#closetmm=14}} selected="selected" {{/closetmm=14}}>14</option>
+												<option value="15" {{#closetmm=15}} selected="selected" {{/closetmm=15}}>15</option>
+												<option value="16" {{#closetmm=16}} selected="selected" {{/closetmm=16}}>16</option>
+												<option value="17" {{#closetmm=17}} selected="selected" {{/closetmm=17}}>17</option>
+												<option value="18" {{#closetmm=18}} selected="selected" {{/closetmm=18}}>18</option>
+												<option value="19" {{#closetmm=19}} selected="selected" {{/closetmm=19}}>19</option>
+												<option value="20" {{#closetmm=20}} selected="selected" {{/closetmm=20}}>20</option>
+												<option value="21" {{#closetmm=21}} selected="selected" {{/closetmm=21}}>21</option>
+												<option value="22" {{#closetmm=22}} selected="selected" {{/closetmm=22}}>22</option>
+												<option value="23" {{#closetmm=23}} selected="selected" {{/closetmm=23}}>23</option>
+												<option value="24" {{#closetmm=24}} selected="selected" {{/closetmm=24}}>24</option>
+												<option value="25" {{#closetmm=25}} selected="selected" {{/closetmm=25}}>25</option>
+												<option value="26" {{#closetmm=26}} selected="selected" {{/closetmm=26}}>26</option>
+												<option value="27" {{#closetmm=27}} selected="selected" {{/closetmm=27}}>27</option>
+												<option value="28" {{#closetmm=28}} selected="selected" {{/closetmm=28}}>28</option>
+												<option value="29" {{#closetmm=29}} selected="selected" {{/closetmm=29}}>29</option>
+												<option value="30" {{#closetmm=30}} selected="selected" {{/closetmm=30}}>30</option>
+												<option value="31" {{#closetmm=31}} selected="selected" {{/closetmm=31}}>31</option>
+												<option value="32" {{#closetmm=32}} selected="selected" {{/closetmm=32}}>32</option>
+												<option value="33" {{#closetmm=33}} selected="selected" {{/closetmm=33}}>33</option>
+												<option value="34" {{#closetmm=34}} selected="selected" {{/closetmm=34}}>34</option>
+												<option value="35" {{#closetmm=35}} selected="selected" {{/closetmm=35}}>35</option>
+												<option value="36" {{#closetmm=36}} selected="selected" {{/closetmm=36}}>36</option>
+												<option value="37" {{#closetmm=37}} selected="selected" {{/closetmm=37}}>37</option>
+												<option value="38" {{#closetmm=38}} selected="selected" {{/closetmm=38}}>38</option>
+												<option value="39" {{#closetmm=39}} selected="selected" {{/closetmm=39}}>39</option>
+												<option value="40" {{#closetmm=40}} selected="selected" {{/closetmm=40}}>40</option>
+												<option value="41" {{#closetmm=41}} selected="selected" {{/closetmm=41}}>41</option>
+												<option value="42" {{#closetmm=42}} selected="selected" {{/closetmm=42}}>42</option>
+												<option value="43" {{#closetmm=43}} selected="selected" {{/closetmm=43}}>43</option>
+												<option value="44" {{#closetmm=44}} selected="selected" {{/closetmm=44}}>44</option>
+												<option value="45" {{#closetmm=45}} selected="selected" {{/closetmm=45}}>45</option>
+												<option value="46" {{#closetmm=46}} selected="selected" {{/closetmm=46}}>46</option>
+												<option value="47" {{#closetmm=47}} selected="selected" {{/closetmm=47}}>47</option>
+												<option value="48" {{#closetmm=48}} selected="selected" {{/closetmm=48}}>48</option>
+												<option value="49" {{#closetmm=49}} selected="selected" {{/closetmm=49}}>49</option>
+												<option value="50" {{#closetmm=50}} selected="selected" {{/closetmm=50}}>50</option>
+												<option value="51" {{#closetmm=51}} selected="selected" {{/closetmm=51}}>51</option>
+												<option value="52" {{#closetmm=52}} selected="selected" {{/closetmm=52}}>52</option>
+												<option value="53" {{#closetmm=53}} selected="selected" {{/closetmm=53}}>53</option>
+												<option value="54" {{#closetmm=54}} selected="selected" {{/closetmm=54}}>54</option>
+												<option value="55" {{#closetmm=55}} selected="selected" {{/closetmm=55}}>55</option>
+												<option value="56" {{#closetmm=56}} selected="selected" {{/closetmm=56}}>56</option>
+												<option value="57" {{#closetmm=57}} selected="selected" {{/closetmm=57}}>57</option>
+												<option value="58" {{#closetmm=58}} selected="selected" {{/closetmm=58}}>58</option>
+												<option value="59" {{#closetmm=59}} selected="selected" {{/closetmm=59}}>59</option>
+											</select>
+										</div>
+								</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-12 padding-0">
+						<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2168}}*</label>
+						<div class="col-sm-10">
+							<div class="m-t-5">
+								<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" name="isAll" id="isAll">
+									<option value="true" {{#isall=true}} selected="selected" {{/isall=true}}>{{i18n.BO2183}}</option>
+									<option value="false"{{#isall=false}} selected="selected" {{/isall=false}}>{{i18n.BO2184}}</option>
+								</select>
+							</div>
+							<div class="m-t-5" id="storelist" style="display: none;">
+								<select class="js-states form-control" tabindex="-1" multiple="multiple"
+									style="display: none; width: 100%" id="store_select" name="storelist">
+									<option value="HI">{{i18n.BO2205}}</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="form-group min-height-30 col-sm-12 padding-0">
+						<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2359}}</label>
+						<div class="col-sm-10">
+							<textarea class="note-codable" name="notice">{{notice}}</textarea>
+						</div>
+					</div>
+				</div>
+				<hr>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+				<button type="submit" class="btn btn-primary">{{i18n.BO0014}}</button>
+			</div>
+		</div>
+	</form>
+</div>

@@ -1,0 +1,85 @@
+<div class="modal-dialog modal-lg">
+	<form>
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title">
+				{{i18n.BO1061}} <b>* {{i18n.BO0008}}<b>
+			</h4>
+		</div>
+		<div class="modal-body" id="modal-form">
+		 	<input type="hidden" name="id" value="{{id}}" readonly="readonly">
+		 	<input type="hidden" name="franCdEx" value="{{franCd}}" readonly="readonly">
+			<div class="row">
+				<div class="form-group min-height-30 col-sm-9 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO5001}}*</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="input-Default" value="{{companyCd}}" name="companyCd" data-validation="required" maxlength="25"/>
+					</div>
+				</div>
+			   <div class="form-group min-ehgith-30 col-sm-9 padding-0">
+			     <label for="input-Default" class="col-sm-2 control-label">{{i18n.BO5002}}*</label>
+			     <div class="col-sm-10">
+  			     <input type="text" class="form-control" id="input-Default" value="{{companyNm}}" name="companyNm" data-validation="required" maxlength="45" />
+  			     </div>
+			   </div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2005}}</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{bizNo}}" name="bizNo" maxlength="40"/>
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2006}}</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{ceoNm}}" name="ceoNm"  />
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2024}}</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{tel}}" name="tel"  />
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2017}}</label>
+					<div class="col-sm-9">
+            <input type="text" class="form-control" id="input-Default" value="{{fax}}" name="fax"  />
+          </div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2342}}</label>
+					<div class="col-sm-9">
+            <input type="text" class="form-control" id="input-Default" value="{{mb}}" name="mb" />
+          </div>
+				</div>
+				<div class="form-group min-height-30 col-sm-6 padding-0">
+					<label for="input-Default" class="col-sm-3 control-label">{{i18n.BO2018}}</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="input-Default" value="{{email}}" name="email">
+					</div>
+				</div>
+				<div class="form-group min-height-30 col-sm-9 padding-0">
+					<label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2013}}</label>
+					<div class="col-sm-9">
+            <input type="text" class="form-control" id="input-Default" value="{{addr1}}" name="addr1">
+          </div>
+				</div>
+				<div class="form-group min-height-30 col-sm-9 padding-0">
+          <label for="input-Default" class="col-sm-2 control-label">{{i18n.BO2014}}</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="input-Default" value="{{addr2}}" name="addr2">
+          </div>
+        </div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+			<button type="submit" class="btn btn-primary">{{i18n.BO0014}}</button>
+		</div>
+	</div>
+	</form>
+</div>

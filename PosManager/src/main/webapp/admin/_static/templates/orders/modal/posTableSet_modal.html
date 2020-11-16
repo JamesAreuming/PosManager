@@ -1,0 +1,53 @@
+
+<div class="modal-dialog modal-lg">
+	<form>
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">
+					{{#mode=floor-modal}}Floor {{i18n.BO0025}}{{/mode=floor-modal}}
+					{{#mode=table-modal}}Table {{i18n.BO0015}}{{/mode=table-modal}}
+					{{#mode=table-amt-modal}}Table {{i18n.BO2254}}{{/mode=table-amt-modal}}
+				</h4>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" name="id" value="{{list.id}}" readonly="readonly">
+				<input type="hidden" name="brandId" value="{{brandId}}" readonly="readonly">
+				<input type="hidden" name="storeId" value="{{storeId}}" readonly="readonly">
+				<input type="hidden" name="mode" value="{{mode}}" readonly="readonly">
+				<div class="row">
+					<div class="form-group min-height-30 col-sm-12 padding-0">
+						{{#mode=floor-modal}}
+							<label for="input-Default" class="col-sm-4 control-label">{{i18n.BO2380}} * : </label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="input-Default" value="{{list.name}}" name="name" data-validation="required" placeholder="floor name">
+							</div>
+						{{/mode=floor-modal}}
+						{{#mode=table-modal}}
+							<input type="hidden" name="sectionId" value="{{list.sectionId}}" readonly="readonly">
+							<label for="input-Default" class="col-sm-4 control-label">{{i18n.BO2381}} * : </label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="input-Default" value="{{list.name}}" name="name" data-validation="required" placeholder="table name">
+							</div>
+						{{/mode=table-modal}}
+						{{#mode=table-amt-modal}}
+							<input type="hidden" name="sectionId" value="{{sectionId}}" readonly="readonly">
+							<label for="input-Default" class="col-sm-4 control-label">{{i18n.BO2379}} * : </label>
+							<div class="col-sm-8">
+								<button class="table-count_btn" value="-">-</button>
+								<input id="timepicker" name="tableCnt" type="text" value="{{tableCnt}}" class="form-control table-count" placeholder="{{i18n.BO2379}}">
+								<button class="table-count_btn" value="+">+</button>
+							</div>
+						{{/mode=table-amt-modal}}
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+				<button type="submit" class="btn btn-primary">{{i18n.BO0014}}</button>
+			</div>
+		</div>
+	</form>
+</div>

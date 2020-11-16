@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: PosSalesTableOrderDetailMapper.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History		: 
+  ~
+  ~ Version		: 1.0
+  ~ Author   	: 
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.pos.PosSalesTableOrderDetailMapper">
+
+  <select id="selectDefault" parameterType="hashmap" resultType="com.jc.pico.utils.bean.PosSalesTableOrderDetail">
+    SELECT  /* PosSalesTableOrderDetailMapper.selectDefault : POS.S_TABLE_ORDER_DETAIL, 2016-07-11, green */
+			0 AS noOrder /* 주문번호 */
+			, TB_SVC_ORDER_ITEM.ORDINAL AS seq /* 일련번호 */
+			, TB_SVC_ORDER_ITEM.ITEM_CD AS cdGoods /* 품번 */
+			, TB_SVC_ORDER_ITEM.ITEM_NM AS nmGoods /* 품명 */
+			, 0 AS dsSale /* 판매형태 (0:일반, 1:폐기, 2:서비스, 3:자가소비) */
+			, TB_SVC_ORDER_ITEM.PRICE AS prSale /* 판매단가 */
+			, TB_SVC_ORDER_ITEM.COUNT AS qtyOrder /* 주문수량 */
+			, TB_SVC_ORDER_ITEM.SALES AS amtOrder /* 주문금액 */
+			, TB_SVC_ORDER_ITEM.SUPPLY_PRICE AS amtSupply /* 공급가 */
+			, TB_SVC_ORDER_ITEM.TAX AS amtVat /* 부가세 */
+			, TB_SVC_ORDER_ITEM.DISCOUNT AS amtDc /* 할인금액 */
+			, DATE_FORMAT(TB_SVC_ORDER_ITEM.CREATED, '%Y%m%d%H%i%s') AS dtInsert /* 등록일시 */
+			, TB_SVC_ORDER_ITEM.STAFF_ID AS cdEmployeeInsert /* 등록자 */
+			, DATE_FORMAT(TB_SVC_ORDER_ITEM.UPDATED, '%Y%m%d%H%i%s') AS dtUpdate /* 수정일시 */
+			, TB_SVC_ORDER_ITEM.STAFF_ID AS cdEmployeeUpdate /* 수정자 */
+      FROM TB_SVC_ORDER_ITEM
+	<trim prefix="WHERE" prefixOverrides="AND |OR ">
+		<if test="_parameter.containsKey('orderId')">
+	   AND TB_SVC_ORDER_ITEM.ORDER_ID = #{orderId}
+		</if>
+	</trim>
+  </select>
+
+</mapper>

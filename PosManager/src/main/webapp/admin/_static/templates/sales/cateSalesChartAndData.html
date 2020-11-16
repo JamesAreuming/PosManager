@@ -1,0 +1,75 @@
+{{#searchYn}}
+
+
+	{{#summaryYn}}
+		<div class="col-md-8">
+			<div class="panel panel-white">
+				<div class="panel-body" id="chart01"></div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-white">
+				<div class="panel-body" id="chart02"></div>
+			</div>
+		</div>
+	{{/summaryYn}}
+
+	{{^summaryYn}}
+		<div class="col-md-12">
+			<div class="panel panel-white">
+				<div class="panel-body" id="dayMonthChart"></div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-white">
+				<div class="panel-body" id="dayofweekChart"></div>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="panel panel-white">
+				<div class="panel-body" id="hourChart"></div>
+			</div>
+		</div>
+	{{/summaryYn}}
+
+<!-- <input style="margin:10px 10px 10px 0" type="button" id="convert" value="Create chart from table"> -->
+
+	<div class="col-md-12">
+		<div class="panel panel-white">
+			<div class="panel panel-default">
+				<div class="panel-body ">
+					<div class="table-responsive table-responsive-overflow">
+						{{#summaryYn}}
+							<table class="table table-success mb30 table-striped table_fullwidth" id="summary-table">
+								<thead>
+									<tr>
+										<th class="col1">{{i18n.BO2120}}</th>
+										<th class="col2">{{i18n.BO2312}}</th>
+										<th class="col3">{{i18n.BO2303}}</th>
+									</tr>
+								</thead>
+								<tbody>
+									{{#list}}
+										<tr class="{{#id}}even gradeC{{/id}}{{^id}}odd gradeX back_blue{{/id}}">
+											<td class="title">{{#id}}{{catCd}}{{/id}}{{^id}}{{i18n.BO2308}}{{/id}}</td>
+											<td>{{#formatNumber}}{{count}}{{/formatNumber}}</td>
+											<td>{{#formatPrice2}}{{sales}}{{/formatPrice2}}</td>
+										</tr>
+									{{/list}}
+								</tbody>
+							</table>
+						{{/summaryYn}}
+						{{^summaryYn}}
+							<table class="table table-success mb30 table-striped" id="etc-table">
+							</table>
+						{{/summaryYn}}
+					</div>
+					<!-- table-responsive -->
+
+				</div>
+				<!-- panel-body -->
+			</div>
+		</div>
+	</div>
+
+{{/searchYn}}

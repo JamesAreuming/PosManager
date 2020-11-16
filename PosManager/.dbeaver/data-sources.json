@@ -1,0 +1,55 @@
+{
+	"folders": {},
+	"connections": {
+		"mysql8-1758833d653-75165fd815d67681": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "218.145.31.52",
+			"save-password": true,
+			"show-system-objects": true,
+			"read-only": false,
+			"configuration": {
+				"host": "218.145.31.52",
+				"port": "2306",
+				"url": "jdbc:mysql://218.145.31.52:2306/",
+				"home": "MySQL Binaries",
+				"type": "dev",
+				"provider-properties": {
+					"@dbeaver-serverTimezone@": "Asia/Seoul"
+				},
+				"auth-model": "native"
+			}
+		},
+		"mysql8-17595fabedf-4330f9eabf721627": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "order9db",
+			"save-password": true,
+			"show-system-objects": true,
+			"read-only": false,
+			"configuration": {
+				"host": "218.145.31.52",
+				"port": "2306",
+				"database": "order9db",
+				"url": "jdbc:mysql://218.145.31.52:2306/order9db",
+				"home": "MySQL Binaries",
+				"type": "dev",
+				"provider-properties": {
+					"@dbeaver-serverTimezone@": "Asia/Seoul"
+				},
+				"auth-model": "native",
+				"handlers": {}
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false
+		}
+	}
+}

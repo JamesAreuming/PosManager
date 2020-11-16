@@ -1,0 +1,379 @@
+<div class="modal-dialog modal-lg">
+	<form>
+		<input type="hidden" value="{{id}}" name="id">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myLargeModalLabel">
+					매장 관리 <b>* {{i18n.BO0008}}<b>
+				</h4>
+			</div>
+			<div class="modal-body">
+				<ul class="nav nav-tabs nav-justified nav-dark">
+					<li class="active"><a href="#info" data-toggle="tab"><strong>기초정보</strong></a></li>
+					<li><a href="#service" data-toggle="tab"><strong>서비스설정</strong></a></li>
+					<li><a href="#introduce" data-toggle="tab"><strong>매장소개</strong></a></li>
+					<li><a href="#becon" data-toggle="tab"><strong>비콘</strong></a></li>
+					<li><a href="#pos" data-toggle="tab"><strong>pos
+								license</strong></a></li>
+					<li><a href="#staff" data-toggle="tab"><strong>staff</strong></a></li>
+					
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="info">
+						<div class="row">
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">매장
+									코드</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default"
+										value="{{storeCd}}" name="storeCd" disabled>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">브랜드
+									코드</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default"
+										disabled>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">매장명
+									*</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default"
+										value="{{storeNm}}" name="storeNm">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">운영상태
+									*</label>
+								<div class="col-sm-9">
+									<div class="col-sm-6 p-l-0">
+										<select class="form-control m-b-sm" tabindex="-1"
+											style="display: none; width: 100%" name="storeSt">
+											<option value="">운영</option>
+										</select>
+									</div>
+									<div class="col-sm-6 >
+								<div class=" input-group m-b-sminput-appendbootstrap-timepicker">
+										<input id="timepicker1" type="text"
+											class="form-control date-picker" placeholder="폐점일">
+									</div>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">사업자번호
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default"
+										value="{{bizNo}}" name="bizNo">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">대표자명
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">전화번호
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default"
+										placeholder="(예:010-1234-5678)" value="{{tel}}" name="tel">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">팩스번호</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default"
+										placeholder="(예:02-1234-5678)" value="{{fax}}" name="fax">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">휴대폰번호</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default"
+										placeholder="(예:010-1234-5678)" value="{{mb}}" name="mb">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">E-mail&nbsp;&nbsp;&nbsp;</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="input-Default"
+										value="{{email}}" name="email">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">주소
+									*</label>
+								<div class="col-sm-9">
+									<div class="input-group m-b-sm">
+										<input type="text" class="form-control" value="{{zip}}"
+											name="zip"> <span class="input-group-btn">
+											<button class="btn btn-primary" type="button" id="zipcode">우편번호</button>
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-9 padding-0">
+								<label for="input-Default" class="col-sm-2 control-label">상세주소</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control addr1"
+										id="input-Default" value="{{addr1}}" name="addr1">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-9 padding-0">
+								<label for="input-Default" class="col-sm-2 control-label">상세주소2</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control addr2"
+										id="input-Default" value="{{addr2}}" name="addr2">
+									<!--input-error 에는 has-error 추가할것-->
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-9 padding-0">
+								<label for="input-Default" class="col-sm-2 control-label">위치</label>
+								<div class="col-sm-10">
+									<div class="input-group m-b-sm">
+										<input type="text" class="form-control" id="input-Default"
+											value="위도:{{latitude}} / 경도 {{longitude}}" readonly>
+										<input type="hidden" name="latitude" value="{{latitude}}">
+										<input type="hidden" name="longitude" value="{{longitude}}">
+										<span class="input-group-btn">
+											<button class="btn btn-primary" type="button" id="toggle_map">지도검색</button>
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group col-sm-12 padding-0 hidden"
+								style="height: 250px;" id="target_map">
+								<div class="col-sm-12" id="daum_map" style="height: 100%;">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="service">
+						<div class="row">
+							<div class="form-group min-height-30 col-sm-9 padding-0">
+								<label for="input-Default" class="col-sm-2	 control-label">리뷰</label>
+								<div class="col-sm-10">
+									<div class="radio">
+										<label>
+											<input type="radio" name="optradio"> {{i18n.BO2031}}
+										</label>&nbsp;&nbsp; 
+										<label>
+											<input type="radio"	name="optradio"> {{i18n.BO2032}}
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">Self Order</label>
+								<div class="col-sm-9">
+									<div class="radio">
+										<label>
+											<input type="radio" name="optradio"> {{i18n.BO2031}}
+										</label>&nbsp;&nbsp; 
+										<label>
+											<input type="radio" name="optradio"> {{i18n.BO2032}}
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">주문가능시간</label>
+								<div class="col-sm-9">
+									<div class="col-sm-6 p-l-0">
+										<select id="input-Default"
+											class="form-control m-b-sm form-timepicker" tabindex="-1"
+											data-validation="required" name="svcSt" style="width: 100%">
+											<option>AM 09:00</option>
+											<option>AM 09:15</option>
+										</select>
+									</div>
+									<div class="col-sm-6">
+										<select id="input-Default"
+											class="form-control m-b-sm form-timepicker" tabindex="-1"
+											data-validation="required" name="svcSt" style="width: 100%">
+											<option>AM 09:00</option>
+											<option>AM 09:15</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">Reservation</label>
+								<div class="col-sm-9">
+									<div class="radio">
+										<label><input type="radio" name="optradio"> {{i18n.BO2031}}</label>
+										&nbsp;&nbsp; <label><input type="radio"
+											name="optradio"> {{i18n.BO2032}}</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">예약금/1인</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control">
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">Party
+									Contract</label>
+								<div class="col-sm-9">
+									<div class="radio">
+										<label><input type="radio" name="optradio"> {{i18n.BO2031}}</label>
+										&nbsp;&nbsp; <label><input type="radio"
+											name="optradio"> {{i18n.BO2032}}</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group min-height-30 col-sm-6 padding-0">
+								<label for="input-Default" class="col-sm-3 control-label">예약금/1인</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="introduce">
+						<div class="form-group min-height-30 col-sm-9 padding-0">
+							<label for="input-Default" class="col-sm-2 control-label">1인
+								예산금액 </label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group min-height-30 col-sm-9 padding-0">
+							<label for="input-Default" class="col-sm-2 control-label">매장
+								운영시간 </label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group min-height-30 col-sm-9 padding-0">
+							<label for="input-Default" class="col-sm-2 control-label">매장
+								TIP </label>
+							<div class="col-sm-10">
+								<div class="ckbox ckbox-primary">
+									<input id="subject" type="checkbox"> <label
+										for="subject">주차가능</label>
+								</div>
+								<div class="ckbox ckbox-primary">
+									<input id="subject" type="checkbox"> <label
+										for="subject">베이비체어</label>
+								</div>
+								<div class="ckbox ckbox-primary">
+									<input id="subject" type="checkbox"> <label
+										for="subject">소형룸준</label>
+								</div>
+								<div class="ckbox ckbox-primary">
+									<input id="subject" type="checkbox"> <label
+										for="subject">파티가능</label>
+								</div>
+								<div class="ckbox ckbox-primary">
+									<input id="subject" type="checkbox"> <label
+										for="subject">야외식사가능</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group min-height-30 col-sm-9 padding-0">
+							<label for="input-Default" class="col-sm-2 control-label">매장
+								사진 </label>
+							<div class="col-sm-10">
+								<form action="/file-upload" class="dropzone">
+									<div class="fallback">
+										<input name="file" type="file" />
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="form-group min-height-30 col-sm-9 padding-0">
+							<label for="input-Default" class="col-sm-2 control-label">매장
+								소개 </label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="becon">
+
+							<div class="float-right">
+							<button type="button"
+									class="btn btn-xs btn-danger ">
+									- 비콘삭제</button>
+								<button type="button" 
+									class="btn btn-xs btn-primary " data-toggle="modal"
+									data-target=".bs-beacon-modal-lg" id="new-beacon">
+									+ 비콘추가</button>
+									
+							</div>
+						</ul>
+						<div class="table-responsive">
+							<table id="brand_table" class="display table"
+								style="width: 100%; cellspacing: 0;">
+								<thead>
+									<tr>
+										<th><input type="checkbox"></th>
+										<th>Device ID(UU)</th>
+										<th>Major</th>
+										<th>Miner</th>
+										<th>설치위치</th>
+										<th>등록일</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><input type="checkbox"></td>
+										<td>000012345678</td>
+										<td>0000</td>
+										<td>0000</td>
+										<td>카운터</td>
+										<td>2016-12-31</td>
+									</tr>
+									<tr>
+										<td><input type="checkbox"></td>
+										<td>000012345678</td>
+										<td>0000</td>
+										<td>0000</td>
+										<td>카운터</td>
+										<td>2016-12-31</td>
+									</tr>
+									<tr>
+										<td><input type="checkbox"></td>
+										<td>000012345678</td>
+										<td>0000</td>
+										<td>0000</td>
+										<td>카운터</td>
+										<td>2016-12-31</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="tab-pane" id="pos">
+						<!--보류(구현 전 협의필요) -->
+					</div>
+					<div class="tab-pane" id="staff">
+						<!--보류(구현 전 협의필요) -->
+					</div>
+
+
+
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+				<button type="submit" class="btn btn-primary">{{i18n.BO0014}}</button>
+			</div>
+		</div>
+	</form>
+</div>
+

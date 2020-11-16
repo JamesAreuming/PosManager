@@ -1,0 +1,494 @@
+<div class="row" id="couponIssue">
+	<form id="be-search">
+		<ul class="filemanager-options" {{#isBr}} style="display: none" {{/isBr}}>
+			<li class="select2-padding" {{#isFr}} style="display: none" {{/isFr}}>
+				<div class="itemopt">
+					<select class="select2" id="franchise_select" >
+						<option value="">{{i18n.BO1031}}</option>
+						{{#frList}}
+						<option value="{{id}}" >{{companyNm}}</option>
+						{{/frList}}
+					</select>
+				</div>
+			</li>
+			<li class="select2-padding" {{#isBr}} style="display: none" {{/isBr}}>
+				<div class="itemopt">
+					<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="brand_select" >
+						<option value="">{{i18n.BO1032}}</option>
+						{{#brList}}
+						<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+						{{/brList}}
+					</select>
+				</div>
+			</li>
+		</ul>
+	</form>
+
+	<div class="panel-group" id="accordion">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a id="colOwn" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">1. {{i18n.BO2409}}<span class="pull-right"><b id="promotionName"></b></span></a>
+					
+				</h4>
+			</div>
+			<div id="collapseOne" class="panel-collapse collapse in">
+				<div class="panel-body">
+					<div class="col-sm-12">
+						<div class="table-responsive">							
+							<div class="row ">
+								<form id="sub-search">
+									<div class="form-group min-height-30 col-sm-12 padding-0">
+										<label class="col-sm-2 control-label" for="input-Default">{{i18n.BO2149}}</label>
+										<div class="col-sm-3">
+											<input type="text" placeholder="{{i18n.BO2149}}" class="form-control" name="promotionNm"/>
+										</div>
+										
+										<label class="col-sm-2 control-label" for="input-Default">{{i18n.BO2076}}</label>
+										<div class="col-sm-3">
+											<input type="text" placeholder="{{i18n.BO2076}}" class="form-control" name="couponNm"/>
+										</div>
+									
+										<button type="button" class="btn btn-primary margin-b-15" style="float: right;" id="promotionSearch">{{i18n.BO0011}}</button>
+									</div>
+								</form>	
+							</div>
+														
+							<table id="coupon_table" class="display table" style="width: 100%; cellspacing: 0;">
+								<thead>
+									<tr>
+										<th></th> <!-- 프로모션ID -->
+										<th></th> <!-- 쿠폰ID -->
+										<th>{{i18n.BO2149}}</th> 
+										<th>{{i18n.BO2076}}</th>
+										<th>{{i18n.BO2169}}</th>
+										<th>{{i18n.BO2161}}</th>
+										<th></th> <!-- 할인유형 -->
+										<th></th> <!-- 유효기간타입 -->
+										<th></th> <!-- BRAND_CD-->
+										<th>{{i18n.BO1032}}</th>
+										<th>{{i18n.BO1033}}</th>										
+										<th></th>					<!-- 발행상태 -->
+										<th>{{i18n.BO2419}}</th>	<!-- 발행상태명 -->
+										<th></th>					<!-- 발행구분 -->
+										<th>{{i18n.BO2267}}</th>	<!-- 발행구분명 -->
+										<th>{{i18n.BO2397}}</th>	<!-- 발행일자 -->
+										<th></th>	<!-- 기간 -->
+									</tr>
+								</thead>
+								<tfoot>
+									<tr>
+										<th></th> <!-- 프로모션ID -->
+										<th></th> <!-- 쿠폰ID -->
+										<th>{{i18n.BO2149}}</th>
+										<th>{{i18n.BO2076}}</th>
+										<th>{{i18n.BO2169}}</th>
+										<th>{{i18n.BO2161}}</th>
+										<th></th> <!-- 할인유형 -->
+										<th></th> <!-- 유효기간타입 -->
+										<th></th> <!-- BRAND_CD-->
+										<th>{{i18n.BO1032}}</th>
+										<th>{{i18n.BO1033}}</th>
+										<th></th>					<!-- 발행상태 -->
+										<th>{{i18n.BO2419}}</th>	<!-- 발행상태명 -->
+										<th></th>					<!-- 발행구분 -->
+										<th>{{i18n.BO2267}}</th>	<!-- 발행구분명 -->
+										<th>{{i18n.BO2397}}</th>	<!-- 발행일자 -->
+										<th></th>	<!-- 기간 -->
+									</tr>
+								</tfoot>
+								<tbody>
+									
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a id="colTwo" data-toggle="collapse" class="collapsed" data-parent="#accordion" href="#collapseTwo">2. {{i18n.BO2190}}<span class="pull-right"><b id="totalCnt"></b></span></a>
+				</h4>
+        	</div>
+			<div id="collapseTwo" class="panel-collapse collapse">
+				<div class="panel-body">
+					<div class="col-md-12">
+						<div class="panel panel-default">
+							<div class="panel-body panel-body-nopadding">	    
+								<!-- BASIC WIZARD -->
+								<div id="progressWizard" class="basic-wizard">	      
+									<ul class="nav nav-pills nav-justified" id="targetUser">
+										<li><a id="all" href="#ptab1" data-toggle="tab">{{i18n.BO2191}}</a></li>
+										<li><a id="group" href="#ptab2" data-toggle="tab">{{i18n.BO2192}}</a></li>
+										<!-- <li><a id="coutom" href="#ptab3" data-toggle="tab">{{i18n.BO2193}}</a></li> -->
+									</ul>	        
+									<div class="tab-content">                  
+										<div class="tab-pane" id="ptab1">
+											<form class="form">
+						            			<div class="table-responsive">
+													<table id="allUser_table" class="display table" style="width: 100%; cellspacing: 0;">
+														<thead>
+															<tr>
+																<th>{{i18n.BO2001}}</th>
+																<th></th>
+																<th></th>
+																<th>{{i18n.BO2151}}</th>
+																<th>{{i18n.BO2152}}</th>
+																<th>{{i18n.BO2342}}</th>
+																<th>{{i18n.BO2018}}</th>
+																
+															</tr>
+														</thead>
+														<tfoot>
+															<tr>
+																<th>{{i18n.BO2001}}</th>
+																<th></th>
+																<th></th>
+																<th>{{i18n.BO2151}}</th>
+																<th>{{i18n.BO2152}}</th>
+																<th>{{i18n.BO2342}}</th>
+																<th>{{i18n.BO2018}}</th>																
+															</tr>
+														</tfoot>
+														<tbody>
+															
+														</tbody>
+													</table>
+												</div>
+						            		</form>
+										</div>					
+										<div class="tab-pane" id="ptab2">
+											<form class="form" id="groupUser">
+												<div class="col-sm-6">
+													<div class="panel panel-default">
+														<div class="panel-heading">		             
+															<h3 class="panel-title">{{i18n.BO2194}}</h3>
+														</div>
+														<div class="panel-body">
+															<!-- <div class="form-group min-height-30 col-sm-12 padding-0">
+																<label class="col-sm-3 control-label" for="radio">성별</label>
+																<div class="col-sm-9">
+																	<div class="rdio rdio-primary col-sm-3">
+												                        <input type="radio" name="radio" value="0" id="all" />
+												                        <label for="all">전체</label>
+												                    </div>
+												                    <div class="rdio rdio-primary col-sm-3">
+												                        <input type="radio" name="radio" value="1" id="male" />
+												                        <label for="male">남자</label>
+												                    </div>
+												                    <div class="rdio rdio-primary col-sm-3">
+												                        <input type="radio" name="radio" value="2" id="female" />
+												                        <label for="female">여자</label>
+												                    </div>																
+																</div>
+																
+															</div> -->
+															
+												            <!-- <div class="form-group min-height-30 col-sm-12 padding-0">
+																<label class="col-sm-3 control-label" for="checkbox">나이</label>																
+																<div class="col-sm-9">
+																	<div class="ckbox ckbox-primary col-sm-3">
+																		<input type="checkbox" value="1" id="10age" />
+																		<label for="10age">10대</label>
+																	</div>
+																	<div class="ckbox ckbox-primary col-sm-3">
+																		<input type="checkbox" value="1" id="20age" />
+																		<label for="20age">20대</label>
+																	</div>
+																	<div class="ckbox ckbox-primary col-sm-3">
+																		<input type="checkbox" value="1" id="30age" />
+																		<label for="30age">30대</label>
+																	</div>
+																	<div class="ckbox ckbox-primary col-sm-3">
+																		<input type="checkbox" value="1" id="40age" />
+																		<label for="40age">40대</label>
+																	</div>
+																	<div class="ckbox ckbox-primary col-sm-3">
+																		<input type="checkbox" value="1" id="50age" />
+																		<label for="50age">50대</label>
+																	</div>
+																	<div class="ckbox ckbox-primary col-sm-6">
+																		<input type="checkbox" value="1" id="60age" />
+																		<label for="60age">60대이상</label>
+																	</div>
+																</div>																
+															</div> -->
+															
+															<div class="form-group min-height-30 col-sm-12 padding-0">
+																<label class="col-sm-3 control-label" for="input-Default">{{i18n.BO2410}}</label>
+																<div class="col-sm-9">
+																	<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+																		style="width: 100%" name="lastLogin">
+																		<option value="">{{i18n.BO2411}}</option>
+																		<option value="1">{{i18n.BO2412}}</option>
+																		<option value="2">{{i18n.BO2413}}</option>
+																		<option value="3">{{i18n.BO2414}}</option>
+																		<option value="4">{{i18n.BO2415}}</option>
+																		<option value="5">{{i18n.BO2416}}</option>
+																		<option value="5">{{i18n.BO2417}}</option>
+																	</select>
+																</div>
+															</div>
+														</div>
+													</div><!-- panel -->
+												</div><!-- col-sm-4 -->		        
+												<div class="col-sm-6">
+													<div class="panel panel-default">
+														<div class="panel-heading">
+															<h3 class="panel-title">{{i18n.BO2418}}</h3>
+														</div>
+														<div class="panel-body">
+															<div class="form-group min-height-30 col-sm-12 padding-0">
+																<label class="col-sm-3 control-label" for="input-Default">{{i18n.BO2423}}</label>
+																<div class="col-sm-9">
+																	<input type="number" placeholder="0" class="form-control" name="sales"/>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+												<!-- 
+												<div class="col-sm-4">
+													<div class="panel panel-default">
+														<div class="panel-heading">
+															<h3 class="panel-title">스템프적립</h3>
+														</div>
+														<div class="panel-body">
+															<div class="form-group min-height-30 col-sm-12 padding-0">
+																<label class="col-sm-3 control-label" for="input-Default">적립기간</label>
+																<div class="col-sm-9">
+																	<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+																		style="width: 100%" name="recentAccess">
+																		<option value="">사용안함</option>
+																		<option value="1">최근1주</option>
+																		<option value="2">최근2주</option>
+																		<option value="3">최근1개월</option>
+																		<option value="4">최근6개월</option>
+																		<option value="5">최근1년</option>
+																	</select>
+																</div>
+															</div>
+															<div class="form-group min-height-30 col-sm-12 padding-0">
+																<label class="col-sm-3 control-label" for="input-Default">스템프적립</label>
+																<div class="col-sm-9">
+																	<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+																		style="width: 100%" name="recentAccess">
+																		<option value="">사용안함</option>
+																		<option value="1">1개이상</option>
+																		<option value="2">2개이상</option>
+																		<option value="3">3개이상</option>
+																		<option value="5">5개이상</option>
+																		<option value="10">10개이상</option>
+																		<option value="12">12개이상</option>
+																	</select>
+																</div>
+															</div>
+															<div class="form-group min-height-30 col-sm-12 padding-0">
+																<label class="col-sm-3 control-label" for="input-Default">대상매장</label>
+																<div class="col-sm-9">
+																	<input type="text" placeholder="대상매장" class="form-control" />
+																</div>
+															</div>
+														</div>
+													</div>
+												</div> -->
+												<!--  
+												<div class="col-sm-4">
+													<div class="panel panel-default">
+														<div class="panel-heading">
+															<h3 class="panel-title">쿠폰적립/사용</h3>
+														</div>
+														<div class="panel-body">
+															<div class="form-group min-height-30 col-sm-12 padding-0">
+																<label class="col-sm-3 control-label" for="input-Default">이용기간</label>
+																<div class="col-sm-9">
+																	<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+																		style="width: 100%" name="recentAccess">
+																		<option value="">사용안함</option>
+																		<option value="1">최근1주</option>
+																		<option value="2">최근2주</option>
+																		<option value="3">최근1개월</option>
+																		<option value="4">최근6개월</option>
+																		<option value="5">최근1년</option>
+																	</select>
+																</div>
+															</div>
+															<div class="form-group min-height-30 col-sm-12 padding-0">
+																<label class="col-sm-3 control-label" for="input-Default">쿠폰발행</label>
+																<div class="col-sm-9">
+																	<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+																		style="width: 100%" name="recentAccess">
+																		<option value="">사용안함</option>
+																		<option value="1">1개이상</option>
+																		<option value="2">2개이상</option>
+																		<option value="3">3개이상</option>
+																		<option value="5">5개이상</option>
+																	</select>
+																</div>
+															</div>
+															<div class="form-group min-height-30 col-sm-12 padding-0">
+																<label class="col-sm-3 control-label" for="input-Default">쿠폰사용</label>
+																<div class="col-sm-9">
+																	<select id="input-Default" class="form-control m-b-sm" tabindex="-1"
+																		style="width: 100%" name="recentAccess">
+																		<option value="">사용안함</option>
+																		<option value="1">1개이상</option>
+																		<option value="2">2개이상</option>
+																		<option value="3">3개이상</option>
+																		<option value="5">5개이상</option>
+																	</select>
+																</div>
+															</div>
+															<div class="form-group min-height-30 col-sm-12 padding-0">
+																<label class="col-sm-3 control-label" for="input-Default">대상매장</label>
+																<div class="col-sm-9">
+																	<input type="text" placeholder="대상매장" class="form-control" />
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												-->
+												</form>
+											<div class="table-responsive">
+												<div class="form-group min-height-30 col-sm-12">
+													<button type="button" class="btn btn-primary margin-b-15" style="float: right;" id="groupUser_Search">{{i18n.BO0011}}</button>
+												</div>
+												<table id="groupUser_table" class="display table" style="width: 100%; cellspacing: 0;">
+													<thead>
+														<tr>
+															<th>{{i18n.BO2001}}</th>
+															<th></th>
+															<th></th>
+															<th>{{i18n.BO2151}}</th>
+															<th>{{i18n.BO2152}}</th>
+															<th>{{i18n.BO2342}}</th>
+															<th>{{i18n.BO2018}}</th>
+															
+														</tr>
+													</thead>
+													<tfoot>
+														<tr>
+															<th>{{i18n.BO2001}}</th>
+															<th></th>
+															<th></th>
+															<th>{{i18n.BO2151}}</th>
+															<th>{{i18n.BO2152}}</th>
+															<th>{{i18n.BO2342}}</th>
+															<th>{{i18n.BO2018}}</th>																
+														</tr>
+													</tfoot>
+													<tbody>
+														
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<!-- <div class="tab-pane" id="ptab3">
+											<form class="form">
+							            		<div class="table-responsive">
+													
+													<div class="form-group min-height-30 col-sm-12 float-left">
+														<div class="col-sm-6">
+															<input type="file" class="form-control" id="upload-target"/>
+														</div>
+														<button type="button" class="btn btn-primary margin-b-15" id="upload-target-button">{{i18n.BO3063}}</button>
+													</div>
+													
+													<table id="custom_table" class="display table" style="width: 100%; cellspacing: 0;">
+														<thead>
+															<tr>
+																<th>{{i18n.BO2001}}</th>
+																<th>{{i18n.BO2152}}</th>
+																<th>{{i18n.BO2151}}</th>
+																<th>{{i18n.BO2342}}</th>
+																<th>{{i18n.BO2018}}</th>
+																<th></th>
+															</tr>
+														</thead>
+														<tfoot>
+															<tr>
+																<th>{{i18n.BO2001}}</th>
+																<th>{{i18n.BO2152}}</th>
+																<th>{{i18n.BO2151}}</th>
+																<th>{{i18n.BO2342}}</th>
+																<th>{{i18n.BO2018}}</th>
+																<th></th>
+															</tr>
+														</tfoot>
+														<tbody>
+															
+														</tbody>
+													</table>
+												</div>
+								            </form>
+										</div> -->
+									</div>
+									<!-- tab-content -->	      
+									<ul class="pager wizard">
+										<li class="next"><a id="nextButton">{{i18n.BO0020}}</a></li>
+									</ul>
+								</div><!-- #basicWizard -->
+							</div><!-- panel-body -->
+						</div><!-- panel -->
+					</div><!-- col-md-12 -->
+			    </div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a id="colThree" data-toggle="collapse" class="collapsed" data-parent="#accordion" href="#collapseThree">3. {{i18n.BO2208}}</a>
+				</h4>
+			</div>
+			<div id="collapseThree" class="panel-collapse collapse">
+				<div class="panel-body">
+					<div class="col-md-12">
+						<div class="panel panel-default">
+							<div class="panel-body panel-body-nopadding">	    
+								<!-- Nav tabs -->
+						        <ul class="nav nav-tabs" id="issuingTab" style="display: none;">
+						          <li id="issueTab1" class="active"><a href="#immediately" data-toggle="tab"><strong>{{i18n.BO2209}}</strong></a></li>
+						          <!-- <li id="issueTab2" ><a href="#revervation" data-toggle="tab"><strong>{{i18n.BO2210}}</strong></a></li> -->
+						        </ul>
+						        
+						        <!-- Tab panes -->
+						        <div class="tab-content mb30">
+						          <div class="tab-pane active" id="immediately">
+						            
+						            <p id="test1"></p>
+						          	
+						          </div>
+						          <!-- <div class="tab-pane" id="revervation">
+						            <form>
+						            	<div class="form-group min-height-30 col-sm-6 padding-0">
+											<label for="input-Default" class="col-sm-2 control-label">예약일시</label>
+											<div class="col-sm-6">
+												<div class="input-group col-sm-12 m-b-sm input-append bootstrap-timepicker float-left">
+													<input id="timepicker1" type="text" class="form-control date-picker" placeholder="" name="openDt" value="{{openDt}}"> 
+													<span class="input-group-addon add-on add-on-datepicker">
+														<i class="fa fa-calendar"></i>
+													</span>
+												</div>
+											</div>											
+										</div>
+						            	<p id="test2"></p>
+						            </form>
+						          </div> -->
+						        </div>
+						        <button class="btn btn-primary mr5" id="issuing_coupon" style="float: right;">{{i18n.BO2189}}</button>
+						</div><!-- panel -->
+					</div><!-- col-md-12 -->
+			    </div>
+			</div>
+		</div>
+	</div>
+</div><!-- row -->
+
+
+
+

@@ -1,0 +1,73 @@
+<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+			<h4 class="modal-title" id="myLargeModalLabel4">{{i18n.BO2340}} {{i18n.BO0025}}</h4>
+		</div>
+		<div class="modal-body">
+			<!-- <ul class="filemanager-options">
+				<li class="sch-toolbar">
+					<div class="input-group ">
+						<input type="text" class="form-control ckbox-border sch-input"
+							id="demo" placeholder="search...">
+						<button>
+							<i class="glyphicon glyphicon-search sch-btn-i"></i>
+						</button>
+					</div>
+				</li>
+			</ul> -->
+
+			<form id="cctvList">
+				<div class="table-responsive">
+					<div class="float-right">
+						<button type="button" class="btn btn-xs btn-danger" id="del-cctv-row">- {{i18n.BO0016}}</button>
+						<button type="button" class="btn btn-xs btn-primary" id="new-cctv">+ {{i18n.BO0017}}</button>
+						<input type="hidden" name="nvrId" value="{{nvrId}}">
+						<input type="hidden" name="brandId" value="{{brandId}}">											
+						<input type="hidden" name="storeId" value="{{storeId}}">
+					</div>
+					<table id="cctv-table" class="display table" style="width: 100%; cellspacing: 0;">
+						<thead>
+							<tr>
+								<th></th>
+								<th>{{i18n.BO2428}}</th>
+								<th>{{i18n.BO2429}}</th>
+								<!-- <th>{{i18n.BO2348}}</th> -->
+								<th>{{i18n.BO2430}}</th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th></th>
+								<th>{{i18n.BO2428}}</th>
+								<th>{{i18n.BO2429}}</th>
+								<!-- <th>{{i18n.BO2348}}</th> -->
+								<th>{{i18n.BO2430}}</th>
+							</tr>
+						</tfoot>
+						<tbody>
+						{{#list}}
+							<tr>
+								<td>
+									<input type="checkbox" name="chk{{id}}" id="ckl_{{id}}" value="{{id}}" class="table-checkbox">
+									<input type="hidden" name="cctvIU{{id}}" value="U">
+									<input type="hidden" name="cctvId{{id}}" value="{{id}}">											
+									<input type="hidden" name="nvrId{{id}}" value="{{nvrId}}">
+								</td>
+								<td><input type="text" name="name{{id}}" value="{{name}}" data-validation="required"></td>
+								<td><input type="text" name="no{{id}}" value="{{no}}" data-validation="required"></td>
+								<!-- <td><input type="text" name="ip{{id}}" value="{{ip}}" data-validation="required"></td> -->
+								<td><input type="text" name="model{{id}}" value="{{model}}" data-validation="required"></td>
+							</tr>
+						{{/list}}
+						</tbody>
+					</table>
+				</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">{{i18n.BO0026}}</button>
+			<button type="button" id="cctvSave" class="btn btn-primary">{{i18n.BO0014}}</button>
+		</div>
+	</div>
+</div>

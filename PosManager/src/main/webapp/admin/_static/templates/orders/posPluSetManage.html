@@ -1,0 +1,117 @@
+<div class="row">
+	<form id="rollSearchFrom">
+		<ul class="filemanager-options" {{#isSt}} style="display: none" {{/isSt}}>
+			<li class="select2-padding" {{#isFr}} style="display: none" {{/isFr}}>
+				<div class="itemopt">
+					<select class="select2" id="franchise_select">
+						<option value="">{{i18n.BO1031}}</option>
+						{{#frList}}
+						<option value="{{id}}" >{{companyNm}}</option>
+						{{/frList}}
+					</select>
+				</div>
+			</li>
+			<li class="select2-padding" {{#isBr}} style="display: none" {{/isBr}}>
+				<div class="itemopt">
+					<select class="js-states form-control" tabindex="-1" style="display: none; width: 100%" id="brand_select">
+						<option value="">{{i18n.BO1032}}</option>
+						{{#brList}}
+						<option value="{{id}}" {{{selections}}}>{{companyNm}}</option>
+						{{/brList}}
+					</select>
+				</div>
+			</li>
+			<li class="select2-padding">
+				<div class="itemopt">
+					<select class="js-states form-control" name="storeId" tabindex="-1" style="display: none; width: 100%" id="store_select">
+						<option value="">{{i18n.BO1033}}</option>
+						{{#stList}}
+						<option value="{{id}}" {{{selections}}}>{{storeNm}}</option>
+						{{/stList}}
+					</select>
+				</div>
+			</li>
+		</ul>
+		<ul class="filemanager-options">
+			<li class="select2-padding">
+				<div class="itemopt">
+					<select class="select2" name="cateType" id="cateType_select">
+						<option value="">Category Type</option>
+					</select>
+				</div>
+			</li>
+		</ul>
+	</form>
+</div>
+
+<div class="row">
+	<div class="col-sm-8">
+		<div class="row filemanager panel panel-white" style="overflow-y:scroll; max-height: 610px;>
+			<section class="brick_inner">
+				<!-- <div class="gridly-title gridly-item-grid">
+					<div class="gridly-title-c" id="gdlPluType" >
+						<div class="col-md-3 p-a-0" id="_gdlTmp">
+							<a class="gridly-title-txt action">카테고리 타입을 선택해 주세요.</a>
+						</div>
+					</div>
+				</div> -->
+				<div class="gridly-main">
+					<form id="gdlForm">
+					   <input type="hidden" name="catId" value="" id="pluTypeId"/>
+		<!-- 			<div class="gridly panel-white"> -->
+		<!-- 			</div> -->
+						<ul id="sortableBox">
+	
+						</ul>
+					</form>
+				</div>
+			</section>
+		</div>
+		<div class="float-right">
+			<button type="button" class="btn btn-xs btn-primary gridly-btn" id="savePluItem">{{i18n.BO0014}}</button>
+		</div>
+	</div>
+	<div class="col-sm-4">
+		<div class="gridly-item-list" style="width: 100%;">
+			<div class="panel panel-white">
+				<div class="panel-body">
+					<div class="itemopt">
+						<ul class="filemanager-options">
+							<li class="select2-padding">
+								<div class="itemopt">
+									<select class="select2" name="catId" id="category_select">
+										<option value="">All Category</option>
+									</select>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="table-responsive" style="overflow-y:scroll; max-height: 500px;" >
+						<table class="table table-striped" id="table2">
+							<thead>
+								<tr class="dataTables_wrapper_th_min">
+									<th>{{i18n.BO2214}}</th>
+									<th>{{i18n.BO2215}}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="dataTables_wrapper_th_min">
+									<td colspan="2">
+										<span >{{i18n.BO4045}}</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+						<!-- table-responsive -->
+					<div class="float-right">
+	<!-- 					<button type="button" class="btn btn-xs btn-primary gridly-btn">전체선택</button> -->
+	<!-- 					<button type="button" class="btn btn-xs btn-primary gridly-btn">선택등록</button> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Row -->

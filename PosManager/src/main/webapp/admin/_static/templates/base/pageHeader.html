@@ -1,0 +1,15 @@
+<!-- BEGIN PAGE HEADER-->
+<h3 class="page-title">{{pageTitle}}</h3>
+  <ol class="breadcrumb">
+  {{#pageNavi}}
+    {{#link}}
+    <li {{^hasNext}}class="active"{{/hasNext}}><a href="{{link}}">{{title}}</a></li>
+    {{/link}}
+    {{^link}}
+    <li {{^hasNext}}class="active"{{/hasNext}}>{{pageTitle}}</a></li>
+    {{/link}}
+  {{/pageNavi}}
+  </ol>
+<!-- <button type="button" class="btn btn-warning-alt btn-fav"><i class="fa fa-star-o"></i> Favorite</button> -->
+  <!--<button type="button" class="btn btn-warning-alt btn-fav"><i class="fa fa-star"></i> Favorite</button>-->
+<!-- END PAGE HEADER-->

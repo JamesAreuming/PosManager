@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jc.pico.utils.customMapper.store.StoreStoreCouponMapper">
+
+	<select id="selectSummaryInfo" parameterType="map" resultType="SingleMap">
+		/* StoreStoreCouponMapper.selectSummaryInfo */
+		SELECT
+			A.couponIssuedTotal
+		    , B.couponIssueCanceledTotal
+			, C.couponUsedTotal
+		    , D.couponUseCanceledTotal
+		FROM (
+			SELECT
+				COUNT(*) AS couponIssuedTotal
+			FROM
+				TB_SVC_COUPON_LOG
+			WHERE
+				STORE_ID = #{storeId}
+			AND LOG_TP = 402001
+			AND `WHEN` BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+		) A
+		CROSS JOIN (
+			SELECT
+				COUNT(*) AS couponIssueCanceledTotal
+			FROM
+				TB_SVC_COUPON_LOG
+			WHERE
+				STORE_ID = #{storeId}
+			AND LOG_TP = 402004
+			AND `WHEN` BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+		) B
+		CROSS JOIN (
+			SELECT
+				COUNT(*) AS couponUsedTotal
+			FROM
+				TB_SVC_COUPON_LOG
+			WHERE
+				STORE_ID = #{storeId}
+			AND LOG_TP = 402003
+			AND `WHEN` BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+		) C
+		CROSS JOIN (
+			SELECT
+				COUNT(*) AS couponUseCanceledTotal
+			FROM
+				TB_SVC_COUPON_LOG
+			WHERE
+				STORE_ID = #{storeId}
+			AND LOG_TP = 402002
+			AND `WHEN` BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+		) D
+	</select>
+
+	<select id="selectSummaryHourlyIssuedList" parameterType="map" resultType="SingleMap">
+		/* StoreStoreCouponMapper.selectSummaryHourlyIssuedList */
+		SELECT
+			CONCAT(A.hour, '~', A.hour + 1, 'h') AS label
+		    , COALESCE(B.couponIssuedTotal, 0) AS couponIssuedTotal
+		    , COALESCE(C.couponUsedTotal, 0) AS couponUsedTotal
+		FROM (
+			SELECT 0 AS hour UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+			UNION SELECT 6 AS hour UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11
+			UNION SELECT 12 AS hour UNION SELECT 13 UNION SELECT 14 UNION SELECT 15 UNION SELECT 16 UNION SELECT 17
+			UNION SELECT 18 AS hour UNION SELECT 19 UNION SELECT 20 UNION SELECT 21 UNION SELECT 22 UNION SELECT 23
+		) A
+		LEFT JOIN (
+			SELECT
+				HOUR(`WHEN`) AS hour
+				, COUNT(*) AS couponIssuedTotal
+			FROM TB_SVC_COUPON_LOG
+			WHERE
+				STORE_ID = #{storeId}
+			AND LOG_TP = 402001
+			AND `WHEN` BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+			GROUP BY hour
+		) B
+		ON A.hour = B.hour
+		LEFT JOIN (
+			SELECT
+				HOUR(`WHEN`) AS hour
+				, COUNT(*) AS couponUsedTotal
+			FROM TB_SVC_COUPON_LOG
+			WHERE
+				STORE_ID = #{storeId}
+			AND LOG_TP = 402003
+			AND `WHEN` BETWEEN DATE_ADD(#{startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+			GROUP BY hour
+		) C
+		ON A.hour = C.hour
+		ORDER BY A.hour
+	</select>
+
+	<select id="selectDailyList" parameterType="map" resultType="SingleMap">
+		/* StoreStoreCouponMapper.selectDailyList */
+		SELECT
+			DATE_FORMAT(CL.YMD, '%Y-%m-%d') AS label
+			, COALESCE(A.couponIssuedTotal, 0) AS couponIssuedTotal
+			, COALESCE(B.couponUsedTotal, 0) AS couponUsedTotal
+		FROM
+			TB_BASE_CALENDAR CL
+		LEFT JOIN (
+			SELECT
+				DATE(`WHEN`) AS YMD
+				, COUNT(*) AS couponIssuedTotal
+			FROM
+				TB_SVC_COUPON_LOG
+			WHERE
+				STORE_ID = #{storeId}
+			AND LOG_TP = 402001
+		    AND `WHEN` BETWEEN DATE_ADD(#{pagination.startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{pagination.endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+		    GROUP BY YMD
+		) A
+		ON CL.YMD = A.YMD
+		LEFT JOIN (
+			SELECT
+				DATE(`WHEN`) AS YMD
+				, COUNT(*) AS couponUsedTotal
+			FROM
+				TB_SVC_COUPON_LOG
+			WHERE
+				STORE_ID = #{storeId}
+			AND LOG_TP = 402003
+		    AND `WHEN` BETWEEN DATE_ADD(#{pagination.startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{pagination.endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+		    GROUP BY YMD
+		) B
+		ON CL.YMD = B.YMD
+		WHERE
+			CL.YMD BETWEEN #{pagination.startDate} AND #{pagination.endDate}
+		ORDER BY CL.YMD
+	</select>
+
+	<select id="selectWeeklyList" parameterType="map" resultType="SingleMap">
+		/* StoreStoreCouponMapper.selectWeeklyList */
+		SELECT
+			CONCAT(DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 0), '%X%V%w'), '%Y-%m-%d')
+				, ' ~ '
+		        , DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 6), '%X%V%w'), '%Y-%m-%d')
+			) AS label
+			, DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 0), '%X%V%w'), '%Y-%m-%d') AS startDate
+		    , DATE_FORMAT(STR_TO_DATE(CONCAT(CL.YEARWEEK, 6), '%X%V%w'), '%Y-%m-%d') AS endDate
+			, COALESCE(A.couponIssuedTotal, 0) AS couponIssuedTotal
+			, COALESCE(B.couponUsedTotal, 0) AS couponUsedTotal
+		FROM
+			TB_BASE_CALENDAR CL
+		LEFT JOIN (
+			SELECT
+				YEARWEEK(`WHEN`) AS YEARWEEK
+				, COUNT(*) AS couponIssuedTotal
+			FROM
+				TB_SVC_COUPON_LOG
+			WHERE
+				STORE_ID = #{storeId}
+			AND LOG_TP = 402001
+		    AND `WHEN` BETWEEN DATE_ADD(#{pagination.startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{pagination.endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+		    GROUP BY YEARWEEK
+		) A
+		ON CL.YEARWEEK = A.YEARWEEK
+		LEFT JOIN (
+			SELECT
+				YEARWEEK(`WHEN`) AS YEARWEEK
+				, COUNT(*) AS couponUsedTotal
+			FROM
+				TB_SVC_COUPON_LOG
+			WHERE
+				STORE_ID = #{storeId}
+			AND LOG_TP = 402003
+		    AND `WHEN` BETWEEN DATE_ADD(#{pagination.startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{pagination.endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+		    GROUP BY YEARWEEK
+		) B
+		ON CL.YEARWEEK = B.YEARWEEK
+		WHERE
+			CL.YMD BETWEEN #{pagination.startDate} AND #{pagination.endDate}
+		GROUP BY CL.YEARWEEK
+		ORDER BY CL.YEARWEEK
+	</select>
+
+	<select id="selectMonthlyList" parameterType="map" resultType="SingleMap">
+		/* StoreStoreCouponMapper.selectMonthlyList */
+		SELECT
+			DATE_FORMAT(CL.YMD, '%Y-%m') AS label
+			, COALESCE(A.couponIssuedTotal, 0) AS couponIssuedTotal
+			, COALESCE(B.couponUsedTotal, 0) AS couponUsedTotal
+		FROM
+			TB_BASE_CALENDAR CL
+		LEFT JOIN (
+			SELECT
+				YEAR(`WHEN`) AS YEAR
+				, MONTH(`WHEN`) AS MONTH
+				, COUNT(*) AS couponIssuedTotal
+			FROM
+				TB_SVC_COUPON_LOG
+			WHERE
+				STORE_ID = #{storeId}
+			AND LOG_TP = 402001
+		    AND `WHEN` BETWEEN DATE_ADD(#{pagination.startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{pagination.endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+		    GROUP BY YEAR, MONTH
+		) A
+		ON CL.YEAR = A.YEAR
+			AND CL.MONTH = A.MONTH
+		LEFT JOIN (
+			SELECT
+				YEAR(`WHEN`) AS YEAR
+				, MONTH(`WHEN`) AS MONTH
+				, COUNT(*) AS couponUsedTotal
+			FROM
+				TB_SVC_COUPON_LOG
+			WHERE
+				STORE_ID = #{storeId}
+			AND LOG_TP = 402003
+		    AND `WHEN` BETWEEN DATE_ADD(#{pagination.startDate}, INTERVAL 0 SECOND) AND DATE_ADD(#{pagination.endDate}, INTERVAL '23:59:59' HOUR_SECOND)
+		    GROUP BY YEAR, MONTH
+		) B
+		ON CL.YEAR = B.YEAR
+			AND CL.MONTH = B.MONTH
+		WHERE
+			CL.YMD BETWEEN #{pagination.startDate} AND #{pagination.endDate}
+		GROUP BY CL.YEAR, CL.MONTH
+		ORDER BY CL.YEAR, CL.MONTH
+	</select>
+
+</mapper>

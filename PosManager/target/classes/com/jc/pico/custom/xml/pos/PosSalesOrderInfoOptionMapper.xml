@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+  ~ Filename	: PosSalesOrderInfoOptionMapper.xml
+  ~ Function	:
+  ~ Comment 	:
+  ~ History		: 
+  ~
+  ~ Version		: 1.0
+  ~ Author   	: 
+  -->
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.utils.customMapper.pos.PosSalesOrderInfoOptionMapper">
+
+	<select id="selectDefault" parameterType="hashmap" resultType="com.jc.pico.utils.bean.PosSalesOrderInfoOption">
+    	SELECT 	
+		    ORDINAL AS seq
+		    , OPT_ID AS noOpt
+		    , OPT_DTL_ID AS noOptDtl
+		    , OPT_NM AS nmOpt
+		    , OPT_DTL_NM AS nmOptDtl
+		    , OPT_PRICE AS prOpt
+		FROM 
+			TB_SVC_ORDER_ITEM_OPT
+		WHERE
+			ITEM_ID = #{itemId}
+		ORDER BY ORDINAL
+  	</select>
+  	
+</mapper>
