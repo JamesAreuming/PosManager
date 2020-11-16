@@ -12,9 +12,9 @@ public interface ClerkStoreMapper {
 
 	List<SingleMap> selectTableListBySectionId(SingleMap param);
 
-	List<SingleMap> selectPluCategoryList(SingleMap param);
+	List<SingleMap> selectPluCategoryList(SingleMap param); // ex. 44, 44, 89
 
-	List<SvcItemExtended> selectPluItemList(SingleMap param);
+	List<SvcItemExtended> selectPluItemList(SingleMap param); // 151
 
 	Long saveStoreTemp(SvnStoreTemp record);
 

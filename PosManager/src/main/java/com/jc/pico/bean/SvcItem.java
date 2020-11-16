@@ -291,6 +291,9 @@ public class SvcItem {
      *
      * @mbggenerated Fri Sep 23 19:04:40 KST 2016
      */
+    
+    private String isSoldOut;
+    
     public Long getId() {
         return id;
     }
@@ -1122,6 +1125,16 @@ public class SvcItem {
     public void setRecipe(String recipe) {
         this.recipe = recipe == null ? null : recipe.trim();
     }
+    
+    
+
+	public String getIsSoldOut() {
+		return isSoldOut;
+	}
+
+	public void setIsSoldOut(String isSoldOut) {
+		this.isSoldOut = isSoldOut;
+	}
 
 	@Override
 	public String toString() {
@@ -1134,8 +1147,25 @@ public class SvcItem {
 				+ isOptUsed + ", isPackable=" + isPackable + ", isStamp=" + isStamp + ", mbIconTp=" + mbIconTp
 				+ ", salesBegin=" + salesBegin + ", salesEnd=" + salesEnd + ", printerNo=" + printerNo + ", adminId="
 				+ adminId + ", created=" + created + ", updated=" + updated + ", intro=" + intro + ", isStockUse="
-				+ isStockUse + ", safeStockCnt=" + safeStockCnt + ", recipe=" + recipe + "]";
+				+ isStockUse + ", safeStockCnt=" + safeStockCnt + ", recipe=" + recipe + ", isSoldOut=" + isSoldOut
+				+ "]";
 	}
-    
+	
+	
+
+//	@Override
+//	public String toString() {
+//		return "SvcItem [id=" + id + ", catId=" + catId + ", brandId=" + brandId + ", storeId=" + storeId + ", status="
+//				+ status + ", itemTp=" + itemTp + ", itemCd=" + itemCd + ", barcode=" + barcode + ", name=" + name
+//				+ ", shortName=" + shortName + ", price=" + price + ", supplyPrice=" + supplyPrice + ", purchasePrice="
+//				+ purchasePrice + ", tax=" + tax + ", discountPrice=" + discountPrice + ", serviceCharge="
+//				+ serviceCharge + ", isTaxIncluded=" + isTaxIncluded + ", taxTp=" + taxTp + ", isTipIncluded="
+//				+ isTipIncluded + ", isReward=" + isReward + ", isDiscountable=" + isDiscountable + ", isOptUsed="
+//				+ isOptUsed + ", isPackable=" + isPackable + ", isStamp=" + isStamp + ", mbIconTp=" + mbIconTp
+//				+ ", salesBegin=" + salesBegin + ", salesEnd=" + salesEnd + ", printerNo=" + printerNo + ", adminId="
+//				+ adminId + ", created=" + created + ", updated=" + updated + ", intro=" + intro + ", isStockUse="
+//				+ isStockUse + ", safeStockCnt=" + safeStockCnt + ", recipe=" + recipe + "]";
+//	}
+//    
     
 }

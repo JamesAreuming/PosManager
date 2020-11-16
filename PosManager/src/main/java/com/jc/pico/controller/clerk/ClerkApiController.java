@@ -286,6 +286,8 @@ public class ClerkApiController {
 	public ClerkResult getPluCategories(@RequestBody StoreParam reqParam, Authentication authentication)
 			throws DataNotFoundException, DataNotRegisteredException {
 		logger.debug("getPluCategories : " + reqParam);
+		
+		logger.debug("getPluCategories 확인>>>>>>>>>>>>>>>>>>>: " + reqParam); //StoreParam [header={os=android, posNo=003, lang=ko}, data={brandId=44, storeId=89}]
 
 		SingleMap param = reqParam.getData();
 

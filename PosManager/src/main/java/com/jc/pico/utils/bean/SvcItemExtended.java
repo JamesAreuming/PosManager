@@ -60,7 +60,7 @@ public class SvcItemExtended extends SvcItem {
 	public void setImages(List<SvcItemImg> images) {
 		this.images = images;
 	}
-
+ 
 	@Override
 	public String toString() {
 		return "SvcItemExtended [options=" + options + ", images=" + images + "]";

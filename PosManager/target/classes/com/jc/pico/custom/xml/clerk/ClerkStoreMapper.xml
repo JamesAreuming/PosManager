@@ -39,6 +39,7 @@
 		ORDER BY ORDINAL
 	</select>
 	
+	<!-- 해당 카테고리 QUERY : ex. 식사류, 분식류, 음료, 주류 등등 -->
 	<select id="selectPluCategoryList" parameterType="SingleMap" resultType="SingleMap">
 		/* ClerkStoreMapper.selectPluCategoryList */
 		SELECT 
@@ -58,6 +59,7 @@
 		ORDER BY ORDINAL
 	</select>
 	
+	<!-- 선택된 카테고리의 음식리스트 QUERY : ex. 식사류 - 된장찌게, 닭볶음탕 등등 -->
 	<select id="selectPluItemList" parameterType="SingleMap" resultType="com.jc.pico.utils.bean.SvcItemExtended">	
 		/* ClerkStoreMapper.selectPluItemList */
 		SELECT 
@@ -90,6 +92,7 @@
 			, B.IS_PACKABLE AS isPackable
 			, B.MB_ICON_TP AS mbIconTp
 		    , B.INTRO AS intro
+		    , B.IS_SOLDOUT AS isSoldOut <!-- IS_SOLDOUT 컬럼이 나중에 생성 -->
 		FROM 
 			TB_SVC_PLU_ITEM A
 		INNER JOIN TB_SVC_ITEM B
