@@ -200,6 +200,7 @@ public class ClerkApiController {
 	@RequestMapping(value = "/order/detailKiosk", method = RequestMethod.POST)
 	public ClerkResult getOrderDetailKiosk(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
 		logger.debug("detailKiosk > getOrder : " + reqParam);
+		//StoreParam [header={os=android, posNo=003, lang=ko}, data={endDate=2020-11-10 23:59:59, brandId=44, tableId=1, storeId=89, startDate=2020-11-10 00:00:00}] 
 
 		SingleMap param = reqParam.getData();
 
@@ -255,9 +256,11 @@ public class ClerkApiController {
 	@RequestMapping(value = "/order/saveKiosk", method = RequestMethod.POST)
 	public ClerkResult saveOrderKiosk(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
 		logger.debug("saveOrderKiosk : " + reqParam);
+		//StoreParam [header={os=android, posNo=003, lang=ko}, data={withTableLock=release, tableId=1, isUsePrinter=false, order={acceptTm=2020-11-17 07:41:40, acceptTmLocal=2020-11-17 16:41:40, brandId=44, customerCnt=1, discount=0.0, id=0, isReserve=false, lastSt=951002, openDt=2020-11-17 00:00:00, orderDiv=1, orderNo=44891605598900272, orderSt=607002, orderTm=2020-11-17 07:41:40, orderTmLocal=2020-11-17 16:41:40, orderTp=605001, pathTp=606004, posNo=003, sales=13000.0, serviceCharge=0.0, staffId=82, storeId=89, supplyValue=11700.0, svcOrderItems=[{catCd=1001, catNm=식사류, count=1, discount=0.0, id=0, image=/image-resource/items/store/89/355/it_st_89_1577129358431.jpg, isCanceled=false, isPacking=false, isStamp=false, itemCd=20191224042918, itemId=355, itemNm=삼계탕, itemTp=818000, lastSt=951002, netSales=11700.0, optPrice=0.0, orderAmount=13000.0, orderId=0, orderTm=2020-11-17 07:41:40, orderTmLocal=2020-11-17 16:41:40, ordinal=1605598900272, orgCount=0, orgId=0, pathTp=606004, price=13000.0, purchasePrice=0.0, sales=13000.0, salesDiv=0, salesTypeDiv=0, serviceCharge=0.0, shortName=삼계탕, staffId=82, svcOrderDiscounts=[], svcOrderHistories=[], svcOrderItemOpts=[], tax=1300.0, taxTp=819001}], svcOrderPays=[{amount=13000.0, cardInfo=현금, cardNo=, created=2020-11-17 16:41:40, id=0, monthlyPlain=0, orderId=0, ordinal=1, payMethod=810001, paySt=415003, payTm=2020-11-17 07:41:40, payTmLocal=2020-11-17 16:41:40, pgKind=, staffId=82, tranNo=, updated=2020-11-17 16:41:40}], tableNo=1, tax=1300.0, useCoupon=false, userId=0}}]  
 
 		SingleMap param = reqParam.getData();
 		param.put("userName", (authentication != null ? authentication.getName() : ""));
+		logger.debug("userName : " + authentication.getName()); //kiosk1_-_89_-_2332 
 		param.putAll(reqParam.getHeader());
 
 		ClerkResult result = new ClerkResult();
@@ -288,7 +291,7 @@ public class ClerkApiController {
 		logger.debug("getPluCategories : " + reqParam);
 		
 		logger.debug("getPluCategories 확인>>>>>>>>>>>>>>>>>>>: " + reqParam); //StoreParam [header={os=android, posNo=003, lang=ko}, data={brandId=44, storeId=89}]
-
+		
 		SingleMap param = reqParam.getData();
 
 		ClerkResult result = new ClerkResult();

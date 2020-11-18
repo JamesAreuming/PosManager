@@ -620,6 +620,8 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 		final String posNo = param.getString("posNo", null); // FIXME posNo를 헤더에 전달하면 clerk/tabl이 릴리즈 되면 두번째 파라미터를 제거해야 empty 체크 하도록 해야함
 		final boolean isUsePrinter = param.getBoolean("isUsePrinter", false);
 		
+		logger.debug("확인>>>>>>>>>>"+order.getUserId()); //0
+		logger.debug("확인 >>>>>>>>>>"+param); //{withTableLock=release, os=android, tableId=1, isUsePrinter=false, posNo=003, userName=kiosk1_-_89_-_2332, lang=ko, order={acceptTm=2020-11-17 08:35:14, acceptTmLocal=2020-11-17 17:35:14, brandId=44, customerCnt=1, discount=0.0, id=0, isReserve=false, lastSt=951002, openDt=2020-11-17 00:00:00, orderDiv=1, orderNo=44891605602114406, orderSt=607002, orderTm=2020-11-17 08:35:14, orderTmLocal=2020-11-17 17:35:14, orderTp=605001, pathTp=606004, posNo=003, sales=13000.0, serviceCharge=0.0, staffId=82, storeId=89, supplyValue=11700.0, svcOrderItems=[{catCd=1001, catNm=식사류, count=1, discount=0.0, id=0, image=/image-resource/items/store/89/355/it_st_89_1577129358431.jpg, isCanceled=false, isPacking=false, isStamp=false, itemCd=20191224042918, itemId=355, itemNm=삼계탕, itemTp=818000, lastSt=951002, netSales=11700.0, optPrice=0.0, orderAmount=13000.0, orderId=0, orderTm=2020-11-17 08:35:14, orderTmLocal=2020-11-17 17:35:14, ordinal=1605602114406, orgCount=0, orgId=0, pathTp=606004, price=13000.0, purchasePrice=0.0, sales=13000.0, salesDiv=0, salesTypeDiv=0, serviceCharge=0.0, shortName=삼계탕, staffId=82, svcOrderDiscounts=[], svcOrderHistories=[], svcOrderItemOpts=[], tax=1300.0, taxTp=819001}], svcOrderPays=[{amount=13000.0, cardInfo=현금, cardNo=, created=2020-11-17 17:35:14, id=0, monthlyPlain=0, orderId=0, ordinal=1, payMethod=810001, paySt=415003, payTm=2020-11-17 08:35:14, payTmLocal=2020-11-17 17:35:14, pgKind=, staffId=82, tranNo=, updated=2020-11-17 17:35:14}], tableNo=1, tax=1300.0, useCoupon=false, userId=0}} 
 		
 		// 추가 : 
 		// SvcOrderPay
@@ -663,7 +665,7 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 						 			posNo, order.getId(), order.getOrderNo(), order.getReceiptId(), order.getReceiptNo());
 		} 
 		catch (Throwable e) {
-			logger.error("Can not save order on common Kiosk order service.", e);
+			logger.error("Can not save order on common Kiosk order service.", e); // 결제가 안될시 이쪽으로 넘어감
 			throw new RequestResolveException(ErrorCode.ORDER_SAVE_FAILED.code, "Failed save order.", e);
 		}
  
