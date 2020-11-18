@@ -872,12 +872,16 @@ public class ClerkApiController {
 
 		final SingleMap param = reqParam.getData();
 		
+		logger.debug("getAdvertise  : " + reqParam); //StoreParam [header={os=android, posNo=003, lang=ko}, data={}]
+
+		param.put("host", String.format("%s://%s", request.getScheme(), request.getServerName())); //http://192.168.0.166
 		param.put("storeId", ClerkUtil.getStaffStoreId(authentication));
-		param.put("host", String.format("%s://%s", request.getScheme(), request.getServerName()));
 		
 		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.getAdvertiseInfo(request.getServletContext(), param));
+		result.setData(clerkCommonService.getAdvertiseInfo(request.getServletContext(), param)); //{host=http://192.168.0.166, storeId=89}
 		result.setSuccess();
+		
+		logger.debug("getAdvertise  : " + reqParam); //StoreParam [header={os=android, posNo=003, lang=ko}, data={host=http://192.168.0.166, storeId=89}]
 		
 		return result;
 	}
