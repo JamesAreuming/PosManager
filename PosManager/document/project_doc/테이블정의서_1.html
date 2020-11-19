@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>테이블정의서_1</title>
+    <title>order9db 테이블 정의서</title>
     <style type="text/css">
         .entity{
             border: solid 1px #7E2828;
@@ -14,83 +14,146 @@
         }
         .column-header{
             background-color: #E8E8E8;
+            text-align: center;
+            font-weight: bold;
+            
         }
         td{
             padding-left: 5px;
             padding-right: 5px;
         }
+        th{
+        	text-align: center;
+        }
     </style>
 </head>
 <body>
-<h2>order9db의 템플릿</h2>
+<h1> &lt;order9db 테이블 정의서&gt; </h1>
 <table class="entity" cellpadding="0" cellspacing="0">
     <tr>
-        <td colspan="6" class="header">oauth_access_token (oauth_access_token)</td>
+    	<th class="header" colspan="2">엔티티 타입명</th>
+        <td colspan="3">oauth_access_token</td>
+        <th class="header">작성일</th>
+        <td colspan="2">2020-11-19</td>
     </tr>
+    <tr>
+    	<th class="header" colspan="2">테이블명</th>
+        <td colspan="3">oauth_access_token</td>
+        <th class="header">작성자</th>
+        <td colspan="2">정아름</td>
+    </tr>
+    <tr>
+    	<th class="header" colspan="2">테이블 설명</th>
+    	<td></td>
+    </tr>    
     <tr class="column-header">
+    	<td>번호</td>
         <td>논리명</td>
         <td>물리명</td>
-        <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
-        <td>설명</td>
+        <td>자료형</td>
+        <td>KEY</td>
+        <td>NULL</td>
+        <td>자동여부</td>
+        <td>기본값</td>
     </tr>
     <tr>
+    	<td>1</td>
         <td>token_id</td>
         <td>token_id</td>
-        <td>N/A</td>
         <td>VARCHAR(255)</td>
-        <td>N</td>
-        <td>&nbsp;</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
     </tr>
     <tr>
+       	<td>2</td>
         <td>token</td>
         <td>token</td>
-        <td>N/A</td>
         <td>BLOB</td>
         <td>N</td>
         <td>&nbsp;</td>
     </tr>
     <tr>
+    	<td>3</td>    
         <td>authentication_id</td>
         <td>authentication_id</td>
-        <td>N/A</td>
         <td>VARCHAR(255)</td>
         <td>N</td>
         <td>&nbsp;</td>
     </tr>
     <tr>
+    	<td>4</td>    
         <td>user_name</td>
         <td>user_name</td>
-        <td>N/A</td>
         <td>VARCHAR(255)</td>
         <td>N</td>
         <td>&nbsp;</td>
     </tr>
     <tr>
+    	<td>5</td>    
         <td>client_id</td>
         <td>client_id</td>
-        <td>N/A</td>
         <td>VARCHAR(255)</td>
         <td>N</td>
         <td>&nbsp;</td>
     </tr>
     <tr>
+    	<td>6</td>    
         <td>authentication</td>
         <td>authentication</td>
-        <td>N/A</td>
         <td>BLOB</td>
         <td>N</td>
         <td>&nbsp;</td>
     </tr>
     <tr>
+    	<td>7</td>    
         <td>refresh_token</td>
         <td>refresh_token</td>
-        <td>N/A</td>
         <td>VARCHAR(255)</td>
         <td>N</td>
         <td>&nbsp;</td>
     </tr>
+    <tr class="column-header">
+    	<td>번호</td>
+ 	    <td colspan="4">비고</td>
+        <td colspan="3">sample data</td>
+    </tr>
+    <tr>
+    	<td>1</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td>2</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td>3</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td>4</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td>5</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td>6</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td>7</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>                        
 </table>
 <table class="entity" cellpadding="0" cellspacing="0">
     <tr>
@@ -100,8 +163,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -201,8 +264,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -254,8 +317,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -283,8 +346,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -320,8 +383,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -453,8 +516,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -522,8 +585,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -647,8 +710,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -804,8 +867,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -969,8 +1032,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -1086,8 +1149,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -1131,8 +1194,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -1264,8 +1327,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -1381,8 +1444,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -1530,8 +1593,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -1639,8 +1702,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -1988,8 +2051,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -2209,8 +2272,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -2318,8 +2381,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -2419,8 +2482,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -2616,8 +2679,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -2901,8 +2964,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -3162,8 +3225,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -3329,8 +3392,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -3446,8 +3509,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -3563,8 +3626,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -3720,8 +3783,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -3877,8 +3940,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -3962,8 +4025,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -4215,8 +4278,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -4544,8 +4607,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -4629,8 +4692,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -4730,8 +4793,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -4855,8 +4918,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -4966,8 +5029,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -5035,8 +5098,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -5112,8 +5175,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -5229,8 +5292,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -5298,8 +5361,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -5407,8 +5470,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -5540,8 +5603,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -5625,8 +5688,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -5694,8 +5757,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -5755,8 +5818,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -5808,8 +5871,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -6295,8 +6358,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -6404,8 +6467,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -6705,8 +6768,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -6806,8 +6869,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -6915,8 +6978,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -7056,8 +7119,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -7133,8 +7196,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -7234,8 +7297,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -7319,8 +7382,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -7444,8 +7507,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -7529,8 +7592,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -7606,8 +7669,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -7707,8 +7770,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -7784,8 +7847,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -8215,8 +8278,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -8316,8 +8379,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -8473,8 +8536,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -8750,8 +8813,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -8851,8 +8914,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -8992,8 +9055,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -9069,8 +9132,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -9170,8 +9233,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -9255,8 +9318,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -9516,8 +9579,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -9577,8 +9640,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -9704,8 +9767,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -9797,8 +9860,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -9882,8 +9945,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -9992,8 +10055,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -10085,8 +10148,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -10442,8 +10505,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -10495,8 +10558,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -10572,8 +10635,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -10651,8 +10714,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -10752,8 +10815,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -10845,8 +10908,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -10946,8 +11009,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -11213,8 +11276,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -11290,8 +11353,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -11543,8 +11606,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -11644,8 +11707,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -11729,8 +11792,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -11912,8 +11975,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -12029,8 +12092,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -12106,8 +12169,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -12271,8 +12334,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -12376,8 +12439,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -12545,8 +12608,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -12614,8 +12677,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -12723,8 +12786,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -13120,8 +13183,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -13149,8 +13212,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -13306,8 +13369,8 @@
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -13467,8 +13530,8 @@ P - Premium&nbsp;</td>
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -13528,8 +13591,8 @@ P - Premium&nbsp;</td>
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -13655,8 +13718,8 @@ P - Premium&nbsp;</td>
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -13756,8 +13819,8 @@ P - Premium&nbsp;</td>
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -13881,8 +13944,8 @@ P - Premium&nbsp;</td>
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -14046,8 +14109,8 @@ P - Premium&nbsp;</td>
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -14123,8 +14186,8 @@ P - Premium&nbsp;</td>
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -14184,8 +14247,8 @@ P - Premium&nbsp;</td>
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -14253,8 +14316,8 @@ P - Premium&nbsp;</td>
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -14330,8 +14393,8 @@ P - Premium&nbsp;</td>
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -14407,8 +14470,8 @@ P - Premium&nbsp;</td>
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -14580,8 +14643,8 @@ P - Premium&nbsp;</td>
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -14665,8 +14728,8 @@ P - Premium&nbsp;</td>
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -14758,8 +14821,8 @@ P - Premium&nbsp;</td>
         <td>논리명</td>
         <td>물리명</td>
         <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
+        <td>자료형</td>
+        <td>NULL</td>
         <td>설명</td>
     </tr>
     <tr>
@@ -14888,52 +14951,6 @@ P - Premium&nbsp;</td>
         <td>N/A</td>
         <td>VARCHAR(2)</td>
         <td>Y</td>
-        <td>&nbsp;</td>
-    </tr>
-</table>
-<h2>sys의 템플릿</h2>
-<table class="entity" cellpadding="0" cellspacing="0">
-    <tr>
-        <td colspan="6" class="header">sys_config (sys_config)</td>
-    </tr>
-    <tr class="column-header">
-        <td>논리명</td>
-        <td>물리명</td>
-        <td>도메인</td>
-        <td>데이터 타입</td>
-        <td>Not Null</td>
-        <td>설명</td>
-    </tr>
-    <tr>
-        <td>variable(PK)</td>
-        <td>variable</td>
-        <td>N/A</td>
-        <td>VARCHAR(128)</td>
-        <td>Y</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>value</td>
-        <td>value</td>
-        <td>N/A</td>
-        <td>VARCHAR(128)</td>
-        <td>N</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>set_time</td>
-        <td>set_time</td>
-        <td>N/A</td>
-        <td>TIMESTAMP</td>
-        <td>Y</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>set_by</td>
-        <td>set_by</td>
-        <td>N/A</td>
-        <td>VARCHAR(128)</td>
-        <td>N</td>
         <td>&nbsp;</td>
     </tr>
 </table>

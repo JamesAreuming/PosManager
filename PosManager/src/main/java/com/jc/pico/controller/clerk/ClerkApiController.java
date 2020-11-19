@@ -874,7 +874,7 @@ public class ClerkApiController {
 		
 		logger.debug("getAdvertise  : " + reqParam); //StoreParam [header={os=android, posNo=003, lang=ko}, data={}]
 
-		param.put("host", String.format("%s://%s", request.getScheme(), request.getServerName())); //http://192.168.0.166
+		param.put("host", String.format("%s://%s", request.getScheme(), request.getServerName())); //http://192.168.0.166 -- 내 ip주소
 		param.put("storeId", ClerkUtil.getStaffStoreId(authentication));
 		
 		ClerkResult result = new ClerkResult();
@@ -882,6 +882,7 @@ public class ClerkApiController {
 		result.setSuccess();
 		
 		logger.debug("getAdvertise  : " + reqParam); //StoreParam [header={os=android, posNo=003, lang=ko}, data={host=http://192.168.0.166, storeId=89}]
+
 		
 		return result;
 	}
