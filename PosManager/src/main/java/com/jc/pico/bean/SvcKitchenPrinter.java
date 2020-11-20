@@ -11,6 +11,7 @@ public class SvcKitchenPrinter {
 	private Long storeId;
 	private String printerNo;
 	private String orderNo;
+	private String posNo;
 	private int ordinal;
 	private String receiptNo;
 	private String itemNm;
@@ -120,12 +121,33 @@ public class SvcKitchenPrinter {
 	public void setPrintIp(String printIp) {
 		this.printIp = printIp;
 	}
+	
+	
+	public String getPosNo() {
+		return posNo;
+	}
+	public void setPosNo(String posNo) {
+		this.posNo = posNo;
+	}
+	
+	
 	@Override
 	public String toString() {
-		return "SvcKitchenPrinter [brandId=" + brandId + ", storeId=" + storeId + ", printerNo=" + printerNo + ", orderNo="
-				+ orderNo + ", ordinal=" + ordinal + ", receiptNo=" + receiptNo + ", itemNm=" + itemNm + ", count="
-				+ count + ", isPrint=" + isPrint + ", isOption=" + isOption + ", orderTmLocal=" + orderTmLocal
-				+ ", printPort=" + printPort + ", printIp=" + printIp + ", created=" + created + ", updated=" + updated
-				+ ", items=" + items + "]";
+		return "SvcKitchenPrinter [brandId=" + brandId + ", storeId=" + storeId + ", printerNo=" + printerNo
+				+ ", orderNo=" + orderNo + ", posNo=" + posNo + ", ordinal=" + ordinal + ", receiptNo=" + receiptNo
+				+ ", itemNm=" + itemNm + ", count=" + count + ", isPrint=" + isPrint + ", isOption=" + isOption
+				+ ", orderTmLocal=" + orderTmLocal + ", printPort=" + printPort + ", printIp=" + printIp + ", created="
+				+ created + ", updated=" + updated + ", items=" + items + "]";
 	}
+	
+	
+	
+//	@Override
+//	public String toString() {
+//		return "SvcKitchenPrinter [brandId=" + brandId + ", storeId=" + storeId + ", printerNo=" + printerNo + ", orderNo="
+//				+ orderNo + ", ordinal=" + ordinal + ", receiptNo=" + receiptNo + ", itemNm=" + itemNm + ", count="
+//				+ count + ", isPrint=" + isPrint + ", isOption=" + isOption + ", orderTmLocal=" + orderTmLocal
+//				+ ", printPort=" + printPort + ", printIp=" + printIp + ", created=" + created + ", updated=" + updated
+//				+ ", items=" + items + "]";
+//	}
 }
