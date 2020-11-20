@@ -416,12 +416,14 @@ public class ClerkApiController {
 		SingleMap param = reqParam.getData();
 		param.put("userName", ClerkUtil.getAgentUserName(authentication));
 		
-		// logger.debug("param : " + param); // ▶  {deviceType=876004, licenseKey=11CE-4865-9C83-8802, isMain=true, installType=1, hwInfo=G7FXOJYDBD, userName=installman} 
+		logger.debug(authentication.toString());
+		
+		logger.debug("param : " + param); // ▶  {deviceType=876004, licenseKey=11CE-4865-9C83-8802, isMain=true, installType=1, hwInfo=G7FXOJYDBD, userName=installman} 
 
 		ClerkResult result = new ClerkResult();
 		result.setData(clerkCommonService.registerDeviceLicenseKiosk(param));
 		result.setSuccess();
-
+		
 		return result;
 	}
 
