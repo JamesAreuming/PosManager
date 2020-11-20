@@ -264,7 +264,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 		List<SvcOrderItemExtended> svcOrderItemExtendeds = newOrder.getSvcOrderItems();
 		
 		if (svcOrderItemExtendeds != null) {
-			logger.debug("SvcOrderExtended::saveOrder.5 > oldOrder(size) : " + svcOrderItemExtendeds.size());
+			logger.debug("SvcOrderExtended::saveOrder.5 > oldOrder(size) : " + svcOrderItemExtendeds.size()); // 1
 			
 			int ordinal = 0;
 			String defaultPrinterNo = "";
@@ -272,7 +272,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 			List<SvcKitchenPrinter> svcKitchenPrintList = new ArrayList<SvcKitchenPrinter>();
 			List<SvcItem> itemList = new ArrayList<SvcItem>();
 			
-			logger.debug("IsUsePrinter::::::::::::::: " + newOrder.getIsUsePrinter());
+			logger.debug("IsUsePrinter::::::::::::::: " + newOrder.getIsUsePrinter()); //true
 			if(newOrder.getIsUsePrinter()) {
 				defaultPrinterNo = generateDefaultPrinterNo(defaultPrinterNo, newOrder, itemList);
 			}

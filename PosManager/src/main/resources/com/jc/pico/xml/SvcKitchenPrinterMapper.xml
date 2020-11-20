@@ -82,8 +82,6 @@
     	ORDER_NO = #{orderNo,jdbcType=VARCHAR}
     AND 
     	PRINTER_NO = #{printerNo,jdbcType=VARCHAR}
-    AND
-    	POS_NO = #{posNo,jdbcType=VARCHAR}
   </update>
   
   <delete id="deleteKitchenPrinterAtOrderCancel" parameterType="hashmap">
