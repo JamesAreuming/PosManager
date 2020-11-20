@@ -1425,6 +1425,9 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 	@Override
 	public void setOrderKitchenPrinter(SvcKitchenPrinter svcKitchenPrinter) {
 		svcKitchenPrinter.setIsPrint(true);
+		
+		logger.debug("svcKitchenPrinter 확인 >>" + svcKitchenPrinter.getIsPrint());
+		
 		svcKitchenPrinterMapper.update(svcKitchenPrinter);
 		
 	}

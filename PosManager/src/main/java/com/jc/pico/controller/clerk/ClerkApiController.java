@@ -942,7 +942,7 @@ public class ClerkApiController {
 	 */
 	@RequestMapping(value = "/order/kitchenprinter", method = RequestMethod.POST )
 	public ClerkResult orderKitchenPrinter(HttpServletRequest request, @RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException{
-		logger.debug("tempOrder : " + reqParam);
+		logger.debug("tempOrder : " + reqParam); //StoreParam [header={os=android, posNo=103, lang=ko}, data={}] 
 		
 		ClerkResult result = new ClerkResult();
 		result.setData(clerkOrderService.getOrderKitchenPrinter());
@@ -962,7 +962,7 @@ public class ClerkApiController {
 	 */
 	@RequestMapping(value = "/update/kitchenprinter", method = RequestMethod.POST )
 	public ClerkResult orderKitchenPrinterUpdate(HttpServletRequest request, @RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException{
-		logger.debug("tempOrder : " + reqParam);
+		logger.debug("tempOrder : " + reqParam); //StoreParam [header={os=android, posNo=103, lang=ko}, data={orderNo=44891605854073931, printerNo=101, receiptNo=20201120-0004}] 
 		
 		ClerkResult result = new ClerkResult();
 		result.setData(clerkOrderService.setOrderKitchenPrinter(reqParam.getData()));
