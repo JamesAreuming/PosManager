@@ -68,7 +68,7 @@ public class ClerkApiController {
 	 */
 	@RequestMapping(value = "/appinfo", method = RequestMethod.POST)
 	public ClerkResult getAppInfo(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
-		logger.debug("getAppInfo : " + reqParam);
+		logger.debug("getAppInfo : " + reqParam); //StoreParam [header={os=android, posNo=102, lang=ko}, data={withTableLock=release, appType=108004, storeId=89, versionCode=28}]
 
 		SingleMap param = reqParam.getData();
 		param.putAll(reqParam.getHeader());
@@ -341,7 +341,7 @@ public class ClerkApiController {
 	public ClerkResult getStaffDetail(HttpServletRequest reqeust, @RequestBody StoreParam reqParam, OAuth2Authentication authentication)
 			throws DataNotFoundException, NoPermissionException {
 
-		logger.debug("getUserDetail : " + reqParam);
+		logger.debug("getUserDetail : " + reqParam); //[header={os=android, posNo=103, lang=ko}, data={}
 
 		if (!reqeust.isUserInRole(ROLE_STORE_STAFF)) {
 			throw new NoPermissionException();

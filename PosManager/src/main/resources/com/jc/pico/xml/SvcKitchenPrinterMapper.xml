@@ -6,7 +6,7 @@
     <result column="STORE_ID" jdbcType="BIGINT" property="storeId" />
     <result column="PRINTER_NO" jdbcType="VARCHAR" property="printerNo" />
     <result column="ORDER_NO" jdbcType="VARCHAR" property="orderNo" />
-    <result column="POS_NO" jdbcType="VARCHAR" property="posNo" />
+    <!-- <result column="POS_NO" jdbcType="VARCHAR" property="posNo" /> --> <!-- posNO추가 -->
     <result column="RECEIPT_NO" jdbcType="VARCHAR" property="receiptNo" />
     <result column="IS_PRINT" jdbcType="TINYINT" property="isPrint" />
     <result column="PRINT_PORT" jdbcType="VARCHAR" property="printPort" />
@@ -30,7 +30,8 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     INSERT INTO TB_SVC_KITCHEN_PRINTER (
-    	BRAND_ID, STORE_ID, PRINTER_NO, POS_NO 
+    	BRAND_ID, STORE_ID, PRINTER_NO, 
+    	<!-- POS_NO, -->
     	ORDER_NO,  ORDINAL, RECEIPT_NO, 
     	ITEM_NM, COUNT, IS_PRINT, IS_OPTION, 
     	ORDER_TM_LOCAL, CREATED, UPDATED
@@ -38,7 +39,7 @@
     VALUES 
    		<foreach collection="list" item="item" separator=" , " >
 	    	(
-	    		#{item.brandId,jdbcType=BIGINT},#{item.storeId,jdbcType=BIGINT},#{item.printerNo,jdbcType=VARCHAR},#{item.posNo,jdbcType=VARCHAR}
+	    		#{item.brandId,jdbcType=BIGINT},#{item.storeId,jdbcType=BIGINT},#{item.printerNo,jdbcType=VARCHAR},<!-- #{item.posNo,jdbcType=VARCHAR}, -->
 	    		#{item.orderNo,jdbcType=VARCHAR},#{item.ordinal,jdbcType=SMALLINT},#{item.receiptNo,jdbcType=VARCHAR},
 	    		#{item.itemNm,jdbcType=VARCHAR},#{item.count,jdbcType=SMALLINT},#{item.isPrint,jdbcType=TINYINT},
 	    		#{item.isOption,jdbcType=TINYINT},#{item.orderTmLocal,jdbcType=TIMESTAMP},
@@ -50,7 +51,8 @@
   <!-- posNO추가 -->  
   <select id="selectList" parameterType="com.jc.pico.bean.SvcKitchenPrinter" resultMap="BaseResultMap">
     SELECT
-		a.BRAND_ID, a.STORE_ID, a.PRINTER_NO, a.ORDER_NO, a.POS_NO, 
+		a.BRAND_ID, a.STORE_ID, a.PRINTER_NO, a.ORDER_NO, 
+		<!-- a.POS_NO, --> 
 		a.ORDINAL, a.RECEIPT_NO, a.ITEM_NM, a.COUNT, 
 		a.IS_PRINT, a.IS_OPTION, a.ORDER_TM_LOCAL, 
 		b.IP as PRINT_IP, b.IP_PORT as PRINT_PORT
