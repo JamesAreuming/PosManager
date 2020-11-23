@@ -33,7 +33,7 @@ import com.jc.pico.utils.customMapper.pos.PosStorePrinterMapper;
  * 
  *
  */
-@RestController
+@RestController //@RestController : Controller가 REST 방식을 처리하기 위한 것임을 명시
 @RequestMapping(value = "/clerk/api")
 public class ClerkApiController {
 
@@ -66,18 +66,19 @@ public class ClerkApiController {
 	 * @throws RequestResolveException
 	 * 
 	 */
-	@RequestMapping(value = "/appinfo", method = RequestMethod.POST)
+	@RequestMapping(value = "/appinfo", method = RequestMethod.POST) //@RequestBody : JSON 데이터를 원하는 타입으로 바인딩 처리
 	public ClerkResult getAppInfo(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
-		logger.debug("getAppInfo : " + reqParam); //StoreParam [header={os=android, posNo=102, lang=ko}, data={withTableLock=release, appType=108004, storeId=89, versionCode=28}]
+		logger.debug("getAppInfo : " + reqParam);
 
 		SingleMap param = reqParam.getData();
 		param.putAll(reqParam.getHeader());
 
 		ClerkResult result = new ClerkResult();
 		result.setData(clerkCommonService.getAppInfo(param));
-		result.setSuccess();
+		result.setSuccess(); //ECL0000 -- 성공
 		return result;
 	}
+		
 
 	/**
 	 * 스토어의 테이블 섹션 목록 및 섹션의 테이블 목록, 테이블의 간단한 주문 정보 조회
@@ -199,8 +200,7 @@ public class ClerkApiController {
 	//public ClerkResult getOrderDetailKiosk(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
 	@RequestMapping(value = "/order/detailKiosk", method = RequestMethod.POST)
 	public ClerkResult getOrderDetailKiosk(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
-		logger.debug("detailKiosk > getOrder : " + reqParam);
-		//StoreParam [header={os=android, posNo=003, lang=ko}, data={endDate=2020-11-10 23:59:59, brandId=44, tableId=1, storeId=89, startDate=2020-11-10 00:00:00}] 
+		logger.debug("detailKiosk > getOrder : " + reqParam); 
 
 		SingleMap param = reqParam.getData();
 
@@ -289,8 +289,6 @@ public class ClerkApiController {
 	public ClerkResult getPluCategories(@RequestBody StoreParam reqParam, Authentication authentication)
 			throws DataNotFoundException, DataNotRegisteredException {
 		logger.debug("getPluCategories : " + reqParam);
-		
-		logger.debug("getPluCategories 확인>>>>>>>>>>>>>>>>>>>: " + reqParam); //StoreParam [header={os=android, posNo=003, lang=ko}, data={brandId=44, storeId=89}]
 		
 		SingleMap param = reqParam.getData();
 
@@ -883,7 +881,7 @@ public class ClerkApiController {
 		result.setData(clerkCommonService.getAdvertiseInfo(request.getServletContext(), param)); //{host=http://192.168.0.166, storeId=89}
 		result.setSuccess();
 		
-		logger.debug("getAdvertise  : " + reqParam); //StoreParam [header={os=android, posNo=003, lang=ko}, data={host=http://192.168.0.166, storeId=89}]
+		logger.debug("getAdvertise  : " + result); //StoreParam [header={os=android, posNo=003, lang=ko}, data={host=http://192.168.0.166, storeId=89}]
 
 		
 		return result;
