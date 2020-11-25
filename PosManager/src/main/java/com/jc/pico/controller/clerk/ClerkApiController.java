@@ -71,7 +71,9 @@ public class ClerkApiController {
 		logger.debug("getAppInfo : " + reqParam);
 
 		SingleMap param = reqParam.getData();
-		param.putAll(reqParam.getHeader());
+		param.putAll(reqParam.getHeader()); // putAll()메소드를 이용해서 복사
+		
+		System.out.println("확인>>>>>>>>>>>"+param); //withTableLock=release, os=android, appType=108004, posNo=105, storeId=89, lang=ko, versionCode=28
 
 		ClerkResult result = new ClerkResult();
 		result.setData(clerkCommonService.getAppInfo(param));

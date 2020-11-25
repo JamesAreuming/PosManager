@@ -281,9 +281,9 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		}
 
 		SingleMap result = new SingleMap();
-		result.put("appUpdateInfo", getAppUpdateInfo(appType, osType, versionCode));
 		result.put("openDt", closing != null ? closing.getOpenDt() : null);
 		result.put("isClosing", closing != null ? closing.getIsClosing(): false);
+		result.put("appUpdateInfo", getAppUpdateInfo(appType, osType, versionCode));
 		
 
 		return result;
@@ -315,10 +315,11 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		int latestVersionCode = appInfo.getVersionCode();
 
 		SingleMap updateInfo = new SingleMap();
-		updateInfo.put("versionName", appInfo.getVersion());
-		updateInfo.put("versionCode", latestVersionCode);
 		updateInfo.put("isUpdatable", latestVersionCode > versionCode);
 		updateInfo.put("isStrict", getHasStrictUpdate(appType, osType, versionCode, latestVersionCode)); // 강제 유무, true이면 반드시 업데이트 해야 함.
+		updateInfo.put("versionName", appInfo.getVersion());
+		updateInfo.put("versionCode", latestVersionCode);
+
 
 		return updateInfo;
 	}
@@ -1010,6 +1011,8 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		example.setOrderByClause("OPEN_DT DESC"); // 최근 순서
 
 		List<SvcClosing> result = svcClosingMapper.selectByExampleWithRowbounds(example, ROW_BOUNDS_JUST_FIRST);
+		
+		System.out.println("확인>>>>>"+result.toString());
 		return result.size() > 0 ? result.get(0) : null;
 	}
 
