@@ -20,8 +20,11 @@ public class ClerkResult {
 	public void setData(Object data) {
 		this.data = data;
 	}
+	
+	
+	/* setError & setSuccess*/
 
-	public void setError(ErrorCode errorCode, String errMsg) {
+	public void setError(ErrorCode errorCode, String errMsg) { // -- enum : ErrorCode
 		if (header == null) {
 			header = new Header();
 		}
@@ -40,7 +43,11 @@ public class ClerkResult {
 	public void setSuccess() {
 		setError(ErrorCode.SUCCESS, null);
 	}
-
+	
+	
+	
+    /* Header */
+	
 	public static class Header {
 
 		private String errCd;
@@ -63,6 +70,8 @@ public class ClerkResult {
 		}
 	}
 
+	/* enum ErrorCode */
+	
 	public static enum ErrorCode {
 
 		SUCCESS("ECL0000") // 성공

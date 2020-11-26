@@ -25,7 +25,7 @@ public class SingleMap extends HashMap<String, Object> {
 		super(map);
 	}
 
-	@Nullable
+	@Nullable // 메소드에서 null값을 허용하는지를 보다 명확하게 보여주기 위한 표시
 	public Integer getInt(String key, Integer defaultValue) {
 		Object value = get(key);
 		if (isEmpty(value)) {

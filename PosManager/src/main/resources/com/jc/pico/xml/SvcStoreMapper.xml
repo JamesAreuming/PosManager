@@ -43,6 +43,7 @@
     <result column="HAS_NVR" jdbcType="BIT" property="hasNvr" />
     <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
     <result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />
+    <result column="VAN_TYPE" jdbcType="CHAR" property="vanType" />    
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -121,7 +122,7 @@
     ID, SERVICE_ID, TENANT_ID, BRAND_ID, STORE_CD, SVC_ST, STORE_ST, STORE_TP, BIZ_NO, 
     OWNER_NM, STORE_NM, BIZ_CAT, EMAIL, FAX_COUNTRY_CD, FAX, MB_COUNTRY_CD, MB, TEL_COUNTRY_CD, 
     TEL, COUNTRY, REGION, CITY, ADDR1, ADDR2, ZIP, LATITUDE, LONGITUDE, TIMEZONE, DEPOSIT, 
-    BUSINESS_HOUR, TIP, INTRO, ADMIN_ID, HAS_NVR, CREATED, UPDATED
+    BUSINESS_HOUR, TIP, INTRO, ADMIN_ID, HAS_NVR, CREATED, UPDATED, VAN_TYPE
   </sql>
   <select id="selectByExample" parameterType="com.jc.pico.bean.SvcStoreExample" resultMap="BaseResultMap">
     <!--

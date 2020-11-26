@@ -778,7 +778,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		
 		//TODO STORE_ID 해당 포스들중 하나만 메인으로 설정
 		
-		if(isMain) {
+		if(isMain) { //false
 			svcDeviceLicenseMapper.updateIsMainFalse(record);			
 		}
 
@@ -790,6 +790,9 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		result.put("license", license);
 		result.put("store",    store);
 		result.put("brand",   svcBrandMapper.selectByPrimaryKey(store.getBrandId()));
+		
+		System.out.println("확인 >>>>>"+store.toString());
+		System.out.println("확인 >>>>>"+svcBrandMapper.selectByPrimaryKey(store.getBrandId()));
 		
 		return result;
 	} // ---------------------------- registerDeviceLicenseKiosk
@@ -856,6 +859,8 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		example.createCriteria() 
 				.andIdEqualTo(id);
 		List<SvcStore> storeList = svcStoreMapper.selectByExample(example);
+		
+		
 		return storeList.size() > 0 ? storeList.get(0) : null;
 	}
 

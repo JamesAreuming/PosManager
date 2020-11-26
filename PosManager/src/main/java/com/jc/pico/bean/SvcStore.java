@@ -301,6 +301,9 @@ public class SvcStore {
      *
      * @mbggenerated Thu Aug 04 11:39:46 KST 2016
      */
+    
+    private String vanType;
+    
     public Long getId() {
         return id;
     }
@@ -1156,4 +1159,14 @@ public class SvcStore {
     public void setUpdated(Date updated) {
         this.updated = updated;
     }
+
+	public String getVanType() {
+		return vanType;
+	}
+
+	public void setVanType(String vanType) {
+		this.vanType = vanType;
+	}
+    
+    
 }

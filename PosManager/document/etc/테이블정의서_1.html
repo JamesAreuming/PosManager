@@ -46,1078 +46,814 @@
 <body>
 
 
+
+
 <table class="entity" cellpadding="0" cellspacing="0">
     <tr>
-        <td colspan="6" class="header">tb_svc_coupon (tb_svc_coupon)</td>
-    </tr>
-    <tr class="column-header">
-        <td>논리명</td>
-        <td>물리명</td>
-         
-        <td>자료형</td>
-        <td>NULL</td>
-        <td>설명</td>
+    	<th class="header" colspan="2">엔티티 타입명</th>
+        <td colspan="3" class="header-name">tb_svc_device_license</td>
+        <th class="header">작성일</th>
+        <td colspan="2" class="header-name">2020-11-19</td>
     </tr>
     <tr>
-        <td>ID(PK)</td>
+    	<th class="header" colspan="2">테이블명</th>
+        <td colspan="3" class="header-name"></td>
+        <th class="header">작성자</th>
+        <td colspan="2" class="header-name">정아름</td>
+    </tr>
+    <tr>
+    	<th class="header" colspan="2">테이블 설명</th>
+    	<td colspan="6"></td>
+    </tr>    
+    <tr class="column-header">
+        <td>번호</td>
+        <td>논리명</td>
+        <td>물리명</td>
+        <td>자료형</td>
+        <td>KEY</td>
+        <td>NULL</td>
+        <td>자동여부</td>
+        <td>기본값</td>
+    </tr>
+    <tr>
+       <td class="center">1</td>
+        <td>미정</td>
         <td>ID</td>
-          
-        <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>BRAND_ID(FK)</td>
-        <td>BRAND_ID</td>
-          
-        <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>브랜드 설정의 경우 0</td>
-        <td>STORE_ID</td>
-          
-        <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>브랜드 설정의 경우 0&nbsp;</td>
-    </tr>
-    <tr>
-        <td>스템프 적립시 발행되는 기본 쿠폰일 경우 1</td>
-        <td>IS_DEFAULT</td>
-          
-        <td>TINYINT(1)</td>
-        <td>Not Null</td>
-        <td>스템프 적립시 발행되는 기본 쿠폰일 경우 1&nbsp;</td>
-    </tr>
-    <tr>
-        <td>사용 여부</td>
-        <td>USED</td>
-          
-        <td>TINYINT(1)</td>
-        <td>Not Null</td>
-        <td>사용 여부&nbsp;</td>
-    </tr>
-    <tr>
-        <td>쿠폰 이름</td>
-        <td>COUPON_NM</td>
-          
-        <td>VARCHAR(50)</td>
-        <td>Not Null</td>
-        <td>쿠폰 이름&nbsp;</td>
-    </tr>
-    <tr>
-        <td>수량 제한 사용여부</td>
-        <td>HAS_COUNT_LIMIT</td>
-          
-        <td>TINYINT(1)</td>
-        <td>Not Null</td>
-        <td>수량 제한 사용여부&nbsp;</td>
-    </tr>
-    <tr>
-        <td>할인 타입</td>
-        <td>DISCOUNT_TP</td>
-          
-        <td>CHAR(6)</td>
-        <td>Not Null</td>
-        <td>할인 타입&nbsp;</td>
-    </tr>
-    <tr>
-        <td>유효기간 타입</td>
-        <td>EXPIRE_TP</td>
-          
-        <td>CHAR(6)</td>
-        <td>Not Null</td>
-        <td>유효기간 타입&nbsp;</td>
-    </tr>
-    <tr>
-        <td>발급 제한 수량</td>
-        <td>MAX_CNT</td>
-          
-        <td>INT(11)</td>
-        <td>Not Null</td>
-        <td>발급 제한 수량&nbsp;</td>
-    </tr>
-    <tr>
-        <td>현재 발급된 수량</td>
-        <td>ISSUE_CNT</td>
-          
-        <td>INT(11)</td>
-        <td>Not Null</td>
-        <td>현재 발급된 수량&nbsp;</td>
-    </tr>
-    <tr>
-        <td>발행일로 부터 유효기간(yy/mm/dd)</td>
-        <td>TERM</td>
-          
-        <td>CHAR(8)</td>
-        <td>Not Null</td>
-        <td>발행일로 부터 유효기간(yy/mm/dd)&nbsp;</td>
-    </tr>
-    <tr>
-        <td>시작일</td>
-        <td>BEGIN</td>
-          
-        <td>DATETIME</td>
-        <td></td>
-        <td>시작일&nbsp;</td>
-    </tr>
-    <tr>
-        <td>만료일</td>
-        <td>EXPIRE</td>
-          
-        <td>DATETIME</td>
-        <td></td>
-        <td>만료일&nbsp;</td>
-    </tr>
-    <tr>
-        <td>할인률 또는 금액</td>
-        <td>DISCOUNT</td>
-          
-        <td>DOUBLE</td>
-        <td>Not Null</td>
-        <td>할인률 또는 금액&nbsp;</td>
-    </tr>
-    <tr>
-        <td>최대할인 금액</td>
-        <td>DISCOUNT_LIMIT</td>
-          
-        <td>DOUBLE UNSIGNED</td>
-        <td>Not Null</td>
-        <td>최대할인 금액&nbsp;</td>
-    </tr>
-    <tr>
-        <td>메뉴 지정 쿠폰일 경우(대상 메뉴)</td>
-        <td>TARGET_MENU_ID</td>
-          
-        <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>메뉴 지정 쿠폰일 경우(대상 메뉴)&nbsp;</td>
-    </tr>
-    <tr>
-        <td>메뉴 지정 쿠폰일 경우(제공메뉴)</td>
-        <td>SUPPLY_MENU_ID</td>
-          
-        <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>메뉴 지정 쿠폰일 경우(제공메뉴)&nbsp;</td>
-    </tr>
-    <tr>
-        <td>사용 제한 여부</td>
-        <td>HAS_USE_LIMIT</td>
-          
-        <td>TINYINT(1)</td>
-        <td>Not Null</td>
-        <td>사용 제한 여부&nbsp;</td>
-    </tr>
-    <tr>
-        <td>사용가능 요일(1~7, 일월화수목금토)</td>
-        <td>ENABLE_DAYS</td>
-          
-        <td>CHAR(7)</td>
-        <td>Not Null</td>
-        <td>사용가능 요일(1~7, 일월화수목금토)&nbsp;</td>
-    </tr>
-    <tr>
-        <td>사용가능 시간(시작)</td>
-        <td>OPEN_TM</td>
-          
-        <td>CHAR(4)</td>
-        <td>Not Null</td>
-        <td>사용가능 시간(시작)&nbsp;</td>
-    </tr>
-    <tr>
-        <td>사용가능 시간(끝)</td>
-        <td>CLOSE_TM</td>
-          
-        <td>CHAR(4)</td>
-        <td>Not Null</td>
-        <td>사용가능 시간(끝)&nbsp;</td>
-    </tr>
-    <tr>
-        <td>이미지 URL</td>
-        <td>IMG</td>
-          
-        <td>VARCHAR(200)</td>
-        <td>Not Null</td>
-        <td>이미지 URL&nbsp;</td>
-    </tr>
-    <tr>
-        <td>작은 이미지 URL</td>
-        <td>SMALL_IMG</td>
-          
-        <td>VARCHAR(200)</td>
-        <td>Not Null</td>
-        <td>작은 이미지 URL&nbsp;</td>
-    </tr>
-    <tr>
-        <td>전체 매장 사용 여부</td>
-        <td>IS_ALL</td>
-          
-        <td>TINYINT(1)</td>
-        <td>Not Null</td>
-        <td>전체 매장 사용 여부&nbsp;</td>
-    </tr>
-    <tr>
-        <td>사용가능 STORE_ID(JSON array)</td>
-        <td>STORE_IDS</td>
-          
-        <td>TEXT</td>
-        <td></td>
-        <td>사용가능 STORE_ID(JSON array)&nbsp;</td>
-    </tr>
-    <tr>
-        <td>사용시 유의사항</td>
-        <td>NOTICE</td>
-          
-        <td>TEXT</td>
-        <td></td>
-        <td>사용시 유의사항&nbsp;</td>
-    </tr>
-    <tr>
-        <td>최종 수정자 ID(TB_USER.USERNAME)</td>
-        <td>ADMIN_ID</td>
-          
-        <td>VARCHAR(64)</td>
-        <td>Not Null</td>
-        <td>최종 수정자 ID(TB_USER.USERNAME)&nbsp;</td>
-    </tr>
-    <tr>
-        <td>CREATED</td>
-        <td>CREATED</td>
-          
-        <td>DATETIME</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>UPDATED</td>
-        <td>UPDATED</td>
-          
-        <td>DATETIME</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>COUPON_TP</td>
-        <td>COUPON_TP</td>
-          
-        <td>VARCHAR(6)</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-</table>
-<table class="entity" cellpadding="0" cellspacing="0">
-    <tr>
-        <td colspan="6" class="header">tb_svc_coupon_log (tb_svc_coupon_log)</td>
-    </tr>
-    <tr class="column-header">
-        <td>논리명</td>
-        <td>물리명</td>
-         
-        <td>자료형</td>
-        <td>NULL</td>
-        <td>설명</td>
-    </tr>
-    <tr>
-        <td>ID(PK)</td>
-        <td>ID</td>
-          
-        <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>USER_ID</td>
-        <td>USER_ID</td>
-          
-        <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>매장 ID</td>
-        <td>STORE_ID</td>
-          
-        <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>매장 ID&nbsp;</td>
-    </tr>
-    <tr>
-        <td>TB_SVC_USER_COUPON.ID</td>
-        <td>BRAND_ID</td>
-          
-        <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>TB_SVC_USER_COUPON.ID&nbsp;</td>
-    </tr>
-    <tr>
-        <td>TB_SVC_USER_COUPON.ID</td>
-        <td>COUPON_ID</td>
-          
-        <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>TB_SVC_USER_COUPON.ID&nbsp;</td>
-    </tr>
-    <tr>
-        <td>PROMOTION_ID</td>
-        <td>PROMOTION_ID</td>
-          
         <td>BIGINT(20)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
+        <td class="center">PK</td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>쿠폰 이름</td>
-        <td>COUPON_NM</td>
-          
-        <td>VARCHAR(50)</td>
-        <td>Not Null</td>
-        <td>쿠폰 이름&nbsp;</td>
-    </tr>
-    <tr>
-        <td>쿠폰 코드</td>
-        <td>COUPON_CD</td>
-          
-        <td>VARCHAR(50)</td>
-        <td>Not Null</td>
-        <td>쿠폰 코드&nbsp;</td>
-    </tr>
-    <tr>
-        <td>쿠폰이 사용된 주문ID</td>
-        <td>ORDER_ID</td>
-          
-        <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>쿠폰이 사용된 주문ID&nbsp;</td>
-    </tr>
-    <tr>
-        <td>발생 시간</td>
-        <td>WHEN</td>
-          
-        <td>DATETIME</td>
-        <td>Not Null</td>
-        <td>발생 시간&nbsp;</td>
-    </tr>
-    <tr>
-        <td>히스토리 타입(발행, 취소)</td>
-        <td>LOG_TP</td>
-          
-        <td>CHAR(6)</td>
-        <td>Not Null</td>
-        <td>히스토리 타입(발행, 취소)&nbsp;</td>
-    </tr>
-    <tr>
-        <td>소스 IP</td>
-        <td>SRC_IP</td>
-          
-        <td>VARCHAR(15)</td>
-        <td>Not Null</td>
-        <td>소스 IP&nbsp;</td>
-    </tr>
-    <tr>
-        <td>USER_AGENT</td>
-        <td>USER_AGENT</td>
-          
-        <td>VARCHAR(250)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>CLIENT_ID</td>
-        <td>CLIENT_ID</td>
-          
-        <td>VARCHAR(20)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>DEVICE_ID</td>
-        <td>DEVICE_ID</td>
-          
-        <td>VARCHAR(100)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>GRANT_TYPE</td>
-        <td>GRANT_TYPE</td>
-          
-        <td>VARCHAR(20)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>적립쿠폰인 경우 쿠폰을 발행한 스템프수
-</td>
-        <td>STAMP_CNT</td>
-          
-        <td>INT(8)</td>
-        <td></td>
-        <td>적립쿠폰인 경우 쿠폰을 발행한 스템프수
-&nbsp;</td>
-    </tr>
-    <tr>
-        <td>할인구분 (403)</td>
-        <td>DISCOUNT_TP</td>
-          
-        <td>VARCHAR(6)</td>
-        <td></td>
-        <td>할인구분 (403)&nbsp;</td>
-    </tr>
-    <tr>
-        <td>DISCOUNT</td>
-        <td>DISCOUNT</td>
-          
-        <td>DOUBLE</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-</table>
-<table class="entity" cellpadding="0" cellspacing="0">
-    <tr>
-        <td colspan="6" class="header">tb_svc_coupon_promotion (tb_svc_coupon_promotion)</td>
-    </tr>
-    <tr class="column-header">
-        <td>논리명</td>
-        <td>물리명</td>
-         
-        <td>자료형</td>
-        <td>NULL</td>
-        <td>설명</td>
-    </tr>
-    <tr>
-        <td>ID(PK)</td>
-        <td>ID</td>
-          
-        <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>PROMOTION_NM</td>
-        <td>PROMOTION_NM</td>
-          
-        <td>VARCHAR(200)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>BRAND_ID</td>
-        <td>BRAND_ID</td>
-          
-        <td>BIGINT(20)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>COUPON_ID</td>
-        <td>COUPON_ID</td>
-          
-        <td>BIGINT(20)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>USE_SELF</td>
-        <td>USE_SELF</td>
-          
-        <td>TINYINT(1)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>IS_JOINED</td>
-        <td>IS_JOINED</td>
-          
-        <td>TINYINT(1)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>START_DT</td>
-        <td>START_DT</td>
-          
-        <td>DATETIME</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>END_DT</td>
-        <td>END_DT</td>
-          
-        <td>DATETIME</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>ISSUED_TP</td>
-        <td>ISSUED_TP</td>
-          
-        <td>CHAR(6)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>ISSUED_DT</td>
-        <td>ISSUED_DT</td>
-          
-        <td>DATETIME</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>ISSUED_TM</td>
-        <td>ISSUED_TM</td>
-          
-        <td>CHAR(4)</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>CREATED</td>
-        <td>CREATED</td>
-          
-        <td>DATETIME</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>UPDATED</td>
-        <td>UPDATED</td>
-          
-        <td>DATETIME</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-</table>
-<table class="entity" cellpadding="0" cellspacing="0">
-    <tr>
-        <td colspan="6" class="header">배송지 입력 받아 처리하는 거래처 관리 (tb_svc_delivery)</td>
-    </tr>
-    <tr class="column-header">
-        <td>논리명</td>
-        <td>물리명</td>
-         
-        <td>자료형</td>
-        <td>NULL</td>
-        <td>설명</td>
-    </tr>
-    <tr>
-        <td>id(PK)</td>
-        <td>id</td>
-          
-        <td>BIGINT(20)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>brand_id</td>
-        <td>brand_id</td>
-          
-        <td>BIGINT(20)</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>store_id</td>
-        <td>store_id</td>
-          
-        <td>BIGINT(20)</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>order_no</td>
-        <td>order_no</td>
-          
-        <td>VARCHAR(200)</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>cus_name</td>
-        <td>cus_name</td>
-          
-        <td>VARCHAR(100)</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>cus_cellno</td>
-        <td>cus_cellno</td>
-          
-        <td>VARCHAR(45)</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>cus_telno</td>
-        <td>cus_telno</td>
-          
-        <td>VARCHAR(45)</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>cus_zip</td>
-        <td>cus_zip</td>
-          
-        <td>VARCHAR(45)</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>cus_addr1</td>
-        <td>cus_addr1</td>
-          
-        <td>VARCHAR(500)</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>cus_addr2</td>
-        <td>cus_addr2</td>
-          
-        <td>VARCHAR(100)</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>cus_message</td>
-        <td>cus_message</td>
-          
-        <td>VARCHAR(500)</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>cus_express</td>
-        <td>cus_express</td>
-          
-        <td>VARCHAR(100)</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>cus_express_no</td>
-        <td>cus_express_no</td>
-          
-        <td>VARCHAR(100)</td>
-        <td></td>
-        <td>&nbsp;</td>
-    </tr>
-</table>
-<table class="entity" cellpadding="0" cellspacing="0">
-    <tr>
-        <td colspan="6" class="header">tb_svc_device_license (tb_svc_device_license)</td>
-    </tr>
-    <tr class="column-header">
-        <td>논리명</td>
-        <td>물리명</td>
-         
-        <td>자료형</td>
-        <td>NULL</td>
-        <td>설명</td>
-    </tr>
-    <tr>
-        <td>ID(PK)</td>
-        <td>ID</td>
-          
-        <td>BIGINT(20)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        <td>SERVICE_ID(FK)</td>
+       <td class="center">2</td>
+        <td>미정</td>
         <td>SERVICE_ID</td>
-          
         <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
+        <td class="center">FK</td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>사용가능 멤버 할당(FK)</td>
+       <td class="center">3</td>
+        <td>미정</td>
         <td>USER_ID</td>
-          
         <td>BIGINT(20) UNSIGNED</td>
-        <td></td>
-        <td>사용가능 멤버 할당&nbsp;</td>
+        <td class="center">FK</td>
+        <td class="center"></td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>발행 대상 Tenant</td>
+       <td class="center">4</td>
+        <td>미정</td>
         <td>TENANT_ID</td>
-          
         <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>발행 대상 Tenant&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>발행 대상 brand</td>
+       <td class="center">5</td>
+        <td>미정</td>
         <td>BRAND_ID</td>
-          
         <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>발행 대상 brand&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>발행 대상 store</td>
+       <td class="center">6</td>
+        <td>미정</td>
         <td>STORE_ID</td>
-          
         <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>발행 대상 store&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>라이센스 상태</td>
+       <td class="center">7</td>
+        <td>미정</td>
         <td>STATUS</td>
-          
         <td>CHAR(6)</td>
-        <td>Not Null</td>
-        <td>라이센스 상태&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>장비 타입</td>
+       <td class="center">8</td>
+        <td>미정</td>
         <td>DEVICE_TP</td>
-          
         <td>CHAR(6)</td>
-        <td>Not Null</td>
-        <td>장비 타입&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
+       <td class="center">9</td>
+        <td>미정</td>
         <td>NAME</td>
-        <td>NAME</td>
-          
         <td>VARCHAR(50)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>유효기간(시작)</td>
+       <td class="center">10</td>
+        <td>미정</td>
         <td>BEGIN</td>
-          
         <td>DATETIME</td>
-        <td>Not Null</td>
-        <td>유효기간(시작)&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>유효기간(종료)</td>
+       <td class="center">11</td>
+        <td>미정</td>
         <td>END</td>
-          
         <td>DATETIME</td>
-        <td>Not Null</td>
-        <td>유효기간(종료)&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
+       <td class="center">12</td>
+        <td>미정</td>
         <td>LICENSE_KEY</td>
-        <td>LICENSE_KEY</td>
-          
         <td>VARCHAR(200)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>POS 번호</td>
+       <td class="center">13</td>
+        <td>미정</td>
         <td>POS_NO</td>
-          
         <td>VARCHAR(20)</td>
-        <td>Not Null</td>
-        <td>POS 번호&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>설치된 POS의 H/W 정보(MAC or UUID)</td>
+       <td class="center">14</td>
+        <td>미정</td>
         <td>HW_INFO</td>
-          
         <td>VARCHAR(50)</td>
-        <td>Not Null</td>
-        <td>설치된 POS의 H/W 정보(MAC or UUID)&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
+       <td class="center">15</td>
+        <td>미정</td>
         <td>IS_MAIN</td>
-        <td>IS_MAIN</td>
-          
         <td>TINYINT(1)</td>
-        <td></td>
-        <td>&nbsp;</td>
+        <td class="center"></td>
+        <td class="center"></td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>라이센스 최초 등록일</td>
+       <td class="center">16</td>
+        <td>미정</td>
         <td>CERT_TM</td>
-          
         <td>DATETIME</td>
-        <td></td>
-        <td>라이센스 최초 등록일&nbsp;</td>
+        <td class="center"></td>
+        <td class="center"></td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
+       <td class="center">17</td>
+        <td>미정</td>
         <td>CREATED</td>
-        <td>CREATED</td>
-          
         <td>DATETIME</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
+       <td class="center">18</td>
+        <td>미정</td>
         <td>UPDATED</td>
-        <td>UPDATED</td>
-          
         <td>DATETIME</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-</table>
-<table class="entity" cellpadding="0" cellspacing="0">
-    <tr>
-        <td colspan="6" class="header">tb_svc_device_license_200707 (tb_svc_device_license_200707)</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr class="column-header">
-        <td>논리명</td>
-        <td>물리명</td>
-         
-        <td>자료형</td>
-        <td>NULL</td>
-        <td>설명</td>
+    	<td>번호</td>
+ 	    <td colspan="4">비고</td>
+        <td colspan="3">sample data</td>
     </tr>
     <tr>
+    	<td class="center">1</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">2</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">3</td>
+ 	    <td colspan="4">사용가능 멤버 할당</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">4</td>
+ 	    <td colspan="4">발행 대상 Tenant</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">5</td>
+ 	    <td colspan="4">발행 대상 brand</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">6</td>
+ 	    <td colspan="4">발행 대상 store</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">7</td>
+ 	    <td colspan="4">라이센스 상태</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">8</td>
+ 	    <td colspan="4">장비 타입</td>
+        <td colspan="3"></td>
+    </tr>                   
+    <tr>
+    	<td class="center">9</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">10</td>
+ 	    <td colspan="4">유효기간(시작)</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">11</td>
+ 	    <td colspan="4">유효기간(종료)</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">12</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">13</td>
+ 	    <td colspan="4">POS 번호</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">14</td>
+ 	    <td colspan="4">설치된 POS의 H/W 정보(MAC or UUID)</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">15</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">16</td>
+ 	    <td colspan="4">라이센스 최초 등록일</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">17</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">18</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>                                        
+</table>
+
+
+<table class="entity" cellpadding="0" cellspacing="0">
+    <tr>
+    	<th class="header" colspan="2">엔티티 타입명</th>
+        <td colspan="3" class="header-name">tb_svc_device_license_200707</td>
+        <th class="header">작성일</th>
+        <td colspan="2" class="header-name">2020-11-19</td>
+    </tr>
+    <tr>
+    	<th class="header" colspan="2">테이블명</th>
+        <td colspan="3" class="header-name"></td>
+        <th class="header">작성자</th>
+        <td colspan="2" class="header-name">정아름</td>
+    </tr>
+    <tr>
+    	<th class="header" colspan="2">테이블 설명</th>
+    	<td colspan="6"></td>
+    </tr>    
+    <tr class="column-header">
+        <td>번호</td>    
+        <td>논리명</td>
+        <td>물리명</td>
+        <td>자료형</td>
+        <td>KEY</td>
+        <td>NULL</td>
+        <td>자동여부</td>
+        <td>기본값</td>
+    </tr>
+    <tr>
+        <td class="center">1</td>
+        <td>미정</td>
         <td>ID</td>
-        <td>ID</td>
-          
         <td>BIGINT(20)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
+       <td class="center">2</td>
+        <td>미정</td>
         <td>SERVICE_ID</td>
-        <td>SERVICE_ID</td>
-          
         <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
-    <tr>
-        <td>사용가능 멤버 할당</td>
+       <td class="center">3</td>
+        <td>미정</td>
         <td>USER_ID</td>
-          
         <td>BIGINT(20) UNSIGNED</td>
-        <td></td>
-        <td>사용가능 멤버 할당&nbsp;</td>
+        <td class="center"></td>
+        <td class="center"></td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>발행 대상 Tenant</td>
+       <td class="center">4</td>
+        <td>미정</td>
         <td>TENANT_ID</td>
-          
         <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>발행 대상 Tenant&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>발행 대상 brand</td>
+       <td class="center">5</td>
+        <td>미정</td>
         <td>BRAND_ID</td>
-          
         <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>발행 대상 brand&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>발행 대상 store</td>
+       <td class="center">6</td>
+        <td>미정</td>
         <td>STORE_ID</td>
-          
         <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>발행 대상 store&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>라이센스 상태</td>
+       <td class="center">7</td>
+        <td>미정</td>
         <td>STATUS</td>
-          
         <td>CHAR(6)</td>
-        <td>Not Null</td>
-        <td>라이센스 상태&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>장비 타입</td>
+       <td class="center">8</td>
+        <td>미정</td>
         <td>DEVICE_TP</td>
-          
         <td>CHAR(6)</td>
-        <td>Not Null</td>
-        <td>장비 타입&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
+       <td class="center">9</td>
+        <td>미정</td>
         <td>NAME</td>
-        <td>NAME</td>
-          
         <td>VARCHAR(50)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>유효기간(시작)</td>
+       <td class="center">10</td>
+        <td>미정</td>
         <td>BEGIN</td>
-          
         <td>DATETIME</td>
-        <td>Not Null</td>
-        <td>유효기간(시작)&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>유효기간(종료)</td>
+       <td class="center">11</td>
+        <td>미정</td>
         <td>END</td>
-          
         <td>DATETIME</td>
-        <td>Not Null</td>
-        <td>유효기간(종료)&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
+       <td class="center">12</td>
+        <td>미정</td>
         <td>LICENSE_KEY</td>
-        <td>LICENSE_KEY</td>
-          
         <td>VARCHAR(200)</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>POS 번호</td>
+       <td class="center">13</td>
+        <td>미정</td>
         <td>POS_NO</td>
-          
         <td>VARCHAR(20)</td>
-        <td>Not Null</td>
-        <td>POS 번호&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>설치된 POS의 H/W 정보(MAC or UUID)</td>
+       <td class="center">14</td>
+        <td>미정</td>
         <td>HW_INFO</td>
-          
         <td>VARCHAR(50)</td>
-        <td>Not Null</td>
-        <td>설치된 POS의 H/W 정보(MAC or UUID)&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
+       <td class="center">15</td>
+        <td>미정</td>
         <td>IS_MAIN</td>
-        <td>IS_MAIN</td>
-          
         <td>TINYINT(1)</td>
-        <td></td>
-        <td>&nbsp;</td>
+        <td class="center"></td>
+        <td class="center"></td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>라이센스 최초 등록일</td>
+       <td class="center">16</td>
+        <td>미정</td>
         <td>CERT_TM</td>
-          
         <td>DATETIME</td>
-        <td></td>
-        <td>라이센스 최초 등록일&nbsp;</td>
+        <td class="center"></td>
+        <td class="center"></td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
+       <td class="center">17</td>
+        <td>미정</td>
         <td>CREATED</td>
-        <td>CREATED</td>
-          
         <td>DATETIME</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
+       <td class="center">18</td>
+        <td>미정</td>
         <td>UPDATED</td>
-        <td>UPDATED</td>
-          
         <td>DATETIME</td>
-        <td>Not Null</td>
-        <td>&nbsp;</td>
-    </tr>
-</table>
-<table class="entity" cellpadding="0" cellspacing="0">
-    <tr>
-        <td colspan="6" class="header">디바이스 푸시 설정 (tb_svc_device_push_set)</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr class="column-header">
+    	<td>번호</td>
+ 	    <td colspan="4">비고</td>
+        <td colspan="3">sample data</td>
+    </tr>
+    <tr>
+    	<td class="center">1</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">2</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">3</td>
+ 	    <td colspan="4">사용가능 멤버 할당</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">4</td>
+ 	    <td colspan="4">발행 대상 Tenant</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">5</td>
+ 	    <td colspan="4">발행 대상 brand</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">6</td>
+ 	    <td colspan="4">발행 대상 store</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">7</td>
+ 	    <td colspan="4">라이센스 상태</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">8</td>
+ 	    <td colspan="4">장비 타입</td>
+        <td colspan="3"></td>
+    </tr>                   
+    <tr>
+    	<td class="center">9</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">10</td>
+ 	    <td colspan="4">유효기간(시작)</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">11</td>
+ 	    <td colspan="4">유효기간(종료)</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">12</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">13</td>
+ 	    <td colspan="4">POS 번호 </td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">14</td>
+ 	    <td colspan="4">설치된 POS의 H/W 정보(MAC or UUID)</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">15</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">16</td>
+ 	    <td colspan="4">라이센스 최초 등록일</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">17</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">18</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>                            
+</table>
+
+
+<table class="entity" cellpadding="0" cellspacing="0">
+    <tr>
+    	<th class="header" colspan="2">엔티티 타입명</th>
+        <td colspan="3" class="header-name">tb_svc_device_push_set</td>
+        <th class="header">작성일</th>
+        <td colspan="2" class="header-name">2020-11-19</td>
+    </tr>
+    <tr>
+    	<th class="header" colspan="2">테이블명</th>
+        <td colspan="3" class="header-name"></td>
+        <th class="header">작성자</th>
+        <td colspan="2" class="header-name">정아름</td>
+    </tr>
+    <tr>
+    	<th class="header" colspan="2">테이블 설명</th>
+    	<td colspan="6">디바이스 푸시 설정</td>
+    </tr>    
+    <tr class="column-header">
+        <td>번호</td>
         <td>논리명</td>
         <td>물리명</td>
-         
         <td>자료형</td>
+        <td>KEY</td>
         <td>NULL</td>
-        <td>설명</td>
+        <td>자동여부</td>
+        <td>기본값</td>
     </tr>
     <tr>
-        <td>PK(PK)</td>
+       <td class="center">1</td>
+        <td>미정</td>
         <td>ID</td>
-          
         <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>PK&nbsp;</td>
+        <td class="center">PK</td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>사용자 디바이스 PK</td>
+       <td class="center">2</td>
+        <td>미정</td>
         <td>DEVICE_ID</td>
-          
         <td>BIGINT(20) UNSIGNED</td>
-        <td>Not Null</td>
-        <td>사용자 디바이스 PK&nbsp;</td>
+        <td class="center">PK</td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>주문 취소 알림 수신 여부</td>
+       <td class="center">3</td>
+        <td>미정</td>
         <td>IS_PUSH_ORDER_CANCEL</td>
-          
         <td>TINYINT(1)</td>
-        <td>Not Null</td>
-        <td>주문 취소 알림 수신 여부&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>결제 알림 수신 여부</td>
+       <td class="center">4</td>
+        <td>미정</td>
         <td>IS_PUSH_PAYMENT</td>
-          
         <td>TINYINT(1)</td>
-        <td>Not Null</td>
-        <td>결제 알림 수신 여부&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>결제 취소 알림 수신 여부</td>
+       <td class="center">5</td>
+        <td>미정</td>
         <td>IS_PUSH_PAYMENT_CANCEL</td>
-          
         <td>TINYINT(1)</td>
-        <td>Not Null</td>
-        <td>결제 취소 알림 수신 여부&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>반품 알림 수신 여부</td>
+       <td class="center">6</td>
+        <td>미정</td>
         <td>IS_PUSH_REFUND</td>
-          
         <td>TINYINT(1)</td>
-        <td>Not Null</td>
-        <td>반품 알림 수신 여부&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>VIP 방문 알림 수신 여부</td>
+       <td class="center">7</td>
+        <td>미정</td>
         <td>IS_PUSH_VISIT_VIP</td>
-          
         <td>TINYINT(1)</td>
-        <td>Not Null</td>
-        <td>VIP 방문 알림 수신 여부&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>등록일</td>
+       <td class="center">8</td>
+        <td>미정</td>
         <td>CREATED</td>
-          
         <td>DATETIME</td>
-        <td>Not Null</td>
-        <td>등록일&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
     <tr>
-        <td>수정일</td>
+       <td class="center">9</td>
+        <td>미정</td>
         <td>UPDATED</td>
-          
         <td>DATETIME</td>
-        <td>Not Null</td>
-        <td>수정일&nbsp;</td>
+        <td class="center"></td>
+        <td class="center">Not Null</td>
+        <td class="center"></td>
+        <td class="center"></td>
     </tr>
+   <tr class="column-header">
+    	<td>번호</td>
+ 	    <td colspan="4">비고</td>
+        <td colspan="3">sample data</td>
+    </tr>
+    <tr>
+    	<td class="center">1</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">2</td>
+ 	    <td colspan="4">사용자 디바이스 PK</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">3</td>
+ 	    <td colspan="4">주문 취소 알림 수신 여부</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">4</td>
+ 	    <td colspan="4">결제 알림 수신 여부</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">5</td>
+ 	    <td colspan="4">결제 취소 알림 수신 여부</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">6</td>
+ 	    <td colspan="4">반품 알림 수신 여부</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">7</td>
+ 	    <td colspan="4">VIP 방문 알림 수신 여부</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">8</td>
+ 	    <td colspan="4">등록일</td>
+        <td colspan="3"></td>
+    </tr>                   
+    <tr>
+    	<td class="center">9</td>
+ 	    <td colspan="4">수정일</td>
+        <td colspan="3"></td>
+    </tr>   
 </table>
+
+
+
 <table class="entity" cellpadding="0" cellspacing="0">
     <tr>
-        <td colspan="6" class="header">tb_svc_franchise (tb_svc_franchise)</td>
+    	<th class="header" colspan="2">엔티티 타입명</th>
+        <td colspan="3" class="header-name">tb_svc_franchise</td>
+        <th class="header">작성일</th>
+        <td colspan="2" class="header-name">2020-11-19</td>
     </tr>
+    <tr>
+    	<th class="header" colspan="2">테이블명</th>
+        <td colspan="3" class="header-name"></td>
+        <th class="header">작성자</th>
+        <td colspan="2" class="header-name">정아름</td>
+    </tr>
+    <tr>
+    	<th class="header" colspan="2">테이블 설명</th>
+    	<td colspan="6"></td>
+    </tr>    
     <tr class="column-header">
+		<td>번호</td>    
         <td>논리명</td>
         <td>물리명</td>
-         
         <td>자료형</td>
+        <td>KEY</td>
         <td>NULL</td>
-        <td>설명</td>
+        <td>자동여부</td>
+        <td>기본값</td>
     </tr>
     <tr>
         <td>ID(PK)</td>
@@ -1359,7 +1095,84 @@
         <td>Not Null</td>
         <td>&nbsp;</td>
     </tr>
+   <tr class="column-header">
+    	<td>번호</td>
+ 	    <td colspan="4">비고</td>
+        <td colspan="3">sample data</td>
+    </tr>
+    <tr>
+    	<td class="center">1</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">2</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">3</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">4</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">5</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">6</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">7</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">8</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>                   
+    <tr>
+    	<td class="center">9</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">10</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">11</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">12</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">13</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+    	<td class="center">14</td>
+ 	    <td colspan="4"></td>
+        <td colspan="3"></td>
+    </tr>                        
 </table>
+
+
 <table class="entity" cellpadding="0" cellspacing="0">
     <tr>
         <td colspan="6" class="header">tb_svc_item (tb_svc_item)</td>
