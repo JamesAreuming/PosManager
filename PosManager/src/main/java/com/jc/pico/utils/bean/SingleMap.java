@@ -24,6 +24,8 @@ public class SingleMap extends HashMap<String, Object> {
 	public SingleMap(java.util.Map<? extends String, ? extends Object> map) {
 		super(map);
 	}
+	
+	/* Integer & int : getInt */
 
 	@Nullable // 메소드에서 null값을 허용하는지를 보다 명확하게 보여주기 위한 표시
 	public Integer getInt(String key, Integer defaultValue) {
@@ -51,6 +53,8 @@ public class SingleMap extends HashMap<String, Object> {
 		return value;
 	}
 
+	/* Long & long : getLong */
+	
 	@Nullable
 	public Long getLong(String key, Long defaultValue) {
 		Object value = get(key);
@@ -76,6 +80,8 @@ public class SingleMap extends HashMap<String, Object> {
 		}
 		return value;
 	}
+	
+	/* Double & double : getDouble */
 
 	@Nullable
 	public Double getDouble(String key, Double defaultValue) {
@@ -103,6 +109,7 @@ public class SingleMap extends HashMap<String, Object> {
 		return value;
 	}
 
+	
 	public boolean equalsValue(String key, Object value) {
 		return Objects.equals(get(key), value);
 	}
@@ -113,6 +120,7 @@ public class SingleMap extends HashMap<String, Object> {
 		}
 	}
 
+	
 	@SuppressWarnings("unchecked")
 	public SingleMap getSingleMap(String key) {
 		return new SingleMap((java.util.Map<? extends String, ? extends Object>) get(key));
@@ -150,7 +158,10 @@ public class SingleMap extends HashMap<String, Object> {
 		// 문자열인 경우 "true"가 아니면 모두 false로 처리 
 		return Boolean.parseBoolean(value.toString());
 	}
-
+	
+	
+	/* Short & short */
+	
 	public Short getShort(String key, Short defaultValue) {
 		Object value = get(key);
 		if (isEmpty(value)) {
