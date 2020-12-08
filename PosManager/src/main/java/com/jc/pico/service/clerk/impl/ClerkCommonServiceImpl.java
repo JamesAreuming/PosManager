@@ -163,7 +163,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 	 */
 	public static final String TABLE_LOCK_RELEASE = "release";
 
-	private static final RowBounds ROW_BOUNDS_JUST_FIRST = new RowBounds(0, 1);
+	private static final RowBounds ROW_BOUNDS_JUST_FIRST = new RowBounds(0, 1); //페이징 기법
 	
     private static final List<String> DEFAULT_ADVERTISE = new ArrayList<String>();
     static {
@@ -1002,7 +1002,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 	}
 	
 	/**
-	 * 마감되지 않은 최종 openDt
+	 * 마감되지 않은 최종 openDt → isClosing : 영업중(0, false)
 	 * @param storeId
 	 * @return
 	 */
@@ -1010,16 +1010,43 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 
 		SvcClosingExample example = new SvcClosingExample();
 		example.createCriteria() // 조건
-				.andStoreIdEqualTo(storeId)
-				.andIsClosingEqualTo(false);
+				.andStoreIdEqualTo(storeId);
+				//.andIsClosingEqualTo(false);
+		
 		
 		example.setOrderByClause("OPEN_DT DESC"); // 최근 순서
 
 		List<SvcClosing> result = svcClosingMapper.selectByExampleWithRowbounds(example, ROW_BOUNDS_JUST_FIRST);
 		
-		System.out.println("확인>>>>>"+result.toString());
 		return result.size() > 0 ? result.get(0) : null;
 	}
+	
+//	public SvcClosing getLatestOpenByStoreId2(long storeId, Date openDateApc) {
+//
+//		SvcClosingExample example = new SvcClosingExample();
+//		example.createCriteria() // 조건
+//				.andStoreIdEqualTo(storeId)
+//				.andIsClosingEqualTo(false)
+//				.andOpenDtNotEqualTo(openDateApc);
+//		
+//		
+//		example.setOrderByClause("OPEN_DT DESC"); // 최근 순서
+//
+//		List<SvcClosing> result = svcClosingMapper.selectByExampleWithRowbounds(example, ROW_BOUNDS_JUST_FIRST);
+//		
+//		/* <마감되지 않은 최종 openDt> - isClosing : 영업중(0, false)
+//		 * 
+//		 * (QUery문)
+//		 * select ID, BRAND_ID, STORE_ID, OPEN_DT, OPEN_TM, CLOSE_TM, IS_CLOSING, OPEN_RESERVE, SALES, SALES_CNT, REFUND, REFUND_CNT, DISCOUNT, DISCOUNT_CNT, CUSTOMER_CNT, CASH_IN, CASH_IN_CNT, CASH_OUT, CASH_OUT_CNT, CASH_ON_HAND, CASH_LACK, CREATED, UPDATED from tb_svc_closing WHERE ( OPEN_DT != ? and STORE_ID = ? and IS_CLOSING = ? ) order by OPEN_DT DESC
+//		 * 
+//		 * (적용)
+//		 * select ID, BRAND_ID, STORE_ID, OPEN_DT, OPEN_TM, CLOSE_TM, IS_CLOSING, OPEN_RESERVE, SALES, SALES_CNT, REFUND, REFUND_CNT, DISCOUNT, DISCOUNT_CNT, CUSTOMER_CNT, CASH_IN, CASH_IN_CNT, CASH_OUT, CASH_OUT_CNT, CASH_ON_HAND, CASH_LACK, CREATED, UPDATED from tb_svc_closing WHERE STORE_ID = 89 and IS_CLOSING = false order by OPEN_DT DESC
+//		 */  
+//		
+//		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>3");
+//		
+//		return result.size() > 0 ? result.get(0) : null;
+//	}	
 
 
 	/**
@@ -1191,12 +1218,22 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 			final List<String> imageList = dataList.stream().filter(data -> data.getString("FORMAT").equals(ADVERTISE_TYPE_PICTURE)).map(data -> String.format("%s%s", param.getString("host"), data.getString("URL"))).collect(Collectors.toList());
 			
 			if(!imageList.isEmpty()) {
-				imageList.addAll(DEFAULT_ADVERTISE.stream().map(data -> String.format("%s%s", param.getString("host"), data)).collect(Collectors.toList()));
+				imageList.addAll(DEFAULT_ADVERTISE.stream().map(data -> String.format("%s%s", param.getString("host"), data)).collect(Collectors.toList())); //기존의 광고 이미지 + 기본 이미지
+				System.out.println("확인---------------------------->");
 			}
+			
+			if(!videoList.isEmpty()) {
+				System.out.println("확인 -------------------------->@@@@");
+			}
+			
 			defaultAdvertise.put("image", imageList);
 			defaultAdvertise.put("video", videoList);
+			
+			logger.debug("확인1"+videoList.toString());
+			logger.debug("확인2"+imageList.toString());
+			
 		
-			return defaultAdvertise;
+			return defaultAdvertise; //안드로이드 쪽에서 이미지를 아예 고정시켜 놓은듯하다 : initImageview()
 		} catch (IOException e) {
 			
 			e.printStackTrace();
@@ -1211,15 +1248,14 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 	public SingleMap sOpenInfo(SingleMap param) throws RequestResolveException {
 
 		try {
-			final String openDateApcStr = param.getString("openDateApc", null);
-			final Date openDateApc = StringUtils.isEmpty(openDateApcStr) ? null : param.getDate("openDateApc", "yyyyMMdd"); // 개점일자(yyyymmdd)			
+			final String openDateApcStr = param.getString("openDateApc", null); // 20201208
+			final Date openDateApc = StringUtils.isEmpty(openDateApcStr) ? null : param.getDate("openDateApc", "yyyyMMdd"); // Tue Dec 08 00:00:00 KST 2020	
 
-			final StaffUserDetail userDetail = AuthenticationUtils.getDetails(StaffUserDetail.class);
+			final StaffUserDetail userDetail = AuthenticationUtils.getDetails(StaffUserDetail.class); // StaffUserDetail [brandId=44, storeId=89, staffId=82, licenseId=320]
 			
-			Long storeId = userDetail.getStoreId();
-			Long brandId = userDetail.getBrandId();
+			Long storeId = userDetail.getStoreId(); // ex. 89
+			Long brandId = userDetail.getBrandId(); // ex. 44
 
-		
 
 			// 해당 매장의 개점/폐점 정보를 읽어오기
 			String orderByClause = "OPEN_DT DESC";
@@ -1228,15 +1264,30 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 			Criteria svcClosingExampleCriteria = svcClosingExample.createCriteria() // 검색 조건
 					.andBrandIdEqualTo(brandId) // 브랜드
 					.andStoreIdEqualTo(storeId); // 상점
+            
+			logger.debug("확인+++"+openDateApc);
+			
+			// <오늘날짜O 개점 처리>
+			if (openDateApc != null) { 
 
-			if (openDateApc != null) { // 개점 처리
-
-				svcClosingExampleCriteria.andOpenDtBetween(posUtil.getDateTime(openDateApc, 0, 0, 0, 0),
+				svcClosingExampleCriteria.andOpenDtBetween(posUtil.getDateTime(openDateApc, 0, 0, 0, 0),      //날짜 ex. 당일 2020-12-07 00:00:00.0(Timestamp) ~ 2020-12-07 23:59:59.999(Timestamp) 까지
 						posUtil.getDateTime(openDateApc, 23, 59, 59, 999));
 
 				List<SvcClosing> svcClosings = svcClosingMapper.selectByExampleWithRowbounds(svcClosingExample, new RowBounds(0, 1));
-				if (svcClosings.isEmpty()) { // 신규 개점 처리 					
-
+				
+				/*
+				 * (QUERY문)
+				 * select ID, BRAND_ID, STORE_ID, OPEN_DT, OPEN_TM, CLOSE_TM, IS_CLOSING, OPEN_RESERVE, SALES, SALES_CNT, REFUND, REFUND_CNT, DISCOUNT, DISCOUNT_CNT, CUSTOMER_CNT, CASH_IN, CASH_IN_CNT, CASH_OUT, CASH_OUT_CNT, CASH_ON_HAND, CASH_LACK, CREATED, UPDATED from tb_svc_closing WHERE ( BRAND_ID = ? and STORE_ID = ? and OPEN_DT between ? and ? ) order by OPEN_DT DESC
+				 * 
+				 * (적용문)
+				 * select ID, BRAND_ID, STORE_ID, OPEN_DT, OPEN_TM, CLOSE_TM, IS_CLOSING, OPEN_RESERVE, SALES, SALES_CNT, REFUND, REFUND_CNT, DISCOUNT, DISCOUNT_CNT, CUSTOMER_CNT, CASH_IN, CASH_IN_CNT, CASH_OUT, CASH_OUT_CNT, CASH_ON_HAND, CASH_LACK, CREATED, UPDATED from tb_svc_closing WHERE ( BRAND_ID = 44 and STORE_ID = 89 and OPEN_DT between 2020-12-08 00:00:00.0(Timestamp) and 2020-12-08 23:59:59.999(Timestamp) ) order by OPEN_DT DESC
+				 *    
+				 */
+				
+				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1");
+				
+				if (svcClosings.isEmpty()) { // 신규 개점 처리 				
+						
 					SvcClosing record = new SvcClosing();
 					record.setBrandId(brandId);
 					record.setStoreId(storeId);
@@ -1244,6 +1295,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 					record.setOpenTm(new Date());
 					record.setIsClosing(false);
 					svcClosingMapper.insertSelective(record);
+					System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1-1");					
 
 				} else { // 재개점 처리					
 
@@ -1252,33 +1304,39 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 					record.setIsClosing(false);
 					//record.setOpenTm(new Date());
 					svcClosingMapper.updateByPrimaryKeySelective(record);
+					System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1-2");					
 				}
 
-			} else { // openDateApc 가 없으면 마감 처리
+			} else { // <오늘날짜X -- 마감 처리>
 
-				// 가장 최근에 오픈된 정보를 마감으로 변경 처리 함
+				// 오늘날짜X, 영업종료되지 않은 경우 찾기
 				List<SvcClosing> svcClosings = svcClosingMapper.selectByExampleWithRowbounds(svcClosingExample, new RowBounds(0, 1));
+				
+				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2");
+				
 				if (!svcClosings.isEmpty()) { // 신규 개점 처리					
 					SvcClosing record = new SvcClosing();
 					record.setId(svcClosings.get(0).getId());
-					record.setIsClosing(true);
+					record.setIsClosing(true);//영업종료(0 → 1)
 					record.setCloseTm(new Date());
 					svcClosingMapper.updateByPrimaryKeySelective(record);
+					System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2-1");					
 				} else { // 미개점 상태에서 마감 요청이 들어오면 무시 (이미 마감 처리되어 있거나, 새로운 개점이 없음)
 
 					logger.warn("Invalid close request. Cause by not opened. storeId={}", storeId);
+					System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2-2");						
 				}
 			}
 			
 
+			//마감되지 않은 영업중인 정보 ---> 마감으로 만들어 주기()
 			final SvcClosing closing = getLatestOpenByStoreId(storeId);
 			
 			SingleMap result = new SingleMap();
-			result.put("openDt", closing != null ? closing.getOpenDt() : null);
-			result.put("isClosing", closing != null ? closing.getIsClosing(): false);
-			
-
-			return result;
+			result.put("openDt", closing != null ? closing.getOpenDt() : null); //개점날짜
+			//result.put("isClosing", closing != null ? closing.getIsClosing(): false);
+			logger.debug("IsClosing 상태 : "+closing.getIsClosing()); // false(0 - 영업중) / true(1 - 영업종료)
+			return result; // {openDt=Mon Dec 07 00:00:00 KST 2020, isClosing=false} // 영업종료 : openDt = null
 			
 		} catch (Exception e) {
 			logger.error("[{}][{}] {}", PosUtil.EPO_0000_CODE, PosUtil.EPO_0000_MSG, e.getMessage(), e);
@@ -1286,6 +1344,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		}
 	}
 
+	
 	@Override
 	public SingleMap saveStoreTemp() throws RequestResolveException {
 		StaffUserDetail staffUserDetail = AuthenticationUtils.getDetails(StaffUserDetail.class);
