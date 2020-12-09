@@ -3,8 +3,10 @@ package com.jc.pico.service.clerk.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidParameterException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -752,7 +754,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 			throw new InvalidParameterException("Unknown app type. " + param.get("appType"));
 		}
 
-		final SvcClosing closing = getLatestOpenByStoreId(storeId);
+		final SvcClosing closing = getLatestOpenByStoreId(storeId); //tb_svc_closing 
 		
 		// 앱 최초 실행시 호출 되는데 이때 요청이 있으면 해당 포스가 설정한 테이블 락을 해제 한다.
 		if (storeId != 0 && posNo != null && TABLE_LOCK_RELEASE.equals(withTableLock)) {
@@ -762,6 +764,8 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		SingleMap result = new SingleMap();
 		result.put("openDt", closing != null ? closing.getOpenDt() : null);
 		result.put("isClosing", closing != null ? closing.getIsClosing(): false);
+		logger.debug("openDt(개점날짜) 상태 : " + closing.getOpenDt());
+		logger.debug("IsClosing(영업오픈(false:0) / 영업종료(true:1)) 상태 : " + closing.getIsClosing()); // false(0 - 영업오픈) / true(1 - 영업종료)
 		result.put("appUpdateInfo", getAppUpdateInfo(appType, osType, versionCode));
 		
 
@@ -922,7 +926,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 			
 			if(!imageList.isEmpty()) {
 				imageList.addAll(DEFAULT_ADVERTISE.stream().map(data -> String.format("%s%s", param.getString("host"), data)).collect(Collectors.toList())); //기존의 광고 이미지 + 기본 이미지
-				System.out.println("확인---------------------------->");
+				
 			}
 			
 			if(!videoList.isEmpty()) {
@@ -950,7 +954,12 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 	 */
 	@Override
 	public SingleMap sOpenInfo(SingleMap param) throws RequestResolveException {
-
+			//오늘날짜
+		    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		    Calendar time = Calendar.getInstance();
+		    
+		    String format_today = format.format(time.getTime());
+		
 		try {
 			final String openDateApcStr = param.getString("openDateApc", null); // 20201208
 			final Date openDateApc = StringUtils.isEmpty(openDateApcStr) ? null : param.getDate("openDateApc", "yyyyMMdd"); // Tue Dec 08 00:00:00 KST 2020	
@@ -988,7 +997,6 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 				 *    
 				 */
 				
-				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1");
 				
 				if (svcClosings.isEmpty()) { // 신규 개점 처리 				
 						
@@ -998,8 +1006,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 					record.setOpenDt(openDateApc);
 					record.setOpenTm(new Date());
 					record.setIsClosing(false);
-					svcClosingMapper.insertSelective(record);
-					System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1-1");					
+					svcClosingMapper.insertSelective(record);					
 
 				} else { // 재개점 처리					
 
@@ -1008,15 +1015,14 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 					record.setIsClosing(false);
 					//record.setOpenTm(new Date());
 					svcClosingMapper.updateByPrimaryKeySelective(record);
-					System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1-2");					
+								
 				}
 
-			} else { // <오늘날짜X -- 마감 처리>
+			} else { // <오늘날짜X -- 마감 처리> : 오늘날짜X 영업종료되지 않은 경우 → 영업종료상태(true - 0) update → 결과 result 던져주기
 
 				// 오늘날짜X, 영업종료되지 않은 경우 찾기
 				List<SvcClosing> svcClosings = svcClosingMapper.selectByExampleWithRowbounds(svcClosingExample, new RowBounds(0, 1));
 				
-				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2");
 				
 				if (!svcClosings.isEmpty()) { // 신규 개점 처리					
 					SvcClosing record = new SvcClosing();
@@ -1024,22 +1030,24 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 					record.setIsClosing(true);//영업종료(0 → 1)
 					record.setCloseTm(new Date());
 					svcClosingMapper.updateByPrimaryKeySelective(record);
-					System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2-1");					
+					
 				} else { // 미개점 상태에서 마감 요청이 들어오면 무시 (이미 마감 처리되어 있거나, 새로운 개점이 없음)
 
-					logger.warn("Invalid close request. Cause by not opened. storeId={}", storeId);
-					System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2-2");						
+					logger.warn("Invalid close request. Cause by not opened. storeId={}", storeId);						
 				}
 			}
 			
 
-			//마감되지 않은 영업중인 정보 ---> 마감으로 만들어 주기()
-			final SvcClosing closing = getLatestOpenByStoreId(storeId);
+			//결과(SingelMap - result) 던져주기
+			final SvcClosing closing = getLatestOpenByStoreId(storeId); //getLatesOpenByStoreId : 
 			
 			SingleMap result = new SingleMap();
 			result.put("openDt", closing != null ? closing.getOpenDt() : null); //개점날짜
-			//result.put("isClosing", closing != null ? closing.getIsClosing(): false);
-			logger.debug("IsClosing 상태 : "+closing.getIsClosing()); // false(0 - 영업중) / true(1 - 영업종료)
+			result.put("isClosing", closing != null ? closing.getIsClosing(): false);
+			
+			logger.debug("오늘 날짜 : " + format_today);
+			logger.debug("openDt(개점날짜) 상태 : " + closing.getOpenDt());
+			logger.debug("IsClosing(영업오픈(false:0) / 영업종료(true:1)) 상태 : " + closing.getIsClosing()); // false(0 - 영업오픈) / true(1 - 영업종료)
 			return result; // {openDt=Mon Dec 07 00:00:00 KST 2020, isClosing=false} // 영업종료 : openDt = null
 			
 		} catch (Exception e) {
@@ -1318,7 +1326,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 	
 	
 	/**
-	 * 마감되지 않은 최종 openDt → isClosing : 영업중(0, false)
+	 * 마감되지 않은 최종 openDt
 	 * @param storeId
 	 * @return
 	 */
@@ -1332,7 +1340,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		
 		example.setOrderByClause("OPEN_DT DESC"); // 최근 순서
 
-		List<SvcClosing> result = svcClosingMapper.selectByExampleWithRowbounds(example, ROW_BOUNDS_JUST_FIRST);
+		List<SvcClosing> result = svcClosingMapper.selectByExampleWithRowbounds(example, ROW_BOUNDS_JUST_FIRST); //해당 tb_svc_closing의 가장 최근 순서 select
 		
 		return result.size() > 0 ? result.get(0) : null;
 	}
