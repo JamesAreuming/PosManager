@@ -902,7 +902,8 @@ public class ClerkApiController {
 		
 		final SingleMap param = reqParam.getData();
 		
-	
+		logger.debug("sOpenInfo  : " + reqParam); //StoreParam [header={os=android, posNo=002, lang=ko}, data={openDateApc=20201208}]
+		
 		ClerkResult result = new ClerkResult();
 		result.setData(clerkCommonService.sOpenInfo(param));
 		result.setSuccess();
