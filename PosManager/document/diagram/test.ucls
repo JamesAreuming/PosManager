@@ -20,47 +20,17 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="3" language="java" name="com.jc.pico.controller.clerk.ClerkApiController" project="PosManager" 
-    file="/PosManager/src/main/java/com/jc/pico/controller/clerk/ClerkApiController.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="247" y="-73"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <interface id="4" language="java" name="com.jc.pico.service.clerk.ClerkOrderService" project="PosManager" 
-    file="/PosManager/src/main/java/com/jc/pico/service/clerk/ClerkOrderService.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="775" y="-122"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </interface>  
-  <class id="5" language="java" name="com.jc.pico.service.clerk.impl.ClerkOrderServiceImpl" project="PosManager" 
-    file="/PosManager/src/main/java/com/jc/pico/service/clerk/impl/ClerkOrderServiceImpl.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1245" y="-117"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <interface id="6" language="java" name="com.jc.pico.utils.customMapper.clerk.ClerkOrderMapper" project="PosManager" 
+  <interface id="3" language="java" name="com.jc.pico.utils.customMapper.clerk.ClerkOrderMapper" project="PosManager" 
     file="/PosManager/src/main/java/com/jc/pico/utils/customMapper/clerk/ClerkOrderMapper.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1703" y="-469"/>    
+    <position height="-1" width="-1" x="1262" y="-1024"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <interface id="7" language="java" name="com.jc.pico.mapper.SvcDeviceLicenseMapper" project="PosManager" 
+  <interface id="4" language="java" name="com.jc.pico.mapper.SvcDeviceLicenseMapper" project="PosManager" 
     file="/PosManager/src/main/java/com/jc/pico/mapper/SvcDeviceLicenseMapper.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1143" y="1302"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -69,7 +39,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="8" language="java" name="com.jc.pico.utils.StrUtils" project="PosManager" 
+  <class id="5" language="java" name="com.jc.pico.utils.StrUtils" project="PosManager" 
     file="/PosManager/src/main/java/com/jc/pico/utils/StrUtils.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="210" y="2208"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -78,50 +48,74 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <association id="9">    
+  <interface id="6" language="java" name="com.jc.pico.service.clerk.ClerkCommonService" project="PosManager" 
+    file="/PosManager/src/main/java/com/jc/pico/service/clerk/ClerkCommonService.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="495" y="-863"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="7" language="java" name="com.jc.pico.service.clerk.impl.ClerkCommonServiceImpl" project="PosManager" 
+    file="/PosManager/src/main/java/com/jc/pico/service/clerk/impl/ClerkCommonServiceImpl.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="877" y="-286"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <association id="8">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="10" name="svcDeviceLicenseMapper"/>      
-      <multiplicity id="11" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="12">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="13" name="clerkOrderMapper">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="14" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="15">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="16" name="svcStaffMapper">        
+      <attribute id="9" name="svcStaffMapper">        
         <position height="0" width="0" x="-152" y="-298"/>      
       </attribute>      
-      <multiplicity id="17" minimum="0" maximum="1">        
+      <multiplicity id="10" minimum="0" maximum="1">        
         <position height="0" width="0" x="-152" y="-298"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <realization id="18">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="4"/>  
-  </realization>  
-  <association id="19">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="20" name="clerkOrderService">        
+  <association id="11">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="12" name="svcStaffMapper"/>      
+      <multiplicity id="13" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="14">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="15" name="svcDeviceLicenseMapper">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="21" minimum="0" maximum="1">        
+      <multiplicity id="16" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="17">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="18" name="orderMapper"/>      
+      <multiplicity id="19" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="20">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="6"/>  
+  </realization>  
+  <association id="21">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="22" name="svcDeviceLicenseMapper"/>      
+      <multiplicity id="23" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
