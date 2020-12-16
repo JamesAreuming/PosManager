@@ -26,6 +26,7 @@ import com.jc.pico.utils.ClerkUtil;
 import com.jc.pico.utils.bean.ClerkResult;
 import com.jc.pico.utils.bean.SingleMap;
 import com.jc.pico.utils.bean.StoreParam;
+import com.jc.pico.utils.customMapper.admin.CustomSalesMapper;
 import com.jc.pico.utils.customMapper.pos.PosStorePrinterMapper;
 
 /**
@@ -55,6 +56,11 @@ public class ClerkApiController {
 	
 	@Autowired
 	private PosStorePrinterMapper posStorePrinterMapper;
+	
+	
+	
+	@Autowired
+	private CustomSalesMapper customSalesMapper;	
 
 	/**
 	 * 앱 정보 조회
@@ -203,6 +209,7 @@ public class ClerkApiController {
 	@RequestMapping(value = "/order/detailKiosk", method = RequestMethod.POST)
 	public ClerkResult getOrderDetailKiosk(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
 		logger.debug("detailKiosk > getOrder : " + reqParam); 
+		//StoreParam [header={os=android, posNo=002, lang=ko}, data={endDate=2020-12-16 23:59:59, brandId=44, tableId=1, storeId=89, startDate=2020-12-16 00:00:00}] 
 
 		SingleMap param = reqParam.getData();
 
@@ -1005,6 +1012,36 @@ public class ClerkApiController {
 		result.setSuccess();
 
 		return result;
-	}	
+	}
 	
+	/*내가 만드는 API*/
+	//주문조회
+	//결제정보, 주문내역
+	/**
+	 * 매출  정보 조회(키오스크)
+	 * 추가 : 
+	 * @param param
+	 *            브랜드
+	 *            스토어
+	 *            시작일
+	 *            종료일
+	 * 
+	 * @return
+	 * @throws RequestResolveException
+	 */
+	
+	//@RequestMapping(value = "/order/detailKiosk", method = RequestMethod.POST)
+	//public ClerkResult getOrderDetailKiosk(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
+	@RequestMapping(value = "/sales/salesDetailKiosk", method = RequestMethod.POST)
+	public ClerkResult getSalesDetailKiosk(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
+		logger.debug("SalesDtailKiosk : " + reqParam); 
+
+		SingleMap param = reqParam.getData();
+
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkOrderService.getSalesDetailKiosk(param));
+		result.setSuccess();
+
+		return result;
+	}	
 }

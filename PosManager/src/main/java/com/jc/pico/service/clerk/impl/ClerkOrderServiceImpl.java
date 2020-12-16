@@ -367,6 +367,25 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 		
 		return svcSalesList;
 	}
+	
+	@Override
+	public SvcSalesList getSalesDetailKiosk(SingleMap param) {
+		Long   STORE_ID  = param.getLong("storeId");
+		Long   BRAND_ID = param.getLong("brandId");
+		String startString  = param.getString("startDate");
+		String endString   = param.getString("endDate");
+		
+		HashMap<String, Object> searchItem = new HashMap();
+		searchItem.put("storeId",    STORE_ID);
+		searchItem.put("brandId",   BRAND_ID);
+		searchItem.put("startDate", startString);
+		searchItem.put("endDate",  endString);
+		//일별 리스트
+		SvcSalesList svcSalesList = new SvcSalesList();
+		
+		svcSalesList.setSvcSalesList(svcSalesItemMapper.selectBySalesDetailKioskTest(searchItem));
+		return svcSalesList;
+	}	
 
 	
 	/**
@@ -1609,4 +1628,6 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 		}
 		return map;
 	}
+
+
 }

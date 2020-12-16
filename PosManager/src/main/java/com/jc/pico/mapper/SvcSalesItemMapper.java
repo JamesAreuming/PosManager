@@ -111,4 +111,6 @@ public interface SvcSalesItemMapper {
     //List<SvcSalesItemEx> selectBySalesItemList(HashMap searchItem);
     List<SvcSalesItem> selectBySalesItemList(HashMap searchItem);
     
+    List<SvcSalesItem> selectBySalesDetailKioskTest(HashMap searchItem);
+    
 }

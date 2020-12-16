@@ -67,4 +67,6 @@ public interface ClerkOrderService {
 
 	SingleMap storeInfo(SingleMap param) throws RequestResolveException;
 
+	SvcSalesList getSalesDetailKiosk(SingleMap param);
+
 }

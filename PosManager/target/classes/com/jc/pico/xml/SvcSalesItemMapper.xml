@@ -781,5 +781,19 @@
      
   </select>
   
-  
+  <select id="selectBySalesDetailKioskTest" parameterType="HashMap" resultMap="BaseResultMap">
+	SELECT DISTINCT
+	       S.ORDER_TM_LOCAL AS ORDER_TM_LOCAL,
+           S.RECEIPT_ID AS RECEPIPT_ID,
+           COUNT(I.SALES_ID) AS COUNT,
+           SUM(I.SALES) AS PRICE,
+           S.ORDER_ST AS ORDER_ST
+     FROM TB_SVC_SALES S, TB_SVC_SALES_ITEM I
+    WHERE S.ID = I.SALES_ID
+      AND S.BRAND_ID = #{brandId,jdbcType=BIGINT}
+      AND S.STORE_ID = #{storeId,jdbcType=BIGINT}
+      AND I.ORDER_TM_LOCAL BETWEEN DATE_ADD( #{startDate,jdbcType=VARCHAR}, INTERVAL 0 SECOND) and DATE_ADD( #{endDate,jdbcType=VARCHAR}, INTERVAL '23:59:59' HOUR_SECOND)
+      GROUP BY I.SALES_ID
+      ORDER BY I.ID DESC
+  </select>
 </mapper>
