@@ -375,13 +375,15 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 		String startString  = param.getString("startDate");
 		String endString   = param.getString("endDate");
 		
+		//일별 리스트
+		SvcSalesList svcSalesList = new SvcSalesList();
+		
 		HashMap<String, Object> searchItem = new HashMap();
 		searchItem.put("storeId",    STORE_ID);
 		searchItem.put("brandId",   BRAND_ID);
 		searchItem.put("startDate", startString);
 		searchItem.put("endDate",  endString);
-		//일별 리스트
-		SvcSalesList svcSalesList = new SvcSalesList();
+
 		
 		svcSalesList.setSvcSalesList(svcSalesItemMapper.selectBySalesDetailKioskTest(searchItem));
 		return svcSalesList;
