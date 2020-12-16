@@ -1032,7 +1032,7 @@ public class ClerkApiController {
 	
 	//@RequestMapping(value = "/order/detailKiosk", method = RequestMethod.POST)
 	//public ClerkResult getOrderDetailKiosk(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
-	@RequestMapping(value = "/sales/salesDetailKiosk", method = RequestMethod.POST)
+	@RequestMapping(value = "/order/salesDetailKiosk", method = RequestMethod.POST)
 	public ClerkResult getSalesDetailKiosk(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
 		logger.debug("SalesDtailKiosk : " + reqParam); 
 
