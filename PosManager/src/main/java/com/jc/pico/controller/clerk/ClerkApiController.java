@@ -215,8 +215,9 @@ public class ClerkApiController {
 
 		ClerkResult result = new ClerkResult();
 		result.setData(clerkOrderService.getOrderDetailKioskEx(param));
+		//result.setData(clerkOrderService.getSalesDetailKiosk(param));
 		result.setSuccess();
-
+		
 		return result;
 	}
 
