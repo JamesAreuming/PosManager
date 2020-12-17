@@ -799,7 +799,7 @@
     WHERE S.ID = I.SALES_ID
       AND S.BRAND_ID = #{brandId,jdbcType=BIGINT}
       AND S.STORE_ID = #{storeId,jdbcType=BIGINT}
-      AND CONVERT_TZ( S.SALES_TM, '+00:00', '+09:00' ) BETWEEN STR_TO_DATE( #{startDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s' ) AND STR_TO_DATE( #{endDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s' )
+      AND S.ORDER_TM_LOCAL BETWEEN DATE_ADD(#{startDate,jdbcType=VARCHAR}, INTERVAL 0 SECOND) and DATE_ADD(#{endDate,jdbcType=VARCHAR}, INTERVAL '23:59:59' HOUR_SECOND)
       GROUP BY I.SALES_ID
       ORDER BY I.ID DESC
   </select>

@@ -60,8 +60,35 @@ public class ClerkApiController {
 	
 	
 	@Autowired
-	private CustomSalesMapper customSalesMapper;	
+	private CustomSalesMapper customSalesMapper;
+	
 
+	
+	/******     (1) url : /clerk/api/advertiseInfo     ******/
+	
+	@RequestMapping(value = "/advertiseInfo", method = RequestMethod.POST)
+	public ClerkResult getAdvertise(HttpServletRequest request, @RequestBody StoreParam reqParam, OAuth2Authentication authentication)
+			throws RequestResolveException {
+
+		final SingleMap param = reqParam.getData();
+		
+		logger.debug("getAdvertise  : " + reqParam); //StoreParam [header={os=android, posNo=003, lang=ko}, data={}]
+
+		param.put("host", String.format("%s://%s", request.getScheme(), request.getServerName())); //http://192.168.0.166 -- 내 ip주소
+		param.put("storeId", ClerkUtil.getStaffStoreId(authentication));
+		
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkCommonService.getAdvertiseInfo(request.getServletContext(), param)); //{host=http://192.168.0.166, storeId=89}
+		result.setSuccess();
+		
+		logger.debug("getAdvertise  : " + result); //StoreParam [header={os=android, posNo=003, lang=ko}, data={host=http://192.168.0.166, storeId=89}]
+
+		
+		return result;
+	}
+	
+	/******     (2) url : /clerk/api/appinfo     ******/
+	
 	/**
 	 * 앱 정보 조회
 	 * 
@@ -86,58 +113,200 @@ public class ClerkApiController {
 		result.setSuccess(); //ECL0000 -- 성공
 		return result;
 	}
+	
+	/******     (3) url : /clerk/api/coupon     ******/
+	
+	/**
+	 * 쿠폰 정보 조회
+	 * 
+	 * @param param
+	 *            couponCd : 쿠폰 코드
+	 * 
+	 * 
+	 * @return 쿠폰 정보
+	 * 
+	 * @throws InvalidParamException
+	 * @throws NoPermissionException
+	 * @throws RequestResolveException
+	 * @throws InvalidJsonException
+	 * 
+	 */
+	@RequestMapping(value = "/coupon/detail", method = RequestMethod.POST)
+	public ClerkResult getCouponDetail(@RequestBody StoreParam reqParam, Authentication authentication)
+			throws InvalidParamException, NoPermissionException, RequestResolveException, InvalidJsonException {
+		logger.debug("getCouponDetail " + reqParam);
+
+		SingleMap param = reqParam.getData();
+		param.put("userName", (authentication != null ? authentication.getName() : ""));
+
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkRewardService.getCouponDetail(param));
+		result.setSuccess();
+
+		return result;
+	}
+	
+	/******     (4) url : /clerk/api/license     ******/
+	
+	/**
+	 * 디바이스 라이센스 등록
+	 * 
+	 * @param param
+	 * 
+	 * 
+	 * @return
+	 * @throws RequestResolveException
+	 *             - ECL0004 : 존재하지 않는 레이센스
+	 *             - ECL0005 : 사용중인 라이센스
+	 *             - ECL0006 : 미사용 라이센스
+	 * 
+	 * @throws InvalidParamException
+	 * @throws NoPermissionException
+	 * 
+	 */
+	@RequestMapping(value = "/license/register", method = RequestMethod.POST)
+	public ClerkResult registerDeviceLicense(@RequestBody StoreParam reqParam, Authentication authentication)
+			throws RequestResolveException, InvalidParamException, NoPermissionException {
+
+		logger.debug("registerDeviceLicense : " + reqParam);
+
+		SingleMap param = reqParam.getData();
+		param.put("userName", ClerkUtil.getAgentUserName(authentication));
+		//param.putIfEmpty("deviceType", "876003"); // Clerk FIXME 제거 필요
+
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkCommonService.registerDeviceLicense(param));
+		result.setSuccess();
+
+		return result;
+	}	
+	
+	
+	/**
+	 * 키오스크 디바이스 라이센스 등록
+	 * 
+	 * @param param
+	 * 
+	 * 
+	 * @return
+	 * @throws RequestResolveException
+	 *             - ECL0004 : 존재하지 않는 레이센스
+	 *             - ECL0005 : 사용중인 라이센스
+	 *             - ECL0006 : 미사용 라이센스
+	 * 
+	 * @throws InvalidParamException
+	 * @throws NoPermissionException
+	 * 
+	 */
+	@RequestMapping(value = "/license/registerKiosk", method = RequestMethod.POST)
+	public ClerkResult registerDeviceLicenseKiosk(@RequestBody StoreParam reqParam, Authentication authentication)
+			throws RequestResolveException, InvalidParamException, NoPermissionException {
+
+		logger.debug("registerDeviceLicenseKiosk : " + reqParam); // ▶ StoreParam [header={os=android, posNo=, lang=ko}, data={deviceType=876004, licenseKey=9D4A-4772-B39E-E870, isMain=true, installType=1, hwInfo=G7FXOJYDBD}] 
 		
+		SingleMap param = reqParam.getData();
+		param.put("userName", ClerkUtil.getAgentUserName(authentication));
+		
+		logger.debug(authentication.toString());
+		
+		logger.debug("param : " + param); // ▶  {deviceType=876004, licenseKey=11CE-4865-9C83-8802, isMain=true, installType=1, hwInfo=G7FXOJYDBD, userName=installman} 
 
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkCommonService.registerDeviceLicenseKiosk(param));
+		result.setSuccess();
+		
+		return result;
+	}	
+	
 	/**
-	 * 스토어의 테이블 섹션 목록 및 섹션의 테이블 목록, 테이블의 간단한 주문 정보 조회
-	 * 포스가 오픈전, 마감후 이면 예외를 던짐
+	 * 포스 번호 수정
 	 * 
 	 * @param param
-	 *            stordId : 스토어 아이디
+	 * 
 	 * 
 	 * @return
 	 * @throws RequestResolveException
+	 * @throws InvalidParamException
+	 * @throws NoPermissionException
+	 * 
 	 */
-	@RequestMapping(value = "/store/tables", method = RequestMethod.POST)
-	public ClerkResult getStoreSections(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
-		logger.debug("getStoreSections : " + reqParam);
+	@RequestMapping(value = "/license/register/posno", method = RequestMethod.POST)
+	public ClerkResult updateLicensePosNo(@RequestBody StoreParam reqParam, Authentication authentication)
+			throws RequestResolveException, InvalidParamException, NoPermissionException {
+
+		logger.debug("updateLicensePosNo : " + reqParam);
 
 		SingleMap param = reqParam.getData();
 
-		clerkCommonService.throwIfPosNotReady(param.getLong("storeId"));
+		param.put("userName", ClerkUtil.getAgentUserName(authentication));
+		param.putIfEmpty("deviceType", "876003"); // KIOSK DEVICE
 
 		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.getStoreTableSections(param));
+		result.setData(clerkCommonService.updateLicensePosNo(param));
+		result.setSuccess();
+
+		return result;
+	}	
+	
+	/**
+	 * getDeviceAndStoreInfoKiosk
+	 * 
+	 *   키오스크 디바이스  라이선스 정보
+	 *   
+	 * @param param
+	 * 
+	 * 
+	 * @return
+	 * @throws RequestResolveException
+	 *             - ECL0004 : 존재하지 않는 레이센스
+	 *             - ECL0005 : 사용중인 라이센스
+	 *             - ECL0006 : 미사용 라이센스
+	 * 
+	 * @throws InvalidParamException
+	 * @throws NoPermissionException
+	 * 
+	 */
+	@RequestMapping(value = "/license/getDeviceInfoKiosk", method = RequestMethod.POST)
+	public ClerkResult getDeviceInfoKiosk(@RequestBody StoreParam reqParam, Authentication authentication)
+			throws RequestResolveException, InvalidParamException, NoPermissionException {
+
+		logger.debug("getDeviceInfoKiosk   : " + reqParam);
+
+		SingleMap param = reqParam.getData();
+		param.put("userName", ClerkUtil.getAgentUserName(authentication));
+
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkCommonService.getDeviceInfoKiosk(param));
 		result.setSuccess();
 
 		return result;
 	}
-
+	
+	/******     (5) url : /clerk/api/open     ******/
+	
 	/**
-	 * 스토어의 개점 정보, 테이블 섹션 목록 및 섹션의 테이블 목록, 테이블의 간단한 주문 정보 조회
-	 * 포스가 오픈전, 마감후 이면 예외를 던짐
-	 * 
-	 * @param param
-	 *            stordId : 스토어 아이디
-	 * 
+	 * pos 의 S_OPEN_INFO 프로세스를 가져왔음
+	 * @param request
+	 * @param reqParam
+	 * @param authentication
 	 * @return
 	 * @throws RequestResolveException
 	 */
-	@RequestMapping(value = "/store/status", method = RequestMethod.POST)
-	public ClerkResult getStoreStatus(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
-		logger.debug("getStoreStatus : " + reqParam);
-
-		SingleMap param = reqParam.getData();
-
-		clerkCommonService.throwIfPosNotReady(param.getLong("storeId"));
-
+	@RequestMapping(value = "/open", method = RequestMethod.POST )
+	public ClerkResult sOpenInfo(HttpServletRequest request, @RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException{
+		
+		final SingleMap param = reqParam.getData();
+		
+		logger.debug("sOpenInfo  : " + reqParam); //StoreParam [header={os=android, posNo=002, lang=ko}, data={openDateApc=20201208}]
+		
 		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.getStoreStatus(param));
+		result.setData(clerkCommonService.sOpenInfo(param));
 		result.setSuccess();
-
+	
 		return result;
-	}
-
+	}	
+	
+	/******     (6) url : /clerk/api/order     ******/
 	
 	/**
 	 * 주문 정보 조회
@@ -215,7 +384,6 @@ public class ClerkApiController {
 
 		ClerkResult result = new ClerkResult();
 		result.setData(clerkOrderService.getOrderDetailKioskEx(param));
-		//result.setData(clerkOrderService.getSalesDetailKiosk(param));
 		result.setSuccess();
 		
 		return result;
@@ -278,12 +446,114 @@ public class ClerkApiController {
 		result.setSuccess();
 
 		return result;
-	}
+	}	
+	
+	/**
+	 * setOrderCancelComplete
+	 * 주문, 매출 취소
+	 * 
+	 * @param param
+	 * 			  Id
+	 *            storeId
+	 *            brandId
+	 *            orderId
+	 * 
+	 * @return true(성공) / false(실패)
+	 * 
+	 * @throws InvalidParamException
+	 * 
+	 */
+	@RequestMapping(value = "/order/setOrderCancelComplete", method = RequestMethod.POST)
+	public ClerkResult setOrderCancelComplete(@RequestBody StoreParam reqParam, Authentication authentication)
+			throws InvalidParamException, NoPermissionException {
 
+		logger.debug("setOrderCancelComplete : " + reqParam);
+
+		SingleMap param = reqParam.getData();
+
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkOrderService.setOrderCancelComplete(param));
+		result.setSuccess();
+
+		return result;
+	}
+	
+
+	/**
+	 * getMerchantAndPrinter
+	 * 결재  ID,  주방 프린터 정보 
+	 * 
+	 * @param param
+	 *            brandId
+	 *            storeId
+	 * 
+	 * @return 
+	 * 
+	 * @throws InvalidParamException
+	 * 
+	 */
+	@RequestMapping(value = "/order/getMerchantAndPrinter", method = RequestMethod.POST)
+	public ClerkResult getMerchantAndPrinter(@RequestBody StoreParam reqParam, Authentication authentication)
+			throws InvalidParamException, NoPermissionException {
+
+		logger.debug("getMerchantAndPrinter : " + reqParam);
+
+		SingleMap param = reqParam.getData();
+
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkOrderService.getMerchantAndPrinter(param));
+		result.setSuccess();
+
+		return result;
+	}	
+	
+	/**
+	 * 주방프린터 리스트
+	 * @param request
+	 * @param reqParam
+	 * @param authentication
+	 * @return
+	 * @throws RequestResolveException
+	 */
+	@RequestMapping(value = "/order/kitchenprinter", method = RequestMethod.POST )
+	public ClerkResult orderKitchenPrinter(HttpServletRequest request, @RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException{
+		logger.debug("tempOrder : " + reqParam); //StoreParam [header={os=android, posNo=103, lang=ko}, data={}] 
+		
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkOrderService.getOrderKitchenPrinter());
+		result.setSuccess();
+	
+		return result;
+	}
+		
+	/**
+	 * 매출  정보 조회(키오스크)
+	 * 추가 : 
+	 * @param param
+	 *            브랜드
+	 *            스토어
+	 *            시작일
+	 *            종료일
+	 * 
+	 * @return
+	 * @throws RequestResolveException
+	 */
 	
 	
+	@RequestMapping(value = "/order/salesDetailKiosk", method = RequestMethod.POST)
+	public ClerkResult getSalesDetailKiosk(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
+		logger.debug("SalesDtailKiosk : " + reqParam); 
+
+		SingleMap param = reqParam.getData();
+
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkOrderService.getSalesDetailKiosk(param));
+		result.setSuccess();
+
+		return result;
+	}
 	
-	
+	/******     (7) url : /clerk/api/plu     ******/
 	
 	/**
 	 * 카테고리별 상품 조회
@@ -309,6 +579,82 @@ public class ClerkApiController {
 
 		return result;
 	}
+	
+	
+	/******     (8) url : /clerk/api/staff     ******/
+	/******     (9) url : /clerk/api/store     ******/
+	/******     (10) url : /clerk/api/table     ******/
+	/******     (11) url : /clerk/api/update     ******/
+	/******     (12) url : /clerk/api/user     ******/
+
+
+
+
+
+
+
+
+		
+
+	/**
+	 * 스토어의 테이블 섹션 목록 및 섹션의 테이블 목록, 테이블의 간단한 주문 정보 조회
+	 * 포스가 오픈전, 마감후 이면 예외를 던짐
+	 * 
+	 * @param param
+	 *            stordId : 스토어 아이디
+	 * 
+	 * @return
+	 * @throws RequestResolveException
+	 */
+	@RequestMapping(value = "/store/tables", method = RequestMethod.POST)
+	public ClerkResult getStoreSections(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
+		logger.debug("getStoreSections : " + reqParam);
+
+		SingleMap param = reqParam.getData();
+
+		clerkCommonService.throwIfPosNotReady(param.getLong("storeId"));
+
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkCommonService.getStoreTableSections(param));
+		result.setSuccess();
+
+		return result;
+	}
+
+	/**
+	 * 스토어의 개점 정보, 테이블 섹션 목록 및 섹션의 테이블 목록, 테이블의 간단한 주문 정보 조회
+	 * 포스가 오픈전, 마감후 이면 예외를 던짐
+	 * 
+	 * @param param
+	 *            stordId : 스토어 아이디
+	 * 
+	 * @return
+	 * @throws RequestResolveException
+	 */
+	@RequestMapping(value = "/store/status", method = RequestMethod.POST)
+	public ClerkResult getStoreStatus(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
+		logger.debug("getStoreStatus : " + reqParam);
+
+		SingleMap param = reqParam.getData();
+
+		clerkCommonService.throwIfPosNotReady(param.getLong("storeId"));
+
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkCommonService.getStoreStatus(param));
+		result.setSuccess();
+
+		return result;
+	}
+
+	
+
+
+	
+	
+	
+	
+	
+
 
 	/**
 	 * 사용자 정보 조회
@@ -366,107 +712,14 @@ public class ClerkApiController {
 		return result;
 	}
 
-	/**
-	 * 디바이스 라이센스 등록
-	 * 
-	 * @param param
-	 * 
-	 * 
-	 * @return
-	 * @throws RequestResolveException
-	 *             - ECL0004 : 존재하지 않는 레이센스
-	 *             - ECL0005 : 사용중인 라이센스
-	 *             - ECL0006 : 미사용 라이센스
-	 * 
-	 * @throws InvalidParamException
-	 * @throws NoPermissionException
-	 * 
-	 */
-	@RequestMapping(value = "/license/register", method = RequestMethod.POST)
-	public ClerkResult registerDeviceLicense(@RequestBody StoreParam reqParam, Authentication authentication)
-			throws RequestResolveException, InvalidParamException, NoPermissionException {
 
-		logger.debug("registerDeviceLicense : " + reqParam);
-
-		SingleMap param = reqParam.getData();
-		param.put("userName", ClerkUtil.getAgentUserName(authentication));
-		//param.putIfEmpty("deviceType", "876003"); // Clerk FIXME 제거 필요
-
-		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.registerDeviceLicense(param));
-		result.setSuccess();
-
-		return result;
-	}
 
 	
-	/**
-	 * 키오스크 디바이스 라이센스 등록
-	 * 
-	 * @param param
-	 * 
-	 * 
-	 * @return
-	 * @throws RequestResolveException
-	 *             - ECL0004 : 존재하지 않는 레이센스
-	 *             - ECL0005 : 사용중인 라이센스
-	 *             - ECL0006 : 미사용 라이센스
-	 * 
-	 * @throws InvalidParamException
-	 * @throws NoPermissionException
-	 * 
-	 */
-	@RequestMapping(value = "/license/registerKiosk", method = RequestMethod.POST)
-	public ClerkResult registerDeviceLicenseKiosk(@RequestBody StoreParam reqParam, Authentication authentication)
-			throws RequestResolveException, InvalidParamException, NoPermissionException {
 
-		logger.debug("registerDeviceLicenseKiosk : " + reqParam); // ▶ StoreParam [header={os=android, posNo=, lang=ko}, data={deviceType=876004, licenseKey=9D4A-4772-B39E-E870, isMain=true, installType=1, hwInfo=G7FXOJYDBD}] 
-		
-		SingleMap param = reqParam.getData();
-		param.put("userName", ClerkUtil.getAgentUserName(authentication));
-		
-		logger.debug(authentication.toString());
-		
-		logger.debug("param : " + param); // ▶  {deviceType=876004, licenseKey=11CE-4865-9C83-8802, isMain=true, installType=1, hwInfo=G7FXOJYDBD, userName=installman} 
-
-		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.registerDeviceLicenseKiosk(param));
-		result.setSuccess();
-		
-		return result;
-	}
 
 	
 	
-	/**
-	 * 포스 번호 수정
-	 * 
-	 * @param param
-	 * 
-	 * 
-	 * @return
-	 * @throws RequestResolveException
-	 * @throws InvalidParamException
-	 * @throws NoPermissionException
-	 * 
-	 */
-	@RequestMapping(value = "/license/register/posno", method = RequestMethod.POST)
-	public ClerkResult updateLicensePosNo(@RequestBody StoreParam reqParam, Authentication authentication)
-			throws RequestResolveException, InvalidParamException, NoPermissionException {
 
-		logger.debug("updateLicensePosNo : " + reqParam);
-
-		SingleMap param = reqParam.getData();
-
-		param.put("userName", ClerkUtil.getAgentUserName(authentication));
-		param.putIfEmpty("deviceType", "876003"); // KIOSK DEVICE
-
-		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.updateLicensePosNo(param));
-		result.setSuccess();
-
-		return result;
-	}
 
 	/**
 	 * 지점의 직원 조회
@@ -641,35 +894,7 @@ public class ClerkApiController {
 		return result;
 	}
 
-	/**
-	 * 쿠폰 정보 조회
-	 * 
-	 * @param param
-	 *            couponCd : 쿠폰 코드
-	 * 
-	 * 
-	 * @return 쿠폰 정보
-	 * 
-	 * @throws InvalidParamException
-	 * @throws NoPermissionException
-	 * @throws RequestResolveException
-	 * @throws InvalidJsonException
-	 * 
-	 */
-	@RequestMapping(value = "/coupon/detail", method = RequestMethod.POST)
-	public ClerkResult getCouponDetail(@RequestBody StoreParam reqParam, Authentication authentication)
-			throws InvalidParamException, NoPermissionException, RequestResolveException, InvalidJsonException {
-		logger.debug("getCouponDetail " + reqParam);
 
-		SingleMap param = reqParam.getData();
-		param.put("userName", (authentication != null ? authentication.getName() : ""));
-
-		ClerkResult result = new ClerkResult();
-		result.setData(clerkRewardService.getCouponDetail(param));
-		result.setSuccess();
-
-		return result;
-	}
 
 	/**
 	 * 테이블 상세 정보 조회
@@ -753,64 +978,7 @@ public class ClerkApiController {
 
 	
 	
-	/**
-	 * setOrderCancelComplete
-	 * 주문, 매출 취소
-	 * 
-	 * @param param
-	 * 			  Id
-	 *            storeId
-	 *            brandId
-	 *            orderId
-	 * 
-	 * @return true(성공) / false(실패)
-	 * 
-	 * @throws InvalidParamException
-	 * 
-	 */
-	@RequestMapping(value = "/order/setOrderCancelComplete", method = RequestMethod.POST)
-	public ClerkResult setOrderCancelComplete(@RequestBody StoreParam reqParam, Authentication authentication)
-			throws InvalidParamException, NoPermissionException {
 
-		logger.debug("setOrderCancelComplete : " + reqParam);
-
-		SingleMap param = reqParam.getData();
-
-		ClerkResult result = new ClerkResult();
-		result.setData(clerkOrderService.setOrderCancelComplete(param));
-		result.setSuccess();
-
-		return result;
-	}
-	
-
-	/**
-	 * getMerchantAndPrinter
-	 * 결재  ID,  주방 프린터 정보 
-	 * 
-	 * @param param
-	 *            brandId
-	 *            storeId
-	 * 
-	 * @return 
-	 * 
-	 * @throws InvalidParamException
-	 * 
-	 */
-	@RequestMapping(value = "/order/getMerchantAndPrinter", method = RequestMethod.POST)
-	public ClerkResult getMerchantAndPrinter(@RequestBody StoreParam reqParam, Authentication authentication)
-			throws InvalidParamException, NoPermissionException {
-
-		logger.debug("getMerchantAndPrinter : " + reqParam);
-
-		SingleMap param = reqParam.getData();
-
-		ClerkResult result = new ClerkResult();
-		result.setData(clerkOrderService.getMerchantAndPrinter(param));
-		result.setSuccess();
-
-		return result;
-	}
 	
 	
 	/**
@@ -843,82 +1011,11 @@ public class ClerkApiController {
 	}
 	
 	
-	/**
-	 * getDeviceAndStoreInfoKiosk
-	 * 
-	 *   키오스크 디바이스  라이선스 정보
-	 *   
-	 * @param param
-	 * 
-	 * 
-	 * @return
-	 * @throws RequestResolveException
-	 *             - ECL0004 : 존재하지 않는 레이센스
-	 *             - ECL0005 : 사용중인 라이센스
-	 *             - ECL0006 : 미사용 라이센스
-	 * 
-	 * @throws InvalidParamException
-	 * @throws NoPermissionException
-	 * 
-	 */
-	@RequestMapping(value = "/license/getDeviceInfoKiosk", method = RequestMethod.POST)
-	public ClerkResult getDeviceInfoKiosk(@RequestBody StoreParam reqParam, Authentication authentication)
-			throws RequestResolveException, InvalidParamException, NoPermissionException {
 
-		logger.debug("getDeviceInfoKiosk   : " + reqParam);
-
-		SingleMap param = reqParam.getData();
-		param.put("userName", ClerkUtil.getAgentUserName(authentication));
-
-		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.getDeviceInfoKiosk(param));
-		result.setSuccess();
-
-		return result;
-	}
 	
-	@RequestMapping(value = "/advertiseInfo", method = RequestMethod.POST)
-	public ClerkResult getAdvertise(HttpServletRequest request, @RequestBody StoreParam reqParam, OAuth2Authentication authentication)
-			throws RequestResolveException {
 
-		final SingleMap param = reqParam.getData();
-		
-		logger.debug("getAdvertise  : " + reqParam); //StoreParam [header={os=android, posNo=003, lang=ko}, data={}]
-
-		param.put("host", String.format("%s://%s", request.getScheme(), request.getServerName())); //http://192.168.0.166 -- 내 ip주소
-		param.put("storeId", ClerkUtil.getStaffStoreId(authentication));
-		
-		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.getAdvertiseInfo(request.getServletContext(), param)); //{host=http://192.168.0.166, storeId=89}
-		result.setSuccess();
-		
-		logger.debug("getAdvertise  : " + result); //StoreParam [header={os=android, posNo=003, lang=ko}, data={host=http://192.168.0.166, storeId=89}]
-
-		
-		return result;
-	}
 	
-	/**
-	 * pos 의 S_OPEN_INFO 프로세스를 가져왔음
-	 * @param request
-	 * @param reqParam
-	 * @param authentication
-	 * @return
-	 * @throws RequestResolveException
-	 */
-	@RequestMapping(value = "/open", method = RequestMethod.POST )
-	public ClerkResult sOpenInfo(HttpServletRequest request, @RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException{
-		
-		final SingleMap param = reqParam.getData();
-		
-		logger.debug("sOpenInfo  : " + reqParam); //StoreParam [header={os=android, posNo=002, lang=ko}, data={openDateApc=20201208}]
-		
-		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.sOpenInfo(param));
-		result.setSuccess();
-	
-		return result;
-	}
+
 
 	/**
 	 * pos test
@@ -942,25 +1039,7 @@ public class ClerkApiController {
 	}
 	
 	
-	/**
-	 * 주방프린터 리스트
-	 * @param request
-	 * @param reqParam
-	 * @param authentication
-	 * @return
-	 * @throws RequestResolveException
-	 */
-	@RequestMapping(value = "/order/kitchenprinter", method = RequestMethod.POST )
-	public ClerkResult orderKitchenPrinter(HttpServletRequest request, @RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException{
-		logger.debug("tempOrder : " + reqParam); //StoreParam [header={os=android, posNo=103, lang=ko}, data={}] 
-		
-		ClerkResult result = new ClerkResult();
-		result.setData(clerkOrderService.getOrderKitchenPrinter());
-		result.setSuccess();
-	
-		return result;
-	}
-	
+
 
 	/**
 	 * 주방프린터 프린트시 업데이트
@@ -1015,34 +1094,5 @@ public class ClerkApiController {
 		return result;
 	}
 	
-	/*내가 만드는 API*/
-	//주문조회
-	//결제정보, 주문내역
-	/**
-	 * 매출  정보 조회(키오스크)
-	 * 추가 : 
-	 * @param param
-	 *            브랜드
-	 *            스토어
-	 *            시작일
-	 *            종료일
-	 * 
-	 * @return
-	 * @throws RequestResolveException
-	 */
 	
-	//@RequestMapping(value = "/order/detailKiosk", method = RequestMethod.POST)
-	//public ClerkResult getOrderDetailKiosk(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
-	@RequestMapping(value = "/order/salesDetailKiosk", method = RequestMethod.POST)
-	public ClerkResult getSalesDetailKiosk(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
-		logger.debug("SalesDtailKiosk : " + reqParam); 
-
-		SingleMap param = reqParam.getData();
-
-		ClerkResult result = new ClerkResult();
-		result.setData(clerkOrderService.getSalesDetailKiosk(param));
-		result.setSuccess();
-
-		return result;
-	}	
 }
