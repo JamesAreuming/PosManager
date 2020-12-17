@@ -277,7 +277,19 @@ public class SvcSalesItem {
      *
      * @mbggenerated Wed Jan 11 14:34:43 KST 2017
      */
-    public Long getId() {
+    private SvcSales svcSales;
+    
+    
+
+	public SvcSales getSvcSales() {
+		return svcSales;
+	}
+
+	public void setSvcSales(SvcSales svcSales) {
+		this.svcSales = svcSales;
+	}
+
+	public Long getId() {
         return id;
     }
 

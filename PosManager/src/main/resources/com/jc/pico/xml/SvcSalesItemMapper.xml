@@ -40,6 +40,13 @@
     <result column="IS_PACKING" jdbcType="BIT" property="isPacking" />
     <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
     <result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />
+    <collection property="svcSales" resultMap="SvcSalesMap"/>
+  </resultMap>
+  
+  <resultMap id="SvcSalesMap" type="com.jc.pico.bean.SvcSales">
+  	<result column="ORDER_TM_LOCAL" jdbcType="TIMESTAMP" property="orderTmLocal" />
+  	<result column="RECEIPT_ID" jdbcType="VARCHAR" property="receiptId" />
+  	<result column="ORDER_ST" jdbcType="CHAR" property="orderSt" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -780,6 +787,20 @@
      ORDER BY O.PAY_METHOD DESC, I.ITEM_NM ASC
      
   </select>
-  
-  
+   
+  <select id="selectBySalesDetailKioskTest" parameterType="HashMap" resultMap="BaseResultMap">
+	SELECT DISTINCT
+	       S.ORDER_TM_LOCAL AS ORDER_TM_LOCAL,
+           S.RECEIPT_ID AS RECEIPT_ID,
+           COUNT(I.SALES_ID) AS COUNT,
+           SUM(I.SALES) AS PRICE,
+           S.ORDER_ST AS ORDER_ST
+     FROM TB_SVC_SALES S, TB_SVC_SALES_ITEM I
+    WHERE S.ID = I.SALES_ID
+      AND S.BRAND_ID = #{brandId,jdbcType=BIGINT}
+      AND S.STORE_ID = #{storeId,jdbcType=BIGINT}
+      AND CONVERT_TZ( S.SALES_TM, '+00:00', '+09:00' ) BETWEEN STR_TO_DATE( #{startDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s' ) AND STR_TO_DATE( #{endDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s' )
+      GROUP BY I.SALES_ID
+      ORDER BY I.ID DESC
+  </select>
 </mapper>
