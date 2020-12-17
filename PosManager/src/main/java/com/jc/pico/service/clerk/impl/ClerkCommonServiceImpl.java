@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -42,6 +44,7 @@ import com.jc.pico.bean.SvcItemOptDtlExample;
 import com.jc.pico.bean.SvcItemOptExample;
 import com.jc.pico.bean.SvcKitchenMessage;
 import com.jc.pico.bean.SvcKitchenMessageExample;
+import com.jc.pico.bean.SvcPluItemExample;
 import com.jc.pico.bean.SvcStaff;
 import com.jc.pico.bean.SvcStaffExample;
 import com.jc.pico.bean.SvcStore;
@@ -66,6 +69,7 @@ import com.jc.pico.mapper.SvcItemMapper;
 import com.jc.pico.mapper.SvcItemOptDtlMapper;
 import com.jc.pico.mapper.SvcItemOptMapper;
 import com.jc.pico.mapper.SvcKitchenMessageMapper;
+import com.jc.pico.mapper.SvcPluItemMapper;
 import com.jc.pico.mapper.SvcStaffMapper;
 import com.jc.pico.mapper.SvcStoreMapper;
 import com.jc.pico.mapper.SvcTableMapper;
@@ -237,6 +241,8 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 	@Autowired
 	private PosUtil posUtil;
 
+	@Autowired
+	private SvcPluItemMapper svcPluItemMapper;	
 
 	private ObjectMapper objectMapper;
 
@@ -283,17 +289,81 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 
 	
 	@Override
-	public List<SingleMap> getCategoriesDetail(SingleMap param) {
-		List<SingleMap> categories = storeMapper.selectPluCategoryList(param);
+	public List<SingleMap> getCategoriesDetail(SingleMap param) { //param : catId, storeId, brandId	
+		List<SingleMap> categories = storeMapper.selectPluCategoryList(param); // 카테고리 리스트 : 인기메뉴, 세트메뉴 ....
 
-		for (SingleMap category : categories) {
-			param.put("catId", category.get("id"));
+		for (SingleMap category : categories) { //for문으로 돌면서 각 카테고리별 메뉴 넣기
+			param.put("catId", category.get("id")); //417 - 인기메뉴, 418 - 세트메뉴, 419 - 단품메뉴, 420 - 참숯메뉴, 421 - 사이드메뉴, 422 - 음료수, 423 - 토핑
 			category.put("items", getPluItemListByCatId(param));
 		}
 
 		return categories;
 	}
 
+	
+	/**
+	 * Plu item 목록 조회, 옵션, 옵션 상세 포함
+	 * 
+	 * @param param
+	 * @return
+	 */
+	private List<SvcItemExtended> getPluItemListByCatId(SingleMap param) {
+		//매출 30일 기준 --> 베스트 5 선정 --> 이전tb_svc_plu_item 지우고, tb_svc_plu_item에 넣어준다(insert)
+		// param : {catId=?, brandId=?, storeId=?} --for문
+		// 이전 인기메뉴 삭제 : delete from tb_svc_plu_item where brand_id = 44 and store_id = 89 and cat_id = 417
+		//svcPluItemMapper.deleteByExample(svcPluItemWhere);
+		//svcPluItemMapper.deleteByExample(param.);
+		// 매출 30일 기준 --> 베스트 5 선정
+		
+		// 인기메뉴 넣어주기 : insert into tb_svc_plu_item (brand_id, store_id, cat_id, item_id, ordinal) values (44,89,417,2926,1)
+		
+		Entry<String, Object> entry = param.entrySet().iterator().next();
+		String key = entry.getKey();
+		Object value = entry.getValue(); // 417
+		String castValue = String.valueOf(value);
+		
+		 
+		 if(castValue.equals("417")) { //인기메뉴
+			 // 이전 인기메뉴 삭제 : delete from tb_svc_plu_item where brand_id = ? and store_id = ? and cat_id = ?
+			 // SvcPluItemExample example = new SvcPluItemExample();
+			 // example.createCriteria();
+			 
+			        //.andBrandIdEqualTo()
+			        //.andStoreIdEqualTo(value)
+			 //.andCatIdEqualTo()
+			 
+			// brand_id : 44
+			// store_id : 89
+		    // cat_id : 417
+			
+				
+				
+			 //svcPluItemMapper.deleteByExample(example);
+			 // 30일 기준 판매건수별 :
+			 // 인기 메뉴 넣어주기(for문) : insert into tb_svc_plu_item (brand_id, store_id, cat_id, item_id, ordinal) values (?,?,?,?,?);
+		 }
+		 
+		List<SvcItemExtended> items = storeMapper.selectPluItemList(param); // 각 카테고리별 포함된 아이템리스트
+
+		for (SvcItemExtended item : items) {
+			item.setImages(new ArrayList<SvcItemImg>());
+			item.setOptions(new ArrayList<SvcItemOptExtended>());
+		}
+
+		// 세부 항목 검색용 item id 목록 생성
+		List<Long> itemIds = new ArrayList<>(items.size());
+		for (SvcItemExtended item : items) {
+			itemIds.add(item.getId());
+		}
+
+		if (!itemIds.isEmpty()) {
+			appendItemImages(items, itemIds);
+			appendItemOptions(items, itemIds);
+		}
+
+		return items;
+	}
+	
 	
 	@Override
 	public SingleMap getUserDetail(SingleMap param) {
@@ -741,9 +811,12 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		// 단 전달한 storeId가 존재하는데 조회 결과 해당 매장이 없으면 에러
 		if (storeId != 0L) {
 			SvcStore store = svcStoreMapper.selectByPrimaryKey(storeId);
+						
 			if (store == null) {
 				throw new RequestResolveException(ClerkResult.ErrorCode.STORE_NOT_FOUND.code, "Not found store");
 			}
+			
+			logger.debug("store VanType 확인 >>>" + store.getVanType()); // Null/0 : KIS, 1 : JT NET, 2 : 다우데이터
 		}
 
 		if (StringUtils.isEmpty(osType)) {
@@ -1158,33 +1231,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 	}
 
 
-	/**
-	 * Plu item 목록 조회, 옵션, 옵션 상세 포함
-	 * 
-	 * @param param
-	 * @return
-	 */
-	private List<SvcItemExtended> getPluItemListByCatId(SingleMap param) {
-		List<SvcItemExtended> items = storeMapper.selectPluItemList(param);
 
-		for (SvcItemExtended item : items) {
-			item.setImages(new ArrayList<SvcItemImg>());
-			item.setOptions(new ArrayList<SvcItemOptExtended>());
-		}
-
-		// 세부 항목 검색용 item id 목록 생성
-		List<Long> itemIds = new ArrayList<>(items.size());
-		for (SvcItemExtended item : items) {
-			itemIds.add(item.getId());
-		}
-
-		if (!itemIds.isEmpty()) {
-			appendItemImages(items, itemIds);
-			appendItemOptions(items, itemIds);
-		}
-
-		return items;
-	}
 
 	
 	/**
