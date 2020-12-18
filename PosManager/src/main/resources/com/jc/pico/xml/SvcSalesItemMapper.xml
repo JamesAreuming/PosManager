@@ -47,8 +47,6 @@
   	<result column="ORDER_TM_LOCAL" jdbcType="TIMESTAMP" property="orderTmLocal" />
   	<result column="RECEIPT_ID" jdbcType="VARCHAR" property="receiptId" />
   	<result column="ORDER_ST" jdbcType="CHAR" property="orderSt" />
-    <result column="TOTALCOUNT" jdbcType="INTEGER" property="totalCount" />
-    <result column="TOTALPRICE" jdbcType="DOUBLE" property="totalPrice" />    
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
