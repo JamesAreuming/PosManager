@@ -429,7 +429,28 @@ public class SvcSales {
      *
      * @mbggenerated Thu Nov 17 14:52:30 KST 2016
      */
-    public Long getId() {
+    
+    private int totalCount;
+    private double totalPrice;
+    
+    
+    public int getTotalCount() {
+		return totalCount;
+	}
+
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
+	}
+
+	public double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public Long getId() {
         return id;
     }
 
