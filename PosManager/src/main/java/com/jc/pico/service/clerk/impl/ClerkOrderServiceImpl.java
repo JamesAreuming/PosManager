@@ -386,6 +386,8 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 
 		
 		svcSalesList.setSvcSalesList(svcSalesItemMapper.selectBySalesDetailKioskTest(searchItem));
+		
+		
 		return svcSalesList;
 	}	
 

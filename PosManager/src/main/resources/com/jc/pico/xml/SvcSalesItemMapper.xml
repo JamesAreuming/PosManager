@@ -46,6 +46,7 @@
   <resultMap id="SvcSalesMap" type="com.jc.pico.bean.SvcSales">
   	<result column="ORDER_TM_LOCAL" jdbcType="TIMESTAMP" property="orderTmLocal" />
   	<result column="RECEIPT_ID" jdbcType="VARCHAR" property="receiptId" />
+  	<result column="RECEIPT_NO" jdbcType="VARCHAR" property="receiptNo" />
   	<result column="ORDER_ST" jdbcType="CHAR" property="orderSt" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -792,7 +793,7 @@
        SELECT DISTINCT
               S.ID,
               DATE_FORMAT(S.ORDER_TM_LOCAL,'%Y-%m-%d %H:%i:%s') AS ORDER_TM_LOCAL,
-              S.RECEIPT_ID AS RECEIPT_ID,
+              S.RECEIPT_NO AS RECEIPT_NO,
               COUNT(I.SALES_ID) AS COUNT,
               SUM(I.SALES) AS PRICE,
               S.ORDER_ST AS ORDER_ST

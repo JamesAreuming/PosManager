@@ -553,6 +553,7 @@ public class ClerkApiController {
 		return result;
 	}
 	
+	
 	/******     (7) url : /clerk/api/plu     ******/
 	
 	/**
