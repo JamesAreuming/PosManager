@@ -59,6 +59,8 @@
     <result column="ORG_SALES_ID" jdbcType="BIGINT" property="orgSalesId" />
     <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
     <result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />
+    <result column="TOTALPRICE" jdbcType="DOUBLE" property="totalPrice" />
+    <result column="TOTALCOUNT" jdbcType="SMALLINT" property="totalCount" />
     <collection property="svcSalesItem" resultMap="SvcSalesItemMap"/>
     <collection property="svcStaff" resultMap="SvcStaffMap"/>
   </resultMap>
@@ -1329,13 +1331,13 @@
    </update>
 
   <select id="selectBySalesDetailKioskTest2" parameterType="HashMap" resultMap="BaseResultMap">
-    SELECT S.RECEIPT_NO,
-	       S.ORDER_NO,
-           COUNT(S.ID),
-           S.ORDER_ST,
-           F.NAME,
-           S.POS_NO,
-           SUM(I.SALES)
+    SELECT S.RECEIPT_NO AS RECEIPT_NO,
+	       S.ORDER_NO AS ORDER_NO,
+           COUNT(S.ID) AS TOTALCOUNT,
+           S.ORDER_ST AS ORDER_ST,
+           F.NAME AS NAME,
+           S.POS_NO AS POS_NO,
+           SUM(I.SALES) AS TOTALPRICE
       FROM TB_SVC_SALES S
            LEFT JOIN
            TB_SVC_SALES_ITEM I

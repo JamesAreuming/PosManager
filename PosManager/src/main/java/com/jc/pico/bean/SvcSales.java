@@ -430,6 +430,8 @@ public class SvcSales {
      * @mbggenerated Thu Nov 17 14:52:30 KST 2016
      */
 
+    private Short totalCount;
+    private Double totalPrice;
 
     private SvcSalesItem svcSalesItem;
     
@@ -438,6 +440,22 @@ public class SvcSales {
     
     
     
+	public Short getTotalCount() {
+		return totalCount;
+	}
+
+	public void setTotalCount(Short totalCount) {
+		this.totalCount = totalCount;
+	}
+
+	public Double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(Double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
 	public SvcSalesItem getSvcSalesItem() {
 		return svcSalesItem;
 	}
