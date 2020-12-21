@@ -1,8 +1,10 @@
 package com.jc.pico.mapper;
 
+import com.jc.pico.bean.SvcSales;
 import com.jc.pico.bean.SvcSalesItem;
 import com.jc.pico.bean.SvcSalesItemEx;
 import com.jc.pico.bean.SvcSalesItemExample;
+import com.jc.pico.utils.bean.SingleMap;
 
 import java.util.HashMap;
 import java.util.List;
@@ -110,7 +112,10 @@ public interface SvcSalesItemMapper {
     // 추가 :     
     //List<SvcSalesItemEx> selectBySalesItemList(HashMap searchItem);
     List<SvcSalesItem> selectBySalesItemList(HashMap searchItem);
-    
+   
     List<SvcSalesItem> selectBySalesDetailKioskTest(HashMap searchItem);
+
+
+
     
 }

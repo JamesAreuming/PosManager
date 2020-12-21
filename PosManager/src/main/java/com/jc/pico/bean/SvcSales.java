@@ -431,6 +431,29 @@ public class SvcSales {
      */
 
 
+    private SvcSalesItem svcSalesItem;
+    
+    private SvcStaff svcStaff;
+    
+    
+    
+    
+	public SvcSalesItem getSvcSalesItem() {
+		return svcSalesItem;
+	}
+
+	public void setSvcSalesItem(SvcSalesItem svcSalesItem) {
+		this.svcSalesItem = svcSalesItem;
+	}
+
+	public SvcStaff getSvcStaff() {
+		return svcStaff;
+	}
+
+	public void setSvcStaff(SvcStaff svcStaff) {
+		this.svcStaff = svcStaff;
+	}
+
 	public Long getId() {
         return id;
     }

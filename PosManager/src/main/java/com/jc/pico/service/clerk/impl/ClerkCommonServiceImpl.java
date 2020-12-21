@@ -308,40 +308,6 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 	 * @return
 	 */
 	private List<SvcItemExtended> getPluItemListByCatId(SingleMap param) {
-		//매출 30일 기준 --> 베스트 5 선정 --> 이전tb_svc_plu_item 지우고, tb_svc_plu_item에 넣어준다(insert)
-		// param : {catId=?, brandId=?, storeId=?} --for문
-		// 이전 인기메뉴 삭제 : delete from tb_svc_plu_item where brand_id = 44 and store_id = 89 and cat_id = 417
-		//svcPluItemMapper.deleteByExample(svcPluItemWhere);
-		//svcPluItemMapper.deleteByExample(param.);
-		// 매출 30일 기준 --> 베스트 5 선정
-		
-		// 인기메뉴 넣어주기 : insert into tb_svc_plu_item (brand_id, store_id, cat_id, item_id, ordinal) values (44,89,417,2926,1)
-		
-		Entry<String, Object> entry = param.entrySet().iterator().next();
-		String key = entry.getKey();
-		Object value = entry.getValue(); // 417
-		String castValue = String.valueOf(value);
-		
-		 
-		 if(castValue.equals("417")) { //인기메뉴
-			 // 이전 인기메뉴 삭제 : delete from tb_svc_plu_item where brand_id = ? and store_id = ? and cat_id = ?
-			 // SvcPluItemExample example = new SvcPluItemExample();
-			 // example.createCriteria();
-			 
-			        //.andBrandIdEqualTo()
-			        //.andStoreIdEqualTo(value)
-			 //.andCatIdEqualTo()
-			 
-			// brand_id : 44
-			// store_id : 89
-		    // cat_id : 417
-			
-				
-				
-			 //svcPluItemMapper.deleteByExample(example);
-			 // 30일 기준 판매건수별 :
-			 // 인기 메뉴 넣어주기(for문) : insert into tb_svc_plu_item (brand_id, store_id, cat_id, item_id, ordinal) values (?,?,?,?,?);
-		 }
 		 
 		List<SvcItemExtended> items = storeMapper.selectPluItemList(param); // 각 카테고리별 포함된 아이템리스트
 

@@ -37,6 +37,7 @@ import com.jc.pico.bean.SvcOrderItemOpt;
 import com.jc.pico.bean.SvcOrderItemOptExample;
 import com.jc.pico.bean.SvcOrderPay;
 import com.jc.pico.bean.SvcOrderPayExample;
+import com.jc.pico.bean.SvcSales;
 import com.jc.pico.bean.SvcSalesList;
 import com.jc.pico.bean.SvcStore;
 import com.jc.pico.bean.SvcStoreInfo;
@@ -53,6 +54,7 @@ import com.jc.pico.mapper.SvcOrderItemOptMapper;
 import com.jc.pico.mapper.SvcOrderMapper;
 import com.jc.pico.mapper.SvcOrderPayMapper;
 import com.jc.pico.mapper.SvcSalesItemMapper;
+import com.jc.pico.mapper.SvcSalesMapper;
 import com.jc.pico.mapper.SvcStoreInfoMapper;
 import com.jc.pico.mapper.SvcStoreMapper;
 import com.jc.pico.mapper.SvcStorePrinterMapper;
@@ -213,9 +215,11 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 	
 	@Autowired
 	private SvcStoreInfoMapper svcStoreInfoMapper;
-	// 추가 : 
-
+	// 추가 : \
 	
+    @Autowired
+	private SvcSalesMapper svcSalesMapper;
+    
 	private ObjectMapper objectMapper;
 
 	@PostConstruct
@@ -385,9 +389,33 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 		searchItem.put("endDate",  endString);
 
 		
-		svcSalesList.setSvcSalesList(svcSalesItemMapper.selectBySalesDetailKioskTest(searchItem));
+		svcSalesList.setSvcSalesList(svcSalesItemMapper.selectBySalesDetailKioskTest(searchItem)); //영수증 리스트
 		
-		
+//		svcSalesList.getSvcSalesList().get(0).getSvcSales().getReceiptNo();
+//		svcSalesList.getSvcSalesList().size();
+//		
+
+		for(int i=0;i<svcSalesList.getSvcSalesList().size();i++) {
+			String receiptString = svcSalesList.getSvcSalesList().get(i).getSvcSales().getReceiptNo();
+			System.out.println("영수증번호 >> "+receiptString);
+			
+			HashMap<String, Object> searchTest = new HashMap();
+			searchTest.put("storeId",    STORE_ID);
+			searchTest.put("brandId",   BRAND_ID);			
+			searchTest.put("receiptNo", receiptString);
+			
+			System.out.println("제발 >>"+searchTest.toString());
+			SvcSales test = new SvcSales();
+				
+				test = svcSalesMapper.selectBySalesDetailKioskTest2(searchTest);
+				
+				System.out.println("dmdmdmdm"+test);
+				
+			
+			
+		}	
+		//svcSalesList.setSvcSalesList(svcSalesItemMapper.selectBySalesDetailKioskTest2(param));
+				
 		return svcSalesList;
 	}	
 
@@ -1632,6 +1660,11 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 		}
 		return map;
 	}
+
+
+
+
+
 
 
 }

@@ -59,7 +59,17 @@
     <result column="ORG_SALES_ID" jdbcType="BIGINT" property="orgSalesId" />
     <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
     <result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />
+    <collection property="svcSalesItem" resultMap="SvcSalesItemMap"/>
+    <collection property="svcStaff" resultMap="SvcStaffMap"/>
   </resultMap>
+  
+  <resultMap id="SvcStaffMap" type="com.jc.pico.bean.SvcStaff">
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  
+  <resultMap id="SvcSalesItemMap" type="com.jc.pico.bean.SvcSalesItem">
+     <result column="SALES" jdbcType="DOUBLE" property="sales" />
+  </resultMap>    
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbggenerated
@@ -1318,5 +1328,24 @@
        AND ORDER_ID = #{orderId,jdbcType=BIGINT}
    </update>
 
-   
+  <select id="selectBySalesDetailKioskTest2" parameterType="HashMap" resultMap="BaseResultMap">
+    SELECT S.RECEIPT_NO,
+	       S.ORDER_NO,
+           COUNT(S.ID),
+           S.ORDER_ST,
+           F.NAME,
+           S.POS_NO,
+           SUM(I.SALES)
+      FROM TB_SVC_SALES S
+           LEFT JOIN
+           TB_SVC_SALES_ITEM I
+           ON S.ID = I.SALES_ID
+           LEFT JOIN
+           TB_SVC_STAFF F
+           ON S.STAFF_ID = f.ID
+           WHERE S.BRAND_ID = #{brandId,jdbcType=BIGINT}
+           AND S.STORE_ID = #{storeId,jdbcType=BIGINT}
+           AND S.RECEIPT_NO = #{receiptNo,jdbcType=VARCHAR}
+          <!--  AND S.ORDER_TM_LOCAL BETWEEN DATE_ADD(#{startDate,jdbcType=VARCHAR}, INTERVAL 0 SECOND) and DATE_ADD(#{endDate,jdbcType=VARCHAR}, INTERVAL '23:59:59' HOUR_SECOND) -->
+  </select>   
 </mapper>

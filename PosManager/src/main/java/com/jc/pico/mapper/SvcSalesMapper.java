@@ -131,5 +131,7 @@ public interface SvcSalesMapper {
      */
     int updateByOrderCancel(HashMap sales);
     
+    SvcSales selectBySalesDetailKioskTest2(HashMap searchTest);    
+    
     
 }
