@@ -586,20 +586,70 @@ public class ClerkApiController {
 	
 	
 	/******     (8) url : /clerk/api/staff     ******/
-	/******     (9) url : /clerk/api/store     ******/
-	/******     (10) url : /clerk/api/table     ******/
-	/******     (11) url : /clerk/api/update     ******/
-	/******     (12) url : /clerk/api/user     ******/
+	
+	/**
+	 * 매장 직원 정보 조회
+	 * 
+	 * @param param
+	 * 
+	 * 
+	 * @return
+	 * @throws DataNotFoundException
+	 * @throws NoPermissionException
+	 * @throws DataNotRegisteredException
+	 */
+	@RequestMapping(value = "/staff/detail", method = RequestMethod.POST)
+	public ClerkResult getStaffDetail(HttpServletRequest reqeust, @RequestBody StoreParam reqParam, OAuth2Authentication authentication)
+			throws DataNotFoundException, NoPermissionException {
 
+		logger.debug("getUserDetail : " + reqParam); //[header={os=android, posNo=103, lang=ko}, data={}
 
+		if (!reqeust.isUserInRole(ROLE_STORE_STAFF)) {
+			throw new NoPermissionException();
+		}
 
+		SingleMap param = reqParam.getData();
+		param.put("staffDetail", authentication.getUserAuthentication().getDetails());
 
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkCommonService.getStaffDetail(param));
+		result.setSuccess();
 
+		return result;
+	}
+	
+	/**
+	 * 지점의 직원 유효성 검색
+	 * 
+	 * @param param
+	 *            username 직원 ID
+	 *            password 패스워드
+	 * 
+	 * 
+	 * @return 직원 목록
+	 * 
+	 * @throws InvalidParamException
+	 * @throws NoPermissionException
+	 * 
+	 */
+	@RequestMapping(value = "/staff/validation", method = RequestMethod.POST)
+	public ClerkResult checkStaffValidation(@RequestBody StoreParam reqParam, Authentication authentication)
+			throws InvalidParamException, NoPermissionException {
 
+		logger.debug("checkStaffAuthority");
 
+		SingleMap param = reqParam.getData();
 
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkCommonService.checkStaffValidation(param));
+		result.setSuccess();
+
+		return result;
+	}
+	
 		
-
+	/******     (9) url : /clerk/api/store     ******/
+	
 	/**
 	 * 스토어의 테이블 섹션 목록 및 섹션의 테이블 목록, 테이블의 간단한 주문 정보 조회
 	 * 포스가 오픈전, 마감후 이면 예외를 던짐
@@ -649,82 +699,7 @@ public class ClerkApiController {
 
 		return result;
 	}
-
 	
-
-
-	
-	
-	
-	
-	
-
-
-	/**
-	 * 사용자 정보 조회
-	 * 
-	 * @param param
-	 * 
-	 * 
-	 * @return
-	 * @throws DataNotFoundException
-	 * @throws DataNotRegisteredException
-	 */
-	@RequestMapping(value = "/user/detail", method = RequestMethod.POST)
-	public ClerkResult getUserDetail(@RequestBody StoreParam reqParam, Authentication authentication) {
-
-		logger.debug("getUserDetail : " + reqParam);
-
-		SingleMap param = reqParam.getData();
-		param.put("userName", (authentication != null ? authentication.getName() : ""));
-
-		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.getUserDetail(param));
-		result.setSuccess();
-
-		return result;
-	}
-
-	/**
-	 * 매장 직원 정보 조회
-	 * 
-	 * @param param
-	 * 
-	 * 
-	 * @return
-	 * @throws DataNotFoundException
-	 * @throws NoPermissionException
-	 * @throws DataNotRegisteredException
-	 */
-	@RequestMapping(value = "/staff/detail", method = RequestMethod.POST)
-	public ClerkResult getStaffDetail(HttpServletRequest reqeust, @RequestBody StoreParam reqParam, OAuth2Authentication authentication)
-			throws DataNotFoundException, NoPermissionException {
-
-		logger.debug("getUserDetail : " + reqParam); //[header={os=android, posNo=103, lang=ko}, data={}
-
-		if (!reqeust.isUserInRole(ROLE_STORE_STAFF)) {
-			throw new NoPermissionException();
-		}
-
-		SingleMap param = reqParam.getData();
-		param.put("staffDetail", authentication.getUserAuthentication().getDetails());
-
-		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.getStaffDetail(param));
-		result.setSuccess();
-
-		return result;
-	}
-
-
-
-	
-
-
-	
-	
-
-
 	/**
 	 * 지점의 직원 조회
 	 * 
@@ -750,65 +725,129 @@ public class ClerkApiController {
 
 		return result;
 	}
-
+	
 	/**
-	 * 지점의 직원 유효성 검색
+	 * 주방 메모 템플핏 메시지 조회
 	 * 
 	 * @param param
-	 *            username 직원 ID
-	 *            password 패스워드
+	 *            storeId : 상점 번호
+	 *            itemId : 상품 ID
 	 * 
-	 * 
-	 * @return 직원 목록
-	 * 
-	 * @throws InvalidParamException
-	 * @throws NoPermissionException
-	 * 
+	 * @return
 	 */
-	@RequestMapping(value = "/staff/validation", method = RequestMethod.POST)
-	public ClerkResult checkStaffValidation(@RequestBody StoreParam reqParam, Authentication authentication)
-			throws InvalidParamException, NoPermissionException {
-
-		logger.debug("checkStaffAuthority");
+	@RequestMapping(value = "/store/kitchen/message", method = RequestMethod.POST)
+	public ClerkResult getKitchenMessage(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
+		logger.debug("getKitchenMessage : " + reqParam);
 
 		SingleMap param = reqParam.getData();
+		param.putAll(reqParam.getHeader());
 
 		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.checkStaffValidation(param));
+		result.setData(clerkCommonService.getKichenMessage(param));
 		result.setSuccess();
 
 		return result;
 	}
 
+	
+	
+
+	
+	
 	/**
-	 * 스토어 사용자 유효성 검새
+	 * 키오스크 상정 정보
 	 * 
 	 * @param param
-	 *            username 직원 ID
-	 *            password 패스워드
 	 * 
 	 * 
-	 * @return 직원 목록
+	 * @return
+	 * @throws RequestResolveException
 	 * 
 	 * @throws InvalidParamException
 	 * @throws NoPermissionException
 	 * 
 	 */
-	@RequestMapping(value = "/user/validation", method = RequestMethod.POST)
-	public ClerkResult checkUserValidation(@RequestBody StoreParam reqParam, Authentication authentication)
-			throws InvalidParamException, NoPermissionException {
-		logger.debug("checkUserValidation");
+	@RequestMapping(value = "/store/getStoreInfoKiosk", method = RequestMethod.POST)
+	public ClerkResult getStoreInfoKiosk(@RequestBody StoreParam reqParam, Authentication authentication)
+			throws RequestResolveException, InvalidParamException, NoPermissionException {
+
+		logger.debug("getStoreInfoKiosk : " + reqParam);
 
 		SingleMap param = reqParam.getData();
-		param.put("userName", (authentication != null ? authentication.getName() : ""));
+		param.put("userName", ClerkUtil.getAgentUserName(authentication));
 
 		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.checkUserValidation(param));
+		result.setData(clerkCommonService.getStoreInfoKiosk(param));
 		result.setSuccess();
 
 		return result;
 	}
+	
+	
 
+	
+
+	
+
+
+	/**
+	 * pos test
+	 * @param request
+	 * @param reqParam
+	 * @param authentication
+	 * @return
+	 * @throws RequestResolveException
+	 */
+	@RequestMapping(value = "/store/temp", method = RequestMethod.POST )
+	public ClerkResult sStoreTemp(HttpServletRequest request, @RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException{
+		logger.debug("tempOrder : " + reqParam);
+		
+		clerkCommonService.saveStoreTemp();
+		
+		ClerkResult result = new ClerkResult();
+		result.setData(null);
+		result.setSuccess();
+	
+		return result;
+	}
+	
+	/**
+	 * getMerchantAndPrinter
+	 * 결재  ID,  주방 프린터 정보 
+	 * 
+	 * @param param
+	 *            brandId
+	 *            storeId
+	 * 
+	 * @return 
+	 * 
+	 * @throws InvalidParamException
+	 * 
+	 */
+	
+	@RequestMapping(value = "/store/info", method = RequestMethod.POST)
+	public ClerkResult storeInfo(@RequestBody StoreParam reqParam, Authentication authentication)
+			 throws RequestResolveException {
+
+		logger.debug("storeInfo : " + reqParam);
+//		logger.debug("인증1>>>>>>>>> : " + authentication.getAuthorities());
+//
+//		logger.debug("인증1>>>>>>>>> : " + authentication.toString());
+//		logger.debug("인증1>>>>>>>>> : " + authentication.getName());
+		
+		
+		SingleMap param = reqParam.getData();
+
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkOrderService.storeInfo(param));
+		result.setSuccess();
+
+		return result;
+	}
+	
+	
+	/******     (10) url : /clerk/api/table     ******/
+	
 	/**
 	 * 테이블 고객수 변경
 	 * 
@@ -954,97 +993,9 @@ public class ClerkApiController {
 
 		return result;
 	}
-
 	
+	/******     (11) url : /clerk/api/update     ******/
 	
-	/**
-	 * 주방 메모 템플핏 메시지 조회
-	 * 
-	 * @param param
-	 *            storeId : 상점 번호
-	 *            itemId : 상품 ID
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/store/kitchen/message", method = RequestMethod.POST)
-	public ClerkResult getKitchenMessage(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
-		logger.debug("getKitchenMessage : " + reqParam);
-
-		SingleMap param = reqParam.getData();
-		param.putAll(reqParam.getHeader());
-
-		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.getKichenMessage(param));
-		result.setSuccess();
-
-		return result;
-	}
-
-	
-	
-
-	
-	
-	/**
-	 * 키오스크 상정 정보
-	 * 
-	 * @param param
-	 * 
-	 * 
-	 * @return
-	 * @throws RequestResolveException
-	 * 
-	 * @throws InvalidParamException
-	 * @throws NoPermissionException
-	 * 
-	 */
-	@RequestMapping(value = "/store/getStoreInfoKiosk", method = RequestMethod.POST)
-	public ClerkResult getStoreInfoKiosk(@RequestBody StoreParam reqParam, Authentication authentication)
-			throws RequestResolveException, InvalidParamException, NoPermissionException {
-
-		logger.debug("getStoreInfoKiosk : " + reqParam);
-
-		SingleMap param = reqParam.getData();
-		param.put("userName", ClerkUtil.getAgentUserName(authentication));
-
-		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.getStoreInfoKiosk(param));
-		result.setSuccess();
-
-		return result;
-	}
-	
-	
-
-	
-
-	
-
-
-	/**
-	 * pos test
-	 * @param request
-	 * @param reqParam
-	 * @param authentication
-	 * @return
-	 * @throws RequestResolveException
-	 */
-	@RequestMapping(value = "/store/temp", method = RequestMethod.POST )
-	public ClerkResult sStoreTemp(HttpServletRequest request, @RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException{
-		logger.debug("tempOrder : " + reqParam);
-		
-		clerkCommonService.saveStoreTemp();
-		
-		ClerkResult result = new ClerkResult();
-		result.setData(null);
-		result.setSuccess();
-	
-		return result;
-	}
-	
-	
-
-
 	/**
 	 * 주방프린터 프린트시 업데이트
 	 * @param request
@@ -1064,39 +1015,68 @@ public class ClerkApiController {
 		return result;
 	}
 	
+	/******     (12) url : /clerk/api/user     ******/
+
 	/**
-	 * getMerchantAndPrinter
-	 * 결재  ID,  주방 프린터 정보 
+	 * 사용자 정보 조회
 	 * 
 	 * @param param
-	 *            brandId
-	 *            storeId
 	 * 
-	 * @return 
 	 * 
-	 * @throws InvalidParamException
-	 * 
+	 * @return
+	 * @throws DataNotFoundException
+	 * @throws DataNotRegisteredException
 	 */
-	
-	@RequestMapping(value = "/store/info", method = RequestMethod.POST)
-	public ClerkResult storeInfo(@RequestBody StoreParam reqParam, Authentication authentication)
-			 throws RequestResolveException {
+	@RequestMapping(value = "/user/detail", method = RequestMethod.POST)
+	public ClerkResult getUserDetail(@RequestBody StoreParam reqParam, Authentication authentication) {
 
-		logger.debug("storeInfo : " + reqParam);
-//		logger.debug("인증1>>>>>>>>> : " + authentication.getAuthorities());
-//
-//		logger.debug("인증1>>>>>>>>> : " + authentication.toString());
-//		logger.debug("인증1>>>>>>>>> : " + authentication.getName());
-		
-		
+		logger.debug("getUserDetail : " + reqParam);
+
 		SingleMap param = reqParam.getData();
+		param.put("userName", (authentication != null ? authentication.getName() : ""));
 
 		ClerkResult result = new ClerkResult();
-		result.setData(clerkOrderService.storeInfo(param));
+		result.setData(clerkCommonService.getUserDetail(param));
 		result.setSuccess();
 
 		return result;
 	}
+
+
+	/**
+	 * 스토어 사용자 유효성 검새
+	 * 
+	 * @param param
+	 *            username 직원 ID
+	 *            password 패스워드
+	 * 
+	 * 
+	 * @return 직원 목록
+	 * 
+	 * @throws InvalidParamException
+	 * @throws NoPermissionException
+	 * 
+	 */
+	@RequestMapping(value = "/user/validation", method = RequestMethod.POST)
+	public ClerkResult checkUserValidation(@RequestBody StoreParam reqParam, Authentication authentication)
+			throws InvalidParamException, NoPermissionException {
+		logger.debug("checkUserValidation");
+
+		SingleMap param = reqParam.getData();
+		param.put("userName", (authentication != null ? authentication.getName() : ""));
+
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkCommonService.checkUserValidation(param));
+		result.setSuccess();
+
+		return result;
+	}
+
+
+
+	
+	
+
 	
 	
 }
