@@ -37,6 +37,45 @@
 				"provider-properties": {
 					"@dbeaver-serverTimezone@": "Asia/Seoul"
 				},
+				"auth-model": "native"
+			}
+		},
+		"mysql8-17684ecb54f-1510b46f539a5e5e": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "115.68.184.161",
+			"save-password": true,
+			"show-system-objects": true,
+			"read-only": false,
+			"configuration": {
+				"host": "115.68.184.161",
+				"port": "3306",
+				"url": "jdbc:mysql://115.68.184.161:3306/",
+				"home": "MySQL Binaries",
+				"type": "dev",
+				"provider-properties": {
+					"@dbeaver-serverTimezone@": "Asia/Seoul"
+				},
+				"auth-model": "native"
+			}
+		},
+		"mysql8-1768864ea3e-b85515478844c43": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "order9db 2",
+			"save-password": true,
+			"show-system-objects": true,
+			"read-only": false,
+			"configuration": {
+				"host": "115.68.184.161",
+				"port": "3306",
+				"database": "order9db",
+				"url": "jdbc:mysql://115.68.184.161:3306/order9db",
+				"home": "MySQL Binaries",
+				"type": "dev",
+				"provider-properties": {
+					"@dbeaver-serverTimezone@": "Asia/Seoul"
+				},
 				"auth-model": "native",
 				"handlers": {}
 			}
