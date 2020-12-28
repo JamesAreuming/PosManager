@@ -807,7 +807,7 @@
               S.ORDER_NO AS ORDER_NO,
               F.NAME AS NAME,
               S.POS_NO AS POS_NO
-         FROM TB_SVC_SALES S, TB_SVC_SALES_ITEM I, TB_SVC_STAFF
+         FROM TB_SVC_SALES S, TB_SVC_SALES_ITEM I, TB_SVC_STAFF F
               WHERE S.ID = I.SALES_ID
                     AND S.STAFF_ID = F.ID 
                     AND S.BRAND_ID = #{brandId,jdbcType=BIGINT}
