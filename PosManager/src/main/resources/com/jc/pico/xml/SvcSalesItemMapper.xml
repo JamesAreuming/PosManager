@@ -48,7 +48,14 @@
   	<result column="RECEIPT_ID" jdbcType="VARCHAR" property="receiptId" />
   	<result column="RECEIPT_NO" jdbcType="VARCHAR" property="receiptNo" />
   	<result column="ORDER_ST" jdbcType="CHAR" property="orderSt" />
+  	<result column="ORDER_NO" jdbcType="VARCHAR" property="orderNo"/>
+  	<result column="POS_NO" jdbcType="VARCHAR" property="posNo"/>
   </resultMap>
+  
+  <resultMap id="SvcStaff" type="com.jc.pico.bean.SvcStaff">
+  	<result column="NAME" jdbcType="VARCHAR" property="name"/>
+  </resultMap>
+  
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbggenerated
@@ -794,11 +801,15 @@
               S.ID,
               DATE_FORMAT(S.ORDER_TM_LOCAL,'%Y-%m-%d %H:%i:%s') AS ORDER_TM_LOCAL,
               S.RECEIPT_NO AS RECEIPT_NO,
-              COUNT(I.SALES_ID) AS COUNT,
+              I.COUNT AS COUNT,
               SUM(I.SALES) AS PRICE,
-              S.ORDER_ST AS ORDER_ST
-         FROM TB_SVC_SALES S, TB_SVC_SALES_ITEM I
+              S.ORDER_ST AS ORDER_ST,
+              S.ORDER_NO AS ORDER_NO,
+              F.NAME AS NAME,
+              S.POS_NO AS POS_NO
+         FROM TB_SVC_SALES S, TB_SVC_SALES_ITEM I, TB_SVC_STAFF
               WHERE S.ID = I.SALES_ID
+                    AND S.STAFF_ID = F.ID 
                     AND S.BRAND_ID = #{brandId,jdbcType=BIGINT}
                     AND S.STORE_ID = #{storeId,jdbcType=BIGINT}
                     AND CONVERT_TZ( S.SALES_TM, '+00:00', '+09:00' ) BETWEEN STR_TO_DATE( #{startDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s' ) AND STR_TO_DATE( #{endDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s' )
