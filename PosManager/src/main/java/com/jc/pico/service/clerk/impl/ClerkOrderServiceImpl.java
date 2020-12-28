@@ -407,9 +407,7 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 			System.out.println("제발 >>"+searchTest.toString());
 			SvcSales test = new SvcSales();
 				     test = svcSalesMapper.selectBySalesDetailKioskTest2(searchTest);
-				     
-				
-			
+				     			
 			
 		}	
 		//svcSalesList.setSvcSalesList(svcSalesItemMapper.selectBySalesDetailKioskTest2(param));

@@ -1,9 +1,9 @@
 {
-  "newVersion": "1.0.24",
-  "newVersionCode": "24",
-  "apkName": "order9-v1.0.24_20200625.apk",
-  "apkUrl": "http://api2.order9.co.kr/admin/_static/appinfo/order9-v1.0.24_20200625.apk",
+  "newVersion": "1.0.28",
+  "newVersionCode": "28",
+  "apkName": "order9-v1.0.25_20201223.apk",
+  "apkUrl": "http://115.68.184.161:8081/admin/_static/appinfo/order9-v1.0.25_20201223.apk",
     "versionNotes": [
-    "- 2020.06.25"
+    "- 2020.12.23"
   ]
 }
