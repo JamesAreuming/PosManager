@@ -62,7 +62,18 @@ public class ClerkApiController {
 	@Autowired
 	private CustomSalesMapper customSalesMapper;
 	
-
+	@RequestMapping(value = "/appversion", method = RequestMethod.POST)
+	public ClerkResult getAppVersion(HttpServletRequest request, @RequestBody StoreParam reqParam,  Authentication authentication)
+			throws RequestResolveException {
+		
+		final SingleMap param = reqParam.getData();
+		
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkCommonService.getAppVersion(request.getServletContext(), param));
+		result.setSuccess();
+		
+		return result;
+	}
 	
 	/******     (1) url : /clerk/api/advertiseInfo     ******/
 	
@@ -74,7 +85,7 @@ public class ClerkApiController {
 		
 		logger.debug("getAdvertise  : " + reqParam); //StoreParam [header={os=android, posNo=003, lang=ko}, data={}]
 
-		param.put("host", String.format("%s://%s", request.getScheme(), request.getServerName())); //http://192.168.0.166 -- 내 ip주소
+		param.put("host", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort())); //http://192.168.0.166:포트번호 -- 내 ip주소
 		param.put("storeId", ClerkUtil.getStaffStoreId(authentication));
 		
 		ClerkResult result = new ClerkResult();
@@ -106,7 +117,7 @@ public class ClerkApiController {
 		SingleMap param = reqParam.getData();
 		param.putAll(reqParam.getHeader()); // putAll()메소드를 이용해서 복사
 		
-		System.out.println("확인>>>>>>>>>>>"+param); //withTableLock=release, os=android, appType=108004, posNo=105, storeId=89, lang=ko, versionCode=28
+		System.out.println("앱버전>>>>>>>>>>>"+param); //withTableLock=release, os=android, appType=108004, posNo=105, storeId=89, lang=ko, versionCode=28
 
 		ClerkResult result = new ClerkResult();
 		result.setData(clerkCommonService.getAppInfo(param));

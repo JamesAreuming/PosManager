@@ -107,4 +107,7 @@ public interface ClerkCommonService {
 	SingleMap saveStoreTemp() throws RequestResolveException;
 	
 	SvcStore getStoreById(Long id);
+
+	// 앱버전 가져오기?
+	SingleMap getAppVersion(ServletContext context, SingleMap param) throws RequestResolveException;
 }
