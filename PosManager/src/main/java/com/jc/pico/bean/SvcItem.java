@@ -294,6 +294,14 @@ public class SvcItem {
     
     private String isSoldOut;
     
+    
+    private String salesTimeBegin;
+    
+    private String salesTimeEnd;
+    
+    
+    /* getter & setter */
+    
     public Long getId() {
         return id;
     }
@@ -1135,7 +1143,25 @@ public class SvcItem {
 	public void setIsSoldOut(String isSoldOut) {
 		this.isSoldOut = isSoldOut;
 	}
+	
 
+	public String getSalesTimeBegin() {
+		return salesTimeBegin;
+	}
+
+	public void setSalesTimeBegin(String salesTimeBegin) {
+		this.salesTimeBegin = salesTimeBegin;
+	}
+
+	public String getSalesTimeEnd() {
+		return salesTimeEnd;
+	}
+
+	public void setSalesTimeEnd(String salesTimeEnd) {
+		this.salesTimeEnd = salesTimeEnd;
+	}
+
+	
 	@Override
 	public String toString() {
 		return "SvcItem [id=" + id + ", catId=" + catId + ", brandId=" + brandId + ", storeId=" + storeId + ", status="
@@ -1148,24 +1174,9 @@ public class SvcItem {
 				+ ", salesBegin=" + salesBegin + ", salesEnd=" + salesEnd + ", printerNo=" + printerNo + ", adminId="
 				+ adminId + ", created=" + created + ", updated=" + updated + ", intro=" + intro + ", isStockUse="
 				+ isStockUse + ", safeStockCnt=" + safeStockCnt + ", recipe=" + recipe + ", isSoldOut=" + isSoldOut
-				+ "]";
+				+ ", salesTimeBegin=" + salesTimeBegin + ", salesTimeEnd=" + salesTimeEnd + "]";
 	}
 	
-	
-
-//	@Override
-//	public String toString() {
-//		return "SvcItem [id=" + id + ", catId=" + catId + ", brandId=" + brandId + ", storeId=" + storeId + ", status="
-//				+ status + ", itemTp=" + itemTp + ", itemCd=" + itemCd + ", barcode=" + barcode + ", name=" + name
-//				+ ", shortName=" + shortName + ", price=" + price + ", supplyPrice=" + supplyPrice + ", purchasePrice="
-//				+ purchasePrice + ", tax=" + tax + ", discountPrice=" + discountPrice + ", serviceCharge="
-//				+ serviceCharge + ", isTaxIncluded=" + isTaxIncluded + ", taxTp=" + taxTp + ", isTipIncluded="
-//				+ isTipIncluded + ", isReward=" + isReward + ", isDiscountable=" + isDiscountable + ", isOptUsed="
-//				+ isOptUsed + ", isPackable=" + isPackable + ", isStamp=" + isStamp + ", mbIconTp=" + mbIconTp
-//				+ ", salesBegin=" + salesBegin + ", salesEnd=" + salesEnd + ", printerNo=" + printerNo + ", adminId="
-//				+ adminId + ", created=" + created + ", updated=" + updated + ", intro=" + intro + ", isStockUse="
-//				+ isStockUse + ", safeStockCnt=" + safeStockCnt + ", recipe=" + recipe + "]";
-//	}
-//    
+	   
     
 }

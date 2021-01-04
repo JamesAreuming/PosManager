@@ -40,6 +40,9 @@
     <result column="SAFE_STOCK_CNT" jdbcType="VARCHAR" property="safeStockCnt" />
     <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
     <result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />
+    <result column="IS_SOLDOUT" jdbcType="CHAR" property="isSoldOut"/>
+    <result column="SALES_TIME_BEGIN" jdbcType="CHAR" property="salesTimeBegin"/>
+    <result column="SALES_TIME_END" jdbcType="CHAR" property="salesTimeEnd"/>    
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.jc.pico.bean.SvcItem">
     <!--
