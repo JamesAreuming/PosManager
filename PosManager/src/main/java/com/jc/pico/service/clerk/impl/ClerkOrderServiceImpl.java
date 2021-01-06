@@ -369,6 +369,8 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 		
 		svcSalesList.setSvcSalesList(svcSalesItemMapper.selectBySalesItemList(searchItem));
 		
+		
+		
 		return svcSalesList;
 	}
 	
@@ -395,7 +397,7 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 //		svcSalesList.getSvcSalesList().size();
 //		
 
-		for(int i=0;i<svcSalesList.getSvcSalesList().size();i++) {
+/* 보류		for(int i=0;i<svcSalesList.getSvcSalesList().size();i++) {
 			String receiptString = svcSalesList.getSvcSalesList().get(i).getSvcSales().getReceiptNo();
 			System.out.println("영수증번호 >> "+receiptString);
 			
@@ -411,7 +413,7 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 			
 		}	
 		//svcSalesList.setSvcSalesList(svcSalesItemMapper.selectBySalesDetailKioskTest2(param));
-				
+*/				
 		return svcSalesList;
 	}	
 

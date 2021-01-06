@@ -57,8 +57,8 @@
 			OR (BRAND_ID = #{brandId} AND STORE_ID = #{storeId})
 		)
 		AND (
-			(SALE_TIME_BEGIN = '0000' and SALE_TIME_END ='0000')
-			OR (TIME_FORMAT(CURTIME(), '%H:%i') BETWEEN SALE_TIME_BEGIN AND SALE_TIME_END)
+			(SALES_TIME_BEGIN = '00' and SALES_TIME_END ='00')
+			OR (TIME_FORMAT(CURTIME(), '%H') BETWEEN SALES_TIME_BEGIN AND SALES_TIME_END)
 		)	 
 		ORDER BY ORDINAL
 	</select>
@@ -97,8 +97,8 @@
 			, B.MB_ICON_TP AS mbIconTp
 		    , B.INTRO AS intro
 		    , B.IS_SOLDOUT AS isSoldOut <!-- IS_SOLDOUT 컬럼이 나중에 생성 -->
-		    , B.SALES_TIME_BEGIN AS salesTimeBegin
-		    , B.SALES_TIME_END AS salesTimeEnd
+		    , LEFT(B.SALES_TIME_BEGIN, 2) AS salesTimeBegin
+		    , LEFT(B.SALES_TIME_END, 2) AS salesTimeEnd
 		FROM 
 			TB_SVC_PLU_ITEM A
 		INNER JOIN TB_SVC_ITEM B

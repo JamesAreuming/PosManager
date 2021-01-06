@@ -801,7 +801,7 @@
               S.ID,
               DATE_FORMAT(S.ORDER_TM_LOCAL,'%Y-%m-%d %H:%i:%s') AS ORDER_TM_LOCAL,
               S.RECEIPT_NO AS RECEIPT_NO,
-              I.COUNT AS COUNT,
+              SUM(I.COUNT) AS COUNT,
               SUM(I.SALES) AS PRICE,
               S.ORDER_ST AS ORDER_ST,
               S.ORDER_NO AS ORDER_NO,
