@@ -1163,6 +1163,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 		svc.setBrandId(order.getBrandId());
 		svc.setStoreId(order.getStoreId());
 		svc.setOrderTmLocal(order.getOrderTmLocal());
+		svc.setPosNo(order.getPosNo());
 		svc.setOrdinal(++ordinal);
 		
 		Optional<SvcItem> optional =  itemList.stream().filter( i -> i.getId().equals(orderItem.getItemId())).findFirst();
