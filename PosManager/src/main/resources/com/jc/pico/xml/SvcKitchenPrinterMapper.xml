@@ -68,7 +68,7 @@
 	ORDER BY a.RECEIPT_NO, a.PRINTER_NO, a.ORDINAL ASC
   </select>
   
-  <!-- posNO추가 -->
+
   <update id="update" parameterType="com.jc.pico.bean.SvcKitchenPrinter">
     UPDATE TB_SVC_KITCHEN_PRINTER
     SET 
