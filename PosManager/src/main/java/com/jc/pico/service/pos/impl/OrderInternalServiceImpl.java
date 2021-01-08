@@ -1197,6 +1197,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 				optSvc.setItemNm(itemOpt.getOptNm() + "(" + itemOpt.getOptDtlNm() + ")");
 				optSvc.setOrdinal(++ordinal);
 				optSvc.setIsOption(true);
+				optSvc.setPosNo(svc.getPosNo());
 				svcKitchenPrintList.add(optSvc);
 			}
 		}
