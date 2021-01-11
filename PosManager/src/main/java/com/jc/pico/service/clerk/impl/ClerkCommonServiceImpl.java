@@ -947,16 +947,20 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		final InputStream is = context.getResourceAsStream("/admin/_static/ad/ad.data");
 		try {
 			final String adInfo = IOUtils.toString(is);
-			final SingleMap defaultAdvertise = objectMapper.readValue(adInfo, SingleMap.class);
+			final SingleMap defaultAdvertise = objectMapper.readValue(adInfo, SingleMap.class); // 기본광고 ad_01, ad_02 ...
 
 			final Long storeId = param.getLong("storeId", 0L);
 
+			//storeId가 0이면 기본강고
 			if (storeId == 0) {
 				return defaultAdvertise;
 			}
 
-			final List<SingleMap> dataList = svcCommonMapper.selectAdvertiseList(param); // 해당 storeId에 대한
-																							// 광고데이터리스트(사진+비디오)
+			/* 
+			 * 해당 storeId에 대한
+			 * 광고데이터리스트(사진+비디오)
+			 */ 
+			final List<SingleMap> dataList = svcCommonMapper.selectAdvertiseList(param);  // storeId = 89경우 >> 101.jpg, 102.jpg, 103.jpg
 
 			// 광고데이터리스트가 비워있는 경우 -- 기본 광고데이터 넣음
 			if (dataList.isEmpty()) {
@@ -982,11 +986,12 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 
 			// videoList가 담겨있다면 -- 추가
 			if (!videoList.isEmpty()) {
-				System.out.println("확인 -------------------------->@@@@");
+				//System.out.println("확인 -------------------------->@@@@");
 			}
 
 			defaultAdvertise.put("image", imageList);
 			defaultAdvertise.put("video", videoList);
+			
 
 			/*
 			 * storeId = 89 : 89번에 해당광고(비디오X) + 기본광고(ad_00, ad_01, ad_02)
