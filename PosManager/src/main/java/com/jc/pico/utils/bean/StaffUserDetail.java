@@ -55,6 +55,7 @@ public class StaffUserDetail extends UsernamePasswordAuthenticationToken {
 	public void setLicenseId(long licenseId) {
 		this.licenseId = licenseId;
 	}
+	
 
 	@Override
 	public String toString() {
