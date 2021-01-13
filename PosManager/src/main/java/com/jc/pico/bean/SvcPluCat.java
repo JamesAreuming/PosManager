@@ -106,7 +106,6 @@ public class SvcPluCat {
     private String pluStatus;
     private String salesTimeBegin;
     private String salesTimeEnd;
-    private String pluSection;
     
     
     public Long getId() {
@@ -388,14 +387,6 @@ public class SvcPluCat {
 
 	public void setSalesTimeEnd(String salesTimeEnd) {
 		this.salesTimeEnd = salesTimeEnd;
-	}
-
-	public String getPluSection() {
-		return pluSection;
-	}
-
-	public void setPluSection(String pluSection) {
-		this.pluSection = pluSection;
 	}
     
     
