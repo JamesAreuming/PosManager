@@ -47,7 +47,8 @@
 		    , BRAND_ID AS brandId    
 		    , STORE_ID AS storeId    
 		    , NAME AS name
-		    , CAT_CD AS catCd      
+		    , CAT_CD AS catCd
+            , PLU_SECTION AS pluSection <!-- 추가 -->     
 		FROM
 		    TB_SVC_PLU_CAT
 		WHERE

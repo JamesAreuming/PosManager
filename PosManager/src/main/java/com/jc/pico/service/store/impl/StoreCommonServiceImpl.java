@@ -673,6 +673,7 @@ public class StoreCommonServiceImpl implements StoreCommonService {
 		SingleMap map = new SingleMap();
 		map.put("storeId",  staffUserDetail.getStoreId());
 		map.put("brandId", staffUserDetail.getBrandId());
+		map.put("licenseId", staffUserDetail.getLicenseId());
 		map.put("ip", data.getString("ip"));
 		return svcStorePrinterMapper.updateBySingleMap(map);
 	}

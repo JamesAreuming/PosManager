@@ -101,6 +101,14 @@ public class SvcPluCat {
      *
      * @mbggenerated Thu Aug 04 11:39:46 KST 2016
      */
+    
+    //추가
+    private String pluStatus;
+    private String salesTimeBegin;
+    private String salesTimeEnd;
+    private String pluSection;
+    
+    
     public Long getId() {
         return id;
     }
@@ -356,4 +364,39 @@ public class SvcPluCat {
     public void setUpdated(Date updated) {
         this.updated = updated;
     }
+
+    //추가
+	public String getPluStatus() {
+		return pluStatus;
+	}
+
+	public void setPluStatus(String pluStatus) {
+		this.pluStatus = pluStatus;
+	}
+
+	public String getSalesTimeBegin() {
+		return salesTimeBegin;
+	}
+
+	public void setSalesTimeBegin(String salesTimeBegin) {
+		this.salesTimeBegin = salesTimeBegin;
+	}
+
+	public String getSalesTimeEnd() {
+		return salesTimeEnd;
+	}
+
+	public void setSalesTimeEnd(String salesTimeEnd) {
+		this.salesTimeEnd = salesTimeEnd;
+	}
+
+	public String getPluSection() {
+		return pluSection;
+	}
+
+	public void setPluSection(String pluSection) {
+		this.pluSection = pluSection;
+	}
+    
+    
 }
