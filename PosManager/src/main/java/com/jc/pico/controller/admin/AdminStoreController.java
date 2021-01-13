@@ -586,6 +586,7 @@ public class AdminStoreController {
     
     switch (method) {
     case GET :
+    	//System.out.println("여기>>>>>>>>>>>>>>>>");
     	/*String str = String.valueOf(params.get("draw"));
     	System.out.println("확인+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+str); // null 
     	

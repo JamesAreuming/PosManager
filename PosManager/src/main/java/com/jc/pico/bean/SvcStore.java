@@ -304,6 +304,14 @@ public class SvcStore {
     
     private String vanType;
     
+    private String enterpriseCodeIf;
+    private String corporationCodeIf;
+    private String storeCodeIf;
+    private String storeStatusIf;
+    private String storeSection;
+    private Long speciality; //추가 : 특산품업체
+    private Long delivery; // 추가 : 배달업체 번호
+    
     public Long getId() {
         return id;
     }
@@ -1167,6 +1175,64 @@ public class SvcStore {
 	public void setVanType(String vanType) {
 		this.vanType = vanType;
 	}
+
+	public String getEnterpriseCodeIf() {
+		return enterpriseCodeIf;
+	}
+
+	public void setEnterpriseCodeIf(String enterpriseCodeIf) {
+		this.enterpriseCodeIf = enterpriseCodeIf;
+	}
+
+	public String getCorporationCodeIf() {
+		return corporationCodeIf;
+	}
+
+	public void setCorporationCodeIf(String corporationCodeIf) {
+		this.corporationCodeIf = corporationCodeIf;
+	}
+
+	public String getStoreCodeIf() {
+		return storeCodeIf;
+	}
+
+	public void setStoreCodeIf(String storeCodeIf) {
+		this.storeCodeIf = storeCodeIf;
+	}
+
+	public String getStoreStatusIf() {
+		return storeStatusIf;
+	}
+
+	public void setStoreStatusIf(String storeStatusIf) {
+		this.storeStatusIf = storeStatusIf;
+	}
+
+	public String getStoreSection() {
+		return storeSection;
+	}
+
+	public void setStoreSection(String storeSection) {
+		this.storeSection = storeSection;
+	}
+
+	public Long getSpeciality() {
+		return speciality;
+	}
+
+	public void setSpeciality(Long speciality) {
+		this.speciality = speciality;
+	}
+
+	public Long getDelivery() {
+		return delivery;
+	}
+
+	public void setDelivery(Long delivery) {
+		this.delivery = delivery;
+	}
     
+	
+	
     
 }
