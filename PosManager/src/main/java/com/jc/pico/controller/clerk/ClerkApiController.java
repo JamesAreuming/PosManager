@@ -584,7 +584,7 @@ public class ClerkApiController {
 	public ClerkResult getPluCategories(@RequestBody StoreParam reqParam, Authentication authentication)
 			throws DataNotFoundException, DataNotRegisteredException {
 		
-		logger.debug("getPluCategories : " + reqParam); //StoreParam [header={os=android, posNo=002, lang=ko}, data={brandId=44, storeId=89}
+		logger.debug("getPluCategories >>>>>>>>>>>>>>>>>>>>>>> : " + reqParam); //StoreParam [header={os=android, posNo=002, lang=ko}, data={brandId=44, storeId=89}
 		
 		SingleMap param = reqParam.getData();
 
@@ -595,6 +595,20 @@ public class ClerkApiController {
 		return result;
 	}
 	
+	/*@RequestMapping(value = "/plu/categories/speciality", method = RequestMethod.POST)
+	public ClerkResult getPluCategoriesSpeciality(@RequestBody StoreParam reqParam, Authentication authentication)
+			throws DataNotFoundException, DataNotRegisteredException {	
+		
+		logger.debug("getPluCategories : " + reqParam); //StoreParam [header={os=android, posNo=002, lang=ko}, data={brandId=44, storeId=146}
+		
+		SingleMap param = reqParam.getData();
+
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkCommonService.getCategoriesDetail(param));
+		result.setSuccess();
+		
+		return result;
+	}*/
 	
 	/******     (8) url : /clerk/api/staff     ******/
 	

@@ -243,7 +243,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 
 	@Autowired
 	private SvcPluItemMapper svcPluItemMapper;
-
+	
 	private ObjectMapper objectMapper;
 
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
@@ -282,14 +282,17 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 	}
 
 	@Override
-	public List<SingleMap> getCategoriesDetail(SingleMap param) { // param : catId, storeId, brandId
+	public List<SingleMap> getCategoriesDetail(SingleMap param) { // param : catId, storeId, brandId // 44,89
+		
+		
 		List<SingleMap> categories = storeMapper.selectPluCategoryList(param); // 카테고리 리스트 : 인기메뉴, 세트메뉴 ....
 
 		for (SingleMap category : categories) { // for문으로 돌면서 각 카테고리별 메뉴 넣기
-			param.put("catId", category.get("id")); // 417 - 인기메뉴, 418 - 세트메뉴, 419 - 단품메뉴, 420 - 참숯메뉴, 421 - 사이드메뉴, 422
+			param.put("catId", category.get("id")); // 해당 카테고리 아이디 417 - 인기메뉴, 418 - 세트메뉴, 419 - 단품메뉴, 420 - 참숯메뉴, 421 - 사이드메뉴, 422
 													// - 음료수, 423 - 토핑
 			category.put("items", getPluItemListByCatId(param));
 		}
+		
 
 		return categories;
 	}
