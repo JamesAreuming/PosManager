@@ -48,10 +48,10 @@
     <result column="CORPORATION_CODE_IF" jdbcType="VARCHAR" property="corporationCodeIf"/>
     <result column="STORE_CODE_IF" jdbcType="VARCHAR" property="storeCodeIf"/>
     <result column="STORE_STATUS_IF" jdbcType="VARCHAR" property="storeStatusIf"/>
-    <result column="STORE_SECTION" jdbcType="CHAR" property="storeSection"/>
-    <result column="speciality" jdbcType="BIGINT" property="speciality"/>
-    <result column="delivery" jdbcType="BIGINT" property="delivery"/>   
+    <result column="MULTI_STORE_USE" jdbcType="CHAR" property="multiStoreUse"/>
+    <result column="SPECIALITY" jdbcType="CHAR" property="speciality"/>
   </resultMap>
+  
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbggenerated
@@ -129,7 +129,8 @@
     ID, SERVICE_ID, TENANT_ID, BRAND_ID, STORE_CD, SVC_ST, STORE_ST, STORE_TP, BIZ_NO, 
     OWNER_NM, STORE_NM, BIZ_CAT, EMAIL, FAX_COUNTRY_CD, FAX, MB_COUNTRY_CD, MB, TEL_COUNTRY_CD, 
     TEL, COUNTRY, REGION, CITY, ADDR1, ADDR2, ZIP, LATITUDE, LONGITUDE, TIMEZONE, DEPOSIT, 
-    BUSINESS_HOUR, TIP, INTRO, ADMIN_ID, HAS_NVR, CREATED, UPDATED, VAN_TYPE, ENTERPRISE_CODE_IF, CORPORATION_CODE_IF, STORE_CODE_IF, STORE_STATUS_IF, STORE_SECTION, speciality, delivery 
+    BUSINESS_HOUR, TIP, INTRO, ADMIN_ID, HAS_NVR, CREATED, UPDATED, VAN_TYPE, ENTERPRISE_CODE_IF, CORPORATION_CODE_IF, STORE_CODE_IF, STORE_STATUS_IF,
+    MULTI_STORE_USE, SPECIALITY
   </sql>
   <select id="selectByExample" parameterType="com.jc.pico.bean.SvcStoreExample" resultMap="BaseResultMap">
     <!--

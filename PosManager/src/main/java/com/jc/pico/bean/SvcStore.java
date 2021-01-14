@@ -308,9 +308,8 @@ public class SvcStore {
     private String corporationCodeIf;
     private String storeCodeIf;
     private String storeStatusIf;
-    private String storeSection;
-    private Long speciality; //추가 : 특산품업체
-    private Long delivery; // 추가 : 배달업체 번호
+    private String multiStoreUse;
+    private String speciality; //특산품업체 배달 여부
     
     public Long getId() {
         return id;
@@ -1208,31 +1207,22 @@ public class SvcStore {
 		this.storeStatusIf = storeStatusIf;
 	}
 
-	public String getStoreSection() {
-		return storeSection;
+	public String getMultiStoreUse() {
+		return multiStoreUse;
 	}
 
-	public void setStoreSection(String storeSection) {
-		this.storeSection = storeSection;
+	public void setMultiStoreUse(String multiStoreUse) {
+		this.multiStoreUse = multiStoreUse;
 	}
 
-	public Long getSpeciality() {
+	public String getSpeciality() {
 		return speciality;
 	}
 
-	public void setSpeciality(Long speciality) {
+	public void setSpeciality(String speciality) {
 		this.speciality = speciality;
 	}
-
-	public Long getDelivery() {
-		return delivery;
-	}
-
-	public void setDelivery(Long delivery) {
-		this.delivery = delivery;
-	}
     
-	
 	
     
 }
