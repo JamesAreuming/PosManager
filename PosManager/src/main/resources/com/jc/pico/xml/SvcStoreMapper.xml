@@ -51,6 +51,7 @@
     <result column="MULTI_STORE_USE" jdbcType="CHAR" property="multiStoreUse"/>
     <result column="SPECIALITY" jdbcType="CHAR" property="speciality"/>
   </resultMap>
+  
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbggenerated
