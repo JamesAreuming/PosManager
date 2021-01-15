@@ -313,17 +313,17 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		
 		for(SingleMap test1 : test) {
 			test1.get("CHILDREN_STORE_ID");
+			
 			logger.debug("칠드런>"+test1.get("CHILDREN_STORE_ID")); // 147, 135
+			
 			Long id = test1.getLong("CHILDREN_STORE_ID");
 			SvcStore store = getStoreById(id); //
-			Long storeId = store.getId();
-			Long brandId = store.getBrandId();
+			Long multiStoreId = store.getId();
+			Long multiBrandId = store.getBrandId();
 			
 					
-			result.put("storeId", storeId);
-			result.put("brandId", brandId);	
-			
-			System.out.println("확인>>>>>>>>>>>>>"+param.toString()); // {brandId=63, storeId=135}
+			result.put("multiStoreId", multiStoreId);
+			result.put("multiBrandId", multiBrandId);	
 			 
 		}
 		
