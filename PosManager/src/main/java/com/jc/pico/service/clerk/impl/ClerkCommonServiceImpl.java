@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.mail.Store;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.io.IOUtils;
@@ -72,6 +73,7 @@ import com.jc.pico.mapper.SvcKitchenMessageMapper;
 import com.jc.pico.mapper.SvcPluItemMapper;
 import com.jc.pico.mapper.SvcStaffMapper;
 import com.jc.pico.mapper.SvcStoreMapper;
+import com.jc.pico.mapper.SvcStoreMultiMapper;
 import com.jc.pico.mapper.SvcTableMapper;
 import com.jc.pico.mapper.SvcUserMappingMapper;
 import com.jc.pico.mapper.UserMapper;
@@ -244,6 +246,9 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 	@Autowired
 	private SvcPluItemMapper svcPluItemMapper;
 	
+	@Autowired
+	private SvcStoreMultiMapper svcStoreMultiMapper;
+	
 	private ObjectMapper objectMapper;
 
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
@@ -284,6 +289,8 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 	@Override
 	public List<SingleMap> getCategoriesDetail(SingleMap param) { // param : catId, storeId, brandId // 44,89
 		
+		List<SingleMap> test = svcStoreMultiMapper.selectByStoreMultiList(param);
+		
 		
 		List<SingleMap> categories = storeMapper.selectPluCategoryList(param); // 카테고리 리스트 : 인기메뉴, 세트메뉴 ....
 
@@ -296,6 +303,39 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 
 		return categories;
 	}
+	
+	@Override
+	public List<SingleMap> getCategoriesMultiDetail(SingleMap param) { // 44, 89
+		
+		List<SingleMap> test = svcStoreMultiMapper.selectByStoreMultiList(param); // 147, 135
+		
+		for(SingleMap test1 : test) {
+			test1.get("CHILDREN_STORE_ID");
+			logger.debug("칠드런>"+test1.get("CHILDREN_STORE_ID")); // 147, 135
+			Long id = test1.getLong("CHILDREN_STORE_ID");
+			SvcStore store = getStoreById(id); //
+			Long storeId = store.getId();
+			Long brandId = store.getBrandId();
+			
+			param.put("storeId", storeId);
+			param.put("brandId", brandId);	
+			
+			System.out.println("확인>>>>>>>>>>>>>"+param.toString()); // {brandId=63, storeId=135}
+			
+			 //List<SingleMap> multiCategories = storeMapper.selectPluCategoryList(param);
+			 
+		}
+		
+		 List<SingleMap> categories = storeMapper.selectPluCategoryList(param);
+		 
+			for (SingleMap category : categories) { // for문으로 돌면서 각 카테고리별 메뉴 넣기
+				param.put("catId", category.get("id")); // 해당 카테고리 아이디 417 - 인기메뉴, 418 - 세트메뉴, 419 - 단품메뉴, 420 - 참숯메뉴, 421 - 사이드메뉴, 422
+														// - 음료수, 423 - 토핑
+				category.put("items", getPluItemListByCatId(param));
+			}
+		
+		return categories;
+	  }
 
 	/**
 	 * Plu item 목록 조회, 옵션, 옵션 상세 포함
@@ -1403,5 +1443,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		record.setIsUsed(false); // 락 해제
 		svcTableMapper.updateByExampleSelective(record, example);
 	}
+
+
 
 }
