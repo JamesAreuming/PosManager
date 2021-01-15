@@ -309,6 +309,8 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		
 		List<SingleMap> test = svcStoreMultiMapper.selectByStoreMultiList(param); // 147, 135
 		
+		SingleMap result = new SingleMap();
+		
 		for(SingleMap test1 : test) {
 			test1.get("CHILDREN_STORE_ID");
 			logger.debug("칠드런>"+test1.get("CHILDREN_STORE_ID")); // 147, 135
@@ -317,24 +319,15 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 			Long storeId = store.getId();
 			Long brandId = store.getBrandId();
 			
-			param.put("storeId", storeId);
-			param.put("brandId", brandId);	
+					
+			result.put("storeId", storeId);
+			result.put("brandId", brandId);	
 			
 			System.out.println("확인>>>>>>>>>>>>>"+param.toString()); // {brandId=63, storeId=135}
-			
-			 //List<SingleMap> multiCategories = storeMapper.selectPluCategoryList(param);
 			 
 		}
 		
-//		 List<SingleMap> categories = storeMapper.selectPluCategoryList(param);
-//		 
-//			for (SingleMap category : categories) { // for문으로 돌면서 각 카테고리별 메뉴 넣기
-//				param.put("catId", category.get("id")); // 해당 카테고리 아이디 417 - 인기메뉴, 418 - 세트메뉴, 419 - 단품메뉴, 420 - 참숯메뉴, 421 - 사이드메뉴, 422
-//														// - 음료수, 423 - 토핑
-//				category.put("items", getPluItemListByCatId(param));
-//			}
-		
-		return param;
+		return result;
 	  }
 
 	/**
