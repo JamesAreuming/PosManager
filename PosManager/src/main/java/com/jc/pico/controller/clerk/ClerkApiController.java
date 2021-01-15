@@ -595,27 +595,26 @@ public class ClerkApiController {
 		return result;
 	}
 	
-	/*@RequestMapping(value = "/plu/categories/speciality", method = RequestMethod.POST)
-	public ClerkResult getPluCategoriesSpeciality(@RequestBody StoreParam reqParam, Authentication authentication)
+	@RequestMapping(value = "/plu/categories/multi", method = RequestMethod.POST)
+	public ClerkResult getPluCategoriesMulti(@RequestBody StoreParam reqParam, Authentication authentication)
 			throws DataNotFoundException, DataNotRegisteredException {	
 		
-		logger.debug("getPluCategories : " + reqParam); //StoreParam [header={os=android, posNo=002, lang=ko}, data={brandId=44, storeId=146}
+		logger.debug("getPluCategoriesMulti : " + reqParam); //StoreParam [header={os=android, posNo=002, lang=ko}, data={brandId=44, storeId=146}
 		
 		SingleMap param = reqParam.getData();
 
 		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.getCategoriesDetail(param));
+		result.setData(clerkCommonService.getCategoriesMultiDetail(param));
 		result.setSuccess();
 		
 		return result;
-	}*/
+	}
 	
 	/******     (8) url : /clerk/api/staff     ******/
 	
 	/**
 	 * 매장 직원 정보 조회
 	 * 
-	 * @param param
 	 * 
 	 * 
 	 * @return
@@ -854,7 +853,7 @@ public class ClerkApiController {
 	public ClerkResult storeInfo(@RequestBody StoreParam reqParam, Authentication authentication)
 			 throws RequestResolveException {
 
-		logger.debug("storeInfo : " + reqParam);
+		logger.debug("storeInfo : " + reqParam); // StoreParam [header={os=android, posNo=111, lang=ko}, data={hwInfo=G7FXOJYDBD, version=1.0.30}]
 //		logger.debug("인증1>>>>>>>>> : " + authentication.getAuthorities());
 //
 //		logger.debug("인증1>>>>>>>>> : " + authentication.toString());
