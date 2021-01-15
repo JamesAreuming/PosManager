@@ -18,6 +18,8 @@ public class SvcStoreMulti {
 	private Date create;
 	private Date update;
 	
+	private String childrenStoreSection;
+	
 	public Long getId() {
 		return id;
 	}
@@ -78,6 +80,14 @@ public class SvcStoreMulti {
 	}
 	public void setUpdate(Date update) {
 		this.update = update;
+	}
+	
+	
+	public String getChildrenStoreSection() {
+		return childrenStoreSection;
+	}
+	public void setChildrenStoreSection(String childrenStoreSection) {
+		this.childrenStoreSection = childrenStoreSection;
 	}
 	
 	

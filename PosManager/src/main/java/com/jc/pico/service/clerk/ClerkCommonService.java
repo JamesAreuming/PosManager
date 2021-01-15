@@ -111,5 +111,6 @@ public interface ClerkCommonService {
 	// 앱버전 가져오기?
 	SingleMap getAppVersion(ServletContext context, SingleMap param) throws RequestResolveException;
 
-	SingleMap getCategoriesMultiDetail(SingleMap param);
+	// 특산품업체 정보 가져오기
+	SingleMap getPluCategoriesSpecialtyInfo(SingleMap param);
 }

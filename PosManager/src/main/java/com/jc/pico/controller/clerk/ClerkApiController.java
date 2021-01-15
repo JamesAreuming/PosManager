@@ -595,16 +595,17 @@ public class ClerkApiController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/plu/categories/multi", method = RequestMethod.POST)
-	public ClerkResult getPluCategoriesMulti(@RequestBody StoreParam reqParam, Authentication authentication)
+	//특산품 가게
+	@RequestMapping(value = "/plu/categories/specialtyInfo", method = RequestMethod.POST)
+	public ClerkResult getPluCategoriesSpecialtyInfo(@RequestBody StoreParam reqParam, Authentication authentication)
 			throws DataNotFoundException, DataNotRegisteredException {	
 		
-		logger.debug("getPluCategoriesMulti : " + reqParam); //StoreParam [header={os=android, posNo=002, lang=ko}, data={brandId=44, storeId=89}
+		logger.debug("getPluCategoriesSpecialtyInfo : " + reqParam); //StoreParam [header={os=android, posNo=002, lang=ko}, data={brandId=44, storeId=89}
 		
 		SingleMap param = reqParam.getData();
 
 		ClerkResult result = new ClerkResult();
-		result.setData(clerkCommonService.getCategoriesMultiDetail(param));
+		result.setData(clerkCommonService.getPluCategoriesSpecialtyInfo(param));
 		result.setSuccess();
 		
 		return result;

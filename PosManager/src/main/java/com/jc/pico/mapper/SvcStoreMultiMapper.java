@@ -6,5 +6,5 @@ import com.jc.pico.bean.SvcStoreMulti;
 import com.jc.pico.utils.bean.SingleMap;
 
 public interface SvcStoreMultiMapper{
-	List<SingleMap> selectByStoreMultiList(SingleMap param);
+	SingleMap selectBySpecialtyInfo(SingleMap param);
 }

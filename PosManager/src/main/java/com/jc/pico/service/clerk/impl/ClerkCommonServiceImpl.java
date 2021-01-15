@@ -289,9 +289,6 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 	@Override
 	public List<SingleMap> getCategoriesDetail(SingleMap param) { // param : catId, storeId, brandId // 44,89
 		
-		List<SingleMap> test = svcStoreMultiMapper.selectByStoreMultiList(param);
-		
-		
 		List<SingleMap> categories = storeMapper.selectPluCategoryList(param); // 카테고리 리스트 : 인기메뉴, 세트메뉴 ....
 
 		for (SingleMap category : categories) { // for문으로 돌면서 각 카테고리별 메뉴 넣기
@@ -305,18 +302,17 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 	}
 	
 	@Override
-	public SingleMap getCategoriesMultiDetail(SingleMap param) { // 44, 89
+	public SingleMap getPluCategoriesSpecialtyInfo(SingleMap param) { // 44, 89
 		
-		List<SingleMap> test = svcStoreMultiMapper.selectByStoreMultiList(param); // 147, 135
+		SingleMap specialtyInfo = svcStoreMultiMapper.selectBySpecialtyInfo(param); // 147, 135
 		
 		SingleMap result = new SingleMap();
 		
-		for(SingleMap test1 : test) {
-			test1.get("CHILDREN_STORE_ID");
+		    specialtyInfo.get("CHILDREN_STORE_ID");
 			
-			logger.debug("칠드런>"+test1.get("CHILDREN_STORE_ID")); // 147, 135
+			logger.debug("칠드런>"+specialtyInfo.get("CHILDREN_STORE_ID")); // 147, 135
 			
-			Long id = test1.getLong("CHILDREN_STORE_ID");
+			Long id = specialtyInfo.getLong("CHILDREN_STORE_ID");
 			SvcStore store = getStoreById(id); //
 			Long multiStoreId = store.getId();
 			Long multiBrandId = store.getBrandId();
@@ -324,8 +320,6 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 					
 			result.put("multiStoreId", multiStoreId);
 			result.put("multiBrandId", multiBrandId);	
-			 
-		}
 		
 		return result;
 	  }
