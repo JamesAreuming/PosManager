@@ -308,10 +308,14 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		//{BRAND_ID=44, INSERT_USER=441, CREATE=2021-01-15 16:40:30.0, STORE_ID=89, IS_USED=Y, CHILDREN_STORE_ID=149, UPDATE=2021-01-15 16:40:30.0, CHILDREN_STORE_SECTION=S, ID=1, FRAN_ID=23, ORDINAL=0}
 		System.out.println("키값 확인 >>>"+specialtyInfo.toString());
 		Long franId = specialtyInfo.getLong("FRAN_ID");
-		Long brandId = specialtyInfo.getLong("brandId");
-		Long storeId = specialtyInfo.getLong("storeId");
+		Long brandId = specialtyInfo.getLong("BRAND_ID");
+		Long storeId = specialtyInfo.getLong("STORE_ID");
 		
-		   SingleMap result = new SingleMap();
+		System.out.println("프랜차이즈"+franId);
+		System.out.println("법인"+brandId);
+		System.out.println("가맹점"+storeId);
+		
+		    SingleMap result = new SingleMap();
 			
 			Long id = specialtyInfo.getLong("CHILDREN_STORE_ID");
 			SvcStore store = getStoreById(id); //
@@ -324,6 +328,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 			result.put("specialtyStoreId", specialtyStoreId);
 			result.put("specialtyBrandId", specialtyBrandId);	
 		
+			System.out.println("확인>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+result.toString());
 		return result;
 	  }
 	
