@@ -305,19 +305,22 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 	public SingleMap getPluCategoriesSpecialtyInfo(SingleMap param) { // 44, 89
 		
 		SingleMap specialtyInfo = svcStoreMultiMapper.selectBySpecialtyInfo(param); // 147, 135
+		//{BRAND_ID=44, INSERT_USER=441, CREATE=2021-01-15 16:40:30.0, STORE_ID=89, IS_USED=Y, CHILDREN_STORE_ID=149, UPDATE=2021-01-15 16:40:30.0, CHILDREN_STORE_SECTION=S, ID=1, FRAN_ID=23, ORDINAL=0}
+		System.out.println("키값 확인 >>>"+specialtyInfo.toString());
+		Long franId = specialtyInfo.getLong("FRAN_ID");
+		Long brandId = specialtyInfo.getLong("brandId");
+		Long storeId = specialtyInfo.getLong("storeId");
 		
-		SingleMap result = new SingleMap();
-		
-		    specialtyInfo.get("CHILDREN_STORE_ID");
-			
-			logger.debug("칠드런>"+specialtyInfo.get("CHILDREN_STORE_ID")); // 147, 135
+		   SingleMap result = new SingleMap();
 			
 			Long id = specialtyInfo.getLong("CHILDREN_STORE_ID");
 			SvcStore store = getStoreById(id); //
 			Long specialtyStoreId = store.getId();
 			Long specialtyBrandId = store.getBrandId();
 			
-					
+			result.put("franId", franId);
+			result.put("brandId", brandId);
+			result.put("storeId", storeId);
 			result.put("specialtyStoreId", specialtyStoreId);
 			result.put("specialtyBrandId", specialtyBrandId);	
 		
