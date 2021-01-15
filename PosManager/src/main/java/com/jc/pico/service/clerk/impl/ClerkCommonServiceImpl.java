@@ -305,7 +305,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 	}
 	
 	@Override
-	public List<SingleMap> getCategoriesMultiDetail(SingleMap param) { // 44, 89
+	public SingleMap getCategoriesMultiDetail(SingleMap param) { // 44, 89
 		
 		List<SingleMap> test = svcStoreMultiMapper.selectByStoreMultiList(param); // 147, 135
 		
@@ -326,15 +326,15 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 			 
 		}
 		
-		 List<SingleMap> categories = storeMapper.selectPluCategoryList(param);
-		 
-			for (SingleMap category : categories) { // for문으로 돌면서 각 카테고리별 메뉴 넣기
-				param.put("catId", category.get("id")); // 해당 카테고리 아이디 417 - 인기메뉴, 418 - 세트메뉴, 419 - 단품메뉴, 420 - 참숯메뉴, 421 - 사이드메뉴, 422
-														// - 음료수, 423 - 토핑
-				category.put("items", getPluItemListByCatId(param));
-			}
+//		 List<SingleMap> categories = storeMapper.selectPluCategoryList(param);
+//		 
+//			for (SingleMap category : categories) { // for문으로 돌면서 각 카테고리별 메뉴 넣기
+//				param.put("catId", category.get("id")); // 해당 카테고리 아이디 417 - 인기메뉴, 418 - 세트메뉴, 419 - 단품메뉴, 420 - 참숯메뉴, 421 - 사이드메뉴, 422
+//														// - 음료수, 423 - 토핑
+//				category.put("items", getPluItemListByCatId(param));
+//			}
 		
-		return categories;
+		return param;
 	  }
 
 	/**
