@@ -314,15 +314,21 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 			
 			Long id = specialtyInfo.getLong("CHILDREN_STORE_ID");
 			SvcStore store = getStoreById(id); //
-			Long multiStoreId = store.getId();
-			Long multiBrandId = store.getBrandId();
+			Long specialtyStoreId = store.getId();
+			Long specialtyBrandId = store.getBrandId();
 			
 					
-			result.put("multiStoreId", multiStoreId);
-			result.put("multiBrandId", multiBrandId);	
+			result.put("specialtyStoreId", specialtyStoreId);
+			result.put("specialtyBrandId", specialtyBrandId);	
 		
 		return result;
 	  }
+	
+	@Override
+	public List<SingleMap> getPluCategoriesDeliveryInfo(SingleMap param) {
+		// TODO Auto-generated method stub
+		return null;
+	}	
 
 	/**
 	 * Plu item 목록 조회, 옵션, 옵션 상세 포함
@@ -1430,6 +1436,8 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		record.setIsUsed(false); // 락 해제
 		svcTableMapper.updateByExampleSelective(record, example);
 	}
+
+
 
 
 

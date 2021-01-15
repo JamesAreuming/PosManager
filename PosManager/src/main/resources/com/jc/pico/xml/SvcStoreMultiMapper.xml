@@ -20,19 +20,6 @@
   	ID, FRAN_ID, BRAND_ID, STORE_ID, ORDINAL, CHILDREN_STORE_ID, INSERT_USER, IS_USED, `CREATE`, `UPDATE`, CHILDREN_STORE_SECTION
   </sql>
   
- <!--  <select id ="selectByExample" parameterType="java.lang.Long" resultMap="BaseResultMap">
-	SELECT 
-    <include refid="Base_Column_List" />
-    FROM
-         TB_SVC_STORE_MULTI
-    WHERE
-         BRAND_ID = #{brandId}
-    AND
-         STORE_ID = #{storeID}
-    AND
-        IS_USED = 'Y'   	
-  </select> -->
-  
   <select id = "selectBySpecialtyInfo" parameterType="SingleMap" resultType="SingleMap">
 	SELECT 
 	    <include refid="Base_Column_List" />
@@ -47,4 +34,20 @@
     AND
         CHILDREN_STORE_SECTION = 'S'    	
   </select>
+  
+  
+<!--   <select id = "selectByDeliverInfo" parameterType="SingleMap" resultType="SingleMap">
+	SELECT 
+	    <include refid="Base_Column_List" />
+    FROM
+         TB_SVC_STORE_MULTI
+    WHERE
+         BRAND_ID = #{brandId}
+    AND
+         STORE_ID = #{storeId}
+    AND
+        IS_USED = 'Y'
+    AND
+        CHILDREN_STORE_SECTION = 'S'    	
+  </select>   -->
 </mapper>

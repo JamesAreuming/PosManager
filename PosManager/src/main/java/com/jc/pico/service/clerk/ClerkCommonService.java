@@ -113,4 +113,7 @@ public interface ClerkCommonService {
 
 	// 특산품업체 정보 가져오기
 	SingleMap getPluCategoriesSpecialtyInfo(SingleMap param);
+
+	//배달업체 리스트 보내기
+	List<SingleMap> getPluCategoriesDeliveryInfo(SingleMap param);
 }

@@ -611,6 +611,22 @@ public class ClerkApiController {
 		return result;
 	}
 	
+	//배달가게 - 리스트(보류)
+	@RequestMapping(value = "/plu/categories/deliveryInfo", method = RequestMethod.POST)
+	public ClerkResult getPluCategoriesDeliveryInfo(@RequestBody StoreParam reqParam, Authentication authentication)
+			throws DataNotFoundException, DataNotRegisteredException {	
+		
+		logger.debug("getPluCategoriesDeliveryInfo : " + reqParam); //StoreParam [header={os=android, posNo=002, lang=ko}, data={brandId=44, storeId=89}
+		
+		SingleMap param = reqParam.getData();
+
+		ClerkResult result = new ClerkResult();
+		result.setData(clerkCommonService.getPluCategoriesDeliveryInfo(param));
+		result.setSuccess();
+		
+		return result;
+	}	
+	
 	/******     (8) url : /clerk/api/staff     ******/
 	
 	/**
