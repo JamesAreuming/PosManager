@@ -1,9 +1,9 @@
 {
-  "newVersion": "1.0.30",
-  "newVersionCode": "30",
-  "apkName": "order9-v1.0.30_20210111.apk",
-  "apkUrl": "http://api2.order9.co.kr/admin/_static/appinfo/order9-v1.0.30_20210111.apk",
+  "newVersion": "1.0.31",
+  "newVersionCode": "31",
+  "apkName": "order9-v1.0.31_20210118.apk",
+  "apkUrl": "http://api2.order9.co.kr/admin/_static/appinfo/order9-v1.0.31_20210118.apk",
     "versionNotes": [
-    "- 2021.01.11"
+    "- 2021.01.18"
   ]
 }
