@@ -743,7 +743,7 @@
 			 WHERE B.BRAND_ID  = #{brandId, jdbcType=BIGINT}) A
   </select>
   
-  <!-- 수정중 -->
+
   <update id="updateBySingleMap" parameterType="SingleMap">
     UPDATE 
     	TB_SVC_STORE_PRINTER
@@ -753,7 +753,7 @@
    		BRAND_ID = #{brandId,jdbcType=BIGINT}
    	AND
     	STORE_ID = #{storeId,jdbcType=BIGINT}
-    AND
-        POS_NO IN (SELECT D.POS_NO FROM TB_SVC_DEVICE_LICENSE D WHERE D.ID = #{licenseId, jdbcType=BIGINT})
+<!--    AND
+        POS_NO IN (SELECT D.POS_NO FROM TB_SVC_DEVICE_LICENSE D WHERE D.ID = #{licenseId, jdbcType=BIGINT}) -->
   </update>
 </mapper>

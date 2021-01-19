@@ -399,7 +399,12 @@
 		    <version>3.4.5</version>
 		</dependency>
 
-
+        <!-- TEST중 -->
+<!-- 		<dependency>
+		    <groupId>org.json</groupId>
+		    <artifactId>json</artifactId>
+		    <version>20180813</version>
+		</dependency> -->
 	</dependencies>
 
 

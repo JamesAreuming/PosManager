@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.jc.pico.bean.Message;
 import com.jc.pico.bean.Sequence;
 import com.jc.pico.bean.SvcItem;
 import com.jc.pico.bean.SvcKitchenPrinter;
@@ -60,6 +61,15 @@ import com.jc.pico.utils.bean.SvcOrderExtended;
 import com.jc.pico.utils.bean.SvcOrderItemExtended;
 import com.jc.pico.utils.customMapper.pos.PosSalesTableOrderMapper;
 import com.jc.pico.utils.customMapper.pos.PosStorePrinterMapper;
+
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import java.io.IOException;
+//import com.jc.pico.bean.Message;
+//import com.jc.pico.bean.MessageModel;
+//import com.jc.pico.utils.APIInit;
 
 @Service
 public class OrderInternalServiceImpl implements OrderInternalService {
@@ -326,9 +336,58 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 		saveOrderSalesPayKiosk(newOrder.getId(), salesId);
 		logger.debug("SvcOrderExtended::saveOrder.13 > oldOrder : ");
 
+		// 배달 내역 저장
+		//saveOrderDeliveryInfo();
+		//sendMessage();
 		return newOrder;
 	}
 	
+/*	private void sendMessage() throws IOException {
+		Message message = new Message("01072062625", "0312030960", "퇴근합시다");
+		Call<MessageModel> api = APIInit.getAPI().sendMessage(APIInit.getHeaders(), message);
+		 api.enqueue(new Callback<MessageModel>() { //MessageModel 추가
+	            @Override
+	            public void onResponse(Call<MessageModel> call, Response<MessageModel> response) {
+	                // 성공 시 200이 출력됩니다.
+	                if (response.isSuccessful()) {
+	                    System.out.println("statusCode : " + response.code());
+	                    MessageModel body = response.body();
+	                    System.out.println("groupId : " + body.getGroupId());
+	                    System.out.println("messageId : " + body.getMessageId());
+	                    System.out.println("to : " + body.getTo());
+	                    System.out.println("from : " + body.getFrom());
+	                    System.out.println("type : " + body.getType());
+	                    System.out.println("statusCode : " + body.getStatusCode());
+	                    System.out.println("statusMessage : " + body.getStatusMessage());
+	                    System.out.println("customFields : " + body.getCustomFields());
+	                    
+	                    System.out.println("************************************************");
+	                } else {
+	                    try {
+	                        System.out.println(response.errorBody().string());
+	                    } catch (IOException e) {
+	                        e.printStackTrace();
+	                    }
+	                }
+	            }
+
+	            @Override
+	            public void onFailure(Call<MessageModel> call, Throwable throwable) {
+	                throwable.printStackTrace();
+	            }
+	        });
+	    }
+
+
+
+
+	private void saveOrderDeliveryInfo() {
+		// TODO Auto-generated method stub
+		
+	}
+
+*/
+
 	private Long saveOrderSalesKiosk(Long orderId) throws RequestResolveException {
 		if(orderId != null) {
 			SingleMap map = new SingleMap();

@@ -21,7 +21,7 @@
 
 
   <select id="selectMerchantAndPrinter"  parameterType="HashMap"  resultMap="BaseResultMap">
-	<!-- SELECT IF (A.ALLOW_STORE_SET = 1, A.PG_MERCHANT_ID_STORE, A.PG_MERCHANT_ID_BRAND) AS PG_MERCHANT_ID, 
+	SELECT IF (A.ALLOW_STORE_SET = 1, A.PG_MERCHANT_ID_STORE, A.PG_MERCHANT_ID_BRAND) AS PG_MERCHANT_ID, 
 	            A.PG_PRIVATE_KEY AS PG_PRIVATE_KEY, A.PG_PAYMENT_KEY AS PG_PAYMENT_KEY,
 		       A.IP AS IP, A.IP_PORT AS IP_PORT, A.PRINTER_NO AS PRINTER_NO, A.POS_NO AS POS_NO  
 	 FROM (
@@ -30,8 +30,8 @@
 				   (SELECT c.ALLOW_STORE_SET FROM tb_svc_brand c     WHERE c.ID = #{brandId, jdbcType=BIGINT} ) AS ALLOW_STORE_SET, 
 				   (SELECT s.PG_MERCHANT_ID  FROM tb_svc_store_set s WHERE s.BRAND_ID = #{brandId, jdbcType=BIGINT} AND s.STORE_ID = #{storeId, jdbcType=BIGINT} ) AS PG_MERCHANT_ID_STORE 
 			  FROM tb_svc_brand_set B LEFT OUTER JOIN tb_svc_store_printer P ON P.BRAND_ID = B.BRAND_ID AND P.STORE_ID = #{storeId, jdbcType=BIGINT} AND P.IS_USED = 1 
-			 WHERE B.BRAND_ID  = #{brandId, jdbcType=BIGINT}) A -->
-    SELECT IF (A.ALLOW_STORE_SET = 1, A.PG_MERCHANT_ID_STORE, A.PG_MERCHANT_ID_BRAND) AS PG_MERCHANT_ID, 
+			 WHERE B.BRAND_ID  = #{brandId, jdbcType=BIGINT}) A
+    <!-- SELECT IF (A.ALLOW_STORE_SET = 1, A.PG_MERCHANT_ID_STORE, A.PG_MERCHANT_ID_BRAND) AS PG_MERCHANT_ID, 
 	           A.PG_PRIVATE_KEY AS PG_PRIVATE_KEY,
 	           A.PG_PAYMENT_KEY AS PG_PAYMENT_KEY,
 		       A.IP AS IP,
@@ -58,7 +58,7 @@
 			                 ON SP.POS_NO = D.POS_NO AND SP.BRAND_ID = #{brandId, jdbcType=BIGINT} AND SP.STORE_ID = #{storeId, jdbcType=BIGINT}
 			                 WHERE D.ID = #{licenseId, jdbcType=BIGINT}) P
 			    ON P.BRAND_ID = B.BRAND_ID AND P.STORE_ID = #{storeId, jdbcType=BIGINT} AND P.IS_USED = 1 
-			 WHERE B.BRAND_ID  = #{brandId, jdbcType=BIGINT}) A 			 
+			 WHERE B.BRAND_ID  = #{brandId, jdbcType=BIGINT}) A --> 			 
   </select>
   
   <select id="selectDeviceLicenseIsMain"  parameterType="HashMap"  resultType="singlemap">

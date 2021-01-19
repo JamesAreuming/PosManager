@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.pico.mapper.SvcDeliveryMapper">
+
+<!--   <resultMap id="BaseResultMap" type="com.jc.pico.bean.SvcDelivery">
+  	<id column="id" jdbcType="BIGINT" property="id"/>
+  	<result column="brand_id" jdbcType="BIGINT" property="brandId"/>
+  	<result column="store_id" jdbcType="BIGINT" property="storeId"/>
+  	<result column="order_no" jdbcType="VARCHAR" property="orderNo"/>
+  	<result column="cus_name" jdbcType="VARCHAR" property="cusName"/>
+  	<result column="cus_cellno" jdbcType="VARCHAR" property="cusCellNo"/>
+  	<result column="cus_telno" jdbcType="VARCHAR" property="cusTelNo"/>
+  	<result column="cus_zip" jdbcType="VARCHAR" property="cusZip"/>
+  	<result column="cus_addr1" jdbcType="VARCHAR" property="cusAddr1"/>
+  	<result column="cus_addr2" jdbcType="VARCHAR" property="cusAddr2"/>
+  	<result column="cus_message" jdbcType="VARCHAR" property="cusMessage"/>
+  	<result column="cus_express" jdbcType="VARCHAR" property="cusExpress"/>
+  	<result column="cus_express_no" jdbcType="" property="cusExpressNo"/>
+  	<result column="CREATE" jdbcType="TIMESTAMP" property="create"/>
+  	<result column="UPDATE" jdbcType="TIMESTAMP" property="update"/>
+  </resultMap> -->
+  
+  <!-- <insert id="insert" parameterType="com.jc.pico.bean.SvcDelivery">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+      insert into tb_svc_delivery
+            (brand_id, store_id, order_no, cus_name, cus_cellno, cus_telno, cus_zip, cus_addr1, cus_addr2, cus_message, CREATED, UPDATED)
+      values(#{brandId,jdbcType=BIGINT}, #{storeId,jdbcType=BIGINT}, #{orderNo,jdbcType=VARCHAR},
+             #{cusName,jdbcType=VARCHAR}, #{cusCellNo,jdbcType=VARCHAR}, #{cusCellNo,jdbcType=VARCHAR},
+             #{cusTelNo,jdbcType=VARCHAR}, #{cusZip,jdbcType=VARCHAR}, #{cusAddr1,jdbcType=VARCHAR}, #{cusAddr2,jdbcType=VARCHAR})
+             #{cusMessage,jdbcType=VARCHAR}, now(), now())
+    </insert>  -->
+</mapper>

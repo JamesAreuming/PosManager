@@ -24,6 +24,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jc.pico.bean.SvcClosing;
+import com.jc.pico.bean.SvcDelivery;
 import com.jc.pico.bean.SvcKitchenPrinter;
 import com.jc.pico.bean.SvcOrder;
 import com.jc.pico.bean.SvcOrderDiscount;
@@ -668,6 +669,7 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 		final String withTableLock = param.getString("withTableLock", TABLE_LOCK_NONE);
 		final String posNo = param.getString("posNo", null); // FIXME posNo를 헤더에 전달하면 clerk/tabl이 릴리즈 되면 두번째 파라미터를 제거해야 empty 체크 하도록 해야함
 		final boolean isUsePrinter = param.getBoolean("isUsePrinter", false);
+		//SvcDelivery orderDelivery = objectMapper.convertValue(param.get("orderDelivery"), SvcDelivery.class);
 		
 		logger.debug("확인>>>>>>>>>>"+order.getUserId()); //0
 		logger.debug("확인 >>>>>>>>>>"+param); 
