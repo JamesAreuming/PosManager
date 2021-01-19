@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.jc.pico.bean.Message;
 import com.jc.pico.bean.Sequence;
 import com.jc.pico.bean.SvcItem;
 import com.jc.pico.bean.SvcKitchenPrinter;
@@ -63,10 +62,10 @@ import com.jc.pico.utils.customMapper.pos.PosSalesTableOrderMapper;
 import com.jc.pico.utils.customMapper.pos.PosStorePrinterMapper;
 
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import java.io.IOException;
+//import retrofit2.Call;
+//import retrofit2.Callback;
+//import retrofit2.Response;
+//import java.io.IOException;
 //import com.jc.pico.bean.Message;
 //import com.jc.pico.bean.MessageModel;
 //import com.jc.pico.utils.APIInit;
@@ -344,7 +343,8 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 	
 /*	private void sendMessage() throws IOException {
 		Message message = new Message("01072062625", "0312030960", "퇴근합시다");
-		Call<MessageModel> api = APIInit.getAPI().sendMessage(APIInit.getHeaders(), message);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>"+message.toString());
+		/*Call<MessageModel> api = APIInit.getAPI().sendMessage(APIInit.getHeaders(), message);
 		 api.enqueue(new Callback<MessageModel>() { //MessageModel 추가
 	            @Override
 	            public void onResponse(Call<MessageModel> call, Response<MessageModel> response) {
@@ -376,12 +376,11 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 	                throwable.printStackTrace();
 	            }
 	        });
-	    }
+	    }*/
 
 
 
-
-	private void saveOrderDeliveryInfo() {
+/*	private void saveOrderDeliveryInfo() {
 		// TODO Auto-generated method stub
 		
 	}
