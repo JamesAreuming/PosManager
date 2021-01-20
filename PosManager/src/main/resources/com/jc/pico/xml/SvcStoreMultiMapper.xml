@@ -10,7 +10,7 @@
   	<result column="ORIDINAL" jdbcType="TINYINT" property="ordinal"/>
   	<result column="CHILDREN_STORE_ID" jdbcType="BIGINT" property="childrenStoreId"/>
   	<result column="INSERT_USER" jdbcType="BIGINT" property="insertUser"/>
-  	<result column="IS_USED" jdbcType="CHAR" property="isUsed"/>
+  	<result column="IS_USED" jdbcType="TINYINT" property="isUsed"/>
   	<result column="CREATE" jdbcType="TIMESTAMP" property="create"/>
   	<result column="UPDATE" jdbcType="TIMESTAMP" property="update"/>
   	<result column="CHILDREN_STORE_SECTION" jdbcType="CHAR" property="childrenStoreSection"/>
@@ -30,7 +30,7 @@
     AND
          STORE_ID = #{storeId}
     AND
-        IS_USED = 'Y'
+        IS_USED = true
     AND
         CHILDREN_STORE_SECTION = 'S'    	
   </select>

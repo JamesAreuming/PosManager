@@ -14,7 +14,7 @@ public class SvcStoreMulti {
 	private Byte ordinal;
 	private Long childrenStoreId;
 	private Long insertUser;	
-	private String isUsed;
+	private Boolean isUsed;
 	private Date create;
 	private Date update;
 	
@@ -63,10 +63,11 @@ public class SvcStoreMulti {
 	public void setInsertUser(Long insertUser) {
 		this.insertUser = insertUser;
 	}
-	public String getIsUsed() {
+
+	public Boolean getIsUsed() {
 		return isUsed;
 	}
-	public void setIsUsed(String isUsed) {
+	public void setIsUsed(Boolean isUsed) {
 		this.isUsed = isUsed;
 	}
 	public Date getCreate() {

@@ -62,13 +62,13 @@ import com.jc.pico.utils.customMapper.pos.PosSalesTableOrderMapper;
 import com.jc.pico.utils.customMapper.pos.PosStorePrinterMapper;
 
 
-//import retrofit2.Call;
-//import retrofit2.Callback;
-//import retrofit2.Response;
-//import java.io.IOException;
-//import com.jc.pico.bean.Message;
-//import com.jc.pico.bean.MessageModel;
-//import com.jc.pico.utils.APIInit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import java.io.IOException;
+import com.jc.pico.bean.Message;
+import com.jc.pico.bean.MessageModel;
+import com.jc.pico.utils.APIInit;
 
 @Service
 public class OrderInternalServiceImpl implements OrderInternalService {
@@ -337,14 +337,17 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 
 		// 배달 내역 저장
 		//saveOrderDeliveryInfo();
-		//sendMessage();
+		System.out.println("문자메세지 --------------------------------------------1");
+		sendMessage();
+		System.out.println("문자메세지 --------------------------------------------3");
 		return newOrder;
 	}
 	
-/*	private void sendMessage() throws IOException {
-		Message message = new Message("01072062625", "0312030960", "퇴근합시다");
+	private void sendMessage() throws IOException {
+		Message message = new Message("01047856253", "0312030960", "문자보내기20%완성 깔깔깔");
+		System.out.println("문자메세지 --------------------------------------------2");
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>"+message.toString());
-		/*Call<MessageModel> api = APIInit.getAPI().sendMessage(APIInit.getHeaders(), message);
+		Call<MessageModel> api = APIInit.getAPI().sendMessage(APIInit.getHeaders(), message);
 		 api.enqueue(new Callback<MessageModel>() { //MessageModel 추가
 	            @Override
 	            public void onResponse(Call<MessageModel> call, Response<MessageModel> response) {
@@ -376,16 +379,8 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 	                throwable.printStackTrace();
 	            }
 	        });
-	    }*/
+	    }
 
-
-
-/*	private void saveOrderDeliveryInfo() {
-		// TODO Auto-generated method stub
-		
-	}
-
-*/
 
 	private Long saveOrderSalesKiosk(Long orderId) throws RequestResolveException {
 		if(orderId != null) {
