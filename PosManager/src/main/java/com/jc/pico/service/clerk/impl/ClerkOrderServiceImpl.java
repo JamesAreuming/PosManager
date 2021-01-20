@@ -1615,6 +1615,7 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 		svcKitchenPrinter.setBrandId(staffUserDetail.getBrandId());
 		svcKitchenPrinter.setOrderNo(param.getString("orderNo"));
 		svcKitchenPrinter.setPrinterNo(param.getString("printerNo"));
+		
 		orderService.setOrderKitchenPrinter(svcKitchenPrinter);
 		
 		List<SvcKitchenPrinter> list = orderService.getOrderKitchenPrinter(svcKitchenPrinter);
