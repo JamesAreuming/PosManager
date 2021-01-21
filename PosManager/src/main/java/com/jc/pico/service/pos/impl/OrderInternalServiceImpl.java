@@ -338,7 +338,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 		// 배달 내역 저장
 		//saveOrderDeliveryInfo();
 		System.out.println("문자메세지 --------------------------------------------1");
-		sendMessage();
+		//sendMessage();
 		System.out.println("문자메세지 --------------------------------------------3");
 		return newOrder;
 	}
