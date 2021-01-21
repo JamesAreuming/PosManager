@@ -11,6 +11,14 @@ public class Message {
         this.message.addProperty("text", text);
     }
     
+    public Message(String to, String from, String text, String subject) {
+        this.message.addProperty("to", to);
+        this.message.addProperty("from", from);
+        this.message.addProperty("text", text);
+        this.message.addProperty("subject", subject);
+        this.message.addProperty("type", "LMS");
+    }    
+    
     public JsonObject toJson() {
         return this.message;
     }

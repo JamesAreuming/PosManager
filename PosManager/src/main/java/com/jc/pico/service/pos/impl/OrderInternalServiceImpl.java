@@ -344,7 +344,8 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 	}
 	
 	private void sendMessage() throws IOException {
-		Message message = new Message("01047856253", "0312030960", "문자보내기20%완성 깔깔깔");
+		//Message message = new Message("01042523245", "0312030960", "ORDER9 문자테스트입니다");
+		Message message = new Message("01042523245", "0312030960", "ORDER9 문자테스트입니다", "배송메세지");
 		System.out.println("문자메세지 --------------------------------------------2");
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>"+message.toString());
 		Call<MessageModel> api = APIInit.getAPI().sendMessage(APIInit.getHeaders(), message);
