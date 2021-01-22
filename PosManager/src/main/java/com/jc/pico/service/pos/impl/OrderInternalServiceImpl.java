@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jc.pico.bean.Sequence;
+import com.jc.pico.bean.SvcDelivery;
 import com.jc.pico.bean.SvcItem;
 import com.jc.pico.bean.SvcKitchenPrinter;
 import com.jc.pico.bean.SvcOrder;
@@ -338,14 +339,31 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 		// 배달 내역 저장
 		//saveOrderDeliveryInfo();
 		System.out.println("문자메세지 --------------------------------------------1");
-		//sendMessage();
-		System.out.println("문자메세지 --------------------------------------------3");
+		if(newOrder.getSvcOrderDelivery().getBrandId() != 0) {
+			SvcDelivery orderDeliveryInfo = newOrder.getSvcOrderDelivery();
+			
+			sendMessage(orderDeliveryInfo, newOrder);
+			System.out.println("문자메세지 --------------------------------------------3");
+		}
+
 		return newOrder;
 	}
 	
-	private void sendMessage() throws IOException {
-		//Message message = new Message("01042523245", "0312030960", "ORDER9 문자테스트입니다");
-		Message message = new Message("01042523245", "0312030960", "ORDER9 문자테스트입니다", "배송메세지");
+	private void sendMessage(SvcDelivery orderDeliveryInfo, SvcOrderExtended newOrder) throws IOException {
+		String cusCellNo = orderDeliveryInfo.getCusCellNo();
+		String orderNo = orderDeliveryInfo.getOrderNo();
+		String cusName = orderDeliveryInfo.getCusName();
+		String cusZip = orderDeliveryInfo.getCusZip();
+		String cusAddr1 = orderDeliveryInfo.getCusAddr1();
+		String cusAddr2 = orderDeliveryInfo.getCusAddr2();
+		String order9Number = "0312030960";
+		String orderDeliveryInfoText = "안녕하세요"
+		                                +cusName+"님 주문하신 상품["+orderNo+"]이 주문 접수 되었습니다."
+		                                + "주소 : (우)"+cusZip+""+cusAddr1+""+cusAddr2+" 신속히 배달해 드리도록 하겠습니다.";
+		
+		//수신번호, 발신번호, 제목, 내용
+		Message message = new Message(cusCellNo, order9Number,orderDeliveryInfoText,"주문 접수 완료");
+		
 		System.out.println("문자메세지 --------------------------------------------2");
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>"+message.toString());
 		Call<MessageModel> api = APIInit.getAPI().sendMessage(APIInit.getHeaders(), message);
