@@ -337,9 +337,15 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 				svcKitchenPrinterMapper.insertList(svcKitchenPrintList);
 			}
 			
-			System.out.println("찍어라>>>>>>>>>>>>>>>>>>>>>>>>>>"+newOrder.toString());
+
 			System.out.println("찍어라>>>>>>>>>>>>>>>>>>>>>>>>>>"+newOrder.getSvcOrderDelivery().getBrandId());
-			if(newOrder.getSvcOrderDelivery().getBrandId() != 0) {
+			
+			if(newOrder.getSvcOrderDelivery().getBrandId() == 0) {
+				newOrder.getSvcOrderDelivery().setBrandId(null);
+				System.out.println("확인중--------------------------------------------------------------------null");
+			}
+			
+/*			if(newOrder.getSvcOrderDelivery().getBrandId() != null) {
 				
 				//배달정보
 				SvcDelivery orderDeliveryInfo = new SvcDelivery();
@@ -354,7 +360,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 				orderDeliveryInfo.setCusAddr1(newOrder.getSvcOrderDelivery().getCusAddr1());
 				orderDeliveryInfo.setCusAddr2(newOrder.getSvcOrderDelivery().getCusAddr2());
 				orderDeliveryInfo.setCusMessage(newOrder.getSvcOrderDelivery().getCusMessage());
-				
+				System.out.println("확인중--------------------------------------------------------------------1");				
 				svcDeliveryMapper.insertOrderDeliveryInfo(orderDeliveryInfo);
 				
 				//주문시간
@@ -374,12 +380,12 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 					itemNm = orderItemNm.concat(cnt);
 				}
 				
-
-
+				//문제메세지 보내기
 				sendMessage(orderDeliveryInfo, orderTm, storeNm, itemNm);
 				
+				System.out.println("확인중--------------------------------------------------------------------2");
 
-			}
+			}*/
 			
 		}
 		
@@ -458,9 +464,11 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 	                    System.out.println("statusCode : " + body.getStatusCode());
 	                    System.out.println("statusMessage : " + body.getStatusMessage());
 	                    System.out.println("customFields : " + body.getCustomFields());
+	    				System.out.println("확인중--------------------------------------------------------------------4");
 	                } else {
 	                    try {
 	                        System.out.println(response.errorBody().string());
+	        				System.out.println("확인중--------------------------------------------------------------------5");
 	                    } catch (IOException e) {
 	                        e.printStackTrace();
 	                    }
