@@ -337,7 +337,8 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 				svcKitchenPrinterMapper.insertList(svcKitchenPrintList);
 			}
 			
-
+			System.out.println("찍어라>>>>>>>>>>>>>>>>>>>>>>>>>>"+newOrder.toString());
+			System.out.println("찍어라>>>>>>>>>>>>>>>>>>>>>>>>>>"+newOrder.getSvcOrderDelivery().getBrandId());
 			if(newOrder.getSvcOrderDelivery().getBrandId() != 0) {
 				
 				//배달정보
