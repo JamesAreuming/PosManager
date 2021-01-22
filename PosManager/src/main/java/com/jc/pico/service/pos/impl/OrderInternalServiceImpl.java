@@ -337,7 +337,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 				svcKitchenPrinterMapper.insertList(svcKitchenPrintList);
 			}
 			
-			System.out.println("문자메세지 --------------------------------------------1");
+
 			if(newOrder.getSvcOrderDelivery().getBrandId() != 0) {
 				
 				//배달정보
@@ -377,7 +377,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 
 				sendMessage(orderDeliveryInfo, orderTm, storeNm, itemNm);
 				
-				System.out.println("문자메세지 --------------------------------------------3");
+
 			}
 			
 		}
@@ -440,8 +440,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 		//수신번호, 발신번호, 제목, 내용
 		Message message = new Message(cusCellNo, order9Number,orderDeliveryInfoText,"주문 접수 완료");
 		
-		System.out.println("문자메세지 --------------------------------------------2");
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>"+message.toString());
+
 		Call<MessageModel> api = APIInit.getAPI().sendMessage(APIInit.getHeaders(), message);
 		 api.enqueue(new Callback<MessageModel>() { //MessageModel 추가
 	            @Override
@@ -458,8 +457,6 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 	                    System.out.println("statusCode : " + body.getStatusCode());
 	                    System.out.println("statusMessage : " + body.getStatusMessage());
 	                    System.out.println("customFields : " + body.getCustomFields());
-	                    
-	                    System.out.println("************************************************");
 	                } else {
 	                    try {
 	                        System.out.println(response.errorBody().string());
