@@ -663,16 +663,21 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 	 */
 	@Override
 	public SvcTableExtended saveOrderKiosk(SingleMap param) throws RequestResolveException {
-
-		SvcOrderExtended order = objectMapper.convertValue(param.get("order"), SvcOrderExtended.class);
-		final long   tableId = param.getLong("tableId");
+        
+		// data : (1) withTableLock, (2) tableId, (3) posNo, (4)isUserPrinter, (5) Order, (6) SvcDelivery
+		
+		
 		final String withTableLock = param.getString("withTableLock", TABLE_LOCK_NONE);
+		final long   tableId = param.getLong("tableId");		
 		final String posNo = param.getString("posNo", null); // FIXME posNo를 헤더에 전달하면 clerk/tabl이 릴리즈 되면 두번째 파라미터를 제거해야 empty 체크 하도록 해야함
 		final boolean isUsePrinter = param.getBoolean("isUsePrinter", false);
+		
+		SvcOrderExtended order = objectMapper.convertValue(param.get("order"), SvcOrderExtended.class);
 		//SvcDelivery orderDelivery = objectMapper.convertValue(param.get("orderDelivery"), SvcDelivery.class);
 		
+		System.out.println(order);
 		logger.debug("확인>>>>>>>>>>"+order.getUserId()); //0
-		logger.debug("확인 >>>>>>>>>>"+param); 
+		logger.debug("확인 >>>>>>>>>>"+param);
 		//{withTableLock=release, os=android, tableId=1, isUsePrinter=true, posNo=103, userName=kiosk1_-_89_-_2668, lang=ko, order={acceptTm=2020-11-20 06:34:25, acceptTmLocal=2020-11-20 15:34:25, brandId=44, customerCnt=1, discount=0.0, id=0, isReserve=false, lastSt=951002, openDt=2020-11-17 00:00:00, orderDiv=1, orderNo=44891605854065469, orderSt=607002, orderTm=2020-11-20 06:34:25, orderTmLocal=2020-11-20 15:34:25, orderTp=605001, pathTp=606004, posNo=103, sales=1004.0, serviceCharge=0.0, staffId=82, storeId=89, supplyValue=904.0, svcOrderItems=[{catCd=1001, catNm=식사류, count=1, discount=0.0, id=0, image=/image-resource/items/store/89/348/it_st_89_1577128826420.jpg, isCanceled=false, isPacking=false, isStamp=false, itemCd=20191212095230, itemId=348, itemNm=김치찌개, itemTp=818000, lastSt=951002, netSales=904.0, optPrice=0.0, orderAmount=1004.0, orderId=0, orderTm=2020-11-20 06:34:25, orderTmLocal=2020-11-20 15:34:25, ordinal=1605854065468, orgCount=0, orgId=0, pathTp=606004, price=1004.0, purchasePrice=0.0, sales=1004.0, salesDiv=0, salesTypeDiv=0, serviceCharge=0.0, shortName=김치찌개, staffId=82, svcOrderDiscounts=[], svcOrderHistories=[], svcOrderItemOpts=[], tax=100.0, taxTp=819001}], svcOrderPays=[{acceptorCd=09, acceptorNm=현대카드, amount=1004.0, cardInfo=현대비자, cardInfoCd=09, cardNo=4172-33**-****-****, created=2020-11-20 15:34:25, id=0, monthlyPlain=0, orderId=0, ordinal=1, payMethod=810002, paySt=415003, payTm=2020-11-20 06:34:25, payTmLocal=2020-11-20 15:34:25, pgKind=, staffId=82, tranNo=00754768, updated=2020-11-20 15:34:25}], tableNo=1, tax=100.0, useCoupon=false, userId=0}}  
 		
 		// 추가 : 
@@ -682,7 +687,7 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 		
 		// 설정된 user id가 없으면 null로 변경. 0으로는 입력될수 없음
 		if (order.getUserId() != null && order.getUserId() == 0) {
-			order.setUserId(null);
+			order.setUserId(null); //null로 셋팅
 		}
 
 		/**
@@ -707,11 +712,12 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 			// 추가 : 2020.02.01
 			// 신용카드, 현금 구분.
 			if (!order.getSvcOrderPays().isEmpty()) {
-				// 신용카드(810002) , 현금 (810001)
+				// PayMethod - 신용카드(810002) , 현금 (810001)
 				order.setPayMethod(order.getSvcOrderPays().get(0).getPayMethod());
 			}
-			order.setIsUsePrinter(isUsePrinter);
-			order = orderService.saveOrderKiosk(order);
+			
+			order.setIsUsePrinter(isUsePrinter); //true
+			order = orderService.saveOrderKiosk(order); //order정보
 
 			logger.info("Kiosk Saved order. posNo={}, orderId={}, orderNo={}, receiptId={}, receiptNo={},",  //posNo=103, orderId=36676, orderNo=44891605854073931, receiptId=20201120-0004, receiptNo=20201120-0004
 						 			posNo, order.getId(), order.getOrderNo(), order.getReceiptId(), order.getReceiptNo());

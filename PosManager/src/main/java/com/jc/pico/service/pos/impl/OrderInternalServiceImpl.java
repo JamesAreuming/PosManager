@@ -1,5 +1,6 @@
 package com.jc.pico.service.pos.impl;
 
+import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,7 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jc.pico.bean.Message;
+import com.jc.pico.bean.MessageModel;
 import com.jc.pico.bean.Sequence;
+import com.jc.pico.bean.SvcDelivery;
 import com.jc.pico.bean.SvcItem;
 import com.jc.pico.bean.SvcKitchenPrinter;
 import com.jc.pico.bean.SvcOrder;
@@ -35,10 +39,12 @@ import com.jc.pico.bean.SvcOrderItemOpt;
 import com.jc.pico.bean.SvcOrderItemOptExample;
 import com.jc.pico.bean.SvcOrderPay;
 import com.jc.pico.bean.SvcOrderPayExample;
+import com.jc.pico.bean.SvcStore;
 import com.jc.pico.bean.SvcTable;
 import com.jc.pico.bean.SvcTableExample;
 import com.jc.pico.exception.RequestResolveException;
 import com.jc.pico.mapper.OrderSequenceMapper;
+import com.jc.pico.mapper.SvcDeliveryMapper;
 import com.jc.pico.mapper.SvcItemMapper;
 import com.jc.pico.mapper.SvcKitchenPrinterMapper;
 import com.jc.pico.mapper.SvcOrderDiscountMapper;
@@ -50,7 +56,9 @@ import com.jc.pico.mapper.SvcOrderPayMapper;
 import com.jc.pico.mapper.SvcOrderSalesMapper;
 import com.jc.pico.mapper.SvcSalesMapper;
 import com.jc.pico.mapper.SvcTableMapper;
+import com.jc.pico.service.clerk.ClerkCommonService;
 import com.jc.pico.service.pos.OrderInternalService;
+import com.jc.pico.utils.APIInit;
 import com.jc.pico.utils.JsonConvert;
 import com.jc.pico.utils.PosUtil;
 import com.jc.pico.utils.bean.ClerkResult.ErrorCode;
@@ -61,14 +69,9 @@ import com.jc.pico.utils.bean.SvcOrderItemExtended;
 import com.jc.pico.utils.customMapper.pos.PosSalesTableOrderMapper;
 import com.jc.pico.utils.customMapper.pos.PosStorePrinterMapper;
 
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import java.io.IOException;
-import com.jc.pico.bean.Message;
-import com.jc.pico.bean.MessageModel;
-import com.jc.pico.utils.APIInit;
 
 @Service
 public class OrderInternalServiceImpl implements OrderInternalService {
@@ -167,6 +170,13 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 
 	@Autowired
 	private PosUtil posUtil;
+	
+	
+	@Autowired
+	private ClerkCommonService clerkCommonService;
+	
+	@Autowired
+	private SvcDeliveryMapper svcDeliveryMapper;	
 
 	private ObjectMapper objectMapper;
 
@@ -287,8 +297,14 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 			}
 			logger.debug("itemList:::::::::::::::::: " + itemList);
 			
+			String orderItemNm = null;
+			int index = 0;
 			for (SvcOrderItemExtended svcOrderItemExtended : svcOrderItemExtendeds) {
 
+				if(index == 0) {
+					orderItemNm = svcOrderItemExtended.getItemNm();
+				}
+				
 				svcOrderItemExtended.setOrderId(newOrder.getId());
 				logger.debug("SvcOrderExtended::saveOrder.6 > oldOrder : ");
 
@@ -313,11 +329,64 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 					ordinal = saveOrderKitchenPrinter(svcOrderItemExtended, newOrder, itemList, svcKitchenPrintList, defaultPrinterNo, ordinal);
 				}
 				logger.debug("SvcOrderExtended::saveOrder.11 > oldOrder : ");
+				
+				index++;
 			}
 			// 주방 프린트 저장
 			if(!svcKitchenPrintList.isEmpty()) {
 				svcKitchenPrinterMapper.insertList(svcKitchenPrintList);
 			}
+			
+
+			System.out.println("찍어라>>>>>>>>>>>>>>>>>>>>>>>>>>"+newOrder.getSvcOrderDelivery().getBrandId());
+			
+			if(newOrder.getSvcOrderDelivery().getBrandId() == 0) {
+				newOrder.getSvcOrderDelivery().setBrandId(null);
+				System.out.println("확인중--------------------------------------------------------------------null");
+			}
+			
+/*			if(newOrder.getSvcOrderDelivery().getBrandId() != null) {
+				
+				//배달정보
+				SvcDelivery orderDeliveryInfo = new SvcDelivery();
+				
+				orderDeliveryInfo.setBrandId(newOrder.getSvcOrderDelivery().getBrandId());
+				orderDeliveryInfo.setStoreId(newOrder.getSvcOrderDelivery().getStoreId());
+				orderDeliveryInfo.setOrderNo(newOrder.getSvcOrderDelivery().getOrderNo());
+				orderDeliveryInfo.setCusName(newOrder.getSvcOrderDelivery().getCusName());
+				orderDeliveryInfo.setCusCellNo(newOrder.getSvcOrderDelivery().getCusCellNo());
+				orderDeliveryInfo.setCusTelNo(newOrder.getSvcOrderDelivery().getCusTelNo());
+				orderDeliveryInfo.setCusZip(newOrder.getSvcOrderDelivery().getCusZip());
+				orderDeliveryInfo.setCusAddr1(newOrder.getSvcOrderDelivery().getCusAddr1());
+				orderDeliveryInfo.setCusAddr2(newOrder.getSvcOrderDelivery().getCusAddr2());
+				orderDeliveryInfo.setCusMessage(newOrder.getSvcOrderDelivery().getCusMessage());
+				System.out.println("확인중--------------------------------------------------------------------1");				
+				svcDeliveryMapper.insertOrderDeliveryInfo(orderDeliveryInfo);
+				
+				//주문시간
+				Date AcceptTmLocal = newOrder.getAcceptTmLocal();
+				SimpleDateFormat transFormat = new SimpleDateFormat("MM/dd a HH:mm");
+				String orderTm = transFormat.format(AcceptTmLocal);
+				
+				//배달담당가게정보
+				SvcStore orderStore = clerkCommonService.getStoreById(newOrder.getSvcOrderDelivery().getStoreId());
+				String storeNm = orderStore.getStoreNm();
+				
+				//배달상품명
+				String itemNm = orderItemNm;
+				//예외) 여러 상품 주문시
+				if(index > 1) {
+					String cnt = "등 "+(index-1)+"개";
+					itemNm = orderItemNm.concat(cnt);
+				}
+				
+				//문제메세지 보내기
+				sendMessage(orderDeliveryInfo, orderTm, storeNm, itemNm);
+				
+				System.out.println("확인중--------------------------------------------------------------------2");
+
+			}*/
+			
 		}
 		
 		Long salesId = saveOrderSalesKiosk(newOrder.getId());
@@ -335,19 +404,50 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 		saveOrderSalesPayKiosk(newOrder.getId(), salesId);
 		logger.debug("SvcOrderExtended::saveOrder.13 > oldOrder : ");
 
-		// 배달 내역 저장
-		//saveOrderDeliveryInfo();
-		System.out.println("문자메세지 --------------------------------------------1");
-		//sendMessage();
-		System.out.println("문자메세지 --------------------------------------------3");
+
+
+
 		return newOrder;
 	}
 	
-	private void sendMessage() throws IOException {
-		//Message message = new Message("01042523245", "0312030960", "ORDER9 문자테스트입니다");
-		Message message = new Message("01042523245", "0312030960", "ORDER9 문자테스트입니다", "배송메세지");
-		System.out.println("문자메세지 --------------------------------------------2");
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>"+message.toString());
+	private void sendMessage(SvcDelivery orderDeliveryInfo, String orderTm, String storeNm, String itemNm) throws IOException { //배달정보, 담당업체, 주문시간, 상품명
+		//이름,우편번호,주소,상세주소
+		String cusName = orderDeliveryInfo.getCusName();
+		String cusZip = orderDeliveryInfo.getCusZip();
+		String cusAddr1 = orderDeliveryInfo.getCusAddr1();
+		String cusAddr2 = orderDeliveryInfo.getCusAddr2();
+		
+        //주문번호
+		String orderNo = orderDeliveryInfo.getOrderNo();
+		
+		//수신&발신번호
+		String cusCellNo = orderDeliveryInfo.getCusCellNo();
+		String order9Number = "0312030960";
+		/*
+		 * 안녕하세요 정아름님 주문해 주셔서 감사합니다.
+		 * 확인 후 신속히 배달해 드리도록 하겠습니다.
+		 * 
+		 * ● 주문일시
+		 * ● 주문번호
+		 * ● 담당업체
+		 * ● 주문상품
+		 * ● 배달주소
+		 */
+		String orderDeliveryInfoText = String.format("안녕하세요 %s님%n" // cusName
+                                                      + "주문해 주셔서 감사합니다.%n"
+				                                      + "신속히 배달해 드리도록 하겠습니다.%n%n"
+                                                      
+				                                      + "● 주문일시 : %s%n" // orderTm
+				                                      + "● 주문번호%n　☞ [%s]%n" // orderNo
+                                                      + "● 담당업체 : %s%n" // storeNm
+                                                      + "● 주문상품 : %s%n" // itemNm
+                                                      + "● 배달주소 : (우)%s %s %s%n"// cusZip, cusAddr1, cusAddr2
+                                                      ,cusName, orderTm, orderNo, storeNm, itemNm, cusZip, cusAddr1, cusAddr2);
+				
+		//수신번호, 발신번호, 제목, 내용
+		Message message = new Message(cusCellNo, order9Number,orderDeliveryInfoText,"주문 접수 완료");
+		
+
 		Call<MessageModel> api = APIInit.getAPI().sendMessage(APIInit.getHeaders(), message);
 		 api.enqueue(new Callback<MessageModel>() { //MessageModel 추가
 	            @Override
@@ -364,11 +464,11 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 	                    System.out.println("statusCode : " + body.getStatusCode());
 	                    System.out.println("statusMessage : " + body.getStatusMessage());
 	                    System.out.println("customFields : " + body.getCustomFields());
-	                    
-	                    System.out.println("************************************************");
+	    				System.out.println("확인중--------------------------------------------------------------------4");
 	                } else {
 	                    try {
 	                        System.out.println(response.errorBody().string());
+	        				System.out.println("확인중--------------------------------------------------------------------5");
 	                    } catch (IOException e) {
 	                        e.printStackTrace();
 	                    }

@@ -12,9 +12,8 @@ public interface OrderService {
 	public SvcOrderExtended saveOrder(SvcOrderExtended svcOrderExtended) throws Throwable;
 
 	
-	// 수정 : 
+	// 수정 : 키오스크 주문 정보
 	public SvcOrderExtended saveOrderKiosk(SvcOrderExtended svcOrderExtended) throws Throwable;
-	// 수정 : 
 
 	
 	/**
