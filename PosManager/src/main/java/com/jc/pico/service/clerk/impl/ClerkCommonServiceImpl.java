@@ -998,7 +998,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 
 			final Long storeId = param.getLong("storeId", 0L);
 
-			//storeId가 0이면 기본강고
+			//storeId가 0이면 기본광고
 			if (storeId == 0) {
 				return defaultAdvertise;
 			}
@@ -1033,7 +1033,10 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 
 			// videoList가 담겨있다면 -- 추가
 			if (!videoList.isEmpty()) {
-				//System.out.println("확인 -------------------------->@@@@");
+				System.out.println("확인 -------------------------->@@@@");
+				videoList.addAll(
+						DEFAULT_ADVERTISE.stream().map(data -> String.format("%s%s", param.getString("host"), data))
+								.collect(Collectors.toList())); // 기존의 광고 이미지 + 기본 이미지
 			}
 
 			defaultAdvertise.put("image", imageList);

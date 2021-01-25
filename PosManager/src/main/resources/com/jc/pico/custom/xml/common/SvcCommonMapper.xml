@@ -10,6 +10,8 @@
         	TB_SVC_ADVERTISE
      	WHERE   
      		STORE_ID = ${storeId}
+     	AND
+     	    IS_PLAY = 1
      	ORDER BY 
      		FORMAT, ORDINAL
 	</select>
