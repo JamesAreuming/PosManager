@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -173,12 +174,19 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 
 	private static final RowBounds ROW_BOUNDS_JUST_FIRST = new RowBounds(0, 1); // 페이징 기법
 
-	private static final List<String> DEFAULT_ADVERTISE = new ArrayList<String>();
+	private static final List<String> DEFAULT_ADVERTISE_IMAGE = new ArrayList<String>();
 	static {
-		DEFAULT_ADVERTISE.add("/image-resource/ad/store/default/ad_00.jpg"); // 고양이1
-		DEFAULT_ADVERTISE.add("/image-resource/ad/store/default/ad_01.jpg"); // 키오스크 광고
-		DEFAULT_ADVERTISE.add("/image-resource/ad/store/default/ad_02.jpg"); // 고양이2
+		DEFAULT_ADVERTISE_IMAGE.add("/image-resource/ad/store/default/ad_00.jpg"); // 고양이1
+		DEFAULT_ADVERTISE_IMAGE.add("/image-resource/ad/store/default/ad_01.jpg"); // 키오스크 광고
+		DEFAULT_ADVERTISE_IMAGE.add("/image-resource/ad/store/default/ad_02.jpg"); // 고양이2
 	}
+	
+	private static final List<String> DEFAULT_ADVERTISE_VIDEO = new ArrayList<String>();
+	static {
+		DEFAULT_ADVERTISE_VIDEO.add("/image-resource/ad/store/default/ad_00.mp4"); // 고양이1
+		DEFAULT_ADVERTISE_VIDEO.add("/image-resource/ad/store/default/ad_01.mp4"); // 키오스크 광고
+		DEFAULT_ADVERTISE_VIDEO.add("/image-resource/ad/store/default/ad_02.mp4"); // 고양이2
+	}	
 
 	@Autowired
 	private ClerkStoreMapper storeMapper;
@@ -1029,22 +1037,29 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 					.collect(Collectors.toList());
 
 			// imageList가 담겨있다면(+ 고양이광고2개, 키오스크광고1개)-- 기본광고(DEFAULT_ADVERTISE)추가(addAll() : 통째로 뒤에 붙이기)
-			if (!imageList.isEmpty() || !videoList.isEmpty()) {
+			if (!imageList.isEmpty()) {
 				imageList.addAll(
-						DEFAULT_ADVERTISE.stream().map(data -> String.format("%s%s", param.getString("host"), data))
+						DEFAULT_ADVERTISE_IMAGE.stream().map(data -> String.format("%s%s", param.getString("host"), data))
 								.collect(Collectors.toList())); // 기존의 광고 이미지 + 기본 이미지
+			}
+			
+			if(!videoList.isEmpty()) {
+				videoList.addAll(
+						DEFAULT_ADVERTISE_VIDEO.stream().map(data -> String.format("%s%s", param.getString("host"), data))
+								.collect(Collectors.toList())); //
 			}
 
 
+			// List 랜덤 추출
+			Collections.shuffle(imageList); 
+			Collections.shuffle(videoList); 
 			
-
+			// defaultAdvertise 틀에 추가
 			defaultAdvertise.put("image", imageList);
 			defaultAdvertise.put("video", videoList);
 			
 
-			/*
-			 * storeId = 89 : 89번에 해당광고(비디오X) + 기본광고(ad_00, ad_01, ad_02)
-			 */
+
 
 			logger.debug("확인1" + videoList.toString());
 			logger.debug("확인2" + imageList.toString());
