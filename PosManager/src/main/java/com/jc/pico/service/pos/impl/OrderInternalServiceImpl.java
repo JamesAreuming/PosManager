@@ -345,7 +345,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 				System.out.println("확인중--------------------------------------------------------------------null");
 			}
 			
-/*			if(newOrder.getSvcOrderDelivery().getBrandId() != null) {
+			if(newOrder.getSvcOrderDelivery().getBrandId() != null) {
 				
 				//배달정보
 				SvcDelivery orderDeliveryInfo = new SvcDelivery();
@@ -385,7 +385,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 				
 				System.out.println("확인중--------------------------------------------------------------------2");
 
-			}*/
+			}
 			
 		}
 		

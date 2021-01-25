@@ -409,7 +409,6 @@ public class ClerkApiController {
 	 *            order : 주문 정보
 	 *            tableId : 테이블 ID
 	 * 
-	 * @return
 	 * 
 	 * @throws RequestResolveException
 	 */
