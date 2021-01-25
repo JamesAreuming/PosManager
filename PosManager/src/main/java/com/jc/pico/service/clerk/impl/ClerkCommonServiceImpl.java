@@ -994,7 +994,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 		final InputStream is = context.getResourceAsStream("/admin/_static/ad/ad.data");
 		try {
 			final String adInfo = IOUtils.toString(is);
-			final SingleMap defaultAdvertise = objectMapper.readValue(adInfo, SingleMap.class); // 기본광고 ad_01, ad_02 ...
+			final SingleMap defaultAdvertise = objectMapper.readValue(adInfo, SingleMap.class); // 기본광고 이미지 : ad_01, ad_02 ..., 비디오
 
 			final Long storeId = param.getLong("storeId", 0L);
 
@@ -1015,29 +1015,28 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 			}
 
 			// picture : P / video : V
+			// * 람다식 : (매개변수, ...) → {실행문 ...}
+			// imageList - 광고 이미지 리스트
 			final List<String> imageList = dataList.stream()
-					.filter(data -> data.getString("FORMAT").equals(ADVERTISE_TYPE_PICTURE))
+					.filter(data -> data.getString("FORMAT").equals(ADVERTISE_TYPE_PICTURE)) // ADVERTISE_TYPE_PICTURE = P
 					.map(data -> String.format("%s%s", param.getString("host"), data.getString("URL")))
 					.collect(Collectors.toList());
+			
+			// videoList - 광고 비디오 리스트
 			final List<String> videoList = dataList.stream()
-					.filter(data -> data.getString("FORMAT").equals(ADVERTISE_TYPE_VIDEO))
+					.filter(data -> data.getString("FORMAT").equals(ADVERTISE_TYPE_VIDEO)) // ADVERTISE_TYPE_PICTURE = V
 					.map(data -> String.format("%s%s", param.getString("host"), data.getString("URL")))
 					.collect(Collectors.toList());
 
-			// imageList가 담겨있다면 -- 기본광고(DEFAULT_ADVERTISE)추가(addAll() : 통째로 뒤에 붙이기)
-			if (!imageList.isEmpty()) {
+			// imageList가 담겨있다면(+ 고양이광고2개, 키오스크광고1개)-- 기본광고(DEFAULT_ADVERTISE)추가(addAll() : 통째로 뒤에 붙이기)
+			if (!imageList.isEmpty() || !videoList.isEmpty()) {
 				imageList.addAll(
 						DEFAULT_ADVERTISE.stream().map(data -> String.format("%s%s", param.getString("host"), data))
 								.collect(Collectors.toList())); // 기존의 광고 이미지 + 기본 이미지
 			}
 
-			// videoList가 담겨있다면 -- 추가
-			if (!videoList.isEmpty()) {
-				System.out.println("확인 -------------------------->@@@@");
-				videoList.addAll(
-						DEFAULT_ADVERTISE.stream().map(data -> String.format("%s%s", param.getString("host"), data))
-								.collect(Collectors.toList())); // 기존의 광고 이미지 + 기본 이미지
-			}
+
+			
 
 			defaultAdvertise.put("image", imageList);
 			defaultAdvertise.put("video", videoList);
@@ -1049,6 +1048,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 
 			logger.debug("확인1" + videoList.toString());
 			logger.debug("확인2" + imageList.toString());
+			logger.debug("확인3" + defaultAdvertise.toString());
 
 			return defaultAdvertise; // duration, image, pay / video = []
 		} catch (IOException e) {
