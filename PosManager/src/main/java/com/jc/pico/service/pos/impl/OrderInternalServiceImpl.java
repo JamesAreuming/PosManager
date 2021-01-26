@@ -255,7 +255,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 	 */
 	@Override
 	@Transactional(rollbackFor = Throwable.class)
-	public SvcOrderExtended saveOrderKiosk(SvcOrderExtended newOrder, SvcOrderExtended oldOrder) throws Throwable {
+	public SvcOrderExtended saveOrderKiosk(SvcOrderExtended newOrder, SvcOrderExtended oldOrder, String host) throws Throwable {
 
 		
 		logger.debug("SvcOrderExtended::saveOrder.1 > oldOrder : ");
@@ -381,7 +381,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 				}
 				
 				//문제메세지 보내기
-				sendMessage(orderDeliveryInfo, orderTm, storeNm, itemNm);
+				sendMessage(orderDeliveryInfo, orderTm, storeNm, itemNm, host);
 				
 				System.out.println("확인중--------------------------------------------------------------------2");
 
@@ -410,15 +410,21 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 		return newOrder;
 	}
 	
-	private void sendMessage(SvcDelivery orderDeliveryInfo, String orderTm, String storeNm, String itemNm) throws IOException { //배달정보, 담당업체, 주문시간, 상품명
+	private void sendMessage(SvcDelivery orderDeliveryInfo, String orderTm, String storeNm, String itemNm, String host) throws IOException { //배달정보, 담당업체, 주문시간, 상품명
 		//이름,우편번호,주소,상세주소
 		String cusName = orderDeliveryInfo.getCusName();
 		String cusZip = orderDeliveryInfo.getCusZip();
 		String cusAddr1 = orderDeliveryInfo.getCusAddr1();
 		String cusAddr2 = orderDeliveryInfo.getCusAddr2();
 		
+
         //주문번호
 		String orderNo = orderDeliveryInfo.getOrderNo();
+		
+		
+		//주문상세정보
+		String orderDetailInfo = host+"/admin/login";
+		
 		
 		//수신&발신번호
 		String cusCellNo = orderDeliveryInfo.getCusCellNo();
@@ -441,8 +447,9 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 				                                      + "● 주문번호%n　☞ [%s]%n" // orderNo
                                                       + "● 담당업체 : %s%n" // storeNm
                                                       + "● 주문상품 : %s%n" // itemNm
-                                                      + "● 배달주소 : (우)%s %s %s%n"// cusZip, cusAddr1, cusAddr2
-                                                      ,cusName, orderTm, orderNo, storeNm, itemNm, cusZip, cusAddr1, cusAddr2);
+                                                      + "● 배달주소 : (우)%s %s %s%n%n"// cusZip, cusAddr1, cusAddr2
+                                                      + "● 주문상세정보%n %s"
+                                                      ,cusName, orderTm, orderNo, storeNm, itemNm, cusZip, cusAddr1, cusAddr2, orderDetailInfo);
 				
 		//수신번호, 발신번호, 제목, 내용
 		Message message = new Message(cusCellNo, order9Number,orderDeliveryInfoText,"주문 접수 완료");

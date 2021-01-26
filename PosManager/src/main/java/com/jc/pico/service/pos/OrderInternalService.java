@@ -37,7 +37,7 @@ public interface OrderInternalService {
 	 * @return 주문 정보
 	 * @throws 오류
 	 */
-	SvcOrderExtended saveOrderKiosk(SvcOrderExtended newOrder, SvcOrderExtended oldOrder) throws Throwable;
+	SvcOrderExtended saveOrderKiosk(SvcOrderExtended newOrder, SvcOrderExtended oldOrder, String host) throws Throwable;
 
 	
 	/**

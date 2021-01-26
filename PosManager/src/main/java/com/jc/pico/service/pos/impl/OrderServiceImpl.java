@@ -101,7 +101,7 @@ public class OrderServiceImpl implements OrderService {
 	 * 
 	 */
 	@Override
-	public SvcOrderExtended saveOrderKiosk(SvcOrderExtended newOrder) throws Throwable {
+	public SvcOrderExtended saveOrderKiosk(SvcOrderExtended newOrder, String host) throws Throwable {
 
 		// 동시에 포스에서 주문 번호가 발생하 경우 동시 입력되는 경우가 있어 락 설정 함
 		// 수정 : 
@@ -124,7 +124,7 @@ public class OrderServiceImpl implements OrderService {
 			// 수정 : 
 			// 트랜잭션 내에서 처리
 			//newOrder = orderInternalService.saveOrder(newOrder, oldOrder);
-			newOrder = orderInternalService.saveOrderKiosk(newOrder, oldOrder);
+			newOrder = orderInternalService.saveOrderKiosk(newOrder, oldOrder, host);
 			// 수정 : 
 		} 
 		finally {

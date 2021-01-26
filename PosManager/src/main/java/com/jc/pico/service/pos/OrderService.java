@@ -13,7 +13,7 @@ public interface OrderService {
 
 	
 	// 수정 : 키오스크 주문 정보
-	public SvcOrderExtended saveOrderKiosk(SvcOrderExtended svcOrderExtended) throws Throwable;
+	public SvcOrderExtended saveOrderKiosk(SvcOrderExtended svcOrderExtended, String host) throws Throwable;
 
 	
 	/**

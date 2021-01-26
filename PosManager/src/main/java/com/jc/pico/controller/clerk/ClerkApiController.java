@@ -2,6 +2,7 @@ package com.jc.pico.controller.clerk;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -442,7 +443,7 @@ public class ClerkApiController {
 	 * @throws RequestResolveException
 	 */
 	@RequestMapping(value = "/order/saveKiosk", method = RequestMethod.POST)
-	public ClerkResult saveOrderKiosk(@RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
+	public ClerkResult saveOrderKiosk(HttpServletRequest request, @RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
 		logger.debug("확인>saveOrderKiosk : " + reqParam);
 		/*
 		 * StoreParam [
@@ -480,14 +481,17 @@ public class ClerkApiController {
 		//data={withTableLock=release, tableId=1, isUsePrinter=true,
 		//order={acceptTm=2021-01-21 05:44:29, acceptTmLocal=2021-01-21 14:44:29, brandId=44, customerCnt=1, discount=0.0, id=0, isReserve=false, lastSt=951002, openDt=2021-01-21 00:00:00, orderDiv=1, orderNo=44891611207869246, orderSt=607002, orderTm=2021-01-21 05:44:29, orderTmLocal=2021-01-21 14:44:29, orderTp=605001, pathTp=606004, posNo=101, sales=1004.0, serviceCharge=0.0, staffId=82, storeId=89, supplyValue=904.0, svcOrderItems=[{catCd=1001, catNm=인기메뉴, count=1, discount=0.0, id=0, image=/image-resource/items/store/89/2371/it_st_89_1610071031186.jpg, isCanceled=false, isPacking=false, isStamp=false, itemCd=20210108105711, itemId=2371, itemNm=스노우와플, itemTp=818007, lastSt=951002, netSales=904.0, optPrice=0.0, orderAmount=1004.0, orderId=0, orderTm=2021-01-21 05:44:23, orderTmLocal=2021-01-21 14:44:23, ordinal=1611207863577, orgCount=0, orgId=0, pathTp=606004, price=1004.0, purchasePrice=0.0, sales=1004.0, salesDiv=0, salesTypeDiv=0, serviceCharge=0.0, shortName=스노우와플, staffId=82, svcOrderDiscounts=[], svcOrderHistories=[], svcOrderItemOpts=[{id=0, itemId=0, optDtlId=4230, optDtlNm=매장식사, optId=1326, optNm=식사구분, optPrice=0.0, orderId=0, ordinal=1}], tax=100.0, taxTp=819001}], svcOrderPays=[{acceptorCd=02, acceptorNm=KB카드, amount=1004.0, cardInfo=카카오뱅크, cardInfoCd=02, cardNo=5365-10**-****-****, created=2021-01-21 14:44:29, id=0, monthlyPlain=0, orderId=0, ordinal=1, payMethod=810002, paySt=415003, payTm=2021-01-21 05:44:29, payTmLocal=2021-01-21 14:44:29, pgKind=, staffId=82, tranNo=22047464, updated=2021-01-21 14:44:29}], tableNo=1, tax=100.0, useCoupon=false, userId=0}}] 
 		                
-
+		
 		SingleMap param = reqParam.getData();
+		param.put("host", String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort()));
+		
+		
 		param.put("userName", (authentication != null ? authentication.getName() : ""));
 		logger.debug("userName : " + authentication.getName()); //kiosk1_-_89_-_2332 
 		param.putAll(reqParam.getHeader());
 
 		ClerkResult result = new ClerkResult();
-		result.setData(clerkOrderService.saveOrderKiosk(param));
+		result.setData(clerkOrderService.saveOrderKiosk(request.getServletContext(), param));
 		result.setSuccess();
 
 		return result;

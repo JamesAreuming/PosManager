@@ -2,6 +2,8 @@ package com.jc.pico.service.clerk;
 
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
 import com.jc.pico.bean.SvcKitchenPrinter;
 import com.jc.pico.bean.SvcSalesList;
 import com.jc.pico.bean.SvcStorePrinter;
@@ -22,7 +24,7 @@ public interface ClerkOrderService {
 	SvcTableExtended saveOrder(SingleMap param) throws RequestResolveException;
 	
 	// 추가 : 
-	SvcTableExtended saveOrderKiosk(SingleMap param) throws RequestResolveException;
+	SvcTableExtended saveOrderKiosk(ServletContext context, SingleMap param) throws RequestResolveException;
 	// 추가 : 
 
 	SvcOrderExtended getOrderDetailOrThrowByOrderId(long orderId) throws RequestResolveException;
