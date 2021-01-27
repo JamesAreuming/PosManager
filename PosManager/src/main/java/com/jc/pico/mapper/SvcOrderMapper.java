@@ -129,4 +129,5 @@ public interface SvcOrderMapper {
     int updateBySalesCancel(HashMap sales);
 
 	void setKioskAccess(SingleMap param);
+	
 }

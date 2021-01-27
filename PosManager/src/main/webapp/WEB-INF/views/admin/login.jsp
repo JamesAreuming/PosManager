@@ -33,7 +33,7 @@
 
 				<form action="./login/auth" method="post">
 				
-                    <h2 class="nomargin">Order9 BackofficeTest</h2>
+                    <h2 class="nomargin">Order9 BackofficeTest오더나인</h2>
                     <p class="mt5 mb20">Login to access your account.</p>
 
                     <input type="text" class="form-control uname" placeholder="User Id" name="username"/>

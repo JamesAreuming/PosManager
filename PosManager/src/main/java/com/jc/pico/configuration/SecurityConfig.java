@@ -22,6 +22,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @ComponentScan(basePackages = "com.jc.pico.configuration")
 public class SecurityConfig {
@@ -49,7 +50,7 @@ public class SecurityConfig {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) throws Exception { //인증 무시, 항상 통과
       web
           .ignoring()
           .antMatchers("/app/public/**") // 가입 처리용 API 및 권한 불필요 API
@@ -64,10 +65,11 @@ public class SecurityConfig {
           .antMatchers("**/favicon.ico")
           .antMatchers("/store/api/appinfo") // Store API 중 권한 불필요한 항목
       	  .antMatchers("/clerk/api/appinfo") // Clerk API 중 권한 불필요한 항목
+      	  .antMatchers("/order9/**") // 테스트중
       	  .antMatchers("/api/pos/store/E_APP_INFO"); // Pos API 중 권한 불필요한 항목      
     }
 
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception { //페이지 권한 설정
       http
           //.antMatcher("/**")
           .regexMatcher("^((?!\\/app\\/public)(?!\\/app\\/model)(?!\\/api)(?!\\/admin)(?!\\/store)(?!\\/clerk))\\/.*")

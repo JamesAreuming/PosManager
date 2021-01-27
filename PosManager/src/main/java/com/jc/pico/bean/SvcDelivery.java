@@ -21,6 +21,16 @@ public class SvcDelivery {
 	private String cusExpressNo;
 	private Date create;
 	private Date update;
+	private SvcOrder svcOrder;
+	
+	
+	public SvcOrder getSvcOrder() {
+		return svcOrder;
+	}
+	public void setSvcOrder(SvcOrder svcOrder) {
+		this.svcOrder = svcOrder;
+	}
+	
 	public Long getId() {
 		return id;
 	}

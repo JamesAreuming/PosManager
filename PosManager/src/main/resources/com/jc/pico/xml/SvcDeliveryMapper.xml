@@ -18,8 +18,14 @@
   	<result column="cus_express_no" jdbcType="VARCHAR" property="cusExpressNo"/>
   	<result column="CREATE" jdbcType="TIMESTAMP" property="create"/>
   	<result column="UPDATE" jdbcType="TIMESTAMP" property="update"/>
+  	<result column="ID" jdbcType="BIGINT" property="svcOrder.id"/>
+  	<result column="RECEIPT_NO" jdbcType="VARCHAR" property="svcOrder.receiptNo"/>
+  	<result column="SALES" jdbcType="DOUBLE" property="svcOrder.sales"/>
   </resultMap>
   
+  <sql id="Base_Column_List">
+  	id, brandId, storeId, orderNo, cusName, cusCellNo, cusTelNo, cusZip, cusAddr1, cusAddr2, cusMessage, cusExpress, cusExpressNo
+  </sql>
   <insert id="insertOrderDeliveryInfo" parameterType="com.jc.pico.bean.SvcDelivery">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
@@ -31,4 +37,16 @@
              #{cusZip,jdbcType=VARCHAR}, #{cusAddr1,jdbcType=VARCHAR}, #{cusAddr2,jdbcType=VARCHAR},
              #{cusMessage,jdbcType=VARCHAR}, now(), now())
     </insert>
+    
+    
+    <select id="selectDeliveryCustomerInfo" resultMap="BaseResultMap">
+    	SELECT 
+    		  O.ID, O.RECEIPT_NO, O.SALES,
+    		  D.id, D.brand_id, D.store_id, D.order_no, D.cus_name, D.cus_cellno, D.cus_telno, D.cus_zip, D.cus_addr1, D.cus_addr2, D.cus_message,
+    		  D.cus_express, D.cus_express_no, D.CREATED, D.UPDATED
+    	from TB_SVC_ORDER O LEFT JOIN TB_SVC_DELIVERY D
+    	ON O.ORDER_NO = D.order_no
+    	WHERE D.order_no = #{orderNo,jdbcType=VARCHAR}
+    </select>
+    
 </mapper>
