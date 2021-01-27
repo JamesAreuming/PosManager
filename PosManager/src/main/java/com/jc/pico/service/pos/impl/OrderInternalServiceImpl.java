@@ -271,9 +271,11 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 			logger.debug("SvcOrderExtended::saveOrder.3 > oldOrder : ");
 		}
 		
-		// 주문번호
+		// 영수중번호 (ex. 2)
 		int receiptNo = createReceiptNo(newOrder);
 		
+		//업데이트 된 주문번호
+		String orderNo = newOrder.getOrderNo();
 		// 주문 마스터 정보 저장
 		logger.debug("SvcOrderExtended::saveOrder.4 > oldOrder (b) : " + ( newOrder.getId() == null ? 0 : newOrder.getId() ) );
 		saveOrderMasterKiosk(newOrder, oldOrder);
@@ -352,7 +354,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 				
 				orderDeliveryInfo.setBrandId(newOrder.getSvcOrderDelivery().getBrandId());
 				orderDeliveryInfo.setStoreId(newOrder.getSvcOrderDelivery().getStoreId());
-				orderDeliveryInfo.setOrderNo(newOrder.getSvcOrderDelivery().getOrderNo());
+				orderDeliveryInfo.setOrderNo(orderNo);
 				orderDeliveryInfo.setCusName(newOrder.getSvcOrderDelivery().getCusName());
 				orderDeliveryInfo.setCusCellNo(newOrder.getSvcOrderDelivery().getCusCellNo());
 				orderDeliveryInfo.setCusTelNo(newOrder.getSvcOrderDelivery().getCusTelNo());
@@ -423,7 +425,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 		
 		
 		//주문상세정보
-		String orderDetailInfo = host+"/admin/login";
+		String orderDetailInfo = host+"/order9/orderInfo?orderNo="+orderNo;
 		
 		
 		//수신&발신번호
@@ -448,7 +450,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
                                                       + "● 담당업체 : %s%n" // storeNm
                                                       + "● 주문상품 : %s%n" // itemNm
                                                       + "● 배달주소 : (우)%s %s %s%n%n"// cusZip, cusAddr1, cusAddr2
-                                                      + "● 주문상세정보%n %s"
+                                                      + "▼ 주문 상세 정보%n %s"
                                                       ,cusName, orderTm, orderNo, storeNm, itemNm, cusZip, cusAddr1, cusAddr2, orderDetailInfo);
 				
 		//수신번호, 발신번호, 제목, 내용

@@ -102,4 +102,6 @@ public interface SvcItemImgMapper {
      * @mbggenerated Mon Nov 28 15:09:12 KST 2016
      */
     int updateByPrimaryKey(SvcItemImg record);
+    
+    List<SvcItemImg> selectDeliveryItemImg(Long itemId);
 }

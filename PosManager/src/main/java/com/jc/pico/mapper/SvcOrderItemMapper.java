@@ -1,5 +1,6 @@
 package com.jc.pico.mapper;
 
+import com.jc.pico.bean.SvcOrder;
 import com.jc.pico.bean.SvcOrderItem;
 import com.jc.pico.bean.SvcOrderItemExample;
 import java.util.List;
@@ -102,4 +103,6 @@ public interface SvcOrderItemMapper {
      * @mbggenerated Thu Oct 27 10:43:21 KST 2016
      */
     int updateByPrimaryKey(SvcOrderItem record);
+    
+	List<SvcOrderItem> selectDeliveryOrderItemInfo(Long orderId);
 }

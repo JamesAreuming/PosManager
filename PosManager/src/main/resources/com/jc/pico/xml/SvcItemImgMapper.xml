@@ -397,4 +397,11 @@
       order by ${orderByClause}
     </if>
   </select>
+  
+  <select id="selectDeliveryItemImg" resultMap="BaseResultMap">
+  	SELECT
+  	<include refid="Base_Column_List"/>
+  	FROM TB_SVC_ITEM_IMG
+  	WHERE ITEM_ID = #{itemId,jdbcType=BIGINT}
+  </select>
 </mapper>

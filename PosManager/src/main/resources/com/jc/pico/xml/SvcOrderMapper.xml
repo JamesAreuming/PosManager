@@ -1271,5 +1271,4 @@
 		)
 		ON DUPLICATE KEY UPDATE POS_NO = #{posNo}, HW_INFO = #{hwInfo}, VERSION = #{version} , LAST_ACCESS_TIME = NOW();
 	</insert>
- 
 </mapper>
