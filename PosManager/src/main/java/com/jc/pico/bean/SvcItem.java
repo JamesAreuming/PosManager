@@ -294,6 +294,7 @@ public class SvcItem {
     
     private String isSoldOut;
     
+    private String isDetailedDescription;
     
     private String salesTimeBegin;
     
@@ -1145,6 +1146,14 @@ public class SvcItem {
 	}
 	
 
+	public String getIsDetailedDescription() {
+		return isDetailedDescription;
+	}
+
+	public void setIsDetailedDescription(String isDetailedDescription) {
+		this.isDetailedDescription = isDetailedDescription;
+	}
+
 	public String getSalesTimeBegin() {
 		return salesTimeBegin;
 	}
@@ -1161,7 +1170,6 @@ public class SvcItem {
 		this.salesTimeEnd = salesTimeEnd;
 	}
 
-	
 	@Override
 	public String toString() {
 		return "SvcItem [id=" + id + ", catId=" + catId + ", brandId=" + brandId + ", storeId=" + storeId + ", status="
@@ -1174,9 +1182,9 @@ public class SvcItem {
 				+ ", salesBegin=" + salesBegin + ", salesEnd=" + salesEnd + ", printerNo=" + printerNo + ", adminId="
 				+ adminId + ", created=" + created + ", updated=" + updated + ", intro=" + intro + ", isStockUse="
 				+ isStockUse + ", safeStockCnt=" + safeStockCnt + ", recipe=" + recipe + ", isSoldOut=" + isSoldOut
-				+ ", salesTimeBegin=" + salesTimeBegin + ", salesTimeEnd=" + salesTimeEnd + "]";
+				+ ", isDetailedDescription=" + isDetailedDescription + ", salesTimeBegin=" + salesTimeBegin
+				+ ", salesTimeEnd=" + salesTimeEnd + "]";
 	}
-	
 	   
     
 }
