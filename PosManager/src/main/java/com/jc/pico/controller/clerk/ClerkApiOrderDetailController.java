@@ -121,6 +121,7 @@ public class ClerkApiOrderDetailController {
 	@RequestMapping(value = "orderInfo/modify", method = RequestMethod.POST)
 	public String orderInfoModifyRegiseter() {
 		
+		svcDeliveryMapper.updateDeliveryCustomerInfo();
 		return "/order9/orderInfo";
 	}
 	

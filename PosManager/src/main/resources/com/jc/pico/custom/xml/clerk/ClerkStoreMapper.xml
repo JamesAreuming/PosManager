@@ -98,6 +98,8 @@
 		    , B.INTRO AS intro
 		    , B.IS_SOLDOUT AS isSoldOut <!-- IS_SOLDOUT 컬럼이 나중에 생성 -->
 		    , B.IS_DETAILED_DESCRIPTION AS isDetailedDescription
+		    , B.IS_DETAILED_TYPE AS isDetailedType
+		    , B.IS_DETAILED_CONTENTS AS isDetailedContents
 		    , LEFT(B.SALES_TIME_BEGIN, 2) AS salesTimeBegin
 		    , LEFT(B.SALES_TIME_END, 2) AS salesTimeEnd
 		FROM 

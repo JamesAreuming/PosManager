@@ -215,6 +215,7 @@ div.btnBox{
              <h3> 배송 정보  </h3>
             <article> 
                 <div class="form">
+                	<form action="modifyRegister" method="post" enctype="multipart/form-data">
                     <p class="required">
                         <label for="cusName" class="">이름</label>
                         <input type="text" name="cusName" placeholder="배송 받으실  정확한 성함을 입력해주세요" value="${customerInfo.cusName}">
@@ -247,6 +248,7 @@ div.btnBox{
 	                    <button type="submit" id="registerBtn" class="modifyBtn">등록</button>
 	                    <button type="button" id="cancelBtn" class="modifyBtn">취소</button>
                     </div>
+                    </form>
                 </div>
             </article>
         </section>

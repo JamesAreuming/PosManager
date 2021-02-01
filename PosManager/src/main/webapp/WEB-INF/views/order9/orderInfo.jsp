@@ -55,23 +55,11 @@
 	    //배송정보수정btn
 	    $("#modifyInfoBtn").click(function(){
 	        if(betweenDay > 3){ //ex. 2월1일 주문 - 2월3일까지 수정가능 / 2월4일부터 주문정보수정 X
-	        	alert("주문하지 3일이 지나 수정하실 수 없습니다.");
+	        	alert("배송 정보 수정시간이 초과하였습니다.");
 	        }else{
 	        	location.href = "${pageContext.request.contextPath }/order9/orderInfo/modify?orderNo=${customerInfo.orderNo}";	
 	        }	    	
 	    })
-	    
-	    //주문취소btn
-	    $("#orderCancelBtn").click(function () {
-	    	var res = confirm("주문을 취소하시겠습니까?");
-	        if(betweenDay > 3){ //ex. 2월1일 주문 - 2월3일까지 수정가능 / 2월4일부터 주문정보수정 X
-	        	alert("주문하지 3일이 지나 주문 취소할 수 없습니다.");
-	        }else{
-	        	if(res){
-	        		location.href = "${pageContext.request.contextPath }/order9/orderInfo/modify?orderNo=${customerInfo.orderNo}";
-	        	}
-	        }	   
-		})
 	    
 	  });
 </script>
@@ -111,16 +99,9 @@ div.btnBox{
 	border-radius: 8px;
 	color: #fff;
 	font-size: 18px;
-	width: 48%;
+	width: 100%;
 	float: left;
-}
-#modifyInfoBtn{
 	background: #CC1C0A;
-	margin-right: 2%;
-}
-#orderCancelBtn{
-	background: #262626;
-	margin-left: 2%;
 }
 </style>
 </head>
@@ -132,6 +113,7 @@ div.btnBox{
             <h2>주문 상세 정보</h2>
         </div>
     </header>
+    
     <!-- section -->
     <div class="container">
         <section class="ordering_info">
@@ -221,7 +203,6 @@ div.btnBox{
                     </p>
                     <div class="btnBox">                    
 	                    <button type="button" id="modifyInfoBtn" class="modifyBtn">배송 정보 수정</button>
-	                    <button type="button" id="orderCancelBtn" class="modifyBtn">주문 취소</button>
                     </div>
                 </div>
             </article>

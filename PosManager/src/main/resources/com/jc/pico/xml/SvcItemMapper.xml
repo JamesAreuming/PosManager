@@ -42,6 +42,8 @@
     <result column="UPDATED" jdbcType="TIMESTAMP" property="updated" />
     <result column="IS_SOLDOUT" jdbcType="CHAR" property="isSoldOut"/>
     <result column="IS_DETAILED_DESCRIPTION" jdbcType="CHAR" property="isDetailedDescription"/>
+    <result column="IS_DETAILED_TYPE" jdbcType="CHAR" property="isDetailedType"/>
+    <result column="IS_DETAILED_CONTENTS" jdbcType="VARCHAR" property="isDetailedContents"/>
     <result column="SALES_TIME_BEGIN" jdbcType="CHAR" property="salesTimeBegin"/>
     <result column="SALES_TIME_END" jdbcType="CHAR" property="salesTimeEnd"/>    
   </resultMap>

@@ -10,6 +10,7 @@ public class SvcItem {
      * This field corresponds to the database column tb_svc_item.ID
      *
      * @mbggenerated Fri Sep 23 19:04:40 KST 2016
+     * 
      */
     private Long id;
 
@@ -295,6 +296,8 @@ public class SvcItem {
     private String isSoldOut;
     
     private String isDetailedDescription;
+    private String isDetailedType;
+    private String isDetailedContents;
     
     private String salesTimeBegin;
     
@@ -1153,6 +1156,24 @@ public class SvcItem {
 	public void setIsDetailedDescription(String isDetailedDescription) {
 		this.isDetailedDescription = isDetailedDescription;
 	}
+	
+	
+
+	public String getIsDetailedType() {
+		return isDetailedType;
+	}
+
+	public void setIsDetailedType(String isDetailedType) {
+		this.isDetailedType = isDetailedType;
+	}
+
+	public String getIsDetailedContents() {
+		return isDetailedContents;
+	}
+
+	public void setIsDetailedContents(String isDetailedContents) {
+		this.isDetailedContents = isDetailedContents;
+	}
 
 	public String getSalesTimeBegin() {
 		return salesTimeBegin;
@@ -1182,9 +1203,12 @@ public class SvcItem {
 				+ ", salesBegin=" + salesBegin + ", salesEnd=" + salesEnd + ", printerNo=" + printerNo + ", adminId="
 				+ adminId + ", created=" + created + ", updated=" + updated + ", intro=" + intro + ", isStockUse="
 				+ isStockUse + ", safeStockCnt=" + safeStockCnt + ", recipe=" + recipe + ", isSoldOut=" + isSoldOut
-				+ ", isDetailedDescription=" + isDetailedDescription + ", salesTimeBegin=" + salesTimeBegin
+				+ ", isDetailedDescription=" + isDetailedDescription + ", isDetailedType=" + isDetailedType
+				+ ", isDetailedContents=" + isDetailedContents + ", salesTimeBegin=" + salesTimeBegin
 				+ ", salesTimeEnd=" + salesTimeEnd + "]";
 	}
+
+
 	   
     
 }
