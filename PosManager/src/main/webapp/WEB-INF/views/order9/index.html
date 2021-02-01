@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>배송 정보 입력</title>
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo"><img src="assets/img/logo.svg" alt="로고"></h1>
+            <h2>배송 정보 입력</h2>
+        </div>
+    </header>
+    <div class="container">
+        <section class="ordering_info">
+            <div class="checks"> <input type="checkbox" id="check"><label for="check">전체 선택</label> 
+            </div><h3>주문내역 (<span>2</span>건)</h3>
+            <article>
+                <div class="list checks">
+                    <input type="checkbox" id="check1">
+                    <label for="check1"></label> 
+                </div>
+                <div class="info">
+                    <span>
+                        <h4>주문 번호</h4>
+                        <p>000000000000000000</p>
+                    </span>
+                    <span>
+                        <h4>영수 번호</h4>
+                        <p>000000000000000000</p>
+                    </span>
+                </div>
+                <div class="list">
+                    <img src="https://picsum.photos/56" alt="상품 이미지">
+                    <div class="list_info">
+                        <h4>상품 이름</h4>
+                        <span>수량 <em>1</em></span>
+                        <span><em>125,000</em>원</span>
+                    </div>
+                </div>
+                <div class="list">
+                    <img src="https://picsum.photos/56" alt="상품 이미지">
+                    <div class="list_info">
+                        <h4>상품 이름</h4>
+                        <span>수량 <em>1</em></span>
+                        <span><em>125,000</em>원</span>
+                    </div>
+                </div>
+            </article>
+            <article>
+                <div class="list checks">
+                    <input type="checkbox" id="check2">
+                    <label for="check2"></label> 
+                </div>
+                <div class="info">
+                    <span>
+                        <h4>주문 번호</h4>
+                        <p>000000000000000000</p>
+                    </span>
+                    <span>
+                        <h4>영수 번호</h4>
+                        <p>000000000000000000</p>
+                    </span>
+                </div>
+                <div class="list">
+                    <img src="https://picsum.photos/56" alt="상품 이미지">
+                    <div class="list_info">
+                        <h4>상품 이름</h4>
+                        <span>수량 <em>1</em></span>
+                        <span><em>125,000</em>원</span>
+                    </div>
+                </div>
+                <div class="list">
+                    <img src="https://picsum.photos/56" alt="상품 이미지">
+                    <div class="list_info">
+                        <h4>상품 이름</h4>
+                        <span>수량 <em>1</em></span>
+                        <span><em>125,000</em>원</span>
+                    </div>
+                </div>
+            </article>
+            
+            <article class="total">
+                <span>총 <em>2</em>건</span>
+                <span>합계 <em>178,000</em>원</span>
+            </article>
+        </section>
+        <section class="shipping_info">
+             <h3>
+                배송 정보 (<span>2</span>건)
+            </h3>
+            <article> 
+                <div class="form">
+                    <p class="required">
+                        <label for="name">이름</label>
+                        <input type="text" name="name" placeholder="이름">
+                    </p>
+                    <p class="required">
+                        <label for="phone">휴대전화 번호</label>
+                        <input type="tel" name="phone" placeholder="휴대전화 번호" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" required>
+                    </p>
+                    <p>
+                        <label for="tel">전화번호</label>
+                        <input type="text" name="tel" placeholder="전화번호">
+                    </p>
+                    <p class="required">
+                        <label for="postcode">우편번호</label>
+                        <input type="text" id="postcode" placeholder="우편번호 찾기" onclick="execDaumPostcode()">
+                        <div id="layer" style="display:none;position:fixed;overflow:hidden;z-index:10;-webkit-overflow-scrolling:touch;">
+                            <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnCloseLayer" style="cursor:pointer;position:absolute;right:-3px;top:-3px;z-index:1" onclick="closeDaumPostcode()" alt="닫기 버튼">
+                        </div>
+                    </p>
+                    <p class="address">
+                        <textarea type="text" id="address" placeholder="주소" style="display:none;"></textarea>
+                    </p>
+                    <p class="required">
+                        <label for="detailAddress">상세주소</label>
+                        <textarea type="text" id="detailAddress" placeholder="상세주소"></textarea>
+                    </p>
+                    <p>
+                        <label for="message">배송 메세지</label>
+                        <textarea type="text" id="message" placeholder="배송 메세지"></textarea>
+                    </p>
+                    <div class="error">
+                        <p>에러 메세지 입력</p>
+                    </div>
+                    <button type="submit">배송 정보 입력</button>
+                </div>
+            </article>
+        </section>
+        <footer>
+            문의 전화 <em>1688-1580</em>
+        </footer>
+    </div>
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="assets/js/postcode.js"></script>
+</body>
+
+</html>

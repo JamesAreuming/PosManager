@@ -21,6 +21,7 @@
   	<result column="ID" jdbcType="BIGINT" property="svcOrder.id"/>
   	<result column="RECEIPT_NO" jdbcType="VARCHAR" property="svcOrder.receiptNo"/>
   	<result column="SALES" jdbcType="DOUBLE" property="svcOrder.sales"/>
+  	<result column="ORDER_TM_LOCAL" jdbcType="TIMESTAMP" property="svcOrder.orderTmLocal"/>
   </resultMap>
   
   <sql id="Base_Column_List">
@@ -41,7 +42,7 @@
     
     <select id="selectDeliveryCustomerInfo" resultMap="BaseResultMap">
     	SELECT 
-    		  O.ID, O.RECEIPT_NO, O.SALES,
+    		  O.ID, O.RECEIPT_NO, O.SALES, O.ORDER_TM_LOCAL,
     		  D.id, D.brand_id, D.store_id, D.order_no, D.cus_name, D.cus_cellno, D.cus_telno, D.cus_zip, D.cus_addr1, D.cus_addr2, D.cus_message,
     		  D.cus_express, D.cus_express_no, D.CREATED, D.UPDATED
     	from TB_SVC_ORDER O LEFT JOIN TB_SVC_DELIVERY D
