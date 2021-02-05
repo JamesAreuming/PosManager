@@ -7,6 +7,6 @@ public interface SvcDeliveryMapper{
 	
 	SvcDelivery selectDeliveryCustomerInfo(String orderNo);
 
-	int updateDeliveryCustomerInfo();
+	int updateDeliveryCustomerInfo(SvcDelivery svcDelivery);
 }
 	

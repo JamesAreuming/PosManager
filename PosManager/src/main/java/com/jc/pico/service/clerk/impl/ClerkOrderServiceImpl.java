@@ -676,9 +676,8 @@ public class ClerkOrderServiceImpl implements ClerkOrderService {
 		
 		final String host = param.getString("host"); 
 		
-		System.out.println("이것두 확인?>>"+context.toString());
-		logger.debug("확인>>>>>>>>>>"+order.getUserId()); //0
-		logger.debug("확인 >>>>>>>>>>"+param);
+		//logger.debug("확인>>>>>>>>>>"+order.getUserId()); //0
+		//logger.debug("확인 >>>>>>>>>>"+param);
 		//{withTableLock=release, os=android, tableId=1, isUsePrinter=true, posNo=103, userName=kiosk1_-_89_-_2668, lang=ko, order={acceptTm=2020-11-20 06:34:25, acceptTmLocal=2020-11-20 15:34:25, brandId=44, customerCnt=1, discount=0.0, id=0, isReserve=false, lastSt=951002, openDt=2020-11-17 00:00:00, orderDiv=1, orderNo=44891605854065469, orderSt=607002, orderTm=2020-11-20 06:34:25, orderTmLocal=2020-11-20 15:34:25, orderTp=605001, pathTp=606004, posNo=103, sales=1004.0, serviceCharge=0.0, staffId=82, storeId=89, supplyValue=904.0, svcOrderItems=[{catCd=1001, catNm=식사류, count=1, discount=0.0, id=0, image=/image-resource/items/store/89/348/it_st_89_1577128826420.jpg, isCanceled=false, isPacking=false, isStamp=false, itemCd=20191212095230, itemId=348, itemNm=김치찌개, itemTp=818000, lastSt=951002, netSales=904.0, optPrice=0.0, orderAmount=1004.0, orderId=0, orderTm=2020-11-20 06:34:25, orderTmLocal=2020-11-20 15:34:25, ordinal=1605854065468, orgCount=0, orgId=0, pathTp=606004, price=1004.0, purchasePrice=0.0, sales=1004.0, salesDiv=0, salesTypeDiv=0, serviceCharge=0.0, shortName=김치찌개, staffId=82, svcOrderDiscounts=[], svcOrderHistories=[], svcOrderItemOpts=[], tax=100.0, taxTp=819001}], svcOrderPays=[{acceptorCd=09, acceptorNm=현대카드, amount=1004.0, cardInfo=현대비자, cardInfoCd=09, cardNo=4172-33**-****-****, created=2020-11-20 15:34:25, id=0, monthlyPlain=0, orderId=0, ordinal=1, payMethod=810002, paySt=415003, payTm=2020-11-20 06:34:25, payTmLocal=2020-11-20 15:34:25, pgKind=, staffId=82, tranNo=00754768, updated=2020-11-20 15:34:25}], tableNo=1, tax=100.0, useCoupon=false, userId=0}}  
 		
 		// 추가 : 

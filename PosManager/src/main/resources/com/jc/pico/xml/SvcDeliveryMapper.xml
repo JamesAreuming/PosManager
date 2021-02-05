@@ -22,6 +22,7 @@
   	<result column="RECEIPT_NO" jdbcType="VARCHAR" property="svcOrder.receiptNo"/>
   	<result column="SALES" jdbcType="DOUBLE" property="svcOrder.sales"/>
   	<result column="ORDER_TM_LOCAL" jdbcType="TIMESTAMP" property="svcOrder.orderTmLocal"/>
+  	<result column="ORDER_ST" jdbcType="CHAR" property="svcOrder.orderSt"/>
   </resultMap>
   
   <sql id="Base_Column_List">
@@ -42,7 +43,7 @@
     
     <select id="selectDeliveryCustomerInfo" resultMap="BaseResultMap">
     	SELECT 
-    		  O.ID, O.RECEIPT_NO, O.SALES, O.ORDER_TM_LOCAL,
+    		  O.ID, O.RECEIPT_NO, O.SALES, O.ORDER_TM_LOCAL, O.ORDER_ST,
     		  D.id, D.brand_id, D.store_id, D.order_no, D.cus_name, D.cus_cellno, D.cus_telno, D.cus_zip, D.cus_addr1, D.cus_addr2, D.cus_message,
     		  D.cus_express, D.cus_express_no, D.CREATED, D.UPDATED
     	from TB_SVC_ORDER O LEFT JOIN TB_SVC_DELIVERY D
@@ -50,4 +51,16 @@
     	WHERE D.order_no = #{orderNo,jdbcType=VARCHAR}
     </select>
     
+    <update id="updateDeliveryCustomerInfo" parameterType="com.jc.pico.bean.SvcDelivery">
+    	UPDATE TB_SVC_DELIVERY
+    		SET cus_name = #{cusName,jdbcType=VARCHAR}
+				,cus_cellno = #{cusCellNo,jdbcType=VARCHAR}
+				,cus_telno = #{cusTelNo,jdbcType=VARCHAR}
+				,cus_zip = #{cusZip,jdbcType=VARCHAR}
+				,cus_addr1 = #{cusAddr1,jdbcType=VARCHAR}
+				,cus_addr2 = #{cusAddr2,jdbcType=VARCHAR}
+				,cus_message = #{cusMessage,jdbcType=VARCHAR}
+				,UPDATED = now()
+    		WHERE order_no = #{orderNo,jdbcType=VARCHAR}
+    </update>
 </mapper>
