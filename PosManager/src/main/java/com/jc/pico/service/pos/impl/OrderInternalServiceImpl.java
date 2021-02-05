@@ -340,11 +340,11 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 			}
 			
 
-			System.out.println("찍어라>>>>>>>>>>>>>>>>>>>>>>>>>>"+newOrder.getSvcOrderDelivery().getBrandId());
+			//System.out.println("찍어라>>>>>>>>>>>>>>>>>>>>>>>>>>"+newOrder.getSvcOrderDelivery().getBrandId());
 			
 			if(newOrder.getSvcOrderDelivery().getBrandId() == 0) {
 				newOrder.getSvcOrderDelivery().setBrandId(null);
-				System.out.println("확인중--------------------------------------------------------------------null");
+				
 			}
 			
 			if(newOrder.getSvcOrderDelivery().getBrandId() != null) {

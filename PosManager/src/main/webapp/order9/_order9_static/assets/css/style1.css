@@ -4,8 +4,6 @@ body {
     background: #F5F7FA;
 }
 
-/************* HEADER *************/
-
 header {
     height: 56px;
     background: #262626;
@@ -33,16 +31,9 @@ header h2 {
     box-sizing: border-box;
 }
 
-/************* SECTION *************/
-
 section {
     margin-top: 24px;
 
-}
-
-.form input::placeholder,
-.form textarea::placeholder {
-    color: #D4D8DD;
 }
 
 .ordering_info {
@@ -126,7 +117,7 @@ article:first-child{
 }
 
 article div:last-child {
-    margin-bottom: -20px;
+    margin-bottom: -16px;
     border-bottom: none;
 }
 
@@ -277,27 +268,21 @@ article div:last-child {
     font-size: 16px;
 }
 
-div.btnBox{
-	position: absolute;
-    left: 0;
-    bottom: -56px;
+.error {
     width: 100%;
-    height: 56px;
-}
-.oneBtn{
-	height: 56px;
-	border-radius: 8px;
-	color: #fff;
-	font-size: 18px;
-	width: 100%;
-	float: left;
-	background: #CC1C0A;
-}
-.oneBtn:hover {
-	background-color: #BF1200;
+    padding: 16px;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, .5);
+    border-radius: 8px;
+    display: none;
 }
 
-/************* FOOTER *************/
+.error p {
+    color: #ffffff;
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
 footer {
     text-align: center;
     color: #A7ACB2;
@@ -307,4 +292,57 @@ footer {
 
 footer em {
     font-weight: 800;
+}
+
+
+
+
+
+
+
+
+
+
+.checks {
+    position: relative;
+}
+
+.checks input[type="checkbox"],
+.radio input[type="radio"] {
+    display: none;
+}
+
+.checks input[type="checkbox"]+label,
+.radio input[type="radio"]+label {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.checks input[type="checkbox"]+label:before,
+.radio input[type="radio"]+label:before {
+    content: ' ';
+    display: inline-block;
+    margin-right: 8px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    vertical-align: middle;
+    background: #fff url(../img/check_off.svg) no-repeat center;
+    border: 1px solid #D4D8DD;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+.checks input[type="checkbox"]:checked+label:before,
+.radio input[type="radio"]:checked+label:before {
+    content: '';
+    margin-right: 8px;
+    color: #99a1a7;
+    background: #CC1C0A url(../img/check_on.svg) no-repeat center;
+    border: none;
 }
