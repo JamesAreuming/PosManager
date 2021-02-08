@@ -49,7 +49,7 @@
     <result column="STORE_CODE_IF" jdbcType="VARCHAR" property="storeCodeIf"/>
     <result column="STORE_STATUS_IF" jdbcType="VARCHAR" property="storeStatusIf"/>
     <result column="MULTI_STORE_USE" jdbcType="CHAR" property="multiStoreUse"/>
-    <result column="SPECIALITY" jdbcType="CHAR" property="speciality"/>
+    <result column="SPECIALITY" jdbcType="TINYINT" property="speciality"/>
   </resultMap>
   
   <sql id="Example_Where_Clause">

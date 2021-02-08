@@ -309,7 +309,7 @@ public class SvcStore {
     private String storeCodeIf;
     private String storeStatusIf;
     private String multiStoreUse;
-    private String speciality; //특산품업체 배달 여부
+    private Boolean speciality;
     
     public Long getId() {
         return id;
@@ -1215,13 +1215,14 @@ public class SvcStore {
 		this.multiStoreUse = multiStoreUse;
 	}
 
-	public String getSpeciality() {
+	public Boolean getSpeciality() {
 		return speciality;
 	}
 
-	public void setSpeciality(String speciality) {
+	public void setSpeciality(Boolean speciality) {
 		this.speciality = speciality;
 	}
+
     
 	
     
