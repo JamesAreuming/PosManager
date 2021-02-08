@@ -330,16 +330,16 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 			SvcStore store = getStoreById(id); //
 			Long specialtyStoreId = store.getId();
 			Long specialtyBrandId = store.getBrandId();
-			String specialtStoreName = store.getStoreNm();
+			String specialtyStoreName = store.getStoreNm();
 			
 			result.put("franId", franId);
 			result.put("brandId", brandId);
 			result.put("storeId", storeId);
 			result.put("specialtyStoreId", specialtyStoreId);
 			result.put("specialtyBrandId", specialtyBrandId);
-			result.put("specialtStoreName", specialtStoreName);
+			result.put("specialtyStoreName", specialtyStoreName);
 			
-			logger.debug("특산품 이름>>>>>>"+specialtStoreName);
+			logger.debug("특산품 이름>>>>>>"+specialtyStoreName);
 		
 			//System.out.println("확인>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+result.toString());
 		return result;
