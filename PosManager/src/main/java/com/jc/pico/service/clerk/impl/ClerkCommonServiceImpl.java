@@ -331,6 +331,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 			Long specialtyStoreId = store.getId();
 			Long specialtyBrandId = store.getBrandId();
 			String specialtyStoreName = store.getStoreNm();
+			String specialtyStoreType = store.getStoreTp(); //353001 : 일반식당, 353002 : 식당 353003 : 카페, 353004 : 레스토랑, 353005 : 기타, 35300 : 호텔
 			
 			result.put("franId", franId);
 			result.put("brandId", brandId);
@@ -338,6 +339,7 @@ public class ClerkCommonServiceImpl implements ClerkCommonService {
 			result.put("specialtyStoreId", specialtyStoreId);
 			result.put("specialtyBrandId", specialtyBrandId);
 			result.put("specialtyStoreName", specialtyStoreName);
+			result.put("specialtyStoreType", specialtyStoreType);
 			
 			logger.debug("특산품 이름>>>>>>"+specialtyStoreName);
 		
