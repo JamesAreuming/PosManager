@@ -385,7 +385,6 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 				//문제메세지 보내기
 //				sendMessage(orderDeliveryInfo, orderTm, storeNm, itemNm, host);
 				
-				System.out.println("확인중--------------------------------------------------------------------2");
 
 			}
 			
