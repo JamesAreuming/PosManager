@@ -16,6 +16,8 @@ public class SvcOrderExtended extends SvcOrder {
 	
 	private SvcDelivery svcOrderDelivery;
 	
+	private MainStore mainStore;
+	
 	/**
 	 * 주문 상품 리스트
 	 */
@@ -53,6 +55,16 @@ public class SvcOrderExtended extends SvcOrder {
 		this.svcOrderItems = svcOrderItems;
 	}
 
+
+
+	public MainStore getMainStore() {
+		return mainStore;
+	}
+
+
+	public void setMainStore(MainStore mainStore) {
+		this.mainStore = mainStore;
+	}
 
 
 	public SvcDelivery getSvcOrderDelivery() {
