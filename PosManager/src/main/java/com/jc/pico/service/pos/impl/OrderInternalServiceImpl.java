@@ -415,9 +415,9 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 	private void sendMessage(SvcDelivery orderDeliveryInfo, String orderTm, String storeNm, String itemNm, String host) throws IOException { //배달정보, 담당업체, 주문시간, 상품명
 		//이름,우편번호,주소,상세주소
 		String cusName = orderDeliveryInfo.getCusName();
-		String cusZip = orderDeliveryInfo.getCusZip();
-		String cusAddr1 = orderDeliveryInfo.getCusAddr1();
-		String cusAddr2 = orderDeliveryInfo.getCusAddr2();
+//		String cusZip = orderDeliveryInfo.getCusZip();
+//		String cusAddr1 = orderDeliveryInfo.getCusAddr1();
+//		String cusAddr2 = orderDeliveryInfo.getCusAddr2();
 		
 
         //주문번호
@@ -439,7 +439,6 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 		 * ● 주문번호
 		 * ● 담당업체
 		 * ● 주문상품
-		 * ● 배달주소
 		 */
 		String orderDeliveryInfoText = String.format("안녕하세요 %s님%n" // cusName
                                                       + "주문해 주셔서 감사합니다.%n"
@@ -448,10 +447,9 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 				                                      + "● 주문일시 : %s%n" // orderTm
 				                                      + "● 주문번호%n　☞ [%s]%n" // orderNo
                                                       + "● 담당업체 : %s%n" // storeNm
-                                                      + "● 주문상품 : %s%n" // itemNm
-                                                      + "● 배달주소 : (우)%s %s %s%n%n"// cusZip, cusAddr1, cusAddr2
+                                                      + "● 주문상품 : %s%n%n" // itemNm
                                                       + "▼ 주문 상세 정보%n %s"
-                                                      ,cusName, orderTm, orderNo, storeNm, itemNm, cusZip, cusAddr1, cusAddr2, orderDetailInfo);
+                                                      ,cusName, orderTm, orderNo, storeNm, itemNm, orderDetailInfo);
 				
 		//수신번호, 발신번호, 제목, 내용
 		Message message = new Message(cusCellNo, order9Number,orderDeliveryInfoText,"주문 접수 완료");
