@@ -339,15 +339,17 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 				svcKitchenPrinterMapper.insertList(svcKitchenPrintList);
 			}
 			
-
-			//System.out.println("찍어라>>>>>>>>>>>>>>>>>>>>>>>>>>"+newOrder.getSvcOrderDelivery().getBrandId());
-			
-			if(newOrder.getSvcOrderDelivery().getBrandId() == 0) {
-				newOrder.getSvcOrderDelivery().setBrandId(null);
-				
+			// 일반주문시 or 특산품 바로결제시 배달정보(SvcOrderDelivery = null)로 셋팅
+			if(newOrder.getSvcOrderDelivery().getId() == 0 &&
+			   newOrder.getSvcOrderDelivery().getBrandId() == 0 &&
+			   newOrder.getSvcOrderDelivery().getStoreId() == 0) {
+				newOrder.setSvcOrderDelivery(null);
 			}
 			
-			if(newOrder.getSvcOrderDelivery().getBrandId() != null) {
+			System.out.println("배달정보"+newOrder.getSvcOrderDelivery());
+
+			// 배달주소 입력시 : speciality = true		
+			if(newOrder.getMainStore().getSpeciality() == true && newOrder.getSvcOrderDelivery() != null) {
 				
 				//배달정보
 				SvcDelivery orderDeliveryInfo = new SvcDelivery();
@@ -362,7 +364,7 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 				orderDeliveryInfo.setCusAddr1(newOrder.getSvcOrderDelivery().getCusAddr1());
 				orderDeliveryInfo.setCusAddr2(newOrder.getSvcOrderDelivery().getCusAddr2());
 				orderDeliveryInfo.setCusMessage(newOrder.getSvcOrderDelivery().getCusMessage());
-				System.out.println("확인중--------------------------------------------------------------------1");				
+				
 				svcDeliveryMapper.insertOrderDeliveryInfo(orderDeliveryInfo);
 				
 				//주문시간
@@ -383,9 +385,8 @@ public class OrderInternalServiceImpl implements OrderInternalService {
 				}
 				
 				//문제메세지 보내기
-//				sendMessage(orderDeliveryInfo, orderTm, storeNm, itemNm, host);
+				sendMessage(orderDeliveryInfo, orderTm, storeNm, itemNm, host);
 				
-
 			}
 			
 		}

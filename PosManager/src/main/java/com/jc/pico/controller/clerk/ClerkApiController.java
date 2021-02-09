@@ -444,42 +444,11 @@ public class ClerkApiController {
 	 */
 	@RequestMapping(value = "/order/saveKiosk", method = RequestMethod.POST)
 	public ClerkResult saveOrderKiosk(HttpServletRequest request, @RequestBody StoreParam reqParam, Authentication authentication) throws RequestResolveException {
-		logger.debug("확인>saveOrderKiosk : " + reqParam);
-		/*
-		 * StoreParam [
-		 * header={os=android, posNo=111, lang=ko},
-		 * data=
-		 * {withTableLock=release, tableId=1, isUsePrinter=true,
-		 * order={
-		 * acceptTm=2021-01-19 02:38:19,
-		 * acceptTmLocal=2021-01-19 11:38:19,
-		 * brandId=44,
-		 * customerCnt=1,
-		 * discount=0.0,
-		 * id=0,
-		 * isReserve=false,
-		 * lastSt=951002,
-		 * openDt=2021-01-19 00:00:00,
-		 * orderDiv=1,
-		 * orderNo=44891611023899547,
-		 * orderSt=607002,
-		 * orderTm=2021-01-19 02:38:19,
-		 * orderTmLocal=2021-01-19 11:38:19,
-		 * orderTp=605001,
-		 * pathTp=606004,
-		 * posNo=111,
-		 * sales=1004.0,
-		 * serviceCharge=0.0,
-		 * staffId=82,
-		 * storeId=89,
-		 * supplyValue=904.0,
-		 * svcOrderItems=[{catCd=1001, catNm=인기메뉴, count=1, discount=0.0, id=0, image=/image-resource/items/store/89/2371/it_st_89_1610071031186.jpg, isCanceled=false, isPacking=false, isStamp=false, itemCd=20210108105711, itemId=2371, itemNm=스노우와플, itemTp=818007, lastSt=951002, netSales=904.0, optPrice=0.0, orderAmount=1004.0, orderId=0, orderTm=2021-01-19 02:38:17, orderTmLocal=2021-01-19 11:38:17, ordinal=1611023897286, orgCount=0, orgId=0, pathTp=606004, price=1004.0, purchasePrice=0.0, sales=1004.0, salesDiv=0, salesTypeDiv=0, serviceCharge=0.0, shortName=스노우와플, staffId=82, svcOrderDiscounts=[],svcOrderHistories=[],svcOrderItemOpts=[{id=0, itemId=0, optDtlId=4230, optDtlNm=매장식사, optId=1326, optNm=식사구분, optPrice=0.0, orderId=0, ordinal=1}], tax=100.0, taxTp=819001}],
-		 * svcOrderPays=[{acceptorCd=01, acceptorNm=비씨카드, amount=1004.0, cardInfo=카카오페이체크, cardInfoCd=01, cardNo=9441-92**-****-****, created=2021-01-19 11:38:19, id=0, monthlyPlain=0, orderId=0, ordinal=1, payMethod=810002, paySt=415003, payTm=2021-01-19 02:38:19, payTmLocal=2021-01-19 11:38:19, pgKind=, staffId=82, tranNo=63469460, updated=2021-01-19 11:38:19}],
-		 * tableNo=1, tax=100.0, useCoupon=false, userId=0}}] 
-		 */
-		// StoreParam [header={os=android, posNo=101, lang=ko}, 
-		//data={withTableLock=release, tableId=1, isUsePrinter=true,
-		//order={acceptTm=2021-01-21 05:44:29, acceptTmLocal=2021-01-21 14:44:29, brandId=44, customerCnt=1, discount=0.0, id=0, isReserve=false, lastSt=951002, openDt=2021-01-21 00:00:00, orderDiv=1, orderNo=44891611207869246, orderSt=607002, orderTm=2021-01-21 05:44:29, orderTmLocal=2021-01-21 14:44:29, orderTp=605001, pathTp=606004, posNo=101, sales=1004.0, serviceCharge=0.0, staffId=82, storeId=89, supplyValue=904.0, svcOrderItems=[{catCd=1001, catNm=인기메뉴, count=1, discount=0.0, id=0, image=/image-resource/items/store/89/2371/it_st_89_1610071031186.jpg, isCanceled=false, isPacking=false, isStamp=false, itemCd=20210108105711, itemId=2371, itemNm=스노우와플, itemTp=818007, lastSt=951002, netSales=904.0, optPrice=0.0, orderAmount=1004.0, orderId=0, orderTm=2021-01-21 05:44:23, orderTmLocal=2021-01-21 14:44:23, ordinal=1611207863577, orgCount=0, orgId=0, pathTp=606004, price=1004.0, purchasePrice=0.0, sales=1004.0, salesDiv=0, salesTypeDiv=0, serviceCharge=0.0, shortName=스노우와플, staffId=82, svcOrderDiscounts=[], svcOrderHistories=[], svcOrderItemOpts=[{id=0, itemId=0, optDtlId=4230, optDtlNm=매장식사, optId=1326, optNm=식사구분, optPrice=0.0, orderId=0, ordinal=1}], tax=100.0, taxTp=819001}], svcOrderPays=[{acceptorCd=02, acceptorNm=KB카드, amount=1004.0, cardInfo=카카오뱅크, cardInfoCd=02, cardNo=5365-10**-****-****, created=2021-01-21 14:44:29, id=0, monthlyPlain=0, orderId=0, ordinal=1, payMethod=810002, paySt=415003, payTm=2021-01-21 05:44:29, payTmLocal=2021-01-21 14:44:29, pgKind=, staffId=82, tranNo=22047464, updated=2021-01-21 14:44:29}], tableNo=1, tax=100.0, useCoupon=false, userId=0}}] 
+		logger.debug("주문정보 >>> saveOrderKiosk : " + reqParam);
+		
+		//매인매장 주문시
+		//특산품 - 배송지입력O
+		//특산품 - 배송지입력X
 		                
 		
 		SingleMap param = reqParam.getData();
