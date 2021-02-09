@@ -22,9 +22,11 @@ import com.jc.pico.bean.MessageModel;
 import com.jc.pico.bean.SvcDelivery;
 import com.jc.pico.bean.SvcItemImg;
 import com.jc.pico.bean.SvcOrderItem;
+import com.jc.pico.bean.SvcOrderItemOpt;
 import com.jc.pico.mapper.SvcDeliveryMapper;
 import com.jc.pico.mapper.SvcItemImgMapper;
 import com.jc.pico.mapper.SvcOrderItemMapper;
+import com.jc.pico.mapper.SvcOrderItemOptMapper;
 import com.jc.pico.utils.APIInit;
 import com.jc.pico.utils.bean.SendMessage;
 
@@ -44,6 +46,9 @@ public class ClerkApiHotelDeliveryController {
 	
 	@Autowired
 	SvcItemImgMapper svcItemImgMapper;
+	
+	@Autowired
+	SvcOrderItemOptMapper svcOrderItemOptMapper;
 	
 	private static Logger logger = LoggerFactory.getLogger(ClerkApiHotelDeliveryController.class);
 	
@@ -85,6 +90,9 @@ public class ClerkApiHotelDeliveryController {
 		Long orderId = customerInfo.getSvcOrder().getId();
 		List<SvcOrderItem> orderItemInfo = svcOrderItemMapper.selectDeliveryOrderItemInfo(orderId);
 		model.addAttribute("orderItemInfo",orderItemInfo); //상품정보
+		
+		List<SvcOrderItemOpt> orderItemOptInfo = svcOrderItemOptMapper.selectDeliveryOrderItemOptInfo(orderId);
+		model.addAttribute("orderItemOptInfo", orderItemOptInfo);
 		
 		// 상품 총 합계
 		int totalCount = 0;

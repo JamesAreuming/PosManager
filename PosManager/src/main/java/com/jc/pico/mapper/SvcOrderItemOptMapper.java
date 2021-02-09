@@ -102,4 +102,6 @@ public interface SvcOrderItemOptMapper {
      * @mbggenerated Thu Oct 27 10:43:21 KST 2016
      */
     int updateByPrimaryKey(SvcOrderItemOpt record);
+
+	List<SvcOrderItemOpt> selectDeliveryOrderItemOptInfo(Long orderId);
 }

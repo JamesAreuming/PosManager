@@ -412,4 +412,10 @@
       order by ${orderByClause}
     </if>
   </select>
+  
+  <select id="selectDeliveryOrderItemOptInfo" resultMap="BaseResultMap">
+  	SELECT
+  	<include refid="Base_Column_List"/>
+  	FROM TB_SVC_ORDER_ITEM_OPT WHERE ORDER_ID = #{orderId,jdbcType=BIGINT}
+  </select>
 </mapper>

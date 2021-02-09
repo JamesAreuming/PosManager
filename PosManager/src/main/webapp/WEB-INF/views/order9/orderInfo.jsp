@@ -59,6 +59,13 @@
 .orderItemInfoWrap{
 	margin-top: 16px;
 }
+.itemOptBox{
+	width: 100%;
+	padding-bottom: 16px;
+}
+.itemOpt{
+	padding: 0 0 10px 25px;
+}
 </style>    
 
     <div class="container">
@@ -90,6 +97,15 @@
 			                    </c:forEach>
 			                    <div class="list_info">
 			                        <h4>${orderItem.itemNm}</h4>
+			                        <div class="itemOptBox">
+			                        <p class = itemOpt>* 샷/휘핑 (샷/휘핑)</p>
+			                        <p class = itemOpt>* 샷/휘핑 (샷/휘핑)</p>
+			                        </div>
+										<%-- <c:forEach var = "orderItemOpt" items="${orderItemOptInfo}">
+											<c:if test="${orderItemOpt.itemId == orderItem.id}}">
+											    ${orderItemOpt.optNm}|${orderItemOpt.optDtlNm}
+											</c:if>
+										</c:forEach>	 --%>		                        
 			                        <span>수량 <em>${orderItem.count}</em></span>
 			                        <span>
 			                             <em>
