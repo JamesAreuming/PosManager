@@ -49,7 +49,7 @@
 			var cusAddr2 = $("textarea[name='cusAddr2']").val(); 
 			
 			var cusAddress = "["+ cusZip + "]" +"\n"
-                             + "　" + cusAddr1 + cusAddr2; 
+                             + "　" + cusAddr1 + " " +cusAddr2; 
 			var cusMessage = $("textarea[name='cusMessage']").val();
 			
 			var orderInfo = "배송받으실 정보가 맞습니까?"+"\n"

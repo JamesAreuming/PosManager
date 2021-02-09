@@ -164,9 +164,6 @@ public class ClerkApiHotelDeliveryController {
 		//과거정보
 		String beforeName = beforeDeliveryInfo.getCusName();
 		String beforeCellNo = beforeDeliveryInfo.getCusCellNo();
-		String beforeZip = beforeDeliveryInfo.getCusZip();
-		String beforeAddr1 = beforeDeliveryInfo.getCusAddr1();
-		String beforeAddr2 = beforeDeliveryInfo.getCusAddr2();
 		System.out.println("과거"+beforeName); // 정아름
 		System.out.println("과거"+beforeCellNo); //01042523245
 		
@@ -182,16 +179,14 @@ public class ClerkApiHotelDeliveryController {
 		//현재정보
 		String updateName = updateDeliveryInfo.getCusName();
 		String updateCellNo = updateDeliveryInfo.getCusCellNo();
-		String updateZip = updateDeliveryInfo.getCusZip();
-		String updateAddr1 = updateDeliveryInfo.getCusAddr1();
-		String updateAddr2 = updateDeliveryInfo.getCusAddr2();
 		
 		System.out.println("업데이트"+beforeCellNo);
 		
-		if(!beforeCellNo.equals(updateCellNo) || !beforeZip.equals(updateZip) || !beforeAddr1.equals(updateAddr1) || !beforeAddr2.equals(updateAddr2)) {
+		//수신번호가 바꼈을 경우에만 수정 문자메세지 갈 수 있도록 구현
+		if(!beforeCellNo.equals(updateCellNo)) {
 			String host = String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort());
 			sendMessage(updateName, updateCellNo, orderNo, host);
-		}
+		} 
 		
 		System.out.println("POST : 정보수정후 -> search");
 		return "/order9/orderInfoSearch";
