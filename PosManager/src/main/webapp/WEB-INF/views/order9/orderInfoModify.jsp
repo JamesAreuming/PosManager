@@ -102,7 +102,19 @@
 	    	}
 	    })
 	    
-
+	    //select 자동지정
+		var cusMessage = $("input#cusMessage").val();
+		$("#selectBox").val(cusMessage).prop("selected",true);
+		
+		//select 변화한값 넣기
+		$("select#selectBox").change(function() {
+			var selectMessage = $("select#selectBox option:selected").val();
+			$("input#cusMessage").val(selectMessage);
+		})
+		
+		$("select#selectBox").on("change",function(){
+			alert(this.value);
+		})
 		
 	  });
 </script>
@@ -222,6 +234,9 @@
 	margin-left: 3px;
 	font-size: 12px;	
 }
+#selectBox{
+
+}
 </style>    
     <div class="container">
     	<!-- section(1) -->
@@ -322,7 +337,13 @@
                     </p>                   
                     <p class="unrequired">
                         <label for="cusMessage">배송 메세지</label>
-                        <textarea type="text" name="cusMessage" id="cusMessage" placeholder="배송메세지를 입력해 주세요" class="orderText">${customerInfo.cusMessage}</textarea>
+                        <input type="hidden" name="cusMessage" id="cusMessage" placeholder="배송메세지를 입력해 주세요" class="orderText" value="${customerInfo.cusMessage}">
+                        <select id="selectBox">
+                        	<option value="배송전, 연락바랍니다.">배송전, 연락바랍니다.</option>
+                        	<option value="부재시, 전화 또는 문자주세요.">부재시, 전화 또는 문자주세요.</option>
+                        	<option value="부재시, 경비실에 맡겨주세요.">부재시, 경비실에 맡겨주세요.</option>
+                        	<option value="직접입력">직접입력</option>
+                        </select>
                     </p>
                     <div class="btnBox">
 	                    <button type="submit" id="registerBtn" class="modifyBtn">등록</button>

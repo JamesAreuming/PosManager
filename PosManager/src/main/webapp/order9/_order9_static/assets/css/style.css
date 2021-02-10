@@ -223,7 +223,8 @@ article div:last-child {
 }
 
 .form input,
-.form textarea {
+.form textarea,
+#selectBox {
     width: 100%;
     line-height: 44px;
     height: 44px;
