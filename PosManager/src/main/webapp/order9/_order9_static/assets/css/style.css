@@ -192,7 +192,7 @@ article div:last-child {
 .list .list_info h4 {
     font-size: 18px;
     font-size: 18px;
-    padding-bottom: 19px;
+    padding-bottom: 9px;
 }
 
 .list .list_info span {
@@ -295,6 +295,19 @@ div.btnBox{
 }
 .oneBtn:hover {
 	background-color: #BF1200;
+}
+
+.itemOptBox{ 
+	width: 100%;
+	padding-bottom: 9px;
+}
+.itemOpt{
+	padding: 5px 0 0 8px;
+	font-size: 11px;
+	color: #777A7F;
+}
+.itemOpt:nth-child(1){
+	padding-top: 0;
 }
 
 /************* FOOTER *************/

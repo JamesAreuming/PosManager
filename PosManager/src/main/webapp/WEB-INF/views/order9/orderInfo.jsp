@@ -59,13 +59,18 @@
 .orderItemInfoWrap{
 	margin-top: 16px;
 }
-.itemOptBox{
+/* .itemOptBox{ 
 	width: 100%;
-	padding-bottom: 16px;
+	padding-bottom: 9px;
 }
 .itemOpt{
-	padding: 0 0 10px 25px;
+	padding: 5px 0 0 8px;
+	font-size: 11px;
+	color: #777A7F;
 }
+.itemOpt:nth-child(1){
+	padding-top: 0;
+} */
 </style>    
 
     <div class="container">
@@ -85,7 +90,6 @@
 					<span class="title">주문 상품</span>
 					<a href="#" class="titleBtn"> <i class="fas fa-angle-up"></i></a>
 				</div>
-			
 				<div class="orderItemInfoWrap" class="open">
 					<article>
 			            <c:forEach var="orderItem" items="${orderItemInfo}" >
@@ -98,14 +102,18 @@
 			                    <div class="list_info">
 			                        <h4>${orderItem.itemNm}</h4>
 			                        <div class="itemOptBox">
-			                        <p class = itemOpt>* 샷/휘핑 (샷/휘핑)</p>
-			                        <p class = itemOpt>* 샷/휘핑 (샷/휘핑)</p>
-			                        </div>
-										<%-- <c:forEach var = "orderItemOpt" items="${orderItemOptInfo}">
-											<c:if test="${orderItemOpt.itemId == orderItem.id}}">
-											    ${orderItemOpt.optNm}|${orderItemOpt.optDtlNm}
-											</c:if>
-										</c:forEach>	 --%>		                        
+									 <c:forEach var="orderItemOpt" items="${orderItemOptInfo}">
+										 	<c:if test="${orderItem.id == orderItemOpt.itemId}">
+											 	  <p class = "itemOpt">* ${orderItemOpt.optNm} | 
+											 	                       ${orderItemOpt.optDtlNm} 
+											 	                       <c:if test ="${orderItemOpt.optPrice != 0.0}">
+											 	                          (+<fmt:formatNumber type="number" maxFractionDigits="3" value="${orderItemOpt.optPrice}"/>)									 	                         
+											 	                        </c:if>
+											 	                        </p>
+											 	                        
+										 	</c:if> 									 	
+							        </c:forEach>
+							        </div>				         		                        
 			                        <span>수량 <em>${orderItem.count}</em></span>
 			                        <span>
 			                             <em>

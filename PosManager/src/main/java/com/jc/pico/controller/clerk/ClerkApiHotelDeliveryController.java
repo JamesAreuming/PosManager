@@ -91,7 +91,7 @@ public class ClerkApiHotelDeliveryController {
 		List<SvcOrderItem> orderItemInfo = svcOrderItemMapper.selectDeliveryOrderItemInfo(orderId);
 		model.addAttribute("orderItemInfo",orderItemInfo); //상품정보
 		
-		List<SvcOrderItemOpt> orderItemOptInfo = svcOrderItemOptMapper.selectDeliveryOrderItemOptInfo(orderId);
+		List<SvcOrderItemOpt> orderItemOptInfo = svcOrderItemOptMapper.selectDeliveryOrderItemOptInfo(orderId);	
 		model.addAttribute("orderItemOptInfo", orderItemOptInfo);
 		
 		// 상품 총 합계
@@ -136,6 +136,9 @@ public class ClerkApiHotelDeliveryController {
 		Long orderId = customerInfo.getSvcOrder().getId();
 		List<SvcOrderItem> orderItemInfo = svcOrderItemMapper.selectDeliveryOrderItemInfo(orderId);
 		model.addAttribute("orderItemInfo",orderItemInfo);
+			
+		List<SvcOrderItemOpt> orderItemOptInfo = svcOrderItemOptMapper.selectDeliveryOrderItemOptInfo(orderId);	
+		model.addAttribute("orderItemOptInfo", orderItemOptInfo);
 		
 		//상품 총 합계
 		int totalCount = 0;

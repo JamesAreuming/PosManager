@@ -252,6 +252,19 @@
 			                    </c:forEach>
 			                    <div class="list_info">
 			                        <h4>${orderItem.itemNm}</h4>
+			                        <div class="itemOptBox">
+									 <c:forEach var="orderItemOpt" items="${orderItemOptInfo}">
+										 	<c:if test="${orderItem.id == orderItemOpt.itemId}">
+											 	  <p class = "itemOpt">* ${orderItemOpt.optNm} | 
+											 	                       ${orderItemOpt.optDtlNm} 
+											 	                       <c:if test ="${orderItemOpt.optPrice != 0.0}">
+											 	                          (+<fmt:formatNumber type="number" maxFractionDigits="3" value="${orderItemOpt.optPrice}"/>)									 	                         
+											 	                        </c:if>
+											 	                        </p>
+											 	                        
+										 	</c:if> 									 	
+							        </c:forEach>
+							        </div>			                        
 			                        <span>수량 <em>${orderItem.count}</em></span>
 			                        <span>
 			                             <em>
