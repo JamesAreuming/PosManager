@@ -21,11 +21,11 @@ img, fieldset, iframe{border:0;}
 strong{font-weight:normal;}
 /*input-style*/
 select,button,input,textarea{
-    -webkit-appearance: none;
+   -webkit-appearance: none;
     -moz-appearance: none;
     -ms-appearance: none;
     -o-appearance: none;
-    appearance: none;
+   appearance: none;
     outline: none;
     border:none;
   }

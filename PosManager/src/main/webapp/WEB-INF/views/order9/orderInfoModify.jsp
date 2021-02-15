@@ -49,14 +49,13 @@
 			var cusAddr2 = $("textarea[name='cusAddr2']").val(); 
 			
 			var cusAddress = "["+ cusZip + "]" +"\n"
-                             + "　" + cusAddr1 + " " +cusAddr2; 
-			var cusMessage = $("textarea[name='cusMessage']").val();
+                             + "　" + cusAddr1 + "　" +cusAddr2; 
 			
 			var orderInfo = "배송받으실 정보가 맞습니까?"+"\n"
 							+" ● 이름 : "+cusName+"\n"
 							+" ● 휴대전화 번호 : "+cusCellNo+"\n"
 							+" ● 주소"+"\n"
-							+"　: "+cusAddress+"\n";
+							+"　: "+cusAddress;
 			
 			//필수 입력 항목이 비워있는 경우
 			if(cusName == "" || cusCellNo == "" || cusZip == "" || cusAddr1 == "" || cusAddr2 == "" ){
@@ -87,11 +86,13 @@
 			}
 	        
 		})
+		
 		$("#zipSearchBtn").click(function(){
 			$("input[name='cusZip']").val("");
 			$("textarea[name='cusAddr1']").val(""); 
 			$("textarea[name='cusAddr2']").val(""); 
 		})
+		
 	    //취소버튼
 	    $("#cancelBtn").click(function(){
 	    	var res = confirm("수정을 취소하시겠습니까?");
@@ -102,19 +103,48 @@
 	    	}
 	    })
 	    
+	    //select 박스
+	    
 	    //select 자동지정
-		var cusMessage = $("input#cusMessage").val();
+	    var cusMessage = "${customerInfo.cusMessage}";
+	    
 		$("#selectBox").val(cusMessage).prop("selected",true);
+		
+		//직접입력일 경우
+		if(cusMessage != $("#selectBox").val()){
+			 $("#selectBox").val("직접입력").prop("selected",true);
+			 var $textArea = "<textarea type='text' name='cusMessage' id='insertMessage' placeholder='배송메세지를 입력해 주세요'>"+cusMessage+"</textarea>";
+			 $("#addEle").append($textArea);
+		}else{
+			$("#selectBox").val(cusMessage).prop("selected",true);
+			var $input = "<input type='hidden' name='cusMessage' id='cusMessage' placeholder='넘어가는값' class='orderText' value='"+cusMessage+"'>";
+			$("#addEle").append($input);
+		}
 		
 		//select 변화한값 넣기
 		$("select#selectBox").change(function() {
 			var selectMessage = $("select#selectBox option:selected").val();
-			$("input#cusMessage").val(selectMessage);
+			if(selectMessage == "직접입력"){
+				$("input#cusMessage").remove(); // 없애기
+				//alert("확인1 : "+$("input#cusMessage").length); // 존재하지 않으면  0
+				
+				if($("#insertMessage").length == 0){
+					//alert("textarea 추가")
+					var $textArea = "<textarea type='text' name='cusMessage' id='insertMessage' placeholder='배송메세지를 입력해 주세요'></textarea>";
+					$("#addEle").append($textArea);		
+				} 
+			}else{ 
+				//alert("확인2 input있는지 여부: "+$("input#cusMessage").length);
+				$("input#cusMessage").val(selectMessage);
+				$("#insertMessage").remove();
+			   if($("input#cusMessage").length == 0){
+				   var $input = "<input type='hidden' name='cusMessage' id='cusMessage' placeholder='넘어가는값' class='orderText' value='"+$("#selectBox").val()+"'>";
+				   $("#addEle").append($input);
+				   
+				}				
+			}
 		})
 		
-		$("select#selectBox").on("change",function(){
-			alert(this.value);
-		})
 		
 	  });
 </script>
@@ -335,9 +365,8 @@
                         <label for="cusAddr2">상세주소</label>
                         <textarea type="text" name="cusAddr2" id="cusAddr2" placeholder="상세주소" class="orderText">${customerInfo.cusAddr2}</textarea>
                     </p>                   
-                    <p class="unrequired">
+                    <p class="unrequired" id="addEle">
                         <label for="cusMessage">배송 메세지</label>
-                        <input type="hidden" name="cusMessage" id="cusMessage" placeholder="배송메세지를 입력해 주세요" class="orderText" value="${customerInfo.cusMessage}">
                         <select id="selectBox">
                         	<option value="배송전, 연락바랍니다.">배송전, 연락바랍니다.</option>
                         	<option value="부재시, 전화 또는 문자주세요.">부재시, 전화 또는 문자주세요.</option>
